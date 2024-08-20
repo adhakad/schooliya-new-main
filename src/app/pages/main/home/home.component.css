@@ -45,7 +45,7 @@
 }
 
 .banner h2 {
-   color: #fff;
+   color: #9a80ff;
    /* font-size: 25px; */
    font-size: clamp(1.25rem, 3vw, 2.5rem);
    font-weight: 600;
@@ -64,7 +64,7 @@
 
 .banner .submit-button {
    background-color: #fff;
-   color: #382066;
+   color: #252525;
    height: 50px;
    width: 75%;
    font-size: clamp(.85rem, 1.25vw, 1.75rem);
@@ -92,23 +92,22 @@
 
 }
 
-.thumbnail-wrapper {
-   position: relative;
+.video-container iframe {
+   position: absolute;
+   top: 0;
+   left: 0;
    width: 100%;
-   height: 28vh;
+   height: 100%;
+   border: 0;
 }
 
 .thumbnail-image {
    width: 100%;
-   height: 28vh;
+   height: auto;
    cursor: pointer;
 }
 
-iframe {
-   width: 100%;
-   height: 28vh;
-   border: 0;
-}
+
 
 .why-choose-us-section {
    background-color: #fff;
@@ -121,7 +120,7 @@ iframe {
 }
 
 .why-choose-us-section .title h3 {
-   color: #2f2c5e;
+   color: #252525;
 
    font-size: 24px;
    font-weight: 600;
@@ -139,7 +138,7 @@ iframe {
 }
 
 .why-choose-us-section .others-chart .mat-icon {
-   color: #2f2c5e;
+   color: #252525;
    font-size: 20px;
    margin-top: 1vh;
 }
@@ -163,19 +162,19 @@ iframe {
 }
 
 .why-choose-us-section .schooliya-chart p {
-   color: #2f2c5e;
+   color: #252525;
    font-size: 12px;
    margin-top: 10px;
 }
 
 .why-choose-us-section .others-chart p {
-   color: #2f2c5e;
+   color: #252525;
    font-size: 12px;
    margin-top: 8px;
 }
 
 .why-choose-us-section .others-chart p span {
-   color: #2f2c5e;
+   color: #252525;
    font-size: 11px;
    margin-top: 8px;
 }
@@ -199,7 +198,7 @@ iframe {
 }
 
 .pricing-section .title h2 {
-   color: #382066;
+   color: #252525;
 
    font-size: 24px;
    font-weight: 600;
@@ -222,7 +221,7 @@ iframe {
 }
 
 .pricing-card h2 {
-   color: #382066;
+   color: #252525;
 
    font-size: 24px;
    font-weight: 700;
@@ -235,7 +234,7 @@ iframe {
 }
 
 .pricing-card p {
-   color: #382066;
+   color: #252525;
 
    font-size: 15px;
    font-weight: 400;
@@ -243,7 +242,7 @@ iframe {
 }
 
 .pricing-card h4 {
-   color: #382066;
+   color: #252525;
    font-size: 28px;
    font-weight: 700;
    letter-spacing: .75px;
@@ -283,7 +282,7 @@ iframe {
 }
 
 .pricing-card .pricing-amount p {
-   color: #392066dd;
+   color: #252525;
    margin-top: 2vh;
    margin-bottom: 2.5vh;
 }
@@ -310,7 +309,7 @@ iframe {
 }
 
 .pricing-feature .module-access span {
-   color: #392066dd;
+   color: #252525;
    font-size: .85rem;
    font-weight: 500;
    text-align: left;
@@ -324,7 +323,7 @@ iframe {
 }
 
 .pricing-feature .module-list span {
-   color: #392066dd;
+   color: #252525;
    font-size: .85rem;
    font-weight: 500;
    text-align: left;
@@ -353,7 +352,7 @@ iframe {
 .service-section .title h2 {
    font-size: clamp(1.25rem, 3vw, 2.5rem);
    font-weight: 600;
-   color: #382066;
+   color: #252525;
    letter-spacing: .5px;
    line-height: 40px;
 }
@@ -377,8 +376,8 @@ iframe {
 }
 
 .service-card h3 {
-   color: #382066;
-   font-size: 16px;
+   color: #252525;
+   font-size: clamp(.75rem, 1vw, 1.5rem);
    font-weight: 500;
    margin-top: 2vh;
    margin-left: 16%;
@@ -386,8 +385,8 @@ iframe {
 }
 
 .service-card p {
-   color: #382066;
-   font-size: 15px;
+   color: #252525;
+   font-size: clamp(.75rem, .9vw, 1.5rem);
    font-weight: 400;
    margin-top: 2vh !important;
 }
@@ -396,7 +395,7 @@ iframe {
 @media (min-width: 576px) and (max-width: 767.98px) {
    .banner {
       position: relative;
-      min-height: 102vh;
+      min-height: 125vh;
       background: url('../../../../assets/background-images/baground-image-1.jpg') no-repeat center center/cover;
    }
 
@@ -418,9 +417,9 @@ iframe {
    }
 
    .banner .banner-content {
-      padding-top: 7vh;
-      padding-left: 5%;
-      padding-right: 5%;
+      padding-top: 15vh;
+      padding-left: 1%;
+      padding-right: 1%;
    }
 
    .banner h3 {
@@ -437,7 +436,7 @@ iframe {
    }
 
    .banner h2 {
-      color: #fff;
+      color: #e9ff85;
       /* font-size: 25px; */
       font-size: clamp(1.25rem, 3vw, 2.5rem);
       font-weight: 600;
@@ -456,143 +455,137 @@ iframe {
 
    .banner .submit-button {
       background-color: #fff;
-      color: #382066;
+      color: #252525;
       height: 50px;
       width: 75%;
       font-size: clamp(.85rem, 1.25vw, 1.75rem);
       font-weight: 500;
       text-align: center;
-      margin-top: 4vh;
+      margin-top: 8vh;
       border-radius: 8px;
       box-shadow: none !important;
    }
 
    .banner .img-section {
-      padding: 0 7% 0 7%;
+      padding: 0 1% 0 1%;
    }
 
    .video-container {
       background-color: #f5f1ff;
       position: relative;
       width: 100%;
-      min-height: 35vh;
-      max-height: 35vh;
+      min-height: 60vh;
+      max-height: 60vh;
       overflow: hidden;
-      margin-top: 7vh;
+      margin-top: 15vh;
       border: 2px solid #e9deff;
       border-radius: 15px;
 
    }
 
-   .thumbnail-wrapper {
-      position: relative;
+   .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 35vh;
-   }
-
-   .thumbnail-image {
-      width: 100%;
-      height: 35vh;
-      cursor: pointer;
-   }
-
-   iframe {
-      width: 100%;
-      height: 35vh;
+      height: 100%;
       border: 0;
    }
+   
+   .thumbnail-image {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+   }
+   
 
    .why-choose-us-section {
       background-color: #fff;
       min-height: auto;
-      padding-top: 8vh !important;
+      padding-top: 15vh !important;
+      padding-left: 5%;
+      padding-right: 5%;
    }
-
+   
    .why-choose-us-section .title {
-      text-align: center;
+      text-align: left;
    }
-
+   
    .why-choose-us-section .title h3 {
-      color: #2f2c5e;
-
+      color: #252525;
+   
       font-size: 24px;
       font-weight: 600;
       letter-spacing: .35px;
    }
-
+   
    .why-choose-us-section .schooliya-chart {
-      height: 7vh;
-      margin-top: 3vh;
+      height: 12vh;
+      margin-top: 5vh;
    }
-
+   
    .why-choose-us-section .schooliya-chart img {
       width: 110%;
-      margin-top: 1vh;
+      margin-top: 3.5vh;
    }
-
-   .why-choose-us-section .others-chart .mat-icon {
-      color: #2f2c5e;
-      font-size: 20px;
-      margin-top: 1vh;
-   }
-
+   
    .why-choose-us-section .others-chart {
-      height: 1vh;
+      height: 2.5vh;
    }
-
+   
    .why-choose-us-section .schooliya {
       background-color: #9231f2;
       width: 100%;
-      height: 4.5vh;
+      height: 12vh;
       border-radius: 8px;
    }
-
+   
    .why-choose-us-section .others {
       background-color: rgba(183, 183, 198, 0.708);
       width: 100%;
-      height: 4.5vh;
+      height: 12vh;
       border-radius: 8px;
+      margin-top: 5vh;
    }
-
+   
    .why-choose-us-section .schooliya-chart p {
-      color: #2f2c5e;
+      color: #252525;
       font-size: 12px;
-      margin-top: 10px;
+      margin-top: 2.5vh;
    }
-
+   
    .why-choose-us-section .others-chart p {
-      color: #2f2c5e;
+      color: #252525;
       font-size: 12px;
-      margin-top: 8px;
+      margin-top: 8.5vh;
    }
-
+   
    .why-choose-us-section .others-chart p span {
-      color: #2f2c5e;
+      color: #252525;
       font-size: 11px;
-      margin-top: 8px;
+      margin-top:8.5vh;
    }
 
    .pricing-section {
       background-color: #fff;
-      padding-top: 5vh;
+      padding-top: 35vh;
       padding-bottom: 0 !important;
 
    }
 
    .card-container {
-      padding-left: 3.5%;
-      padding-right: 3.5%;
+      padding-left: 2%;
+      padding-right: 2%;
    }
 
    .pricing-section .title {
       text-align: center;
       padding-top: 5.5vh;
-      padding-bottom: 1vh;
+      padding-bottom: 8vh;
    }
 
    .pricing-section .title h2 {
-      color: #382066;
-
+      color: #252525;
       font-size: 24px;
       font-weight: 600;
       letter-spacing: .35px;
@@ -603,8 +596,8 @@ iframe {
       background-color: #fff;
       width: 100%;
       height: auto;
-      padding: 5vh 5% 3vh 5%;
-      margin-bottom: 4vh;
+      padding: 12vh 5% 9vh 5%;
+      margin-bottom: 8vh;
       border: 1px solid #e3dfea;
       border-radius: 20px;
    }
@@ -614,7 +607,7 @@ iframe {
    }
 
    .pricing-card h2 {
-      color: #382066;
+      color: #252525;
 
       font-size: 24px;
       font-weight: 700;
@@ -623,11 +616,11 @@ iframe {
    }
 
    .pricing-card .pricing-title {
-      min-height: 11vh;
+      min-height: 15vh;
    }
 
    .pricing-card p {
-      color: #382066;
+      color: #252525;
 
       font-size: 15px;
       font-weight: 400;
@@ -635,14 +628,406 @@ iframe {
    }
 
    .pricing-card h4 {
-      color: #382066;
+      color: #252525;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: .75px;
+      text-align: center;
+      margin-top: 3.5vh;
+   }
+
+   .pricing-button {
+      background: #9231f2;
+      color: #fff;
+      height: 50px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 5.5vh;
+      padding-left: 3.5%;
+      padding-right: 3.5%;
+      border-radius: 8px;
+      box-shadow: none !important;
+   }
+
+   .pricing-button-light {
+      background-color: #fff;
+      color: #9231f2;
+      height: 50px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 5.5vh;
+      padding-left: 3.5%;
+      padding-right: 3.5%;
+      box-shadow: none !important;
+      border: 2px solid #9a34fff9;
+      border-radius: 8px;
+   }
+
+   .pricing-card .pricing-amount p {
+      color: #252525;
+      margin-top: 5vh;
+      margin-bottom: 5.5vh;
+   }
+
+   .mat-divider {
+      background-color: #ddddf8;
+      height: 1px;
+
+   }
+
+   .pricing-feature {
+      padding-top: 6vh;
+   }
+
+   .pricing-feature .done {
+      color: #43d47d;
+      font-size: 20px;
+   }
+
+   .pricing-feature .module-access p {
+      font-size: .85rem;
+      font-weight: 700;
+      text-align: left;
+   }
+
+   .pricing-feature .module-access span {
+      color: #252525;
+      font-size: .85rem;
+      font-weight: 500;
+      text-align: left;
+   }
+
+   .pricing-feature .module-list p {
+      font-size: .85rem;
+      font-weight: 700;
+      text-align: left;
+      margin-left: -20px;
+   }
+
+   .pricing-feature .module-list span {
+      color: #252525;
+      font-size: .85rem;
+      font-weight: 500;
+      text-align: left;
+   }
+
+
+
+
+
+
+
+   .service-section {
+      background: #f6f5ff;
+      margin-top: 15vh;
+      padding-left: 3% !important;
+      padding-right: 3% !important;
+      padding-bottom: 15vh;
+   }
+
+   .service-section .title {
+      text-align: center;
+      padding-top: 7vh;
+      padding-bottom: 9vh;
+   }
+
+   .service-section .title h2 {
+      font-size: clamp(1.25rem, 3vw, 2.5rem);
+      font-weight: 600;
+      color: #252525;
+      letter-spacing: .5px;
+      line-height: 40px;
+   }
+
+   .service-card {
+      background: linear-gradient(315deg, rgba(238, 230, 255, 0.845), rgb(254, 253, 255), rgb(254, 253, 255));
+      width: 100%;
+      height: 60vh;
+      text-align: left;
+      margin-bottom: 6vh;
+      margin-left: 0;
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid #e3dfea;
+   }
+
+
+
+   .service-card img {
+      width: 12vh;
+   }
+
+   .service-card h3 {
+      color: #252525;
+      font-size: clamp(.75rem, 1vw, 1.5rem);
+      font-weight: 500;
+      margin-top: 3vh;
+      margin-left: 7%;
+      text-align: left;
+   }
+
+   .service-card p {
+      color: #252525;
+      font-size: clamp(.75rem, .9vw, 1.5rem);
+      font-weight: 400;
+      margin-top: 3.5vh !important;
+   }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+   .banner {
+      position: relative;
+      min-height: 70vh;
+      background: url('../../../../assets/background-images/baground-image-1.jpg') no-repeat center center/cover;
+   }
+   
+   .banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(39, 6, 67, 0.93) 20%, rgba(39, 6, 67, 0.93) 20%, rgba(139, 49, 204, 0.93) 95%, rgba(137, 45, 203, 0.93) 98%);
+      z-index: 1;
+      pointer-events: none;
+   }
+   
+   .banner>* {
+      position: relative;
+      z-index: 1;
+   }
+   
+   .banner .banner-content {
+      padding-top: 7vh;
+      padding-left: 3.5%;
+   }
+   
+   .banner h3 {
+      color: #fff;
+      font-size: clamp(.9rem, 1.3vw, 1.8rem);
+      font-weight: 400;
+      letter-spacing: .5px
+   }
+   
+   .banner h3 span {
+      background: linear-gradient(to right, #8C52FF, #fff, #fff);
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+   }
+   
+   .banner h2 {
+      color: #ff8080;
+      /* font-size: 25px; */
+      font-size: clamp(1.25rem, 3vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-top: 2.5vh;
+      line-height: 35px;
+   }
+   
+   .banner p {
+      color: #fff;
+      font-size: clamp(.85rem, 1.25vw, 1.75rem);
+      font-weight: 400;
+      margin-top: 2.5vh;
+      line-height: 25px;
+   }
+   
+   .banner .submit-button {
+      background-color: #fff;
+      color: #252525;
+      height: 50px;
+      width: 75%;
+      font-size: clamp(.85rem, 1.25vw, 1.75rem);
+      font-weight: 500;
+      text-align: center;
+      margin-top: 4vh;
+      border-radius: 8px;
+      box-shadow: none !important;
+   }
+   
+   .banner .img-section {
+      padding: 0 3.5% 0 3.5%;
+   }
+   
+   .video-container {
+      background-color: #f5f1ff;
+      position: relative;
+      width: 100%;
+      min-height: 28vh;
+      max-height: 28vh;
+      overflow: hidden;
+      margin-top: 16vh;
+      border: 2px solid #e9deff;
+      border-radius: 15px;
+   
+   }
+   
+   .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+   }
+   
+   .thumbnail-image {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+   }
+   
+   
+   
+   .why-choose-us-section {
+      background-color: #fff;
+      min-height: auto;
+      padding-top: 8vh !important;
+   }
+   
+   .why-choose-us-section .title {
+      text-align: center;
+   }
+   
+   .why-choose-us-section .title h3 {
+      color: #252525;
+   
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: .35px;
+      padding-bottom: 2vh;
+   }
+   
+   .why-choose-us-section .schooliya-chart {
+      height: 7vh;
+      margin-top: 3vh;
+   }
+   
+   .why-choose-us-section .schooliya-chart img {
+      width: 110%;
+      margin-top: 1vh;
+   }
+   
+   .why-choose-us-section .others-chart .mat-icon {
+      color: #252525;
+      font-size: 20px;
+      margin-top: 1vh;
+   }
+   
+   .why-choose-us-section .others-chart {
+      height: 1vh;
+   }
+   
+   .why-choose-us-section .schooliya {
+      background-color: #9231f2;
+      width: 100%;
+      height: 4.5vh;
+      border-radius: 8px;
+   }
+   
+   .why-choose-us-section .others {
+      background-color: rgba(183, 183, 198, 0.708);
+      width: 100%;
+      height: 4.5vh;
+      border-radius: 8px;
+   }
+   
+   .why-choose-us-section .schooliya-chart p {
+      color: #252525;
+      font-size: 12px;
+      margin-top: 10px;
+   }
+   
+   .why-choose-us-section .others-chart p {
+      color: #252525;
+      font-size: 12px;
+      margin-top: 8px;
+   }
+   
+   .why-choose-us-section .others-chart p span {
+      color: #252525;
+      font-size: 11px;
+      margin-top: 8px;
+   }
+   
+   .pricing-section {
+      background-color: #fff;
+      padding-top: 8vh;
+      padding-bottom: 0 !important;
+   
+   }
+   
+   .card-container {
+      padding-left: 3.5%;
+      padding-right: 3.5%;
+   }
+   
+   .pricing-section .title {
+      text-align: center;
+      padding-top: 5.5vh;
+      padding-bottom: 3vh;
+   }
+   
+   .pricing-section .title h2 {
+      color: #252525;
+   
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: .35px;
+      line-height: 40px;
+   }
+   
+   .pricing-card {
+      background-color: #fff;
+      width: 100%;
+      height: auto;
+      padding: 5vh 5% 3vh 5%;
+      margin-bottom: 4vh;
+      border: 1px solid #e3dfea;
+      border-radius: 20px;
+   }
+   
+   .border {
+      border: 2px solid #9a34fff9 !important;
+   }
+   
+   .pricing-card h2 {
+      color: #252525;
+   
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: .75px;
+      text-align: center;
+   }
+   
+   .pricing-card .pricing-title {
+      min-height: 11vh;
+   }
+   
+   .pricing-card p {
+      color: #252525;
+   
+      font-size: 15px;
+      font-weight: 400;
+      text-align: center;
+   }
+   
+   .pricing-card h4 {
+      color: #252525;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: .75px;
       text-align: center;
       margin-top: 1.5vh;
    }
-
+   
    .pricing-button {
       background: #9231f2;
       color: #fff;
@@ -657,7 +1042,7 @@ iframe {
       border-radius: 8px;
       box-shadow: none !important;
    }
-
+   
    .pricing-button-light {
       background-color: #fff;
       color: #9231f2;
@@ -673,11 +1058,402 @@ iframe {
       border: 2px solid #9a34fff9;
       border-radius: 8px;
    }
-
+   
    .pricing-card .pricing-amount p {
-      color: #392066dd;
+      color: #252525;
       margin-top: 2vh;
       margin-bottom: 2.5vh;
+   }
+   
+   .mat-divider {
+      background-color: #ddddf8;
+      height: 1px;
+   
+   }
+   
+   .pricing-feature {
+      padding-top: 3vh;
+   }
+   
+   .pricing-feature .done {
+      color: #43d47d;
+      font-size: 20px;
+   }
+   
+   .pricing-feature .module-access p {
+      font-size: .85rem;
+      font-weight: 700;
+      text-align: left;
+   }
+   
+   .pricing-feature .module-access span {
+      color: #252525;
+      font-size: .85rem;
+      font-weight: 500;
+      text-align: left;
+   }
+   
+   .pricing-feature .module-list p {
+      font-size: .85rem;
+      font-weight: 700;
+      text-align: left;
+      margin-left: -20px;
+   }
+   
+   .pricing-feature .module-list span {
+      color: #252525;
+      font-size: .85rem;
+      font-weight: 500;
+      text-align: left;
+   }
+   
+   
+   
+   
+   
+   
+   
+   .service-section {
+      background: #f6f5ff;
+      margin-top: 5vh;
+      padding-left: 3.5% !important;
+      padding-right: 3.5% !important;
+      padding-bottom: 10vh;
+   }
+   
+   .service-section .title {
+      text-align: center;
+      padding-top: 5vh;
+      padding-bottom: 5vh;
+   }
+   
+   .service-section .title h2 {
+      font-size: clamp(1.25rem, 3vw, 2.5rem);
+      font-weight: 600;
+      color: #252525;
+      letter-spacing: .5px;
+      line-height: 40px;
+   }
+   
+   .service-card {
+      background: linear-gradient(315deg, rgba(238, 230, 255, 0.845), rgb(254, 253, 255), rgb(254, 253, 255));
+      width: 100%;
+      height: 22vh;
+      text-align: left;
+      margin-bottom: 5vh;
+      margin-left: 0;
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid #e3dfea;
+   }
+   
+   
+   
+   .service-card img {
+      width: 7vh;
+   }
+   
+   .service-card h3 {
+      color: #252525;
+      font-size: clamp(.75rem, 1vw, 1.5rem);
+      font-weight: 500;
+      margin-top: 2vh;
+      margin-left: 16%;
+      text-align: left;
+   }
+   
+   .service-card p {
+      color: #252525;
+      font-size: clamp(.75rem, .9vw, 1.5rem);
+      font-weight: 400;
+      margin-top: 2vh !important;
+   }
+}
+
+
+/* Landscape Orientation Specific Queries */
+
+/* Landscape orientation for mobile devices (up to 575.98px) */
+@media (max-width: 575.98px) and (orientation: landscape) {
+   .banner {
+      position: relative;
+      min-height: 130vh;
+      background: url('../../../../assets/background-images/baground-image-1.jpg') no-repeat center center/cover;
+   }
+
+   .banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(39, 6, 67, 0.93) 20%, rgba(39, 6, 67, 0.93) 20%, rgba(139, 49, 204, 0.93) 95%, rgba(137, 45, 203, 0.93) 98%);
+      z-index: 1;
+      pointer-events: none;
+   }
+
+   .banner>* {
+      position: relative;
+      z-index: 1;
+   }
+
+   .banner .banner-content {
+      padding-top: 20vh;
+      padding-left: 15%;
+      padding-right: 15%;
+   }
+
+   .banner h3 {
+      color: #fff;
+      font-size: clamp(.9rem, 1.3vw, 1.8rem);
+      font-weight: 400;
+      letter-spacing: .5px
+   }
+
+   .banner h3 span {
+      background: linear-gradient(to right, #8C52FF, #fff, #fff);
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+   }
+
+   .banner h2 {
+      color: #66ffb0;
+      /* font-size: 25px; */
+      font-size: clamp(1.25rem, 3vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-top: 2.5vh;
+      line-height: 35px;
+   }
+
+   .banner p {
+      color: #fff;
+      font-size: clamp(.85rem, 1.25vw, 1.75rem);
+      font-weight: 400;
+      margin-top: 2.5vh;
+      line-height: 25px;
+   }
+
+   .banner .submit-button {
+      background-color: #fff;
+      color: #252525;
+      height: 50px;
+      width: 75%;
+      font-size: clamp(.85rem, 1.25vw, 1.75rem);
+      font-weight: 500;
+      text-align: center;
+      margin-top: 6vh;
+      border-radius: 8px;
+      box-shadow: none !important;
+   }
+
+   .banner .img-section {
+      padding: 0 15% 0 15%;
+   }
+
+   .video-container {
+      background-color: #f5f1ff;
+      position: relative;
+      width: 100%;
+      min-height: 50vh;
+      max-height: 50vh;
+      overflow: hidden;
+      margin-top: 10vh;
+      border: 2px solid #e9deff;
+      border-radius: 15px;
+
+   }
+
+   .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+   }
+   
+   .thumbnail-image {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+   }
+   
+
+   .why-choose-us-section {
+      background-color: #fff;
+      min-height: auto;
+      padding-top: 12vh !important;
+      padding-left: 6%;
+      padding-right: 6%;
+   }
+   
+   .why-choose-us-section .title {
+      text-align: center;
+      padding-bottom: 6vh;
+   }
+   
+   .why-choose-us-section .title h3 {
+      color: #252525;
+   
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: .35px;
+   }
+   
+   .why-choose-us-section .schooliya-chart {
+      height: 12vh;
+      margin-top: 5vh;
+   }
+   
+   .why-choose-us-section .schooliya-chart img {
+      width: 110%;
+      margin-top: 2.5vh;
+   }
+   
+   .why-choose-us-section .others-chart {
+      height: 2.5vh;
+   }
+   
+   .why-choose-us-section .schooliya {
+      background-color: #9231f2;
+      width: 100%;
+      height: 10vh;
+      border-radius: 8px;
+   }
+   
+   .why-choose-us-section .others {
+      background-color: rgba(183, 183, 198, 0.708);
+      width: 100%;
+      height: 10vh;
+      border-radius: 8px;
+      margin-top: 5vh;
+   }
+   
+   .why-choose-us-section .schooliya-chart p {
+      color: #252525;
+      font-size: 12px;
+      margin-top: 2.5vh;
+   }
+   
+   .why-choose-us-section .others-chart p {
+      color: #252525;
+      font-size: 12px;
+      margin-top: 8.5vh;
+   }
+   
+   .why-choose-us-section .others-chart p span {
+      color: #252525;
+      font-size: 11px;
+      margin-top: 8px;
+   }
+
+   .pricing-section {
+      background-color: #fff;
+      padding-top: 20vh;
+      padding-bottom: 0 !important;
+
+   }
+
+   .card-container {
+      padding-left: 15%;
+      padding-right: 15%;
+   }
+
+   .pricing-section .title {
+      text-align: center;
+      padding-top: 8vh;
+      padding-bottom: 6vh;
+   }
+
+   .pricing-section .title h2 {
+      color: #252525;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: .35px;
+      line-height: 40px;
+   }
+
+   .pricing-card {
+      background-color: #fff;
+      width: 100%;
+      height: auto;
+      padding: 8vh 5% 9vh 5%;
+      margin-bottom: 8vh;
+      border: 1px solid #e3dfea;
+      border-radius: 20px;
+   }
+
+   .border {
+      border: 2px solid #9a34fff9 !important;
+   }
+
+   .pricing-card h2 {
+      color: #252525;
+
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: .75px;
+      text-align: center;
+   }
+
+   .pricing-card .pricing-title {
+      min-height: 15vh;
+   }
+
+   .pricing-card p {
+      color: #252525;
+
+      font-size: 15px;
+      font-weight: 400;
+      text-align: center;
+   }
+
+   .pricing-card h4 {
+      color: #252525;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: .75px;
+      text-align: center;
+      margin-top: 3.5vh;
+   }
+
+   .pricing-button {
+      background: #9231f2;
+      color: #fff;
+      height: 50px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 5.5vh;
+      padding-left: 3.5%;
+      padding-right: 3.5%;
+      border-radius: 8px;
+      box-shadow: none !important;
+   }
+
+   .pricing-button-light {
+      background-color: #fff;
+      color: #9231f2;
+      height: 50px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 5.5vh;
+      padding-left: 3.5%;
+      padding-right: 3.5%;
+      box-shadow: none !important;
+      border: 2px solid #9a34fff9;
+      border-radius: 8px;
+   }
+
+   .pricing-card .pricing-amount p {
+      color: #252525;
+      margin-top: 5vh;
+      margin-bottom: 5.5vh;
    }
 
    .mat-divider {
@@ -687,7 +1463,7 @@ iframe {
    }
 
    .pricing-feature {
-      padding-top: 3vh;
+      padding-top: 6vh;
    }
 
    .pricing-feature .done {
@@ -702,7 +1478,7 @@ iframe {
    }
 
    .pricing-feature .module-access span {
-      color: #392066dd;
+      color: #252525;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -716,7 +1492,7 @@ iframe {
    }
 
    .pricing-feature .module-list span {
-      color: #392066dd;
+      color: #252525;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -730,22 +1506,22 @@ iframe {
 
    .service-section {
       background: #f6f5ff;
-      margin-top: 3vh;
-      padding-left: 3.5% !important;
-      padding-right: 3.5% !important;
+      margin-top: 10vh;
+      padding-left: 15% !important;
+      padding-right: 15% !important;
       padding-bottom: 10vh;
    }
 
    .service-section .title {
       text-align: center;
-      padding-top: 3.5vh;
-      padding-bottom: 5vh;
+      padding-top: 6vh;
+      padding-bottom: 7vh;
    }
 
    .service-section .title h2 {
       font-size: clamp(1.25rem, 3vw, 2.5rem);
       font-weight: 600;
-      color: #382066;
+      color: #252525;
       letter-spacing: .5px;
       line-height: 40px;
    }
@@ -753,9 +1529,9 @@ iframe {
    .service-card {
       background: linear-gradient(315deg, rgba(238, 230, 255, 0.845), rgb(254, 253, 255), rgb(254, 253, 255));
       width: 100%;
-      height: 22vh;
+      height: 45vh;
       text-align: left;
-      margin-bottom: 3vh;
+      margin-bottom: 6vh;
       margin-left: 0;
       border-radius: 20px;
       padding: 20px;
@@ -765,64 +1541,25 @@ iframe {
 
 
    .service-card img {
-      width: 7vh;
+      width: 12vh;
    }
 
    .service-card h3 {
-      color: #382066;
-      font-size: 16px;
+      color: #252525;
+      font-size: clamp(.75rem, 1vw, 1.5rem);
       font-weight: 500;
-      margin-top: 2vh;
+      margin-top: 3vh;
       margin-left: 16%;
       text-align: left;
    }
 
    .service-card p {
-      color: #382066;
-      font-size: 15px;
+      color: #252525;
+      font-size: clamp(.75rem, .9vw, 1.5rem);
       font-weight: 400;
-      margin-top: 2vh !important;
+      margin-top: 3vh !important;
    }
-}
 
-/* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) and (max-width: 991.98px) {
-   .custom-class {
-      /* Styles for col-md equivalent */
-   }
-}
-
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) and (max-width: 1199.98px) {
-   .custom-class {
-      /* Styles for col-lg equivalent */
-   }
-}
-
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-   .custom-class {
-      /* Styles for col-xl equivalent */
-   }
-}
-
-/* Extra extra large devices (larger desktops, 1400px and up) */
-@media (min-width: 1400px) {
-   .custom-class {
-      /* Styles for col-xxl equivalent */
-   }
-}
-
-/* Landscape Orientation Specific Queries */
-
-/* Landscape orientation for mobile devices (up to 575.98px) */
-@media (max-width: 575.98px) and (orientation: landscape) {
-   .custom-class {
-      /* Styles specifically for landscape orientation on mobile devices */
-      /* Example: */
-      background-color: lightcoral;
-      padding: 10px;
-   }
 }
 
 /* Landscape orientation for tablets (576px to 991.98px) */
@@ -901,7 +1638,7 @@ iframe {
 
    .banner .submit-button {
       background-color: #fff;
-      color: #382066;
+      color: #252525;
       height: 7.5vh;
       width: 45%;
       font-size: clamp(.75rem, 1.1vw, 1.5rem);
@@ -932,24 +1669,21 @@ iframe {
 
    }
 
-   .thumbnail-wrapper {
-      position: relative;
+   .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 40vh;
-
-   }
-
-   .thumbnail-image {
-      width: 100%;
-      height: 40vh;
-      cursor: pointer;
-   }
-
-   iframe {
-      width: 100%;
-      height: 40vh;
+      height: 100%;
       border: 0;
    }
+   
+   .thumbnail-image {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+   }
+   
 
    .why-choose-us-section {
       min-height: auto;
@@ -962,7 +1696,7 @@ iframe {
    }
 
    .why-choose-us-section .title h3 {
-      color: #2f2c5e;
+      color: #252525;
       font-size: 24px;
       font-weight: 600;
       letter-spacing: .35px;
@@ -998,19 +1732,19 @@ iframe {
    }
 
    .why-choose-us-section .schooliya-chart p {
-      color: #2f2c5e;
+      color: #252525;
       font-size: 16px;
       margin-top: 1vh;
    }
 
    .why-choose-us-section .others-chart p {
-      color: #2f2c5e;
+      color: #252525;
       font-size: 16px;
       margin-top: 1vh;
    }
 
    .why-choose-us-section .others-chart p span {
-      color: #2f2c5e;
+      color: #252525;
       font-size: 16px;
       margin-top: 8px;
       margin-left: 5px;
@@ -1051,7 +1785,7 @@ iframe {
    }
 
    .pricing-card h2 {
-      color: #382066;
+      color: #252525;
       font-weight: 600;
       font-weight: 600;
       ;
@@ -1066,7 +1800,7 @@ iframe {
    }
 
    .pricing-section .title h2 {
-      color: #382066;
+      color: #252525;
       font-size: 38px;
       font-weight: 600;
       letter-spacing: .5px;
@@ -1074,7 +1808,7 @@ iframe {
    }
 
    .pricing-card p {
-      color: #382066;
+      color: #252525;
       font-size: 15px;
       font-weight: 400;
       text-align: center;
@@ -1082,7 +1816,7 @@ iframe {
    }
 
    .pricing-card h4 {
-      color: #382066;
+      color: #252525;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: .75px;
@@ -1122,7 +1856,7 @@ iframe {
    }
 
    .pricing-card .pricing-amount p {
-      color: #392066dd;
+      color: #252525;
       margin-top: 3vh;
       margin-bottom: 3vh;
    }
@@ -1149,7 +1883,7 @@ iframe {
    }
 
    .pricing-feature .module-access span {
-      color: #392066dd;
+      color: #252525;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1163,7 +1897,7 @@ iframe {
    }
 
    .pricing-feature .module-list span {
-      color: #392066dd;
+      color: #252525;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1186,7 +1920,7 @@ iframe {
    .service-section .title h2 {
       font-size: 38px;
       font-weight: 600;
-      color: #382066;
+      color: #252525;
       letter-spacing: .5px;
       line-height: 40px;
    }

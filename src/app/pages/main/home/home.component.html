@@ -3,11 +3,11 @@
     <div class="banner">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 col-sm-12 col-lg-7">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-7">
                     <div class="row banner-content">
                         <h3>
-                            <span>Online School Management Software Just &#8377;
-                                {{plansInfo[0]?.price}}3000</span>
+                            <span>Smart School Management Just  &#8377;
+                                {{plansInfo[0]?.price}}</span>
                         </h3>
                         <h2>Simplify School Management with Our User Friendly Online Solution</h2>
                         <p>
@@ -15,14 +15,14 @@
                             features and unmatched value at a lower price than any other software in the market.
                             Simplify tasks and save money, allowing you to focus more on teaching and student success
                         </p>
-                        <div class="col-6 col-sm-5 col-lg-6">
+                        <div class="col-6 col-sm-6 col-md-6  col-lg-6">
                             <button class="submit-button" mat-raised-button>Live Demo</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-5 col-lg-5 img-section">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-5 img-section">
                     <div class="row img-section-row">
-                        <div class="col-12 col-md-12 col-lg-12"
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12"
                             *ngFor="let videoUrl of youtubeVideoSafeUrls; let i = index">
                             <div class="video-container" (click)="redirectUser(youtubeVideoUrls[i])">
                                 <img [src]="thumbnailUrls[i]" alt="Thumbnail Image" class="thumbnail-image">
@@ -40,15 +40,15 @@
 
     <div class="container why-choose-us-section">
         <div class="row">
-            <div class="col-12 col-md-5 col-lg-5 title">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-5 title">
                 <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <h3>Why Choose Us ?</h3>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-10 col-lg-10">
-                        <p style="color: #2f2c5e;">Choose our online school management software for its unbeatable value
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-10">
+                        <p>Choose our online school management software for its unbeatable value
                             and efficiency. It offers all the essential features at a lower price than other options in
                             the market. With our software, you get powerful tools that make managing your school easier
                             and more affordable
@@ -56,31 +56,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-7 col-lg-7">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                 <div class="row schooliya-chart">
-                    <div class="col-3 col-md-3 col-lg-3"><img src="../../../../assets/logo.png" alt="">
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3"><img src="../../../../assets/logo.png" alt="">
                     </div>
-                    <div class="col-3 col-md-2 col-lg-2">
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-2">
                         <div class="schooliya">
                         </div>
                     </div>
-                    <div class="col-4 col-md-2 col-lg-2">
+                    <div class="col-4 col-sm-4 col-md-4 col-lg-2">
                         <p>&#8377;{{plansInfo[0]?.price}} / Year</p>
                     </div>
                 </div>
                 <div class="row others-chart">
-                    <div class="col-3 col-md-3 col-lg-3">
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3">
                         <div class="row">
                             <div class="col-12">
                                 <p><span>Other Software</span></p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-7 col-lg-7">
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-7">
                         <div class="others">
                         </div>
                     </div>
-                    <div class="col-3 col-md-2 col-lg-2" style="padding-left: 0 !important;">
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-2" style="padding-left: 0 !important;">
                         <p>&#8377;12000 / Year</p>
                     </div>
                 </div>
@@ -92,12 +92,12 @@
     <div class="container-fluid" style="padding: 0 !important;">
         <div class="container-fluid pricing-section">
             <div class="row">
-                <div class="col-12 col-md-12 col-lg-12">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="row title">
                         <h2>Pick Your Perfect Plan</h2>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-md-4 col-lg-4 card-container">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 card-container">
                             <div class="pricing-card">
                                 <div class="pricing-title">
                                     <h2>{{plansInfo[0]?.plans}}</h2>
@@ -159,7 +159,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4 col-lg-4 card-container">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 card-container">
                             <div class="pricing-card border">
                                 <div class="pricing-title">
                                     <h2>{{plansInfo[1]?.plans}}</h2>
@@ -221,7 +221,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4 col-lg-4 card-container">
+                        <div class="col-12 col-sm-6 offset-sm-3 col-md-6 offset-md-3 col-lg-4 offset-lg-0 card-container">
                             <div class="pricing-card">
                                 <div class="pricing-title">
                                     <h2>{{plansInfo[2]?.plans}}</h2>
@@ -289,7 +289,7 @@
     </div>
     <div class="container-fluid service-section">
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-12">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="row">
                     <div class="col-12">
                         <div class="title">
@@ -298,13 +298,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Student Management</h3>
                                 </div>
                             </div>
@@ -312,39 +312,39 @@
 
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Admission Management</h3>
                                 </div>
                             </div>
                             <p>Simplify your admissions with our intuitive and efficient tools</p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Fees Management</h3>
                                 </div>
                             </div>
                             <p>Easily manage and track fees with our user-friendly modules</p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Admit Card Management</h3>
                                 </div>
                             </div>
@@ -352,13 +352,13 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Marksheet Management</h3>
                                 </div>
                             </div>
@@ -366,13 +366,13 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>T C Management</h3>
                                 </div>
                             </div>
@@ -380,13 +380,13 @@
                                 our simplify modules</p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Subject Management</h3>
                                 </div>
                             </div>
@@ -394,26 +394,26 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Class Subject Management</h3>
                                 </div>
                             </div>
                             <p>Organize class subject groups with ease using our straight-forward tools</p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="service-card">
                             <div class="row">
-                                <div class="col-1 col-md-2 col-lg-2"><img
+                                <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
                                         src="../../../../assets/features-image/student.png" alt="">
                                 </div>
-                                <div class="col-11 col-md-10 col-lg-10">
+                                <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Saff Access Management</h3>
                                 </div>
                             </div>
