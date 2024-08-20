@@ -45,9 +45,8 @@
 }
 
 .banner h2 {
-   color: #9a80ff;
-   /* font-size: 25px; */
-   font-size: clamp(1.25rem, 3vw, 2.5rem);
+   color: #fff;
+   font-size: clamp(1.3rem, 3vw, 2.5rem);
    font-weight: 600;
    letter-spacing: 1px;
    margin-top: 2.5vh;
@@ -56,7 +55,7 @@
 
 .banner p {
    color: #fff;
-   font-size: clamp(.85rem, 1.25vw, 1.75rem);
+   font-size: clamp(.85rem, 1.3vw, 1.75rem);
    font-weight: 400;
    margin-top: 2.5vh;
    line-height: 25px;
@@ -76,7 +75,7 @@
 }
 
 .banner .img-section {
-   padding: 0 3.5% 0 3.5%;
+   padding: 0 3.5% 10vh 3.5%;
 }
 
 .video-container {
@@ -133,7 +132,7 @@
 }
 
 .why-choose-us-section .schooliya-chart img {
-   width: 110%;
+   width: 100%;
    margin-top: 1vh;
 }
 
@@ -163,19 +162,19 @@
 
 .why-choose-us-section .schooliya-chart p {
    color: #252525;
-   font-size: 12px;
+   font-size: 10px;
    margin-top: 10px;
 }
 
 .why-choose-us-section .others-chart p {
    color: #252525;
-   font-size: 12px;
+   font-size: 10px;
    margin-top: 8px;
 }
 
 .why-choose-us-section .others-chart p span {
    color: #252525;
-   font-size: 11px;
+   font-size: 10px;
    margin-top: 8px;
 }
 
@@ -193,7 +192,7 @@
 
 .pricing-section .title {
    text-align: center;
-   padding-top: 5.5vh;
+   padding-top: 8vh;
    padding-bottom: 1vh;
 }
 
@@ -210,10 +209,11 @@
    background-color: #fff;
    width: 100%;
    height: auto;
-   padding: 5vh 5% 3vh 5%;
+   padding: 8vh 5% 3vh 5%;
    margin-bottom: 4vh;
    border: 1px solid #e3dfea;
    border-radius: 20px;
+   margin-bottom: 5vh;
 }
 
 .border {
@@ -395,7 +395,7 @@
 @media (min-width: 576px) and (max-width: 767.98px) {
    .banner {
       position: relative;
-      min-height: 125vh;
+      min-height: 130vh;
       background: url('../../../../assets/background-images/baground-image-1.jpg') no-repeat center center/cover;
    }
 
@@ -417,14 +417,14 @@
    }
 
    .banner .banner-content {
-      padding-top: 15vh;
-      padding-left: 1%;
-      padding-right: 1%;
+      padding-top: 25vh;
+      padding-left: 9%;
+      padding-right: 9%;
    }
 
    .banner h3 {
       color: #fff;
-      font-size: clamp(.9rem, 1.3vw, 1.8rem);
+      font-size: clamp(1rem, 1.3vw, 1.8rem);
       font-weight: 400;
       letter-spacing: .5px
    }
@@ -438,7 +438,7 @@
    .banner h2 {
       color: #e9ff85;
       /* font-size: 25px; */
-      font-size: clamp(1.25rem, 3vw, 2.5rem);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
       font-weight: 600;
       letter-spacing: 1px;
       margin-top: 2.5vh;
@@ -467,15 +467,15 @@
    }
 
    .banner .img-section {
-      padding: 0 1% 0 1%;
+      padding: 0 10% 15vh 10%;
    }
 
    .video-container {
       background-color: #f5f1ff;
       position: relative;
       width: 100%;
-      min-height: 60vh;
-      max-height: 60vh;
+      min-height: 85vh;
+      max-height: 85vh;
       overflow: hidden;
       margin-top: 15vh;
       border: 2px solid #e9deff;
@@ -502,7 +502,7 @@
    .why-choose-us-section {
       background-color: #fff;
       min-height: auto;
-      padding-top: 15vh !important;
+      padding-top: 20vh !important;
       padding-left: 5%;
       padding-right: 5%;
    }
@@ -853,7 +853,7 @@
    }
    
    .banner .img-section {
-      padding: 0 3.5% 0 3.5%;
+      padding: 0 3.5% 15vh 3.5%;
    }
    
    .video-container {
@@ -988,7 +988,7 @@
       background-color: #fff;
       width: 100%;
       height: auto;
-      padding: 5vh 5% 3vh 5%;
+      padding: 8vh 5% 3vh 5%;
       margin-bottom: 4vh;
       border: 1px solid #e3dfea;
       border-radius: 20px;
@@ -1249,7 +1249,7 @@
    }
 
    .banner .img-section {
-      padding: 0 15% 0 15%;
+      padding: 0 15% 15vh 15%;
    }
 
    .video-container {
@@ -1651,7 +1651,7 @@
    }
 
    .banner .img-section {
-      padding: 16vh 0 0 5%;
+      padding: 16vh 0 15vh 5%;
 
    }
 
@@ -1774,7 +1774,7 @@
       background-color: #fff;
       width: 100%;
       height: auto;
-      padding: 6vh 5% 5% 5%;
+      padding: 8vh 5% 5% 5%;
       margin-bottom: 0;
       border: 1px solid #e3dfea;
       border-radius: 20px;
@@ -1905,7 +1905,7 @@
 
    .service-section {
       background: #f6f5ff;
-      margin-top: 3vh;
+      margin-top: 8vh;
       padding-left: 7% !important;
       padding-right: 7% !important;
       padding-bottom: 10vh;
@@ -1913,7 +1913,7 @@
 
    .service-section .title {
       text-align: center;
-      padding-top: 6.5vh;
+      padding-top: 5vh;
       padding-bottom: 7vh;
    }
 
