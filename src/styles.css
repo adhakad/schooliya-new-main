@@ -33,6 +33,7 @@ Header section
 .header .logo {
   padding-left: 10px;
   padding-right: 10px;
+  margin-left: 3%;
 }
 .header .logo img {
   height: 38px;
@@ -51,7 +52,7 @@ Header section
 }
 
 .hamburger {
-  margin-left: 15%;
+  margin-left: 25%;
 }
 
 .hamburger-icon {
@@ -494,7 +495,7 @@ table mat-icon {
   }
   
   .hamburger {
-    margin-left: 45% !important;
+    margin-left: 55% !important;
   }
   
   .hamburger-icon {
@@ -507,7 +508,7 @@ table mat-icon {
     background-color: #fff;
     width: 100%;
     height: auto;
-    position: fixed;
+    position: absolute;
     display: block;
     left: 0;
     top: 20vh;
