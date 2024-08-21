@@ -121,4 +121,9 @@
         font-weight: 600;
         letter-spacing: 1px;
     }
+    .pricing-section {
+        padding-top: 10vh;
+        padding-bottom: 10vh !important;
+  
+     }
 }
