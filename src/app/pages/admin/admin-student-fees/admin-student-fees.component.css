@@ -1,4 +1,4 @@
-@import'../../../../styles.css';
+@import'../dashboard/dashboard.component.css';
 .custom-container {
   font-family: Arial, sans-serif;
   overflow: auto;

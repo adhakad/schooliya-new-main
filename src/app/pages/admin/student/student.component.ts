@@ -98,7 +98,7 @@ export class StudentComponent implements OnInit {
       category: ['', Validators.required],
       religion: ['', Validators.required],
       nationality: ['', Validators.required],
-      address: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$'), Validators.maxLength(50)]],
+      address: ['', [Validators.required, Validators.maxLength(50)]],
       lastSchool: ['', [Validators.maxLength(50)]],
       fatherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       fatherQualification: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],

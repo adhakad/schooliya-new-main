@@ -1,4 +1,4 @@
-@import'../../../../styles.css';
+@import'../dashboard/dashboard.component.css';
 @import'../admin-student-fees/admin-student-fees.component.css'; 
  .file-input {
     height: 50px;

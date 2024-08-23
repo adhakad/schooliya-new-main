@@ -1,3 +1,12 @@
 h1,h2,h3,h4,h5,h6,p,span{
     font-family: 'Poppins', sans-serif !important;
 }
+h3 span{
+    font-family: 'Roboto Slab', serif !important;
+}
+
+.font-rubik {font-family: 'Rubik', sans-serif !important;}
+.font-gilroy-bold {font-family: 'gilroy-bold' !important;}
+.font-slab {font-family: 'Roboto Slab', serif !important;}
+.font-gordita {font-family: 'gordita' !important;}
+.font-recoleta {font-family: 'Recoleta' !important;}

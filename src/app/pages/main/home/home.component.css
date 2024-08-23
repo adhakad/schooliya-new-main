@@ -1620,7 +1620,7 @@
 
    .banner h2 {
       color: #fff;
-      font-size: clamp(1rem, 2.5vw, 2rem);
+      font-size: clamp(1rem, 2.5vw, 3rem);
       font-weight: 700;
       letter-spacing: 1.5px;
       margin-top: 3.5vh;
@@ -1631,7 +1631,7 @@
       color: #fff;
       font-size: clamp(.75rem, 1.1vw, 1.5rem);
       font-weight: 400;
-      letter-spacing: 1.25px;
+      letter-spacing: 1px;
       line-height: 5vh;
       margin-top: 3.5vh;
    }

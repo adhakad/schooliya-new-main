@@ -1,4 +1,4 @@
-@import'../../../../styles.css';
+@import'../dashboard/dashboard.component.css';
 @import'../admin-student-fees/admin-student-fees.component.css';
 .tc-logo{
     height: 80px;display: inline;margin-top: 20px;
