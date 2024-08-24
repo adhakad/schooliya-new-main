@@ -24,7 +24,7 @@ let GetClassSubjectPagination = async (req, res, next) => {
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
-        const countClassSubject = await ClassSubjectModel.count();
+        const countClassSubject = await ClassSubjectModel.count({adminId:adminId});
 
         let classSubjectData = { countClassSubject: 0 };
         classSubjectData.classSubjectList = classSubjectList;

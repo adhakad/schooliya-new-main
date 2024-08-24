@@ -343,7 +343,6 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: #4e4caa32;
   }
-
   .header .logo img {
     height: 42px;
     margin-left: 30px;
@@ -432,7 +431,7 @@ body {
   }
 
   .side-navbar li button .mat-icon {
-    font-size: large;
+    font-size: 1rem;
     display: inline-block;
     margin-top: 5px;
   }
@@ -440,15 +439,15 @@ body {
   .side-navbar li button span {
     display: inline-block;
     font-family: 'Poppins', sans-serif !important;
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: .9rem;
+    font-weight: 400;
     text-align: left;
-    margin-left: 15px;
+    margin-left: 5%;
     letter-spacing: .20px;
   }
 
   .side-navbar li button.active-link {
     background: #fff;
-    color: #8C52FF;
+    color: #8142ff;
   }
 }

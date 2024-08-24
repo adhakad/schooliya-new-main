@@ -206,28 +206,6 @@
                                                         </tr>
                                                     </table>
                                                     <ng-container>
-                                                        <h3>Installment's</h3>
-                                                    </ng-container>
-                                                    <table class="custom-table">
-                                                        <tr
-                                                            *ngFor="let installmentGroup of clsFeesStructure?.installment | chunk: 3; let i = index">
-                                                            <ng-container>
-                                                                <ng-container
-                                                                    *ngFor="let installmentObject of installmentGroup; let j = index">
-                                                                    <ng-container
-                                                                        *ngFor="let entry of installmentObject | keyvalue">
-                                                                        <td class="text-bold">
-                                                                            {{ entry.key }}
-                                                                        </td>
-                                                                        <td style="font-weight: 400">
-                                                                            &#8377; {{ entry.value }}
-                                                                        </td>
-                                                                    </ng-container>
-                                                                </ng-container>
-                                                            </ng-container>
-                                                        </tr>
-                                                    </table>
-                                                    <ng-container>
                                                         <h3>Particular's</h3>
                                                     </ng-container>
                                                     <table class="custom-table">

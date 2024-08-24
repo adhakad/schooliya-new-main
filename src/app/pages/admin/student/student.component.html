@@ -7,46 +7,130 @@
     <div class="col-12 col-lg-10">
       <div class="row">
         <div class="col-12 main-container">
-          <div class="row">
-            <div class="col-3" style="text-align: left;">
-              <button mat-button class="menu-button">
-                <mat-icon>assistant_navigation</mat-icon>
-                <span>Student's</span>
-              </button>
-            </div>
-            <div class="col-9" style="text-align: right;">
-              <input type="text" class="form-control" placeholder="Student Search..." id="searchText" name="searchText"
-                #searchText="ngModel" [(ngModel)]="filters.searchText" (keyup)="getStudents({page : 1, limit : 0})">
-              <mat-form-field class="custom-select">
-                <mat-label *ngIf="!cls">Class</mat-label>
-                <mat-select type="number" matInput>
-                  <div *ngFor="let classInfo of classInfo">
-                    <mat-option value="{{classInfo.class}}" (click)="chooseClass(classInfo.class)">{{classInfo.class |
-                      classSuffix}}</mat-option>
-                  </div>
-                </mat-select>
-              </mat-form-field>
+          <div class="row big-option-container">
 
-              <mat-form-field class="custom-select">
-                <mat-label *ngIf="!stream">Stream</mat-label>
-                <mat-select type="text" matInput>
-                  <ng-container *ngIf="cls==12 || cls==11">
-                    <div *ngFor="let subject of streamMainSubject">
-                      <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+            <div class="desktop-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <button mat-button class="menu-button">
+                      <span>Student's</span>
+                    </button>
+                  </div>
+                  <div class="col-9" style="text-align: right;">
+                    <div class="row">
+                      <div class="col-2">
+                        <button class="submit-button" mat-raised-button *ngIf="cls && stream"
+                      (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
+                      </div>
+                      <div class="col-5">
+                        <input *ngIf="cls && stream" type="text" class="form-control" placeholder="Student Search..." id="searchText"
+                        name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                        (keyup)="getStudents({page : 1, limit : 0})">
+                      </div>
+                      <div class="col-2">
+                        <mat-form-field class="custom-select">
+                          <mat-label *ngIf="!cls">Class</mat-label>
+                          <mat-select type="number" matInput>
+                            <div *ngFor="let classInfo of classInfo">
+                              <mat-option value="{{classInfo.class}}"
+                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                |
+                                classSuffix}}</mat-option>
+                            </div>
+                          </mat-select>
+                        </mat-form-field>
+    
+                      </div>
+                      <div class="col-2">
+                        <mat-form-field class="custom-select">
+                          <mat-label *ngIf="!stream">Stream</mat-label>
+                          <mat-select type="text" matInput>
+                            <ng-container *ngIf="cls==12 || cls==11">
+                              <div *ngFor="let subject of streamMainSubject">
+                                <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                              <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
+                            </ng-container>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-1">
+                        <button class="btn setting-button" [matMenuTriggerFor]="settings">
+                          <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
+                        </button>
+                      </div>
                     </div>
-                  </ng-container>
-                  <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                    <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
-                  </ng-container>
-                </mat-select>
-              </mat-form-field>
-              <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-              </button>
-              <button class="submit-button" mat-raised-button *ngIf="cls && stream"
-                (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
-              <button class="submit-button" mat-raised-button
-                *ngIf="!cls || !stream"><mat-icon>add</mat-icon>Create</button>
+                    
+                    
+                    
+                    
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <div class="mobile-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-9">
+                    <button mat-button class="menu-button">
+                      <span>Student's</span>
+                    </button>
+                  </div>
+                  <div class="col-3">
+                    <button class="btn setting-button" [matMenuTriggerFor]="settings">
+                      <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="custom-select">
+                      <mat-label *ngIf="!cls">Class</mat-label>
+                      <mat-select type="number" matInput>
+                        <div *ngFor="let classInfo of classInfo">
+                          <mat-option value="{{classInfo.class}}"
+                            (click)="chooseClass(classInfo.class)">{{classInfo.class
+                            |
+                            classSuffix}}</mat-option>
+                        </div>
+                      </mat-select>
+                    </mat-form-field>
+
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="custom-select">
+                      <mat-label *ngIf="!stream">Stream</mat-label>
+                      <mat-select type="text" matInput>
+                        <ng-container *ngIf="cls==12 || cls==11">
+                          <div *ngFor="let subject of streamMainSubject">
+                            <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                          <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-7">
+                    <input *ngIf="cls && stream" type="text" class="form-control" placeholder="Student Search..."
+                      id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                      (keyup)="getStudents({page : 1, limit : 0})">
+                  </div>
+                  <div class="col-5">
+                    <button class="submit-button" mat-raised-button *ngIf="cls && stream"
+                      (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <mat-menu #settings="matMenu">
@@ -70,7 +154,7 @@
 
               <table class="table table-hover align-middle mb-1 bg-white mt-3"
                 *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
-                <thead  class="bg-light">
+                <thead class="bg-light">
                   <tr class="text-muted">
                     <th>No.</th>
                     <th>Student</th>
