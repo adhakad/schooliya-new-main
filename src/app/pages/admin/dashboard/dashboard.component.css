@@ -2,6 +2,7 @@
     background: rgb(243, 241, 250);
     min-height: 90vh;
     width: 100%;
+    padding-bottom: 1.5vh;
   }
 
   .main-container {
@@ -15,14 +16,15 @@
     margin-left: 1%;
     margin-top: 3vh;
     margin-bottom: 5vh;
-    padding-top: 2.65vh;
-    padding-bottom: 3.5vh;
+    padding-top: 3vh;
+    padding-bottom: 2vh;
     padding-left: 2%;
     padding-right: 2%;
     border: 1px solid #d5d0e1af;
     box-shadow: none;
     border-radius: 10px;
   }
+
 
   .setting-button {
     background-color: #fff;
@@ -67,6 +69,7 @@
     color: #2f2c5e;
     border: none;
     margin-right: 0 !important;
+    margin-bottom: 3vh;
     display: inline-block;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
   }
@@ -117,6 +120,8 @@
   .main-card {
     min-height: 70vh;
     width: 100%;
+    margin-top: 1.5vh;
+    padding-bottom: 1vh;
     background-color: transparent;
   }
 
@@ -179,7 +184,6 @@
     color: #FFF;
     font-family: 'Poppins', sans-serif !important;
     margin-right: 0 !important;
-    margin-bottom: 3vh;
     border-radius: 6px;
     box-shadow: none !important;
   }
@@ -395,8 +399,8 @@
       width: 100%;
       margin-left: 1%;
       padding-top: .5vh;
-      padding-left: 2%;
-      padding-right: 2%;
+      padding-left: 1%;
+      padding-right: 1%;
       border: 1px solid #d5d0e1af;
       box-shadow: none;
       border-radius: 20px;
@@ -404,6 +408,7 @@
 
     .main-card {
       min-height: 70vh;
+      margin-top: 2vh;
       padding-left: 2px;
       padding-right: 2px;
     }
@@ -414,6 +419,7 @@
       color: #2f2c5e;
       border: none;
       margin-right: 0 !important;
+      margin-bottom: 0 !important;
       display: inline-block;
       box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
     }

@@ -39,13 +39,16 @@
    text-align: center;
 }
 
-.copyright p span {
+/* .copyright p span {
    color: rgb(184, 184, 255);
    cursor: pointer;
 }
 .copyright p span:hover {
    color: #8d6dff;
-}
+} */
+.copyright p img{
+   width: 25%;
+ }
 .margin-social-media-icon{
    margin-top: 25px !important;
 }
@@ -104,13 +107,16 @@
       text-align: center;
    }
    
-   .copyright p span {
+   /* .copyright p span {
       color: rgb(184, 184, 255);
       cursor: pointer;
    }
    .copyright p span:hover {
       color: #8d6dff;
-   }
+   } */
+    .copyright p img{
+      width: 20%;
+    }
    .margin-social-media-icon{
       margin-top: 25px !important;
    }
@@ -158,4 +164,7 @@
       /* margin-top: 15px;
        margin-bottom: 20px; */
    }
+   .copyright p img{
+      width: 10%;
+    }
 }

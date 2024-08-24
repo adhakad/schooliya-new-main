@@ -8,25 +8,24 @@
       <div class="row">
         <div class="col-12 main-container">
           <div class="row big-option-container">
-
             <div class="desktop-option">
               <div class="col-12">
                 <div class="row">
                   <div class="col-3">
                     <button mat-button class="menu-button">
-                      <span>Student's</span>
+                      <span>Student List</span>
                     </button>
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
                       <div class="col-2">
                         <button class="submit-button" mat-raised-button *ngIf="cls && stream"
-                      (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
+                          (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
                       </div>
                       <div class="col-5">
-                        <input *ngIf="cls && stream" type="text" class="form-control" placeholder="Student Search..." id="searchText"
-                        name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
-                        (keyup)="getStudents({page : 1, limit : 0})">
+                        <input *ngIf="cls && stream" type="text" class="form-control" placeholder="Student Search..."
+                          id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                          (keyup)="getStudents({page : 1, limit : 0})">
                       </div>
                       <div class="col-2">
                         <mat-form-field class="custom-select">
@@ -34,13 +33,10 @@
                           <mat-select type="number" matInput>
                             <div *ngFor="let classInfo of classInfo">
                               <mat-option value="{{classInfo.class}}"
-                                (click)="chooseClass(classInfo.class)">{{classInfo.class
-                                |
-                                classSuffix}}</mat-option>
+                                (click)="chooseClass(classInfo.class)">{{classInfo.class | classSuffix}}</mat-option>
                             </div>
                           </mat-select>
                         </mat-form-field>
-    
                       </div>
                       <div class="col-2">
                         <mat-form-field class="custom-select">
@@ -52,7 +48,8 @@
                               </div>
                             </ng-container>
                             <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                              <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
+                              <mat-option value="{{notApplicable}}"
+                                (click)="filterStream(notApplicable)">N/A</mat-option>
                             </ng-container>
                           </mat-select>
                         </mat-form-field>
@@ -63,26 +60,16 @@
                         </button>
                       </div>
                     </div>
-                    
-                    
-                    
-                    
                   </div>
-
-
                 </div>
               </div>
             </div>
-
-
-
-
             <div class="mobile-option">
               <div class="col-12">
                 <div class="row">
                   <div class="col-9">
                     <button mat-button class="menu-button">
-                      <span>Student's</span>
+                      <span>Student List</span>
                     </button>
                   </div>
                   <div class="col-3">
@@ -102,7 +89,6 @@
                         </div>
                       </mat-select>
                     </mat-form-field>
-
                   </div>
                   <div class="col-6">
                     <mat-form-field class="custom-select">
@@ -119,7 +105,6 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-
                   <div class="col-7">
                     <input *ngIf="cls && stream" type="text" class="form-control" placeholder="Student Search..."
                       id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
@@ -151,8 +136,7 @@
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
-
-              <table class="table table-hover align-middle mb-1 bg-white mt-3"
+              <table class="table table-hover align-middle bg-white"
                 *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
                 <thead class="bg-light">
                   <tr class="text-muted">
@@ -163,7 +147,6 @@
                     <th>Class</th>
                     <th>Stream</th>
                     <th>Session</th>
-                    <!-- <th>Status</th> -->
                     <th *ngIf="className!=12">Class Promote</th>
                     <th>Transfer Certificate</th>
                     <th>View</th>
@@ -194,13 +177,6 @@
                     <td>
                       <p class="mb-0">{{students.session}}</p>
                     </td>
-                    <!-- <td>
-                        <a class="mb-0 status-active" (click)="changeStatus(students._id,0)"
-                          *ngIf="students.status == 'Active'"
-                          href="javascript:void(0)">{{students.status}}&nbsp;&nbsp;</a>
-                        <a class="mb-0 status-inactive" (click)="changeStatus(students._id,1)"
-                          *ngIf="students.status == 'Inactive'" href="javascript:void(0)">{{students.status}}</a>
-                      </td> -->
                     <td *ngIf="className!=12">
                       <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
                         class="submit-button" (click)="addStudentClassPromoteModel(students)"
