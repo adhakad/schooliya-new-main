@@ -7,40 +7,124 @@
     <div class="col-12 col-lg-10">
       <div class="row">
         <div class="col-12 main-container">
-          <div class="row">
-            <div class="col-3" style="text-align: left;">
-              <button mat-button class="menu-button">
-                <mat-icon>assistant_navigation</mat-icon>
-                <span>Marksheet's</span>
-              </button>
-            </div>
-            <div class="col-9" style="text-align: right;">
-              <mat-form-field class="custom-select">
-                <mat-label *ngIf="!cls">Class</mat-label>
-                <mat-select type="number" matInput>
-                  <div *ngFor="let classInfo of classInfo">
-                    <mat-option value="{{classInfo.class}}" (click)="chooseClass(classInfo.class)">{{classInfo.class |
-                      classSuffix}}</mat-option>
+          <div class="row big-option-container">
+            <div class="desktop-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <button mat-button class="menu-button">
+                      <span>Marksheet List</span>
+                    </button>
                   </div>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field class="custom-select">
-                <mat-label *ngIf="!stream">Stream</mat-label>
-                <mat-select type="text" matInput>
-                  <ng-container *ngIf="cls==12 || cls==11">
-                    <div *ngFor="let subject of streamMainSubject">
-                      <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                  <div class="col-9" style="text-align: right;">
+                    <div class="row">
+                      <div class="col-2 offset-5">
+                        <ng-container *ngIf="cls && stream && templateStatusCode==200">
+                          <mat-form-field class="custom-select">
+                            <mat-label>Bulk Print</mat-label>
+                            <mat-select matInput>
+                              <div>
+                                <mat-option (click)="bulkPrint()"
+                                *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Bulk Marksheet Print</mat-option>
+                              </div>
+                            </mat-select>
+                          </mat-form-field>
+                        </ng-container>
+                      </div>
+                      <div class="col-2">
+                        <mat-form-field class="custom-select">
+                          <mat-label *ngIf="!cls">Class</mat-label>
+                          <mat-select type="number" matInput>
+                            <div *ngFor="let classInfo of classInfo">
+                              <mat-option value="{{classInfo.class}}"
+                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                | classSuffix}}</mat-option>
+                            </div>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-2">
+                        <mat-form-field class="custom-select">
+                          <mat-label *ngIf="!stream">Stream</mat-label>
+                          <mat-select type="text" matInput>
+                            <ng-container *ngIf="cls==12 || cls==11">
+                              <div *ngFor="let subject of streamMainSubject">
+                                <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                              <mat-option value="{{notApplicable}}"
+                                (click)="filterStream(notApplicable)">N/A</mat-option>
+                            </ng-container>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-1">
+                        <button class="btn setting-button" [matMenuTriggerFor]="settings">
+                          <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
+                        </button>
+                      </div>
                     </div>
-                  </ng-container>
-                  <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                    <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
-                  </ng-container>
-                </mat-select>
-              </mat-form-field>
-              <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-              </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mobile-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-9">
+                    <button mat-button class="menu-button">
+                      <span>Marksheet List</span>
+                    </button>
+                  </div>
+                  <div class="col-3">
+                    <button class="btn setting-button" [matMenuTriggerFor]="settings">
+                      <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="custom-select">
+                      <mat-label *ngIf="!cls">Class</mat-label>
+                      <mat-select type="number" matInput>
+                        <div *ngFor="let classInfo of classInfo">
+                          <mat-option value="{{classInfo.class}}"
+                            (click)="chooseClass(classInfo.class)">{{classInfo.class
+                            |
+                            classSuffix}}</mat-option>
+                        </div>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="custom-select">
+                      <mat-label *ngIf="!stream">Stream</mat-label>
+                      <mat-select type="text" matInput>
+                        <ng-container *ngIf="cls==12 || cls==11">
+                          <div *ngFor="let subject of streamMainSubject">
+                            <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                          <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <ng-container *ngIf="cls && stream && templateStatusCode==200">
+                      <mat-form-field class="custom-select">
+                        <mat-label>Bulk Print</mat-label>
+                        <mat-select matInput>
+                          <div>
+                            <mat-option (click)="bulkPrint()"
+                            *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Bulk Marksheet Print</mat-option>
+                          </div>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <mat-menu #settings="matMenu">
@@ -53,18 +137,12 @@
               <mat-icon>add</mat-icon>
               <span>Result Add</span>
             </button>
-            <button mat-menu-item (click)="bulkPrint()"
-              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">
-              <mat-icon>cloud_upload</mat-icon>
-              <span>Bulk Marksheet's Print</span>
-            </button>
             <button mat-menu-item *ngIf="!cls || !stream">
               <mat-icon>error</mat-icon>
               <span>Please Choose Class & Stream</span>
             </button>
           </mat-menu>
         </div>
-
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
