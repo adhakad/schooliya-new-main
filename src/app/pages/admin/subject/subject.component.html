@@ -7,25 +7,55 @@
     <div class="col-12 col-lg-10">
       <div class="row">
         <div class="col-12 main-container">
-          <div class="row">
-            <div class="col-3" style="text-align: left;">
-              <button mat-button class="menu-button">
-                <mat-icon>assistant_navigation</mat-icon>
-                <span>Subject's</span>
-              </button>
+          <div class="row big-option-container">
+            <div class="desktop-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <button mat-button class="menu-button">
+                      <span>Subject List</span>
+                    </button>
+                  </div>
+                  <div class="col-9" style="text-align: right;">
+                    <div class="row">
+                      <div class="col-2 offset-5">
+                        <button class="submit-button" mat-raised-button
+                          (click)="addSubjectModel()"><mat-icon>add</mat-icon>Create</button>
+                      </div>
+                      <div class="col-5">
+                        <input type="text" class="form-control" placeholder="Subject Search..." id="searchText"
+                          name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                          (keyup)="getSubject({page : 1, limit : 0})">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-9" style="text-align: right;">
-              <input type="text" class="form-control" placeholder="Subject Search..." id="searchText" name="searchText"
-                #searchText="ngModel" [(ngModel)]="filters.searchText" (keyup)="getSubject({page : 1, limit : 0})">
-              <button class="submit-button" mat-raised-button (click)="addSubjectModel()"><mat-icon
-                  style="font-size: 20px;">add</mat-icon>Create</button>
+            <div class="mobile-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-12">
+                    <button mat-button class="menu-button">
+                      <span>Subject List</span>
+                    </button>
+                  </div>
+                  <div class="col-7 mt-3">
+                    <input type="text" class="form-control" placeholder="Subject Search..." id="searchText"
+                      name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                      (keyup)="getSubject({page : 1, limit : 0})">
+                  </div>
+                  <div class="col-5 mt-3"><button class="submit-button" mat-raised-button
+                      (click)="addSubjectModel()"><mat-icon>add</mat-icon>Create</button></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
-              <table class="table table-hover align-middle mb-1 bg-white mt-3">
+              <table class="table table-hover align-middle bg-white">
                 <thead class="bg-light">
                   <tr class="text-muted">
                     <th>No.</th>
