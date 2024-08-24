@@ -153,7 +153,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
     this.examResultService.getAllStudentExamResultByClass(param).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
-        this.statusCode = 200;
+        // this.statusCode = 200;
         this.examResultInfo = res.examResultInfo;
         this.studentInfo = res.studentInfo;
         let isDate = res.isDate;
@@ -195,6 +195,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
         };
         let mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
         this.mappedResults = mappedResults.sort((a: any, b: any) => a.name.localeCompare(b.name));
+        this.statusCode = 200;
       }
     }, err => {
       this.errorCheck = true;

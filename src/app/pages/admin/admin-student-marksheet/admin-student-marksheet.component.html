@@ -18,14 +18,25 @@
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
-                      <div class="col-2 offset-5">
-                        <ng-container *ngIf="cls && stream && templateStatusCode==200">
+                      <div class="col-2 offset-3">
+                        <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
+                          <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                            *ngIf="cls && stream">Add Result</button>
+                        </ng-container>
+                      </div>
+                      <div class="col-2">
+                        <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
+                          <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                            *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200">Add Result</button>
+                        </ng-container>
+                        <ng-container *ngIf="cls && stream && statusCode==200">
                           <mat-form-field class="custom-select">
                             <mat-label>Bulk Print</mat-label>
                             <mat-select matInput>
                               <div>
                                 <mat-option (click)="bulkPrint()"
-                                *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Bulk Marksheet Print</mat-option>
+                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Bulk
+                                  Marksheet Print</mat-option>
                               </div>
                             </mat-select>
                           </mat-form-field>
@@ -111,16 +122,29 @@
                     </mat-form-field>
                   </div>
                   <div class="col-6">
-                    <ng-container *ngIf="cls && stream && templateStatusCode==200">
+                    <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
                       <mat-form-field class="custom-select">
                         <mat-label>Bulk Print</mat-label>
                         <mat-select matInput>
                           <div>
                             <mat-option (click)="bulkPrint()"
-                            *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Bulk Marksheet Print</mat-option>
+                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Bulk
+                              Marksheet Print</mat-option>
                           </div>
                         </mat-select>
                       </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div class="col-6">
+                    <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
+                      <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                        *ngIf="cls && stream">Add Result</button>
+                    </ng-container>
+                  </div>
+                  <div class="col-6 offset-3">
+                    <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
+                      <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                        *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200">Add Result</button>
                     </ng-container>
                   </div>
                 </div>
@@ -132,11 +156,6 @@
               <mat-icon>article</mat-icon>
               <span>Marksheet Template Format</span>
             </button>
-            <button mat-menu-item routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
-              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">
-              <mat-icon>add</mat-icon>
-              <span>Result Add</span>
-            </button>
             <button mat-menu-item *ngIf="!cls || !stream">
               <mat-icon>error</mat-icon>
               <span>Please Choose Class & Stream</span>
@@ -147,7 +166,7 @@
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
 
-              <table class="table table-hover align-middle mb-1 bg-white mt-3"
+              <table class="table table-hover align-middle bg-white"
                 *ngIf="cls && stream && !errorCheck && statusCode !==404 && statusCode !==500 && templateStatusCode !==404 && templateStatusCode !==500">
                 <ng-container *ngIf="mappedResults && mappedResults.length>0">
                   <thead class="bg-light">
@@ -252,7 +271,8 @@
                               <div class="table-container" style="position: relative;height: 100%;">
                                 <div class="row">
                                   <div class="col-2">
-                                    <img class="logo" src="{{baseUrl}}/public/school-logo/{{schoolInfo.schoolLogo}}" alt="">
+                                    <img class="logo" src="{{baseUrl}}/public/school-logo/{{schoolInfo.schoolLogo}}"
+                                      alt="">
                                   </div>
                                   <div class="col-10" style="text-align: center;">
                                     <div class="school-name">

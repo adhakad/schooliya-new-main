@@ -25,9 +25,9 @@
                             <mat-select matInput>
                               <div>
                                 <mat-option (click)="bulkPrint(0)"
-                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One Entry in Bulk Print</mat-option>
+                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One Student Entry in Every Print</mat-option>
                                   <mat-option (click)="bulkPrint(1)"
-                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two Entry in Bulk Print</mat-option>
+                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two Student Entry in Every Print</mat-option>
                               </div>
                             </mat-select>
                           </mat-form-field>
@@ -112,16 +112,16 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col-6">
+                  <div class="col-12">
                     <ng-container *ngIf="cls && stream && templateStatusCode==200">
                       <mat-form-field class="custom-select">
                         <mat-label>Bulk Print</mat-label>
                         <mat-select matInput>
                           <div>
                             <mat-option (click)="bulkPrint(0)"
-                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One Entry in Bulk Print</mat-option>
+                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One Student Entry in Every Print</mat-option>
                               <mat-option (click)="bulkPrint(1)"
-                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two Entry in Bulk Print</mat-option>
+                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two Student Entry in Every Print</mat-option>
                           </div>
                         </mat-select>
                       </mat-form-field>
