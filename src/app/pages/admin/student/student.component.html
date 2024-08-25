@@ -147,7 +147,6 @@
                     <th>Class</th>
                     <th>Stream</th>
                     <th>Session</th>
-                    <th *ngIf="className!=12">Class Promote</th>
                     <th>Transfer Certificate</th>
                     <th>View</th>
                     <!-- <th>Edit</th> -->
@@ -176,11 +175,6 @@
                     </td>
                     <td>
                       <p class="mb-0">{{students.session}}</p>
-                    </td>
-                    <td *ngIf="className!=12">
-                      <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
-                        class="submit-button" (click)="addStudentClassPromoteModel(students)"
-                        mat-raised-button>Promote</button>
                     </td>
                     <td>
                       <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
@@ -783,124 +777,6 @@
                   </div>
                 </div>
               </div>
-              <div class="modal fade show" [class.show]="showClassPromoteModal">
-                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!successMsg">
-                  <div class="modal-content" *ngIf="successMsg">
-                    <div class="modal-header">
-                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                    </div>
-                    <div class="modal-body">
-                      <p class="success-message" *ngIf="promotedClass">{{successMsg}} {{promotedClass |
-                        classSuffix}}
-                      </p>
-                      <p class="success-message" *ngIf="!promotedClass">{{successMsg}}</p>
-                    </div>
-                    <div class="modal-footer">
-                      <mat-icon></mat-icon>
-                    </div>
-                  </div>
-                  <div class="modal-content" *ngIf="!successMsg">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Student Class Promote</h5>
-                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
-                    </div>
-                    <form [formGroup]="studentClassPromoteForm" (ngSubmit)="studentClassPromote()">
-                      <div class="modal-body">
-                        <div *ngIf="errorCheck">
-                          <p class="error-message" *ngIf="promotedClass">{{errorMsg}} {{promotedClass |
-                            classSuffix}}
-                          </p>
-                          <p class="error-message" *ngIf="!promotedClass">{{errorMsg}}</p>
-                        </div>
-                        <div class="container">
-                          <div class="row">
-                            <ng-container>
-                              <p>Admission No. : {{singleStudentInfo?.admissionNo}}</p>
-                              <p>Name : {{singleStudentInfo?.name | titlecase}}</p>
-                              <p>Father Name : {{singleStudentInfo?.fatherName | titlecase}}</p>
-                              <p>Class : {{singleStudentInfo?.class | classSuffix}}</p>
-                            </ng-container>
-                            <div class="mb-5"></div>
-                            <input matInput type="hidden" formControlName="admissionNo" readonly>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Session</mat-label>
-                                <mat-select type="text" matInput formControlName="session">
-                                  <div *ngFor="let session of sessions">
-                                    <mat-option value="{{session.year}}">{{session.year}}</mat-option>
-                                  </div>
-                                </mat-select>
-                                <mat-error
-                                  *ngIf="studentClassPromoteForm.get('session')?.hasError('required') && studentClassPromoteForm.get('session')?.touched">
-                                  Session is required
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Roll Number</mat-label>
-                                <input matInput type="number" formControlName="rollNumber" min="0">
-                                <mat-hint
-                                  *ngIf="!studentClassPromoteForm.get('rollNumber')?.valid && studentClassPromoteForm.get('rollNumber')?.touched"
-                                  class="form-text text-danger">Roll number is required</mat-hint>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Stream</mat-label>
-                                <mat-select type="text" matInput formControlName="stream">
-                                  <ng-container *ngIf="singleStudentInfo?.class==10 || singleStudentInfo?.class==11">
-                                    <div *ngFor="let subject of streamMainSubject">
-                                      <mat-option (click)="chooseStream(subject)"
-                                        value="{{subject}}">{{subject}}</mat-option>
-                                    </div>
-                                  </ng-container>
-                                  <ng-container
-                                    *ngIf="singleStudentInfo?.class<10 && singleStudentInfo?.class!==0 || singleStudentInfo?.class == 200 || singleStudentInfo?.class==201 || singleStudentInfo?.class==202">
-                                    <div>
-                                      <mat-option value="{{notApplicable}}"
-                                        (click)="chooseStream(notApplicable)">N/A</mat-option>
-                                    </div>
-                                  </ng-container>
-                                </mat-select>
-                                <mat-error
-                                  *ngIf="studentClassPromoteForm.get('stream')?.hasError('required') && studentClassPromoteForm.get('stream')?.touched">
-                                  Stream is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="studentClassPromoteForm.get('stream')?.hasError('pattern') && studentClassPromoteForm.get('stream')?.touched">
-                                  Please enter a valid Stream (only letters are allowed)
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Fees Discount Amount (&#8377;)</mat-label>
-                                <input matInput type="number" formControlName="discountAmountInFees" min="0">
-                                <mat-error
-                                  *ngIf="studentForm.get('discountAmountInFees')?.hasError('required') && studentForm.get('discountAmountInFees')?.touched">
-                                  Fees discount amount is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="studentForm.get('discountAmountInFees')?.hasError('pattern') && studentForm.get('discountAmountInFees')?.touched">
-                                  Please enter a valid fees discount amount (numeric characters only)
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button class="submit-button" [disabled]="!studentClassPromoteForm.valid" mat-raised-button
-                          type="submit">Submit</button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-
-
-
               <div class="modal fade show" [class.show]="showStudentInfoViewModal">
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                   <div class="modal-content">

@@ -24,12 +24,10 @@ export class StudentComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
   studentForm: FormGroup;
   excelForm: FormGroup;
-  studentClassPromoteForm: FormGroup;
   tcForm: FormGroup;
   showModal: boolean = false;
   showBulkImportModal: boolean = false;
   showBulkExportModal: boolean = false;
-  showClassPromoteModal: boolean = false;
   showStudentInfoViewModal: boolean = false;
   showStudentTCModal: boolean = false;
   updateMode: boolean = false;
@@ -114,18 +112,6 @@ export class StudentComponent implements OnInit {
     this.excelForm = this.fb.group({
       excelData: [null],
     });
-
-    this.studentClassPromoteForm = this.fb.group({
-      _id: ['', Validators.required],
-      session: ['', Validators.required],
-      admissionNo: ['', Validators.required],
-      adminId: [''],
-      class: [''],
-      stream: [''],
-      rollNumber: ['', Validators.required],
-      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      createdBy: ['']
-    })
 
     this.tcForm = this.fb.group({
       adminId: [''],
@@ -216,7 +202,6 @@ export class StudentComponent implements OnInit {
     this.showModal = false;
     this.showBulkImportModal = false;
     this.showBulkExportModal = false;
-    this.showClassPromoteModal = false;
     this.showStudentInfoViewModal = false;
     this.showStudentTCModal = false;
     this.updateMode = false;
@@ -232,7 +217,6 @@ export class StudentComponent implements OnInit {
     this.singleStudentTCInfo;
     this.admissionType = '';
     this.studentForm.reset();
-    this.studentClassPromoteForm.reset();
     this.excelForm.reset();
     this.tcForm.reset();
   }
@@ -283,13 +267,7 @@ export class StudentComponent implements OnInit {
     this.errorCheck = false;
     this.getStudentByClass(this.className);
   }
-  addStudentClassPromoteModel(student: any) {
-    this.showClassPromoteModal = true;
-    this.singleStudentInfo = student;
-    this.studentClassPromoteForm.patchValue(student);
-    this.studentClassPromoteForm.get('stream')?.setValue(this.stream);
-    this.studentClassPromoteForm.get('discountAmountInFees')?.setValue(null);
-  }
+  
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
@@ -644,31 +622,6 @@ export class StudentComponent implements OnInit {
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
     this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
   }
-
-  studentClassPromote() {
-    if (this.studentClassPromoteForm.valid) {
-      this.studentClassPromoteForm.value.adminId = this.adminId;
-      this.studentClassPromoteForm.value.class = parseInt(this.className);
-      this.studentClassPromoteForm.value.createdBy = 'Admin';
-      this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
-        if (res) {
-          setTimeout(() => {
-            this.successDone();
-          }, 1000)
-          this.promotedClass;
-          this.promotedClass = res.className;
-          this.successMsg = res.successMsg;
-        }
-      }, err => {
-        this.errorCheck = true;
-        this.promotedClass;
-        if (err.error.className) {
-          this.promotedClass = parseInt(err.error.className);
-        }
-        this.errorMsg = err.error.errorMsg;
-      })
-    }
-  }
   getTC() {
     if (this.tcForm.valid && this.singleStudentInfo) {
       this.singleStudentInfo.isDate = this.isDate;
@@ -680,30 +633,5 @@ export class StudentComponent implements OnInit {
       this.readyTC = true;
     }
 
-  }
-
-
-
-  // studentClassPromote() {
-  //   if (this.studentClassPromoteForm.valid) {
-  //     this.studentClassPromoteForm.value.class = parseInt(this.className);
-  //     this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
-  //       if (res) {
-  //         setTimeout(() => {
-  //           this.successDone();
-  //         }, 2000)
-  //         this.promotedClass;
-  //         this.promotedClass = res.className;
-  //         this.successMsg = res.successMsg;
-  //       }
-  //     }, err => {
-  //       this.errorCheck = true;
-  //       this.promotedClass;
-  //       if (err.error.className) {
-  //         this.promotedClass = parseInt(err.error.className);
-  //       }
-  //       this.errorMsg = err.error.errorMsg;
-  //     })
-  //   }
-  // }
+  } 
 }
