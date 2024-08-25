@@ -78,10 +78,6 @@ export class AdminStudentFeesComponent implements OnInit {
     // this.getFees({ page: 1 });
   }
 
-  printReceipt() {
-    this.printPdfService.printElement(this.receipt.nativeElement);
-    this.closeModal();
-  }
   printStudentData() {
     const printContent = this.getPrintContent();
     this.printPdfService.printContent(printContent);
