@@ -108,7 +108,7 @@
   .big-container {
     background-color: #fff;
     width: 100%;
-    min-height: 70vh;
+    min-height: 55vh;
     margin-left: 1%;
     padding-left: 1%;
     padding-right: 1%;
@@ -118,7 +118,7 @@
   }
 
   .main-card {
-    min-height: 70vh;
+    min-height: 55vh;
     width: 100%;
     margin-top: 1.5vh;
     padding-bottom: 1vh;
@@ -395,7 +395,7 @@
 
     .big-container {
       background-color: #fff;
-      min-height: 87vh;
+      min-height: 65vh;
       width: 100%;
       margin-left: 1%;
       padding-top: .5vh;
@@ -407,7 +407,7 @@
     }
 
     .main-card {
-      min-height: 70vh;
+      min-height: 65vh;
       margin-top: 2vh;
       padding-left: 2px;
       padding-right: 2px;

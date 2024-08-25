@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { TransferCertificateComponent } from './transfer-certificate.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: '', component: TransferCertificateComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

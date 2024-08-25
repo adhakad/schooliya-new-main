@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { TransferCertificateRoutingModule } from './transfer-certificate-routing.module';
 import { TransferCertificateComponent } from './transfer-certificate.component';
+import { AdminSharedModule } from '../admin-shared/admin-shared.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { TransferCertificateComponent } from './transfer-certificate.component';
   ],
   imports: [
     CommonModule,
-    TransferCertificateRoutingModule
+    TransferCertificateRoutingModule,
+    AdminSharedModule
   ]
 })
 export class TransferCertificateModule { }

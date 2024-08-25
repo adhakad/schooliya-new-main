@@ -13,7 +13,6 @@ import { HttpClient } from '@angular/common/http';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
-import { IssuedTransferCertificateService } from 'src/app/services/issued-transfer-certificate.service';
 
 @Component({
   selector: 'app-student',
@@ -24,12 +23,10 @@ export class StudentComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
   studentForm: FormGroup;
   excelForm: FormGroup;
-  tcForm: FormGroup;
   showModal: boolean = false;
   showBulkImportModal: boolean = false;
   showBulkExportModal: boolean = false;
   showStudentInfoViewModal: boolean = false;
-  showStudentTCModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
@@ -69,10 +66,9 @@ export class StudentComponent implements OnInit {
   classSubject: any[] = [];
   serialNo!: number;
   isDate: string = '';
-  readyTC: Boolean = false;
   baseURL!: string;
   adminId!: String
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
       session: ['', Validators.required],
@@ -112,16 +108,6 @@ export class StudentComponent implements OnInit {
     this.excelForm = this.fb.group({
       excelData: [null],
     });
-
-    this.tcForm = this.fb.group({
-      adminId: [''],
-      lastExamStatus: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      reasonForLeaving: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      totalWorkingDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      totalPresenceDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      generalConduct: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      anyOtherRemarks: ['',],
-    })
   }
 
   ngOnInit(): void {
@@ -133,19 +119,6 @@ export class StudentComponent implements OnInit {
     this.allOptions();
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
-  }
-  printContent(singleStudentInfo: any) {
-    singleStudentInfo.serialNo = this.serialNo;
-    this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
-      if (res == 'IssueTransferCertificate') {
-        this.printPdfService.printElement(this.content.nativeElement)
-        this.closeModal();
-        this.getStudents({ page: this.page });
-      }
-    }, err => {
-      this.errorCheck = true;
-      this.errorMsg = err.error;
-    })
   }
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
@@ -203,12 +176,10 @@ export class StudentComponent implements OnInit {
     this.showBulkImportModal = false;
     this.showBulkExportModal = false;
     this.showStudentInfoViewModal = false;
-    this.showStudentTCModal = false;
     this.updateMode = false;
     this.deleteMode = false;
     this.fileChoose = false;
     this.errorCheck = false;
-    this.readyTC = false;
     this.errorMsg = '';
     this.successMsg = '';
     this.classSubject = [];
@@ -218,7 +189,6 @@ export class StudentComponent implements OnInit {
     this.admissionType = '';
     this.studentForm.reset();
     this.excelForm.reset();
-    this.tcForm.reset();
   }
   addStudentModel() {
     this.showModal = true;
@@ -271,20 +241,6 @@ export class StudentComponent implements OnInit {
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
-  }
-  addStudentTCModel(student: any) {
-    this.showStudentTCModal = true;
-    this.singleStudentInfo = student;
-    let stream: String = student.stream;
-    if (stream == "N/A") {
-      stream = this.notApplicable;
-    }
-    let params = {
-      cls: student.class,
-      stream: stream,
-      adminId: this.adminId,
-    }
-    this.getSingleClassSubjectByStream(params);
   }
   updateStudentModel(student: any) {
     this.showModal = true;
@@ -622,16 +578,4 @@ export class StudentComponent implements OnInit {
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
     this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
   }
-  getTC() {
-    if (this.tcForm.valid && this.singleStudentInfo) {
-      this.singleStudentInfo.isDate = this.isDate;
-      this.tcForm.value.adminId = this.adminId;
-      if (!this.tcForm.value.anyOtherRemarks) {
-        this.tcForm.value.anyOtherRemarks = 'Nil';
-      }
-      this.singleStudentTCInfo = { ...this.singleStudentInfo, ...this.tcForm.value }
-      this.readyTC = true;
-    }
-
-  } 
 }
