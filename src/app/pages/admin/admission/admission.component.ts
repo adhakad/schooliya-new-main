@@ -8,6 +8,7 @@ import { FeesStructureService } from 'src/app/services/fees-structure.service';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { SchoolService } from 'src/app/services/school.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { SchoolService } from 'src/app/services/school.service';
 })
 export class AdmissionComponent implements OnInit {
   @ViewChild('receipt') receipt!: ElementRef;
+  public baseUrl = environment.API_URL;
   studentForm: FormGroup;
   showModal: boolean = false;
   showAdmissionPrintModal: boolean = false;
@@ -105,10 +107,7 @@ export class AdmissionComponent implements OnInit {
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
-  printReceipt() {
-    this.printPdfService.printElement(this.receipt.nativeElement);
-    this.closeModal();
-  }
+  
   printStudentData() {
     const printContent = this.getPrintContent();
     this.printPdfService.printContent(printContent);
@@ -121,26 +120,30 @@ export class AdmissionComponent implements OnInit {
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
-    printHtml += 'body { margin: 0; padding: 0; }';
-    printHtml += 'div { margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto;}';
-    printHtml += '.table-container {background-color: #fff;border: none;}';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
+    printHtml += 'div {margin: 0; padding: 0;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
+    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.address{margin-left:100px;margin-top: -65px;}';
-    printHtml += '.address p{margin-top: -5px !important;}';
-    printHtml += '.logo { height: 100px; }';
-    printHtml += '.school-name h3 { color: #2e2d6a !important; font-size: 20px !important; margin-left: 15px;margin-top:-65px !important; margin-bottom: 0 !important; }';
-    // printHtml += '.info-table {width:100%;color: #2e2d6a !important;border: none;font-size: 12px;letter-spacing: .25px;margin-top: 5vh;margin-bottom: 5vh;display: inline-table;}';
-    // printHtml += '.info-table th{border:1px solid #2e2d6a;}';
-    // printHtml += '.info-table tr{height:38px;}';
-    // printHtml += '.info-table {border:1px solid #2e2d6a;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #2e2d6a !important;text-align:center}';
-    printHtml += '.title-lable {max-height: 45px;text-align: center;margin-bottom: 15px;border:1px solid #2e2d6a;border-radius: 5px;margin-top: 25px;}';
-    printHtml += '.title-lable p {color: #2e2d6a !important;font-size: 15px;font-weight: 500;letter-spacing: 1px;}';
-    printHtml += '.custom-table {width: 100%;margin-top:30px;color: #2e2d6a !important;border-collapse:collapse;font-size: 12px;letter-spacing: .25px;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{border:1px solid #2e2d6a;}';
-    printHtml += '.custom-table tr{height:35px;}';
-    printHtml += '.custom-table td {padding-left:25px;border:1px solid #2e2d6a;}';
+    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
+
+    printHtml += '.address{margin-top: -42px;}';
+    printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
+    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
+
+    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;padding-top:5px;}';
+    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+    printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
+    printHtml += '.custom-table tr{height: 30px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
+
+    printHtml += '.tc-codes-table {width: 100%;color: #252525 !important;display: inline-table;margin-top: 2vh;}';
+    printHtml += '.tc-codes-table tr{height: 2vh;border:none;}';
+    printHtml += '.tc-codes-table td {width:50%;border:none;font-size: 12px;}';
+    printHtml += '.tc-codes-table td p{margin-left: 20px;margin-right: 20px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += 'p {color: #2e2d6a !important;font-size:12px;}'
     printHtml += 'h4 {color: #2e2d6a !important;}'
@@ -181,6 +184,7 @@ export class AdmissionComponent implements OnInit {
       if (res) {
         this.singleStudentInfo = student;
         this.singleStudentInfo.admissionFees = res.studentFeesCollection.admissionFees;
+        console.log(res)
       }
     })
   }

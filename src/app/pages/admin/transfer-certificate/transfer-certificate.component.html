@@ -451,8 +451,7 @@
                                                 <ng-container *ngIf="singleStudentTCInfo">
                                                     <div id="student">
                                                         <div class="col-lg-10 offset-lg-1 custom-container">
-                                                            <div class="table-container"
-                                                                style="position: relative;height: 100%;">
+                                                            <div class="table-container">
                                                                 <div class="row">
                                                                     <div class="col-2">
                                                                         <img class="logo"
@@ -681,7 +680,9 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="text-left td-left">
-                                                                            <p>13. Whether qualified for promotion to the higher class</p>
+                                                                            <p>13. Whether qualified for promotion to
+                                                                                the
+                                                                                higher class</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
                                                                             <p>
@@ -696,24 +697,32 @@
                                                                                 <span
                                                                                     *ngIf="singleStudentTCInfo.lastExamStatus=='Supply'"
                                                                                     class="text-bold">:
-                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;NOT SURE</span>
+                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;NOT
+                                                                                    SURE</span>
                                                                             </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="text-left td-left">
-                                                                            <p>14. Total no. of working days in the acedemic session</p>
+                                                                            <p>14. Total no. of working days in the
+                                                                                acedemic
+                                                                                session</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
-                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.totalWorkingDays}}</span></p>
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.totalWorkingDays}}</span>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="text-left td-left">
-                                                                            <p>15. Total no. of presence in the acedemic session</p>
+                                                                            <p>15. Total no. of presence in the acedemic
+                                                                                session</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
-                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.totalPresenceDays}}</span></p>
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.totalPresenceDays}}</span>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -721,7 +730,9 @@
                                                                             <p>16. Date of issue of Certificate</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
-                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.isDate}}</span></p>
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.isDate}}</span>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -729,7 +740,9 @@
                                                                             <p>17. Reasion for leaving the school</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
-                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.reasonForLeaving | uppercase}}</span></p>
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.reasonForLeaving
+                                                                                    | uppercase}}</span></p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -737,7 +750,9 @@
                                                                             <p>18. General conduct</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
-                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.generalConduct | uppercase}}</span></p>
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.generalConduct
+                                                                                    | uppercase}}</span></p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -745,7 +760,9 @@
                                                                             <p>19. Any other remarks</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
-                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.anyOtherRemarks | uppercase}}</span></p>
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.anyOtherRemarks
+                                                                                    | uppercase}}</span></p>
                                                                         </td>
                                                                     </tr>
 
@@ -756,17 +773,33 @@
                                                                         <tr>
                                                                             <td class="text-bold"
                                                                                 style="width:33.33%;font-size: 12px;text-align: left;border: none;">
-                                                                                <p style="margin-left: 20px;">Class Teacher<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: 500;">(Signature)</span></p>
+                                                                                <p style="margin-left: 20px;">Class
+                                                                                    Teacher<br>&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                        style="font-weight: 500;">(Signature)</span>
+                                                                                </p>
                                                                             </td>
                                                                             <td class="text-bold"
                                                                                 style="width:33.33%;font-size: 12px;text-align: center;border: none;">
-                                                                                Checked By<br><span style="font-weight: 500;">(Name & Designation)</span>
+                                                                                Checked By<br><span
+                                                                                    style="font-weight: 500;">(Name &
+                                                                                    Designation)</span>
                                                                             </td>
-                                                                            <td class="text-bold" style="width:33.33%;font-size: 12px;text-align: right;border: none;">
+                                                                            <td class="text-bold"
+                                                                                style="width:33.33%;font-size: 12px;text-align: right;border: none;">
                                                                                 <p style="margin-right: 20px;">
-                                                                                   <span *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Principal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br> <span style="font-weight: 500;">(Sign. with official seal)</span></span>
-                                                                                   <span *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal / Head Master<br> <span style="font-weight: 500;">(Sign. with official seal)&nbsp;</span></span> 
-                                    
+                                                                                    <span
+                                                                                        *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Principal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                                                                        <span
+                                                                                            style="font-weight: 500;">(Sign.
+                                                                                            with official
+                                                                                            seal)</span></span>
+                                                                                    <span
+                                                                                        *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal
+                                                                                        / Head Master<br> <span
+                                                                                            style="font-weight: 500;">(Sign.
+                                                                                            with official
+                                                                                            seal)&nbsp;</span></span>
+
                                                                                 </p>
                                                                             </td>
                                                                         </tr>

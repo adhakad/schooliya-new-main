@@ -147,32 +147,32 @@ img{
     height: 60px;display: inline;
  }
  .school-name h3{
-    color:#4e4caacd !important;font-size: 16px !important;display: inline;margin-left: 15px;margin-bottom: 0 !important;
+    color:#252525 !important;font-size: 16px !important;display: inline;margin-left: 15px;margin-bottom: 0 !important;
  }
  .school-name p{
-    color: #4e4caacd !important;
+    color: #252525 !important;
     display: block !important;margin-left: 50px !important;margin-bottom:30px !important;font-size: 12px !important;
  }
  .address{
     margin-left: 30px;
     margin-top: -20px !important;
-    color: #2e2d6aa1;
+    color: #252525;
  }
  .address p{
-    color: #4e4caacd !important;
+    color: #252525 !important;
     display: block !important;margin-top: -15px !important;margin-left: 50px !important;font-size: 12px !important;
  }
  .title-lable{
-    text-align: center;border: 1px solid #4e4caacd;border-radius: 5px;margin-top: 10px;margin-bottom: 15px;padding-top: 5px;
+    text-align: center;border: 1px solid #252525;border-radius: 5px;margin-top: 10px;margin-bottom: 15px;padding-top: 5px;
  }
  .table-container {
-    border: 1px solid #4e4caacd;border-radius: 5px;
+    border: 1px solid #252525;border-radius: 5px;
  }
  .table-container .title{
-    color:#4e4caacd;text-align: center;padding-top:5px;margin-bottom: 15px;border: 1px solid #4e4caacd;border-radius: 5px;
+    color:#252525;text-align: center;padding-top:5px;margin-bottom: 15px;border: 1px solid #252525;border-radius: 5px;
  }
  .table-container .title p{
-    color: #4e4caacd !important;
+    color: #252525 !important;
     font-size: 15px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -181,11 +181,11 @@ img{
     font-weight:bold;
  }
  .table-container p{
-    color:#4e4caacd !important;
+    color:#252525 !important;
     font-size: 12px !important;
  }
  .table-container .container p{
-    color:#4e4caacd !important;
+    color:#252525 !important;
     font-size: 12px !important;
     margin: 5px !important;
  }

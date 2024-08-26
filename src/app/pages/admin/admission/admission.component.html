@@ -563,298 +563,187 @@
                           [disabled]="!studentForm.valid">Submit</button>
                       </div>
                     </form>
-                    <!-- <div class="modal-body" *ngIf="receiptMode && admissionrReceiptInfo">
-                        <div class="row">
-                          <div #receipt class="custom-container">
-                            <div class="table-container">
-                              <table class="logo-table text-bold text-center">
-                                <tr>
-                                  <td>
-                                  <td>
-                                    <img src="../../../../assets/logo.png" alt="">
-                                    {{schoolInfo?.schoolName | uppercase}}, {{schoolInfo?.city | uppercase}}
-                                  </td>
-                                </tr>
-                              </table>
-                              <table class="info-table text-center">
-                                <tr>
-                                  <td>
-                                    School Code : {{schoolInfo?.schoolCode}}
-                                  </td>
-                                  <td>
-                                    Affiliation No. : {{schoolInfo?.affiliationNumber}}
-                                  </td>
-                                </tr>
-                              </table>
-                              <table class="info-table text-center">
-                                <tr>
-                                  <td class="text-bold">Receipt No. :</td>
-                                  <td>{{admissionrReceiptInfo.admissionFeesReceiptNo}}</td>
-                                  <td class="text-bold">Admission No. :</td>
-                                  <td>{{admissionrReceiptInfo.admissionNo}}</td>
-                                </tr>
-                                <tr>
-                                  <td class="text-bold">Class :</td>
-                                  <td>{{admissionrReceiptInfo.class | classSuffix}}</td>
-                                  <td class="text-bold">Date Of Birth :</td>
-                                  <td>{{admissionrReceiptInfo.dob}}</td>
-                                </tr>
-                                <tr>
-                                  <td class="text-bold">Student Name :</td>
-                                  <td>{{admissionrReceiptInfo.name |
-                                    titlecase}}</td>
-                                  <td class="text-bold">Father Name :</td>
-                                  <td>{{admissionrReceiptInfo.fatherName}}</td>
-                                </tr>
-                              </table>
-                              <table class="receipt-table">
-                                <tr class="text-center">
-                                  <th class="border">S. No.</th>
-                                  <th class="border">Particulars</th>
-                                  <th class="border">Fee Amount</th>
-                                </tr>
+                  </div>
+                </div>
+              </div>
 
-                                <tr class="text-center" *ngFor="let item of clsFeesStructure?.feesType,let i = index">
-                                  <td class="border">{{i+1}}.</td>
-                                  <td class="border" *ngFor="let fee of item | keyvalue">
-                                    {{ fee.key}} Fee</td>
-                                  <td class="border" *ngFor="let fee of item | keyvalue">
-                                    &#8377; {{ fee.value}}</td>
-                                </tr>
-                                <tr class="text-center receipt-row">
-                                  <td></td>
-                                  <td class="text-bold text-right">Total Fee</td>
-                                  <td class="text-bold">&#8377;
-                                    {{admissionrReceiptInfo.totalFees}}</td>
-                                </tr>
-                                <tr class="text-center receipt-row">
-                                  <td></td>
-                                  <td class="text-bold text-right">Paid Fee</td>
-                                  <td class="text-bold">&#8377;
-                                    {{admissionrReceiptInfo.paidFees}}</td>
-                                </tr>
-                                <tr class="text-center receipt-row">
-                                  <td></td>
-                                  <td class="text-bold text-right">Due Fee</td>
-                                  <td class="text-bold">&#8377;
-                                    {{admissionrReceiptInfo.dueFees}}</td>
-                                </tr>
-                                <tr>
-                                  <td></td>
-                                  <td>
-                                    <p class="text-center"><span class="text-bold">
-                                        Admission Fee </span>amount deposited <span class="text-bold">&#8377;
-                                        {{admissionrReceiptInfo.admissionFees}} /-</span>
-                                    </p>
-                                  </td>
-                                  <td></td>
-                                </tr>
-                              </table>
 
-                              <p>Date : {{ admissionrReceiptInfo.admissionFeesPaymentDate }}</p>
-                              <div>
-                                <h4 class="text-bold">Disclaimer:</h4>
-                                <p>1. Payment Responsibility: Confirms your obligation to
-                                  {{schoolInfo?.schoolName}} for listed fees.</p>
-                                <p>2. Verification: Review receipt details for accuracy,
-                                  including payment amount and purpose. Report
-                                  discrepancies to the School Office for correction.</p>
-                                <p>3. Non-Transferable: Intended for your use only; do not
-                                  share it.</p>
-                                <p>4. Record Keeping: Keep this receipt for future
-                                  reference, reimbursement, or tax purposes.</p>
-                                <p>5. Lost Receipt: If lost or damaged, contact the School
-                                  Office for a duplicate. A fee may apply.</p>
-                                <p>6. Refund Policy: Refer to our institution's refund
-                                  policy for fee refund information. Generally, fees are
-                                  non-refundable. Exceptions may apply for duplicate
-                                  payments or inadvertent overpayments with proper
-                                  documentation and school policy approval.</p>
+
+              <div class="modal fade show custom-modal" [class.show]="showAdmissionPrintModal">
+                <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">TRANSFER CERTIFICTE PRINT/DOWNLOAD</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <div class="modal-body print-model-body">
+                      <ng-container>
+                        <ng-container>
+                          <div id="student">
+                            <div class="col-lg-10 offset-lg-1 custom-container">
+                              <div class="table-container">
+                                <div class="row">
+                                  <div class="col-2">
+                                    <img class="logo" src="{{baseUrl}}/public/school-logo/{{schoolInfo?.schoolLogo}}"
+                                      alt="">
+                                  </div>
+                                  <div class="col-10" style="text-align: center;">
+                                    <div class="school-name">
+                                      <h3 class="text-bold">
+                                        {{schoolInfo?.schoolName | uppercase}}
+                                      </h3>
+                                    </div>
+                                    <div class="address" style="text-align: center;">
+                                      <p>Affiliated to {{schoolInfo?.board |
+                                        uppercase}}, Affliation No. -
+                                        {{schoolInfo?.affiliationNumber}}</p>
+                                      <p><span>Contact - {{schoolInfo?.phoneOne}}
+                                          &nbsp; Email -
+                                          {{schoolInfo?.email}}</span></p>
+                                      <p><span>{{schoolInfo?.street | titlecase}},
+                                          {{schoolInfo?.city |
+                                          titlecase}},
+                                          Dist.-
+                                          {{schoolInfo?.district |
+                                          titlecase}},
+                                          {{schoolInfo?.state | titlecase}} -
+                                          {{schoolInfo?.pinCode}}</span></p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-12 title-lable">
+                                    <p>ADMISSION LETTER&nbsp;{{singleStudentInfo?.session}}</p>
+                                  </div>
+                                </div>
+                                <table class="custom-table" style="margin-top:15px;margin-bottom: 10px;border: none;">
+                                  <tr>
+                                    <td class="text-bold" style="width:88%;padding: 0;text-align: right;border: none;">
+                                      Admission Date&nbsp; :</td>
+                                    <td
+                                      style="width:12%;padding: 0;text-align: right;border: none;padding-right: 20px;">
+                                      {{singleStudentInfo?.doa}}</td>
+                                  </tr>
+                                </table>
+                                <table class="custom-table">
+                                  <tr>
+                                    <td class="text-bold">Admission No. :</td>
+                                    <td>{{singleStudentInfo?.admissionNo}}</td>
+                                    <td class="text-bold">Roll Number :</td>
+                                    <td>{{singleStudentInfo?.rollNumber}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Class :</td>
+                                    <td>{{singleStudentInfo?.class | classSuffix}}</td>
+                                    <td class="text-bold">Stream :</td>
+                                    <td>{{singleStudentInfo?.stream}}</td>
+                                  </tr>
+                                  <tr style="height: 25px;"></tr>
+                                  <tr>
+                                    <td class="text-bold">Student Name :</td>
+                                    <td colspan="3">{{singleStudentInfo?.name | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Date of Birth :</td>
+                                    <td colspan="3">{{singleStudentInfo?.dob}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Aadhar Number :</td>
+                                    <td colspan="3">{{singleStudentInfo?.aadharNumber}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Samagra Id :</td>
+                                    <td colspan="3">{{singleStudentInfo?.samagraId}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Gender :</td>
+                                    <td colspan="3">{{singleStudentInfo?.gender | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Category :</td>
+                                    <td colspan="3">{{singleStudentInfo?.category | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Religion :</td>
+                                    <td colspan="3">{{singleStudentInfo?.religion | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Nationality :</td>
+                                    <td colspan="3">{{singleStudentInfo?.nationality | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Contact :</td>
+                                    <td colspan="3">{{singleStudentInfo?.contact}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Last School :</td>
+                                    <td colspan="3">{{singleStudentInfo?.lastSchool | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Address :</td>
+                                    <td colspan="3">{{singleStudentInfo?.address | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Father Name :</td>
+                                    <td>{{singleStudentInfo?.fatherName | titlecase}}</td>
+                                    <td class="text-bold">Mother Name :</td>
+                                    <td>{{singleStudentInfo?.motherName | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Father Qualification :</td>
+                                    <td>{{singleStudentInfo?.fatherQualification | titlecase}}</td>
+                                    <td class="text-bold">Mother Qualification :</td>
+                                    <td>{{singleStudentInfo?.motherQualification | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Father Occupation :</td>
+                                    <td>{{singleStudentInfo?.fatherOccupation | titlecase}}</td>
+                                    <td class="text-bold">Mother Occupation :</td>
+                                    <td>{{singleStudentInfo?.motherOccupation | titlecase}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Father Contact :</td>
+                                    <td>{{singleStudentInfo?.fatherContact}}</td>
+                                    <td class="text-bold">Mother Contact :</td>
+                                    <td>{{singleStudentInfo?.motherContact}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Father Annual Income :</td>
+                                    <td>{{singleStudentInfo?.fatherContact}}</td>
+                                    <td class="text-bold">Mother Annual Income :</td>
+                                    <td>{{singleStudentInfo?.motherAnnualIncome}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">Admission Fee :</td>
+                                    <td colspan="3">&#8377; {{singleStudentInfo?.admissionFees}} <span
+                                        class="text-bold">PAID</span></td>
+                                  </tr>
+                                </table>
+
+
+                                <table class="custom-table sign-table"
+                                  style="position: absolute;left: 0;bottom: 3vh;z-index: 2;">
+                                  <tr>
+                                    <td class="text-bold"
+                                      style="width:50%;font-size: 12px;text-align: left;border: none;">
+                                      <p style="margin-left: 50px;">Applicant's Signature</p>
+                                    </td>
+
+                                    <td class="text-bold"
+                                      style="width:50%;font-size: 12px;text-align: right;border: none;">
+                                      <p style="margin-right: 50px;">Authorized Signature</p>
+                                    </td>
+                                  </tr>
+                                </table>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer" *ngIf="receiptMode">
-                        <button class="submit-button print-pdf" mat-raised-button
-                          (click)="printReceipt()">Print</button>
-                      </div>
-                    </div> -->
-                  </div>
-                </div>
-
-                <div class="modal fade show" [class.show]="showAdmissionPrintModal">
-                  <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="showAdmissionPrintModal">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Student Admission Form Print</h5>
-                        <mat-icon matRipple (click)="closeModal()">close</mat-icon>
-                      </div>
-                      <div class="modal-body">
-                        <ng-container>
-                          <ng-container>
-                            <div id="student">
-                              <div class="col-lg-10 offset-lg-1 custom-container">
-                                <div class="table-container">
-                                  <div class="row text-center">
-                                    <div class="col-12" style="text-align: center;">
-                                      <div class="school-name">
-                                        <!-- <img class="logo" src="../../../../assets/logo.png"
-                                        alt=""> -->
-                                        <h3 class="text-bold">{{schoolInfo?.schoolName | uppercase}}, {{schoolInfo?.city
-                                          |
-                                          uppercase}}</h3>
-                                      </div>
-                                      <div class="address">
-                                        <p>( {{schoolInfo?.board}} Affiliation No.- {{schoolInfo?.affiliationNumber}} )
-                                        </p>
-                                        <p><span>{{schoolInfo?.street}},{{schoolInfo?.city}},District-
-                                            {{schoolInfo?.district}},
-                                            {{schoolInfo?.state}}, {{schoolInfo?.pinCode}}</span></p>
-                                        <p><span>Contact - {{schoolInfo?.phoneOne}} &nbsp; Email -
-                                            {{schoolInfo?.email}}</span></p>
-                                        <p><span>Website - {{baseURL}}</span></p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-12" class="title-lable">
-                                      <p>ADMISSION LETTER&nbsp;{{singleStudentInfo?.session}}</p>
-                                    </div>
-                                  </div>
-                                  <table class="custom-table"
-                                    style="margin-top: -10px;margin-bottom:-15px;border: none;">
-                                    <tr>
-                                      <td style="width:10%;padding: 0;text-align: left;border: none;">School Code<span
-                                          class="text-bold">: {{schoolInfo?.schoolCode}}</span></td>
-                                      <td style="width:40%;padding: 0;text-align: right;border: none;">Affiliation
-                                        No.<span class="text-bold">: {{schoolInfo?.affiliationNumber}}</span></td>
-                                    </tr>
-                                  </table>
-                                  <table class="custom-table" style="margin-bottom: -25px;border: none;">
-                                    <tr>
-                                      <td class="text-bold"
-                                        style="width:90%;padding: 0;text-align: right;border: none;">
-                                        Admission Date :</td>
-                                      <td style="width:10%;padding: 0;text-align: right;border: none;">
-                                        {{singleStudentInfo?.doa}}</td>
-                                    </tr>
-                                  </table>
-                                  <table class="custom-table">
-                                    <tr>
-                                      <td class="text-bold">Admission No. :</td>
-                                      <td>{{singleStudentInfo?.admissionNo}}</td>
-                                      <td class="text-bold">Roll Number :</td>
-                                      <td>{{singleStudentInfo?.rollNumber}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Class :</td>
-                                      <td>{{singleStudentInfo?.class | classSuffix}}</td>
-                                      <td class="text-bold">Stream :</td>
-                                      <td>{{singleStudentInfo?.stream}}</td>
-                                    </tr>
-                                    <tr style="height: 25px;"></tr>
-                                    <tr>
-                                      <td class="text-bold">Student Name :</td>
-                                      <td colspan="3">{{singleStudentInfo?.name | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Date of Birth :</td>
-                                      <td colspan="3">{{singleStudentInfo?.dob}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Aadhar Number :</td>
-                                      <td colspan="3">{{singleStudentInfo?.aadharNumber}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Samagra Id :</td>
-                                      <td colspan="3">{{singleStudentInfo?.samagraId}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Gender :</td>
-                                      <td colspan="3">{{singleStudentInfo?.gender | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Category :</td>
-                                      <td colspan="3">{{singleStudentInfo?.category | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Religion :</td>
-                                      <td colspan="3">{{singleStudentInfo?.religion | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Nationality :</td>
-                                      <td colspan="3">{{singleStudentInfo?.nationality | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Contact :</td>
-                                      <td colspan="3">{{singleStudentInfo?.contact}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Last School :</td>
-                                      <td colspan="3">{{singleStudentInfo?.lastSchool | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Address :</td>
-                                      <td colspan="3">{{singleStudentInfo?.address | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Father Name :</td>
-                                      <td>{{singleStudentInfo?.fatherName | titlecase}}</td>
-                                      <td class="text-bold">Mother Name :</td>
-                                      <td>{{singleStudentInfo?.motherName | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Father Qualification :</td>
-                                      <td>{{singleStudentInfo?.fatherQualification | titlecase}}</td>
-                                      <td class="text-bold">Mother Qualification :</td>
-                                      <td>{{singleStudentInfo?.motherQualification | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Father Occupation :</td>
-                                      <td>{{singleStudentInfo?.fatherOccupation | titlecase}}</td>
-                                      <td class="text-bold">Mother Occupation :</td>
-                                      <td>{{singleStudentInfo?.motherOccupation | titlecase}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Father Contact :</td>
-                                      <td>{{singleStudentInfo?.fatherContact}}</td>
-                                      <td class="text-bold">Mother Contact :</td>
-                                      <td>{{singleStudentInfo?.motherContact}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Father Annual Income :</td>
-                                      <td>{{singleStudentInfo?.fatherContact}}</td>
-                                      <td class="text-bold">Mother Annual Income :</td>
-                                      <td>{{singleStudentInfo?.motherAnnualIncome}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td class="text-bold">Admission Fee :</td>
-                                      <td colspan="3">&#8377; {{singleStudentInfo?.admissionFees}} <span
-                                          class="text-bold">PAID</span></td>
-                                    </tr>
-                                  </table>
-
-                                  <table class="custom-table" style="border: none;margin-top: 15px;">
-                                    <tr>
-                                      <td class="text-bold"
-                                        style="width:50%;padding-left:10%;text-align: left;border: none;">Applicant's
-                                        Signature</td>
-                                      <td class="text-bold"
-                                        style="width:50%;padding-right:10%;text-align: right;border: none;">Authorized
-                                        Signature</td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </div>
-                            </div>
-                          </ng-container>
                         </ng-container>
-                      </div>
-                      <div class="modal-footer">
-                        <button class="submit-button print-pdf" mat-raised-button
-                          (click)="printStudentData()">Print</button>
-                      </div>
+                      </ng-container>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="submit-button print-pdf" mat-raised-button
+                        (click)="printStudentData()">Print</button>
                     </div>
                   </div>
                 </div>
@@ -863,9 +752,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="spinner-container" *ngIf="loader">
-    <div class="spinner-overlay" *ngIf="loader">
-      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
     </div>
-  </div> -->
-    </div>
+  </div>
+</div>
