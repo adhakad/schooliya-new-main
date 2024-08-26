@@ -94,7 +94,6 @@ export class TransferCertificateComponent implements OnInit {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
-        console.log(this.schoolInfo)
       }
     })
   }
@@ -122,35 +121,21 @@ export class TransferCertificateComponent implements OnInit {
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
   }
-  printContent(singleStudentInfo: any) {
-    singleStudentInfo.serialNo = this.serialNo;
-    this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
-      if (res == 'IssueTransferCertificate') {
-        this.printPdfService.printElement(this.content.nativeElement)
-        this.closeModal();
-        this.getStudents({ page: this.page });
-      }
-    }, err => {
-      this.errorCheck = true;
-      console.log(err.errorMsg)
-      this.errorMsg = err.error;
-    })
-  }
 
   printStudentData(singleStudentInfo: any) {
 
-    singleStudentInfo.serialNo = this.serialNo;
-    this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
-      if (res == 'IssueTransferCertificate') {
+    // singleStudentInfo.serialNo = this.serialNo;
+    // this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
+    //   if (res == 'IssueTransferCertificate') {
         const printContent = this.getPrintOneAdmitCardContent();
         this.printPdfService.printContent(printContent);
         this.closeModal();
-        this.getStudents({ page: this.page });
-      }
-    }, err => {
-      this.errorCheck = true;
-      this.errorMsg = err.error;
-    })
+    //     this.getStudents({ page: this.page });
+    //   }
+    // }, err => {
+    //   this.errorCheck = true;
+    //   this.errorMsg = err.error;
+    // })
   }
 
 
@@ -180,8 +165,22 @@ export class TransferCertificateComponent implements OnInit {
     printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
     printHtml += '.custom-table tr{height: 30px;}';
     printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
+
+    printHtml += '.tc-codes-table {width: 100%;color: #252525 !important;display: inline-table;margin-top: 2vh;}';
+    printHtml += '.tc-codes-table tr{height: 2vh;border:none;}';
+    printHtml += '.tc-codes-table td {width:50%;border:none;font-size: 12px;}';
+    printHtml += '.tc-codes-table td p{margin-left: 20px;margin-right: 20px;}';
+
+    printHtml += '.student-info-table {width: 100%;color: #252525 !important;display: inline-table;margin-top:3vh}';
+    printHtml += '.student-info-table tr{height: 2.5vh;border:none;}';
+    printHtml += '.student-info-table .td-left {width:45%;border:none;font-size: 12px;}';
+    printHtml += '.student-info-table .td-right {width:55%;border:none;font-size: 12px;}';
+    printHtml += '.student-info-table td p{margin-left: 20px;}';
+
+
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
+    printHtml += '.text-right { text-align: right;}';
     printHtml += 'p {color: #252525 !important;font-size:12px;}'
     printHtml += 'h4 {color: #252525 !important;}'
     printHtml += '@media print {';

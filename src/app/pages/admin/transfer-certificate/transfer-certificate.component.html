@@ -443,9 +443,7 @@
                                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">MARKSHEET'S PRINT/DOWNLOAD - {{cls | classSuffix |
-                                                uppercase}} <span *ngIf="cls==11 || cls ==12">{{stream
-                                                    | uppercase}}</span></h5>
+                                            <h5 class="modal-title">TRANSFER CERTIFICTE PRINT/DOWNLOAD</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <div class="modal-body print-model-body">
@@ -492,165 +490,172 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row tc-codes">
-                                                                    <div class="col-6" style="text-align: left;">
-                                                                        <p>School Code <span class="text-bold">:
-                                                                                {{schoolInfo?.schoolCode}}</span></p>
-                                                                        <p>S.No. <span class="text-bold">:
-                                                                                {{serialNo}}</span>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="col-6" style="text-align: right;">
-                                                                        <p>Affiliation No. <span class="text-bold">:
-                                                                                {{schoolInfo?.affiliationNumber}}</span>
-                                                                        </p>
-                                                                        <p>Admission No. <span class="text-bold">:
-                                                                                {{singleStudentTCInfo?.admissionNo}}</span>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="container">
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                <table class="tc-codes-table">
+                                                                    <tr>
+                                                                        <td class="text-left">
+                                                                            <p>School Code : <span
+                                                                                    class="text-bold">{{schoolInfo?.schoolCode}}</span>
+                                                                            </p>
+                                                                        </td>
+                                                                        <td class="text-right">
+                                                                            <p>Affiliation No. : <span
+                                                                                    class="text-bold">{{schoolInfo?.affiliationNumber}}</span>
+                                                                            </p>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left">
+                                                                            <p>S.No. : <span
+                                                                                    class="text-bold">{{serialNo}}</span>
+                                                                            </p>
+                                                                        </td>
+                                                                        <td class="text-right">
+                                                                            <p>Admission No. : <span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.admissionNo}}</span>
+                                                                            </p>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                </table>
+
+
+
+                                                                <table class="student-info-table">
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>1. Name of the Pupil</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.name |
-                                                                                    uppercase}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.name
+                                                                                    | uppercase}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>3. Father's/Guardian's Name</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.fatherName |
-                                                                                    uppercase}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.fatherName
+                                                                                    | uppercase}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>2. Mother's Name</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.motherName |
-                                                                                    uppercase}}</span></p>
-                                                                        </div>
-                                                                    </div>
-
-
-
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.motherName
+                                                                                    | uppercase}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>4. Date of Birth according to Admission &
                                                                                 Withdrawal Register</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p class="text-bold">:&nbsp;&nbsp; (In
-                                                                                figures)
-                                                                                &nbsp;:&nbsp; <span
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;(In
+                                                                                figures)&nbsp;&nbsp;<span
                                                                                     class="text-bold">{{singleStudentTCInfo?.dob}}</span>
                                                                             </p>
-                                                                            <p class="text-bold">&nbsp;&nbsp;&nbsp; (In
-                                                                                Words)
-                                                                                &nbsp;:&nbsp; <span
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
+                                                                            <p></p>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;(In
+                                                                                Words)&nbsp;&nbsp;<span
                                                                                     class="text-bold">{{singleStudentTCInfo?.dob
-                                                                                    |
-                                                                                    dateToWords}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                                    | dateToWords}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>5. Aadhar Number</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.aadharNumber}}</span>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.aadharNumber}}</span>
                                                                             </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>6. Samagra Id</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.samagraId}}</span>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.samagraId}}</span>
                                                                             </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>7. Nationality</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    INDIAN</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">INDIAN</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>8. Whether the pupil belongs to
-                                                                                General/OBC/SC/ST
+                                                                                General/OBC/SC/ST</p>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.category}}</span>
                                                                             </p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.category}}</span>
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>9. Date of first admission in the school
-                                                                                with
-                                                                                class</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.doa}}
-                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                    Class :
-                                                                                    {{singleStudentTCInfo?.admissionClass
-                                                                                    |
-                                                                                    classSuffix}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                                with class</p>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.doa}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class
+                                                                                    :{{singleStudentTCInfo?.admissionClass
+                                                                                    | classSuffix}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>10. Class in which the pupil last studied
                                                                             </p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.class |
-                                                                                    classSuffix}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.class
+                                                                                    | classSuffix}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>11. School/Board Annual Examination last
-                                                                                taken
-                                                                                with result</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.class |
-                                                                                    classSuffix}}
-                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.lastExamStatus
+                                                                                taken with result</p>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                    class="text-bold">{{singleStudentTCInfo?.class
                                                                                     |
-                                                                                    uppercase}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                                    classSuffix}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudentTCInfo?.lastExamStatus
+                                                                                    | uppercase}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>12. Subject studied</p>
-                                                                        </div>
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
                                                                             <table>
                                                                                 <tr
                                                                                     *ngFor="let subjects of classSubject | chunk: 3; let i = index">
@@ -672,121 +677,96 @@
                                                                                     </ng-container>
                                                                                 </tr>
                                                                             </table>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
-                                                                            <p>13. Whether qualified for promotion to
-                                                                                the higher
-                                                                                class</p>
-                                                                        </div>
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
+                                                                            <p>13. Whether qualified for promotion to the higher class</p>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
                                                                             <p>
                                                                                 <span
                                                                                     *ngIf="singleStudentTCInfo.lastExamStatus=='Pass'"
                                                                                     class="text-bold">:
-                                                                                    &nbsp;&nbsp; YES</span>
+                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;YES</span>
                                                                                 <span
                                                                                     *ngIf="singleStudentTCInfo.lastExamStatus=='Fail'"
                                                                                     class="text-bold">:
-                                                                                    &nbsp;&nbsp; NO</span>
+                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;NO</span>
                                                                                 <span
                                                                                     *ngIf="singleStudentTCInfo.lastExamStatus=='Supply'"
                                                                                     class="text-bold">:
-                                                                                    &nbsp;&nbsp; NOT SURE</span>
+                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;NOT SURE</span>
                                                                             </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
-                                                                            <p>14. Total no. of working days in the
-                                                                                acedemic
-                                                                                session</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.totalWorkingDays}}</span>
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
-                                                                            <p>15. Total no. of presence in the acedemic
-                                                                                session
-                                                                            </p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.totalPresenceDays}}</span>
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
+                                                                            <p>14. Total no. of working days in the acedemic session</p>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.totalWorkingDays}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
+                                                                            <p>15. Total no. of presence in the acedemic session</p>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.totalPresenceDays}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>16. Date of issue of Certificate</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.isDate}}</span>
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.isDate}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>17. Reasion for leaving the school</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.reasonForLeaving
-                                                                                    |
-                                                                                    uppercase}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.reasonForLeaving | uppercase}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>18. General conduct</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.generalConduct
-                                                                                    |
-                                                                                    uppercase}}</span></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.generalConduct | uppercase}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-left td-left">
                                                                             <p>19. Any other remarks</p>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <p><span class="text-bold">: &nbsp;&nbsp;
-                                                                                    {{singleStudentTCInfo?.anyOtherRemarks
-                                                                                    |
-                                                                                    uppercase}}</span></p>
-                                                                        </div>
-                                                                    </div>
+                                                                        </td>
+                                                                        <td class="text-left td-right">
+                                                                            <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-bold">{{singleStudentTCInfo?.anyOtherRemarks | uppercase}}</span></p>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                </table>
+                                                                <div>
                                                                     <table class="custom-table sign-table"
                                                                         style="position: absolute;left: 0;bottom: 0;z-index: 2;">
                                                                         <tr>
                                                                             <td class="text-bold"
                                                                                 style="width:33.33%;font-size: 12px;text-align: left;border: none;">
-                                                                                <p style="margin-left: 30px;">Class
-                                                                                    Teacher (Signature)</p>
+                                                                                <p style="margin-left: 20px;">Class Teacher<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: 500;">(Signature)</span></p>
                                                                             </td>
                                                                             <td class="text-bold"
                                                                                 style="width:33.33%;font-size: 12px;text-align: center;border: none;">
-                                                                                Checked By (Name & Designation)
+                                                                                Checked By<br><span style="font-weight: 500;">(Name & Designation)</span>
                                                                             </td>
-                                                                            <td class="text-bold"
-                                                                                style="width:33.33%;font-size: 12px;text-align: right;border: none;">
-                                                                                <p style="margin-right: 30px;">
-                                                                                    <span
-                                                                                        *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Principal
-                                                                                        (Sign. with official
-                                                                                        seal)</span>
-                                                                                    <span
-                                                                                        *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal
-                                                                                        / Head Master (Sign. with
-                                                                                        official seal)</span>
+                                                                            <td class="text-bold" style="width:33.33%;font-size: 12px;text-align: right;border: none;">
+                                                                                <p style="margin-right: 20px;">
+                                                                                   <span *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Principal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br> <span style="font-weight: 500;">(Sign. with official seal)</span></span>
+                                                                                   <span *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal / Head Master<br> <span style="font-weight: 500;">(Sign. with official seal)&nbsp;</span></span> 
+                                    
                                                                                 </p>
                                                                             </td>
                                                                         </tr>
