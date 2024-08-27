@@ -581,33 +581,25 @@
                         <ng-container>
                           <div id="student">
                             <div class="col-lg-10 offset-lg-1 custom-container">
-                              <div class="table-container">
+                              <div class="table-container" style="position: relative;height: 100%;">
                                 <div class="row">
                                   <div class="col-2">
-                                    <img class="logo" src="{{baseUrl}}/public/school-logo/{{schoolInfo?.schoolLogo}}"
+                                    <img class="logo" src="{{baseUrl}}/public/school-logo/{{schoolInfo.schoolLogo}}"
                                       alt="">
                                   </div>
                                   <div class="col-10" style="text-align: center;">
                                     <div class="school-name">
-                                      <h3 class="text-bold">
-                                        {{schoolInfo?.schoolName | uppercase}}
-                                      </h3>
+                                      <h3 class="text-bold">{{schoolInfo?.schoolName | uppercase}}</h3>
                                     </div>
                                     <div class="address" style="text-align: center;">
-                                      <p>Affiliated to {{schoolInfo?.board |
-                                        uppercase}}, Affliation No. -
+                                      <p style="color: #252525 !important;">Affiliated to {{schoolInfo?.board | uppercase}}, Affliation No. -
                                         {{schoolInfo?.affiliationNumber}}</p>
-                                      <p><span>Contact - {{schoolInfo?.phoneOne}}
-                                          &nbsp; Email -
+                                      <p><span style="color: #252525;">Contact - {{schoolInfo?.phoneOne}} &nbsp; Email -
                                           {{schoolInfo?.email}}</span></p>
-                                      <p><span>{{schoolInfo?.street | titlecase}},
-                                          {{schoolInfo?.city |
-                                          titlecase}},
+                                      <p><span style="color: #252525;">{{schoolInfo?.street | titlecase}}, {{schoolInfo?.city | titlecase}},
                                           Dist.-
-                                          {{schoolInfo?.district |
-                                          titlecase}},
-                                          {{schoolInfo?.state | titlecase}} -
-                                          {{schoolInfo?.pinCode}}</span></p>
+                                          {{schoolInfo?.district | titlecase}},
+                                          {{schoolInfo?.state | titlecase}} - {{schoolInfo?.pinCode}}</span></p>
                                     </div>
                                   </div>
                                 </div>
@@ -726,12 +718,12 @@
                                   <tr>
                                     <td class="text-bold"
                                       style="width:50%;font-size: 12px;text-align: left;border: none;">
-                                      <p style="margin-left: 50px;">Applicant's Signature</p>
+                                      <p style="color:#252525 !important;margin-left: 50px;">Applicant's Signature</p>
                                     </td>
 
                                     <td class="text-bold"
                                       style="width:50%;font-size: 12px;text-align: right;border: none;">
-                                      <p style="margin-right: 50px;">Authorized Signature</p>
+                                      <p style="color:#252525 !important;margin-right: 50px;">Authorized Signature</p>
                                     </td>
                                   </tr>
                                 </table>
