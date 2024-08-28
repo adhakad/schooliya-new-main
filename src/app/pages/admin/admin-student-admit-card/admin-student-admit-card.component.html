@@ -132,13 +132,9 @@
             </div>
           </div>
           <mat-menu #settings="matMenu">
-            <button mat-menu-item routerLink="/admin/admit-card/structure/{{cls}}/{{stream}}" *ngIf="cls && stream">
+            <button mat-menu-item routerLink="/admin/admit-card/structure/{{cls}}/{{stream}}">
               <mat-icon>assignment</mat-icon>
               <span>Admit Card Structure</span>
-            </button>
-            <button mat-menu-item *ngIf="!cls || !stream">
-              <mat-icon>error</mat-icon>
-              <span>Please Choose Class & Stream</span>
             </button>
           </mat-menu>
         </div>

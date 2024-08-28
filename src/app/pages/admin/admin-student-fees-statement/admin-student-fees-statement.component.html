@@ -7,25 +7,35 @@
         <div class="col-12 col-lg-10">
             <div class="row">
                 <div class="col-12 main-container">
-                    <div class="row">
-                        <div class="col-3" style="text-align: left;">
-                            <button mat-button class="menu-button">
-                                <mat-icon>assistant_navigation</mat-icon>
-                                <span>Fee Payment > Statement</span>
-                            </button>
+                    <div class="row big-option-container">
+                        <div class="desktop-option">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button mat-button class="menu-button">
+                                            <span>Fees | Statement</span>
+                                        </button>
+                                        Session - {{studentInfo[0]?.session}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-option">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button mat-button class="menu-button">
+                                            <span>Fees | Statement</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
-                        <div class="main-card">
-                            <table class="info-table text-center">
-                                <tr>
-                                    <td>
-                                        School Fee Statement - {{studentInfo[0]?.session}}
-                                    </td>
-                                </tr>
-                            </table>
+                      <div class="main-card">
                             <table class="info-table text-center">
                                 <tr>
                                     <td class="text-bold">Admission No. :</td>

@@ -198,7 +198,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         }
 
         // console.log(`examResultInfo:`, this.examResultInfo)
-        console.log(`studentInfo:`, this.studentInfo)
         let isDate = res.isDate;
         let marksheetTemplateStructure = res.marksheetTemplateStructure;
         let examType = Object.keys(marksheetTemplateStructure.examStructure);

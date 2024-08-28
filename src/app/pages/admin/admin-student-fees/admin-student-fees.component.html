@@ -108,14 +108,9 @@
                         </div>
                     </div>
                     <mat-menu #settings="matMenu">
-                        <button mat-menu-item routerLink="/admin/fees/structure/{{cls}}/{{stream}}"
-                            *ngIf="cls && stream">
+                        <button mat-menu-item routerLink="/admin/fees/structure/{{cls}}/{{stream}}">
                             <mat-icon>currency_rupee</mat-icon>
                             <span>Create Fee Structure</span>
-                        </button>
-                        <button mat-menu-item *ngIf="!cls || !stream">
-                            <mat-icon>error</mat-icon>
-                            <span>Please Choose Class & Stream</span>
                         </button>
                     </mat-menu>
                 </div>
