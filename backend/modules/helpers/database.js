@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongodbConfig = process.config.global_config.mongodb;
+const mongodbConfig = global.global_config.mongodb;
 
 let DbConnect = () => {
     const URI = mongodbConfig.uri;

@@ -1,7 +1,7 @@
 'use strict'
 require('dotenv').config()
-let constant = "./config/config.js";
-process.config.global_config = require(constant);
+const constant = "./config/config.js";
+global.global_config = require(constant);
 
 const express = require('express');
 const app = express();
@@ -35,7 +35,7 @@ require('./routes')(app);
 
 
 
-let port = Number(process.config.global_config.server.port);
+let port = Number(global.global_config.server.port);
 let server = app.listen(port, function () {
     console.log('server listening on port ' + server.address().port);
 });

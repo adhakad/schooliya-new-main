@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <mat-menu #settings="matMenu">
-                        <button mat-menu-item routerLink="/admin/fees/structure/{{cls}}/{{stream}}">
+                        <button mat-menu-item routerLink="/admin/fees/structure">
                             <mat-icon>currency_rupee</mat-icon>
                             <span>Create Fee Structure</span>
                         </button>
@@ -266,7 +266,7 @@
                             </div>
                             <div class="modal fade show custom-modal" [class.show]="showPrintModal">
                                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable"
-                                    *ngIf="receiptMode && receiptInstallment && singleStudent">
+                                    *ngIf="receiptMode && receiptInstallment && singleStudent && clsFeesStructure">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Student Fee Payment Receipt</h5>
@@ -382,7 +382,7 @@
                                                                     </tr>
 
                                                                     <tr class="text-center"
-                                                                        *ngFor="let item of clsFeesStructure?.feesType,let i = index">
+                                                                        *ngFor="let item of clsFeesStructure.feesType,let i = index">
                                                                         <td class="border" style="border-left: none;">
                                                                             {{i+1}}.</td>
                                                                         <td class="border"

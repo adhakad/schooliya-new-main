@@ -56,26 +56,27 @@
                                         <th>Remove</th>
                                     </tr>
                                 </thead>
-                                <tbody *ngIf="clsFeesStructure">
+                                <tbody *ngFor="let singleFessStructure of clsFeesStructure,let i = index">
                                     <tr>
                                         <td>
-                                            <p class="mb-0">1</p>
+                                            <p class="mb-0">{{i+1}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0">{{clsFeesStructure.class | classSuffix}}</p>
+                                            <p class="mb-0">{{clsFeesStructure[i]?.class | classSuffix}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0">&#8377; {{clsFeesStructure.totalFees}}</p>
+                                            <p class="mb-0">&#8377; {{clsFeesStructure[i]?.totalFees}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0">&#8377; {{clsFeesStructure.admissionFees}}</p>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon (click)="openFeesStructureModal()">launch</mat-icon>
+                                            <p class="mb-0">&#8377; {{clsFeesStructure[i]?.admissionFees}}</p>
                                         </td>
                                         <td class="mb-0">
                                             <mat-icon
-                                                (click)="deleteFeesStructureModel(clsFeesStructure._id)">delete</mat-icon>
+                                                (click)="openFeesStructureModal(singleFessStructure)">launch</mat-icon>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon
+                                                (click)="deleteFeesStructureModel(clsFeesStructure[i]._id)">delete</mat-icon>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -101,11 +102,9 @@
 
                                 <div class="modal-content" *ngIf="!successMsg">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" *ngIf="feesTypeMode || feesMode">Create Fee
-                                            Structure {{cls | classSuffix}} &nbsp;<span
-                                                *ngIf="cls==12 || cls==11">{{stream}}</span></h5>
-                                        <h5 class="modal-title" *ngIf="deleteMode">Delete Fee Structure {{cls |
-                                            classSuffix}}</h5>
+                                        <h5 class="modal-title" *ngIf="feesTypeMode || feesMode">Create Fee Structure
+                                        </h5>
+                                        <h5 class="modal-title" *ngIf="deleteMode">Delete Fee Structure</h5>
                                         <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                     </div>
                                     <div class="modal-body" *ngIf="feesTypeMode && !deleteMode">
@@ -113,7 +112,6 @@
                                             <h3>Particular's</h3>
                                         </ng-container>
                                         <div class="col-10 mb-4 example-margin">
-
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Perticular Total
                                                     Fee</mat-label>
@@ -142,6 +140,56 @@
                                         <div class="modal-body">
                                             <div *ngIf="errorCheck">
                                                 <p class="error-message">{{errorMsg}}</p>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 col-lg-6">
+                                                    <mat-form-field appearance="outline">
+                                                        <mat-label>Class Applied for</mat-label>
+                                                        <mat-select matInput formControlName="class">
+                                                            <div *ngFor="let classInfo of classInfo">
+                                                                <mat-option value="{{classInfo.class}}"
+                                                                    (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                                    |
+                                                                    classSuffix}}</mat-option>
+                                                            </div>
+                                                        </mat-select>
+                                                        <mat-error
+                                                            *ngIf="feesForm.get('class')?.hasError('required') && feesForm.get('class')?.touched">
+                                                            Class is required
+                                                        </mat-error>
+                                                        <mat-error
+                                                            *ngIf="feesForm.get('class')?.hasError('pattern') && feesForm.get('class')?.touched">
+                                                            Please enter a valid class (numeric characters only)
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-lg-6">
+                                                    <mat-form-field appearance="outline">
+                                                        <mat-label>Stream</mat-label>
+                                                        <mat-select type="text" matInput formControlName="stream">
+                                                            <ng-container *ngIf="cls==12 || cls==11">
+                                                                <div *ngFor="let subject of streamMainSubject">
+                                                                    <mat-option value="{{subject}}"
+                                                                        (click)="chooseStream(subject)">{{subject}}</mat-option>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container
+                                                                *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                                                <div>
+                                                                    <mat-option value="N/A">N/A</mat-option>
+                                                                </div>
+                                                            </ng-container>
+                                                        </mat-select>
+                                                        <mat-error
+                                                            *ngIf="feesForm.get('stream')?.hasError('required') && feesForm.get('stream')?.touched">
+                                                            Stream is required
+                                                        </mat-error>
+                                                        <mat-error
+                                                            *ngIf="feesForm.get('stream')?.hasError('pattern') && feesForm.get('stream')?.touched">
+                                                            Please enter a valid Stream (only letters are allowed)
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
                                             </div>
                                             <ng-container>
                                                 <h3>Admission Fee</h3>
@@ -212,8 +260,8 @@
                                                             <td class="text-bold">Admission Fee</td>
                                                             <td>*Apply</td>
                                                             <td class="text-bold">Total Annual Fee</td>
-                                                            <td>&#8377; {{clsFeesStructure?.totalFees +
-                                                                clsFeesStructure?.admissionFees}}</td>
+                                                            <td>&#8377; {{singleFessStructure?.totalFees +
+                                                                singleFessStructure?.admissionFees}}</td>
                                                         </tr>
                                                     </table>
                                                     <ng-container>
@@ -224,7 +272,7 @@
                                                             <td class="text-bold">Admission Fee</td>
                                                             <td>*Not Apply</td>
                                                             <td class="text-bold">Total Annual Fee</td>
-                                                            <td>&#8377; {{clsFeesStructure?.totalFees}}</td>
+                                                            <td>&#8377; {{singleFessStructure?.totalFees}}</td>
                                                         </tr>
                                                     </table>
                                                     <ng-container>

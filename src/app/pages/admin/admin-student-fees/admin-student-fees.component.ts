@@ -174,11 +174,21 @@ export class AdminStudentFeesComponent implements OnInit {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
-        console.log(this.schoolInfo)
       }
     })
   }
-
+  feesStructureByClass() {
+    let params = {
+      class: this.cls,
+      adminId: this.adminId,
+      stream: this.stream
+    }
+    this.feesStructureService.feesStructureByClass(params).subscribe((res: any) => {
+      if (res) {
+        this.clsFeesStructure = res;
+      }
+    })
+  }
   getAllStudentFeesCollectionByClass() {
     let params = {
       class: this.cls,
@@ -196,22 +206,6 @@ export class AdminStudentFeesComponent implements OnInit {
         }));
 
          this.studentList = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
-        setTimeout(() => {
-          this.loader = false;
-        }, 1000)
-      }
-    })
-  }
-
-  feesStructureByClass() {
-    let params = {
-      class: this.cls,
-      adminId: this.adminId,
-      stream: this.stream
-    }
-    this.feesStructureService.feesStructureByClass(params).subscribe((res: any) => {
-      if (res) {
-        this.clsFeesStructure = res;
       }
     })
   }

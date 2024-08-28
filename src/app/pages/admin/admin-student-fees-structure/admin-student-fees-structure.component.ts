@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { FeesStructureService } from 'src/app/services/fees-structure.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { SchoolService } from 'src/app/services/school.service';
+import { ClassService } from 'src/app/services/class.service';
 
 @Component({
   selector: 'app-admin-student-fees-structure',
@@ -12,11 +13,7 @@ import { SchoolService } from 'src/app/services/school.service';
 })
 export class AdminStudentFeesStructureComponent implements OnInit {
   disabled = true;
-  // installment: boolean = false;
-  // monthly: boolean = false;
-
-
-  cls: any;
+  cls: number = 0;
   feesForm: FormGroup;
   showModal: boolean = false;
   showFeesStructureModal: boolean = false
@@ -34,15 +31,20 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   feesMode: boolean = false;
   clsFeesStructure: any;
   particularsAdmissionFees: any[] = [];
+  singleFessStructure:any;
   feePerticulars: any[] = ['Registration', 'Tution', 'Books', 'Uniform', 'Examination', 'Sports', 'Library', 'Transport'];
-  stream: any;
+  classInfo: any[] = [];
+  stream: string = '';
+  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+
   schoolInfo: any;
   loader: Boolean = true;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private feesStructureService: FeesStructureService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService,private classService: ClassService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
-      stream: [''],
+      class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      stream: ['', Validators.required],
       admissionFees: ['', Validators.required],
       type: this.fb.group({
         feesType: this.fb.array([], [Validators.required]),
@@ -54,11 +56,8 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     this.getSchool();
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
-    this.cls = this.activatedRoute.snapshot.paramMap.get('class');
-    this.stream = this.activatedRoute.snapshot.paramMap.get('stream');
-    if (this.cls && this.stream) {
-      this.getFeesStructureByClass();
-    }
+    this.getClass();
+    this.getFeesStructureByClass();
     this.loader = false;
   }
   getSchool() {
@@ -68,28 +67,59 @@ export class AdminStudentFeesStructureComponent implements OnInit {
       }
     })
   }
+  getClass() {
+    this.classService.getClassList().subscribe((res: any) => {
+      if (res) {
+        this.classInfo = res;
+      }
+    })
+  }
+
+
+  chooseClass(cls: any) {
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.cls = 0;
+    this.cls = cls;
+    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
+      this.feesForm.get('stream')?.setValue("N/A");
+      this.stream = '';
+      this.stream = 'stream';
+    }
+  }
+  chooseStream(stream: any) {
+    this.stream = '';
+    this.stream = stream;
+  }
+
+
+
+
+
+
+
+
   getFeesStructureByClass() {
     let params = {
-      class: this.cls,
       adminId: this.adminId,
-      stream:this.stream
     }
     this.feesStructureService.feesStructureByClass(params).subscribe((res: any) => {
       if (res) {
         this.errorMsg = '';
         this.clsFeesStructure = res;
-        this.particularsAdmissionFees = [{ Admission: res.admissionFees }, ...res.feesType];
       }
     }, err => {
       this.errorMsg = err.error;
     })
   }
-  
+
   addFeesModel() {
     this.showModal = true;
     this.feesTypeMode = true;
   }
-  openFeesStructureModal() {
+  openFeesStructureModal(singleFessStructure: any) {
+    this.singleFessStructure= singleFessStructure;
+    this.particularsAdmissionFees = [{ Admission: singleFessStructure.admissionFees }, ...singleFessStructure.feesType];
     this.showFeesStructureModal = true;
   }
   selectFeesStructure() {
@@ -114,6 +144,7 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     this.deleteMode = false;
     this.errorMsg = '';
     this.errorCheck = false
+    this.particularsAdmissionFees = [];
     this.showFeesStructureModal = false;
     this.feesForm.reset();
   }
@@ -157,8 +188,6 @@ export class AdminStudentFeesStructureComponent implements OnInit {
 
   feesStructureAddUpdate() {
     this.feesForm.value.adminId = this.adminId;
-    this.feesForm.value.class = this.cls;
-    this.feesForm.value.stream = this.stream;
     this.feesForm.value.totalFees = this.totalFees;
     let feesTypeObj = this.feesForm.value.type.feesType;
 

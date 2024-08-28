@@ -184,7 +184,6 @@ export class AdmissionComponent implements OnInit {
       if (res) {
         this.singleStudentInfo = student;
         this.singleStudentInfo.admissionFees = res.studentFeesCollection.admissionFees;
-        console.log(res)
       }
     })
   }
