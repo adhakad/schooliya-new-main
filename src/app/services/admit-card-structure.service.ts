@@ -13,6 +13,9 @@ export class AdmitCardStructureService {
     return this.http.post(`${this.url}`,formData);
   }
   admitCardStructureByClass(params: any) {
+    return this.http.get(`${this.url}/admin/${params.adminId}`);
+  }
+  admitCardStructureByClassStream(params: any) {
     return this.http.get(`${this.url}/admin/${params.adminId}/class/${params.cls}/stream/${params.stream}`);
   }
   changeAdmitCardPublishStatus(params:any){

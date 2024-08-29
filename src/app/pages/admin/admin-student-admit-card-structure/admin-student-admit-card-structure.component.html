@@ -19,7 +19,7 @@
                                     <div class="col-9" style="text-align: right;">
                                         <div class="row">
                                             <div class="col-2 offset-10">
-                                                <button class="submit-button" mat-raised-button><mat-icon>add</mat-icon>Create</button>
+                                                <button class="submit-button" (click)="addAdmitCardModel()" mat-raised-button><mat-icon>add</mat-icon>Create</button>
                                             </div>
                                         </div>
                                     </div>
@@ -34,7 +34,7 @@
                                             <span>Admit Card | Structure</span>
                                         </button>
                                     </div>
-                                    <div class="col-5 offset-4"><button class="submit-button" mat-raised-button><mat-icon>add</mat-icon>Create</button></div>
+                                    <div class="col-5 offset-4"><button class="submit-button" (click)="addAdmitCardModel()" mat-raised-button><mat-icon>add</mat-icon>Create</button></div>
                                 </div>
                             </div>
                         </div>
@@ -55,10 +55,10 @@
                                             <th>Remove</th>
                                         </tr>
                                     </thead>
-                                    <tbody *ngIf="examAdmitCard">
-                                        <tr>
+                                    <tbody *ngIf="examAdmitCard && examAdmitCard.length>0">
+                                        <tr *ngFor="let examAdmitCard of examAdmitCard,let i=index">
                                             <td>
-                                                <p class="mb-0">{{1}}</p>
+                                                <p class="mb-0">{{i+1}}</p>
                                             </td>
                                             <td>
                                                 <p class="mb-0">{{examAdmitCard.examType | titlecase}}</p>
@@ -67,25 +67,18 @@
                                                 <p class="mb-0">{{examAdmitCard.class | classSuffix}}</p>
                                             </td>
                                             <td>
-                                                <p class="mb-0" *ngIf="examAdmitCard.class>10">{{examAdmitCard.stream |
-                                                    titlecase}}</p>
-                                                <p class="mb-0" *ngIf="examAdmitCard.class<=10">N/A</p>
+                                                <p class="mb-0">{{examAdmitCard.stream}}</p>
                                             </td>
                                             <td class="mb-0">
                                                 <mat-icon
                                                     (click)="openAdmitCardStructureModal(examAdmitCard)">launch</mat-icon>
                                             </td>
-                                            <!-- <td>
-                                                <mat-slide-toggle [(ngModel)]="examAdmitCard.admitCardPublishStatus"
-                                                    (change)="onToggleChange(examAdmitCard._id,examAdmitCard.admitCardPublishStatus)">
-                                                </mat-slide-toggle>
-                                            </td> -->
                                             <td class="mb-0">
                                                 <mat-icon
                                                     (click)="deleteAdmitCardStructureModel(examAdmitCard._id)">delete</mat-icon>
                                             </td>
                                         </tr>
-
+    
                                     </tbody>
                                 </table>
                                 <div *ngIf="examAdmitCard" style="text-align: center;margin-top: 200px;">
@@ -107,12 +100,11 @@
                                             </div>
                                         </div>
 
-                                        <div class="modal-content" *ngIf="!successMsg && classSubject">
+                                        <div class="modal-content" *ngIf="!successMsg">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete'
                                                     :'Create'}} Admit Card Structure {{cls | classSuffix}} <span *ngIf="cls==12 || cls==11">{{stream}}</span></h5>
-                                                <mat-icon *ngIf="deleteMode" matRipple (click)="closeModal()"
-                                                    style="cursor: pointer;">close</mat-icon>
+                                                    <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                             </div>
 
                                             <form [formGroup]="admitcardForm" (ngSubmit)="admitcardAddUpdate()"
@@ -122,13 +114,54 @@
                                                     <div *ngIf="errorCheck">
                                                         <p class="error-message">{{errorMsg}}</p>
                                                     </div>
-                                                    <div class="container mt-3 mb-3" *ngIf="classSubject.length>0">
+                                                    <div class="container mt-3 mb-3">
                                                         <div class="row">
                                                             <div class="col-12 col-lg-6">
                                                                 <mat-form-field appearance="outline">
+                                                                    <mat-label>Class Applied for</mat-label>
+                                                                    <mat-select matInput formControlName="class">
+                                                                        <div *ngFor="let classInfo of classInfo">
+                                                                            <mat-option value="{{classInfo.class}}"
+                                                                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                                                |
+                                                                                classSuffix}}</mat-option>
+                                                                        </div>
+                                                                    </mat-select>
+                                                                    <mat-error
+                                                                        *ngIf="admitcardForm.get('class')?.hasError('required') && admitcardForm.get('class')?.touched">
+                                                                        Class is required
+                                                                    </mat-error>
+                                                                    <mat-error
+                                                                        *ngIf="admitcardForm.get('class')?.hasError('pattern') && admitcardForm.get('class')?.touched">
+                                                                        Please enter a valid class (numeric characters only)
+                                                                    </mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-12 col-lg-6">
+                                                                <mat-form-field appearance="outline">
                                                                     <mat-label>Stream</mat-label>
-                                                                    <input matInput type="text" formControlName="stream"
-                                                                        readonly>
+                                                                    <mat-select type="text" matInput formControlName="stream">
+                                                                        <ng-container *ngIf="cls==12 || cls==11">
+                                                                            <div *ngFor="let subject of streamMainSubject">
+                                                                                <mat-option value="{{subject}}"
+                                                                                    (click)="chooseStream(subject)">{{subject}}</mat-option>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                                                            <div>
+                                                                                <mat-option value="N/A">N/A</mat-option>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </mat-select>
+                                                                    <mat-error
+                                                                        *ngIf="admitcardForm.get('stream')?.hasError('required') && admitcardForm.get('stream')?.touched">
+                                                                        Stream is required
+                                                                    </mat-error>
+                                                                    <mat-error
+                                                                        *ngIf="admitcardForm.get('stream')?.hasError('pattern') && admitcardForm.get('stream')?.touched">
+                                                                        Please enter a valid Stream (only letters are allowed)
+                                                                    </mat-error>
                                                                 </mat-form-field>
                                                             </div>
                                                             <div class="col-12 col-lg-6">

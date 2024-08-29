@@ -92,7 +92,7 @@ export class AdminStudentAdmitCardComponent implements OnInit {
   }
 
   getAdmitCardStructureByClass(params: any) {
-    this.admitCardStructureService.admitCardStructureByClass(params).subscribe((res: any) => {
+    this.admitCardStructureService.admitCardStructureByClassStream(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
         this.templateStatusCode = 200;
@@ -212,7 +212,7 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     printHtml += '.text-left { text-align: left;}';
     printHtml += 'p {color: #252525 !important;font-size:12px;}'
     printHtml += 'h4 {color: #252525 !important;}'
-    printHtml += '.watermark { position: fixed;font-family: Arial, sans-serif; font-size: 20px; font-weight: bold;text-transform: uppercase; color: rgba(162, 165, 182, 0.015); top: 75%; left:10%; pointer-events: none; z-index: 1; }';
+    printHtml += '.watermark { position: fixed;font-family: Arial, sans-serif; font-size: 20px; font-weight: bold;text-transform: uppercase;color: rgba(50, 48, 65, 0.042); top: 60%; left:10%; pointer-events: none; z-index: 1; }';
     printHtml += '@media print {';
     printHtml += '  body::before {';
     printHtml += `    content: "${schoolName}, ${city}";`;

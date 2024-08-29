@@ -3,7 +3,8 @@ const AdmitCardStructureModel = require('../models/admit-card-structure');
 const AdmitCardModel = require("../models/admit-card");
 const StudentModel = require('../models/student');
 
-let GetSingleClassAdmitCardStructure = async (req, res, next) => {
+
+let GetSingleClassAdmitCardStructureByStream = async (req, res, next) => {
     let adminId = req.params.id;
     let className = req.params.class;
     let stream = req.params.stream;
@@ -12,6 +13,19 @@ let GetSingleClassAdmitCardStructure = async (req, res, next) => {
     }
     try {
         const singleAdmitCardStr = await AdmitCardStructureModel.findOne({adminId:adminId, class: className,stream:stream });
+        if (!singleAdmitCardStr) {
+            return res.status(404).json('Fees structure not found !');
+        }
+        return res.status(200).json(singleAdmitCardStr);
+    } catch (error) { 
+        return res.status(500).json('Internal Server Error !');
+    }
+}
+let GetSingleClassAdmitCardStructure = async (req, res, next) => {
+    let adminId = req.params.id;
+    
+    try {
+        const singleAdmitCardStr = await AdmitCardStructureModel.find({adminId:adminId });
         if (!singleAdmitCardStr) {
             return res.status(404).json('Fees structure not found !');
         }
@@ -90,6 +104,7 @@ let DeleteAdmitCardStructure = async (req, res, next) => {
 }
 module.exports = {
     GetSingleClassAdmitCardStructure,
+    GetSingleClassAdmitCardStructureByStream,
     CreateAdmitCardStructure,
     DeleteAdmitCardStructure,
 }
