@@ -63,7 +63,7 @@
 
 .banner .submit-button {
    background-color: #fff;
-   color: #252525;
+   color: #382066;
    height: 50px;
    width: 75%;
    font-size: clamp(.85rem, 1.25vw, 1.75rem);
@@ -119,7 +119,7 @@
 }
 
 .why-choose-us-section .title h3 {
-   color: #252525;
+   color: #382066;
 
    font-size: 24px;
    font-weight: 600;
@@ -137,7 +137,7 @@
 }
 
 .why-choose-us-section .others-chart .mat-icon {
-   color: #252525;
+   color: #382066;
    font-size: 20px;
    margin-top: 1vh;
 }
@@ -161,19 +161,19 @@
 }
 
 .why-choose-us-section .schooliya-chart p {
-   color: #252525;
+   color: #382066;
    font-size: 10px;
    margin-top: 10px;
 }
 
 .why-choose-us-section .others-chart p {
-   color: #252525;
+   color: #382066;
    font-size: 10px;
    margin-top: 8px;
 }
 
 .why-choose-us-section .others-chart p span {
-   color: #252525;
+   color: #382066;
    font-size: 10px;
    margin-top: 8px;
 }
@@ -197,7 +197,7 @@
 }
 
 .pricing-section .title h2 {
-   color: #252525;
+   color: #382066;
 
    font-size: 24px;
    font-weight: 600;
@@ -221,7 +221,7 @@
 }
 
 .pricing-card h2 {
-   color: #252525;
+   color: #382066;
 
    font-size: 24px;
    font-weight: 700;
@@ -234,7 +234,7 @@
 }
 
 .pricing-card p {
-   color: #252525;
+   color: #382066;
 
    font-size: 15px;
    font-weight: 400;
@@ -242,7 +242,7 @@
 }
 
 .pricing-card h4 {
-   color: #252525;
+   color: #382066;
    font-size: 28px;
    font-weight: 700;
    letter-spacing: .75px;
@@ -282,7 +282,7 @@
 }
 
 .pricing-card .pricing-amount p {
-   color: #252525;
+   color: #382066;
    margin-top: 2vh;
    margin-bottom: 2.5vh;
 }
@@ -309,7 +309,7 @@
 }
 
 .pricing-feature .module-access span {
-   color: #252525;
+   color: #382066;
    font-size: .85rem;
    font-weight: 500;
    text-align: left;
@@ -323,7 +323,7 @@
 }
 
 .pricing-feature .module-list span {
-   color: #252525;
+   color: #382066;
    font-size: .85rem;
    font-weight: 500;
    text-align: left;
@@ -352,7 +352,7 @@
 .service-section .title h2 {
    font-size: clamp(1.25rem, 3vw, 2.5rem);
    font-weight: 600;
-   color: #252525;
+   color: #382066;
    letter-spacing: .5px;
    line-height: 40px;
 }
@@ -377,7 +377,7 @@
 }
 
 .service-card h3 {
-   color: #252525;
+   color: #382066;
    font-size: clamp(.75rem, 1vw, 1.5rem);
    font-weight: 500;
    margin-top: 2vh;
@@ -386,7 +386,7 @@
 }
 
 .service-card p {
-   color: #252525;
+   color: #382066;
    font-size: clamp(.75rem, .9vw, 1.5rem);
    font-weight: 400;
    margin-top: 2vh !important;
@@ -456,7 +456,7 @@
 
    .banner .submit-button {
       background-color: #fff;
-      color: #252525;
+      color: #382066;
       height: 50px;
       width: 75%;
       font-size: clamp(.85rem, 1.25vw, 1.75rem);
@@ -513,7 +513,7 @@
    }
    
    .why-choose-us-section .title h3 {
-      color: #252525;
+      color: #382066;
    
       font-size: 24px;
       font-weight: 600;
@@ -550,19 +550,19 @@
    }
    
    .why-choose-us-section .schooliya-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 12px;
       margin-top: 2.5vh;
    }
    
    .why-choose-us-section .others-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 12px;
       margin-top: 8.5vh;
    }
    
    .why-choose-us-section .others-chart p span {
-      color: #252525;
+      color: #382066;
       font-size: 11px;
       margin-top:8.5vh;
    }
@@ -586,7 +586,7 @@
    }
 
    .pricing-section .title h2 {
-      color: #252525;
+      color: #382066;
       font-size: 24px;
       font-weight: 600;
       letter-spacing: .35px;
@@ -608,7 +608,7 @@
    }
 
    .pricing-card h2 {
-      color: #252525;
+      color: #382066;
 
       font-size: 24px;
       font-weight: 700;
@@ -621,7 +621,7 @@
    }
 
    .pricing-card p {
-      color: #252525;
+      color: #382066;
 
       font-size: 15px;
       font-weight: 400;
@@ -629,7 +629,7 @@
    }
 
    .pricing-card h4 {
-      color: #252525;
+      color: #382066;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: .75px;
@@ -669,7 +669,7 @@
    }
 
    .pricing-card .pricing-amount p {
-      color: #252525;
+      color: #382066;
       margin-top: 5vh;
       margin-bottom: 5.5vh;
    }
@@ -696,7 +696,7 @@
    }
 
    .pricing-feature .module-access span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -710,7 +710,7 @@
    }
 
    .pricing-feature .module-list span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -739,7 +739,7 @@
    .service-section .title h2 {
       font-size: clamp(1.25rem, 3vw, 2.5rem);
       font-weight: 600;
-      color: #252525;
+      color: #382066;
       letter-spacing: .5px;
       line-height: 40px;
    }
@@ -763,7 +763,7 @@
    }
 
    .service-card h3 {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, 1vw, 1.5rem);
       font-weight: 500;
       margin-top: 3vh;
@@ -772,7 +772,7 @@
    }
 
    .service-card p {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, .9vw, 1.5rem);
       font-weight: 400;
       margin-top: 3.5vh !important;
@@ -842,7 +842,7 @@
    
    .banner .submit-button {
       background-color: #fff;
-      color: #252525;
+      color: #382066;
       height: 50px;
       width: 75%;
       font-size: clamp(.85rem, 1.25vw, 1.75rem);
@@ -898,7 +898,7 @@
    }
    
    .why-choose-us-section .title h3 {
-      color: #252525;
+      color: #382066;
    
       font-size: 24px;
       font-weight: 600;
@@ -917,7 +917,7 @@
    }
    
    .why-choose-us-section .others-chart .mat-icon {
-      color: #252525;
+      color: #382066;
       font-size: 20px;
       margin-top: 1vh;
    }
@@ -941,19 +941,19 @@
    }
    
    .why-choose-us-section .schooliya-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 12px;
       margin-top: 10px;
    }
    
    .why-choose-us-section .others-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 12px;
       margin-top: 8px;
    }
    
    .why-choose-us-section .others-chart p span {
-      color: #252525;
+      color: #382066;
       font-size: 11px;
       margin-top: 8px;
    }
@@ -977,7 +977,7 @@
    }
    
    .pricing-section .title h2 {
-      color: #252525;
+      color: #382066;
    
       font-size: 24px;
       font-weight: 600;
@@ -1000,7 +1000,7 @@
    }
    
    .pricing-card h2 {
-      color: #252525;
+      color: #382066;
    
       font-size: 24px;
       font-weight: 700;
@@ -1013,7 +1013,7 @@
    }
    
    .pricing-card p {
-      color: #252525;
+      color: #382066;
    
       font-size: 15px;
       font-weight: 400;
@@ -1021,7 +1021,7 @@
    }
    
    .pricing-card h4 {
-      color: #252525;
+      color: #382066;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: .75px;
@@ -1061,7 +1061,7 @@
    }
    
    .pricing-card .pricing-amount p {
-      color: #252525;
+      color: #382066;
       margin-top: 2vh;
       margin-bottom: 2.5vh;
    }
@@ -1088,7 +1088,7 @@
    }
    
    .pricing-feature .module-access span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1102,7 +1102,7 @@
    }
    
    .pricing-feature .module-list span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1131,7 +1131,7 @@
    .service-section .title h2 {
       font-size: clamp(1.25rem, 3vw, 2.5rem);
       font-weight: 600;
-      color: #252525;
+      color: #382066;
       letter-spacing: .5px;
       line-height: 40px;
    }
@@ -1155,7 +1155,7 @@
    }
    
    .service-card h3 {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, 1vw, 1.5rem);
       font-weight: 500;
       margin-top: 2vh;
@@ -1164,7 +1164,7 @@
    }
    
    .service-card p {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, .9vw, 1.5rem);
       font-weight: 400;
       margin-top: 2vh !important;
@@ -1238,7 +1238,7 @@
 
    .banner .submit-button {
       background-color: #fff;
-      color: #252525;
+      color: #382066;
       height: 50px;
       width: 75%;
       font-size: clamp(.85rem, 1.25vw, 1.75rem);
@@ -1296,7 +1296,7 @@
    }
    
    .why-choose-us-section .title h3 {
-      color: #252525;
+      color: #382066;
    
       font-size: 24px;
       font-weight: 600;
@@ -1333,19 +1333,19 @@
    }
    
    .why-choose-us-section .schooliya-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 12px;
       margin-top: 2.5vh;
    }
    
    .why-choose-us-section .others-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 12px;
       margin-top: 8.5vh;
    }
    
    .why-choose-us-section .others-chart p span {
-      color: #252525;
+      color: #382066;
       font-size: 11px;
       margin-top: 8px;
    }
@@ -1369,7 +1369,7 @@
    }
 
    .pricing-section .title h2 {
-      color: #252525;
+      color: #382066;
       font-size: 24px;
       font-weight: 600;
       letter-spacing: .35px;
@@ -1391,7 +1391,7 @@
    }
 
    .pricing-card h2 {
-      color: #252525;
+      color: #382066;
 
       font-size: 24px;
       font-weight: 700;
@@ -1404,7 +1404,7 @@
    }
 
    .pricing-card p {
-      color: #252525;
+      color: #382066;
 
       font-size: 15px;
       font-weight: 400;
@@ -1412,7 +1412,7 @@
    }
 
    .pricing-card h4 {
-      color: #252525;
+      color: #382066;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: .75px;
@@ -1452,7 +1452,7 @@
    }
 
    .pricing-card .pricing-amount p {
-      color: #252525;
+      color: #382066;
       margin-top: 5vh;
       margin-bottom: 5.5vh;
    }
@@ -1479,7 +1479,7 @@
    }
 
    .pricing-feature .module-access span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1493,7 +1493,7 @@
    }
 
    .pricing-feature .module-list span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1522,7 +1522,7 @@
    .service-section .title h2 {
       font-size: clamp(1.25rem, 3vw, 2.5rem);
       font-weight: 600;
-      color: #252525;
+      color: #382066;
       letter-spacing: .5px;
       line-height: 40px;
    }
@@ -1546,7 +1546,7 @@
    }
 
    .service-card h3 {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, 1vw, 1.5rem);
       font-weight: 500;
       margin-top: 3vh;
@@ -1555,7 +1555,7 @@
    }
 
    .service-card p {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, .9vw, 1.5rem);
       font-weight: 400;
       margin-top: 3vh !important;
@@ -1639,7 +1639,7 @@
 
    .banner .submit-button {
       background-color: #fff;
-      color: #252525;
+      color: #382066;
       height: 7.5vh;
       width: 45%;
       font-size: clamp(.75rem, 1.1vw, 1.5rem);
@@ -1697,7 +1697,7 @@
    }
 
    .why-choose-us-section .title h3 {
-      color: #252525;
+      color: #382066;
       font-size: 24px;
       font-weight: 600;
       letter-spacing: .35px;
@@ -1733,19 +1733,19 @@
    }
 
    .why-choose-us-section .schooliya-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 16px;
       margin-top: 1vh;
    }
 
    .why-choose-us-section .others-chart p {
-      color: #252525;
+      color: #382066;
       font-size: 16px;
       margin-top: 1vh;
    }
 
    .why-choose-us-section .others-chart p span {
-      color: #252525;
+      color: #382066;
       font-size: 16px;
       margin-top: 8px;
       margin-left: 5px;
@@ -1786,7 +1786,7 @@
    }
 
    .pricing-card h2 {
-      color: #252525;
+      color: #382066;
       font-weight: 600;
       font-weight: 600;
       ;
@@ -1801,7 +1801,7 @@
    }
 
    .pricing-section .title h2 {
-      color: #252525;
+      color: #382066;
       font-size: 38px;
       font-weight: 600;
       letter-spacing: .5px;
@@ -1809,7 +1809,7 @@
    }
 
    .pricing-card p {
-      color: #252525;
+      color: #382066;
       font-size: 15px;
       font-weight: 400;
       text-align: center;
@@ -1817,7 +1817,7 @@
    }
 
    .pricing-card h4 {
-      color: #252525;
+      color: #382066;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: .75px;
@@ -1857,7 +1857,7 @@
    }
 
    .pricing-card .pricing-amount p {
-      color: #252525;
+      color: #382066;
       margin-top: 3vh;
       margin-bottom: 3vh;
    }
@@ -1884,7 +1884,7 @@
    }
 
    .pricing-feature .module-access span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1898,7 +1898,7 @@
    }
 
    .pricing-feature .module-list span {
-      color: #252525;
+      color: #382066;
       font-size: .85rem;
       font-weight: 500;
       text-align: left;
@@ -1921,7 +1921,7 @@
    .service-section .title h2 {
       font-size: 38px;
       font-weight: 600;
-      color: #252525;
+      color: #382066;
       letter-spacing: .5px;
       line-height: 40px;
    }
@@ -1945,14 +1945,14 @@
    }
 
    .service-card h3 {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, 1vw, 1.5rem);
       font-weight: 500;
       margin-top: 1vh;
    }
 
    .service-card p {
-      color: #252525;
+      color: #382066;
       font-size: clamp(.75rem, .9vw, 1.5rem);
       font-weight: 400;
       margin-top: 1.5vh !important;

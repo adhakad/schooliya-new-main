@@ -55,7 +55,7 @@
   }
 
   ::ng-deep .custom-select .mat-form-field-label {
-    color: #2f2c5e !important;
+    color: #382066 !important;
     letter-spacing: .5px;
   }
 
@@ -66,7 +66,7 @@
   .form-control {
     width: 100%;
     height: 45px;
-    color: #2f2c5e;
+    color: #382066;
     border: none;
     margin-right: 0 !important;
     margin-bottom: 3vh;
@@ -75,7 +75,7 @@
   }
 
   .form-control::placeholder {
-    color: #2f2c5e;
+    color: #382066;
     font-size: 15px;
     letter-spacing: .5px;
   }
@@ -96,7 +96,7 @@
   }
 
   .main-container .menu-button span {
-    color: #2f2c5e;
+    color: #382066;
     font-size: 15px;
     font-weight: 400;
     margin-top: 2px;
@@ -126,23 +126,23 @@
   }
 
   .main-card h3 {
-    color: #2f2c5e;
+    color: #382066;
     letter-spacing: .6px;
     font-size: 18px;
   }
 
   .modal-content h3 {
-    color: #2f2c5e;
+    color: #382066;
     letter-spacing: .5px;
     font-size: 16px;
   }
 
   h4 {
-    color: #2f2c5e;
+    color: #382066;
   }
 
   p {
-    color: #2f2c5e;
+    color: #382066;
     font-size: 15px;
   }
 
@@ -158,7 +158,7 @@
     margin-top: 25%;
     letter-spacing: .6px;
     font-size: 18px;
-    color: #2f2c5e;
+    color: #382066;
   }
 
 
@@ -203,7 +203,7 @@
   }
 
   .status-inactive {
-    color: #2f2c5e;
+    color: #382066;
     cursor: pointer;
     text-decoration: none;
   }
@@ -223,22 +223,22 @@
 
   th {
     white-space: nowrap;
-    color: #2f2c5e;
+    color: #382066;
     letter-spacing: .5px;
   }
 
   td {
     white-space: nowrap;
-    color: #2f2c5e;
+    color: #382066;
   }
 
   table mat-icon {
-    color: #2f2c5e;
+    color: #382066;
     cursor: pointer;
   }
 
   .table p {
-    color: #2f2c5e;
+    color: #382066;
   }
 
   .pagination {
@@ -368,7 +368,7 @@
     }
 
     .main-container .menu-button span {
-      color: #2f2c5e;
+      color: #382066;
       font-size: 15px;
       font-weight: 400;
       margin-top: 2px;
@@ -416,7 +416,7 @@
     .form-control {
       width: 100% !important;
       height: 45px;
-      color: #2f2c5e;
+      color: #382066;
       border: none;
       margin-right: 0 !important;
       margin-bottom: 0 !important;
@@ -425,7 +425,7 @@
     }
 
     .form-control::placeholder {
-      color: #2f2c5e;
+      color: #382066;
       font-size: 15px;
       letter-spacing: .5px;
     }
@@ -452,7 +452,7 @@
     }
 
     ::ng-deep .custom-select .mat-form-field-label {
-      color: #2f2c5e !important;
+      color: #382066 !important;
       letter-spacing: .5px;
     }
 
@@ -462,7 +462,7 @@
 
     .setting-button {
       background-color: #fff;
-      color: #2f2c5e;
+      color: #382066;
       width: 50px !important;
       height: 50px !important;
       margin-bottom: 0 !important;
