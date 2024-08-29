@@ -183,7 +183,7 @@ export class AdminStudentFeesComponent implements OnInit {
       adminId: this.adminId,
       stream: this.stream
     }
-    this.feesStructureService.feesStructureByClass(params).subscribe((res: any) => {
+    this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
       if (res) {
         this.clsFeesStructure = res;
       }

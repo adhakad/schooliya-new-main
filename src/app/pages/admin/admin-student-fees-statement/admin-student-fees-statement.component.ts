@@ -138,7 +138,7 @@ export class AdminStudentFeesStatementComponent implements OnInit {
       adminId: this.adminId,
       stream:this.stream
     }
-    this.feesStructureService.feesStructureByClass(params).subscribe((res: any) => {
+    this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
       if (res) {
         if (this.studentFeesCollection.admissionFeesPayable == true) {
           res.feesType = [{ Admission: res.admissionFees }, ...res.feesType];

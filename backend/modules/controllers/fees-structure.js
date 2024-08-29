@@ -4,6 +4,23 @@ const ClassModel = require('../models/class');
 const FeesCollectionModel = require('../models/fees-collection');
 const StudentModel = require('../models/student');
 
+let GetSingleClassFeesStructureByStream = async (req, res, next) => {
+    let adminId = req.params.id;
+    let className = req.params.class;
+    let stream = req.params.stream;
+    if (stream === "stream") {
+        stream = "N/A";
+    }
+    try {
+        const singleFeesStr = await FeesStructureModel.findOne({adminId:adminId, class: className,stream:stream });
+        if(!singleFeesStr){
+            return res.status(404).json('Fee Structure not found !')
+        }
+        return res.status(200).json(singleFeesStr);
+    } catch (error) {
+        return res.status(500).json('Internal Server Error !');
+    }
+}
 let GetSingleClassFeesStructure = async (req, res, next) => {
     let adminId = req.params.id;
     try {
@@ -116,6 +133,7 @@ let DeleteFeesStructure = async (req, res, next) => {
 
 module.exports = {
     GetSingleClassFeesStructure,
+    GetSingleClassFeesStructureByStream,
     CreateFeesStructure,
     DeleteFeesStructure
 

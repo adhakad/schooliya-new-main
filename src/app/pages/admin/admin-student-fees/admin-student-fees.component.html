@@ -136,17 +136,17 @@
                                         <td>
                                             <p class="mb-0">{{i+1}}</p>
                                         </td>
-                                        <th>
+                                        <td>
                                             <button
-                                                style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
                                                 *ngIf="student.paidFees !== student.totalFees" class="submit-button"
                                                 mat-raised-button (click)="studentFeesPay(student)">Pay
                                                 Offline</button>
-                                            <button *ngIf="student.paidFees === student.totalFees" class="submit-button"
+                                                <button *ngIf="student.paidFees === student.totalFees" class="submit-button"
                                                 mat-raised-button [disabled]="student.paidFees === student.totalFees"
-                                                style="background-color: transparent;">Fee
+                                                style="background-color: transparent;color:#252525;">Fee
                                                 Paid</button>
-                                        </th>
+    
+                                        </td>
                                         <td>
                                             <p class="mb-0">{{student.name | titlecase}}</p>
                                         </td>
