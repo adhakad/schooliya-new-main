@@ -20,7 +20,7 @@ export class SchoolComponent implements OnInit {
   errorCheck: Boolean = false;
   schoolInfo: any;
   loader: Boolean = true;
-  adminId!:String
+  adminId!:String;
   constructor(private fb: FormBuilder, private schoolService: SchoolService,private adminAuthService:AdminAuthService) {
     this.schoolForm = this.fb.group({
       _id: [''],

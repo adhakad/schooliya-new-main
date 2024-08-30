@@ -7,6 +7,20 @@ let countTeacher = async (req, res, next) => {
     let countTeacher = await TeacherModel.count();
     return res.status(200).json({ countTeacher });
 }
+let GetTeacherById = async (req, res, next) => {
+    let adminId = req.params.adminId;
+    let teacherUserId = req.params.teacherUserId;
+    const checkTeacher = await TeacherUserModel.findOne({ _id: teacherUserId, adminId: adminId, });
+    if (!checkTeacher) {
+        return res.status(400).json("Invailid access !")
+    }
+    let teacherId = checkTeacher.teacherId;
+    const teacher = await TeacherModel.findOne({ _id: teacherId, adminId: adminId, });
+    if (!teacher) {
+        return res.status(400).json("Invailid access !")
+    }
+    return res.status(200).json(teacher);
+}
 let GetTeacherPagination = async (req, res, next) => {
     let searchText = req.body.filters.searchText;
     let adminId = req.body.adminId;
@@ -40,7 +54,6 @@ let GetTeacherPagination = async (req, res, next) => {
 let CreateTeacher = async (req, res, next) => {
     let otp = Math.floor(Math.random() * 899999 + 100000);
     const { adminId, name, teacherUserId, education } = req.body;
-    console.log(req.body)
     try {
         const checkTeacher = await TeacherModel.findOne({ adminId: adminId, teacherUserId: teacherUserId });
         if (checkTeacher) {
@@ -176,6 +189,7 @@ let DeleteTeacher = async (req, res, next) => {
 }
 
 module.exports = {
+    GetTeacherById,
     countTeacher,
     GetTeacherPagination,
     CreateTeacher,

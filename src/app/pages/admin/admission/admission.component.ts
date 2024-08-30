@@ -199,7 +199,7 @@ export class AdmissionComponent implements OnInit {
       this.stream = '';
       this.stream = 'stream';
       if (this.stream) {
-        this.feesStructureByClass();
+        this.feesStructureByClassStream();
       }
     }
   }
@@ -207,16 +207,16 @@ export class AdmissionComponent implements OnInit {
     this.stream = '';
     this.stream = stream;
     if (this.stream) {
-      this.feesStructureByClass();
+      this.feesStructureByClassStream();
     }
   }
-  feesStructureByClass() {
+  feesStructureByClassStream() {
     let params = {
       class: this.cls,
       adminId: this.adminId,
       stream: this.stream
     }
-    this.feesStructureService.feesStructureByClass(params).subscribe((res: any) => {
+    this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = true;
         this.errorMsg = '';

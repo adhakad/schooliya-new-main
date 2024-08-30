@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AdmitCardService } from 'src/app/services/admit-card.service';
+import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 @Component({
   selector: 'app-teacher-admit-card',
   templateUrl: './teacher-admit-card.component.html',
@@ -13,6 +14,7 @@ export class TeacherAdmitCardComponent implements OnInit {
   admitCardInfo: any;
   studentInfo: any;
   loader:Boolean=true;
+  adminId!:any;
   constructor(public activatedRoute: ActivatedRoute, private admitCardService: AdmitCardService) {
 
   }

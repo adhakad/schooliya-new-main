@@ -16,6 +16,7 @@ export class TeacherLoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20),Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
+      schoolId: ['', [Validators.required, Validators.pattern(/^\d{6}$/),Validators.pattern('^[0-9]+$')]],
     })
   }
   ngOnInit(): void {
@@ -36,7 +37,7 @@ export class TeacherLoginComponent implements OnInit {
           this.router.navigate(["/teacher/dashboard"], { replaceUrl: true });
         }
       },err => {
-        this.errorMsg = err.error.errorMsg;
+        this.errorMsg = err.error;
       })
     }
   }

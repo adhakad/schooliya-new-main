@@ -22,8 +22,8 @@ export class TeacherService {
   addTeacherPermission(formData:any){
     return this.http.put(`${this.url}/permission/admin/${formData.adminId}/teacher/${formData._id}`,formData);
   }
-  getTeacherById(id:string) {
-    return this.http.get<any[]>(`${this.url}/${id}`);
+  getTeacherById(params:any) {
+    return this.http.get<any[]>(`${this.url}/admin/${params.adminId}/teacher/${params.teacherUserId}`);
   }
   getTeacherCount() {
     return this.http.get(`${this.url}/teacher-count`);

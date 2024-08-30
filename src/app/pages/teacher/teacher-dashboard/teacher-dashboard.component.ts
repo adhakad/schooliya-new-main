@@ -10,6 +10,7 @@ import { SubjectService } from 'src/app/services/subject.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { TestimonialService } from 'src/app/services/testimonial.service';
 import { TopperService } from 'src/app/services/topper.service';
+import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 
 @Component({
   selector: 'app-teacher-dashboard',
@@ -25,9 +26,13 @@ export class TeacherDashboardComponent implements OnInit {
   studentCountInfo: any;
   subjectCountInfo: any;
   loader: Boolean = true;
-  constructor(private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService) { }
+  adminId!:String;
+  constructor(private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService,private teacherAuthService: TeacherAuthService) { }
 
   ngOnInit(): void {
+    let getTeacher = this.teacherAuthService.getLoggedInTeacherInfo();
+    this.adminId = getTeacher?.adminId;
+    console.log(this.adminId)
     this.classCount();
     this.studentCount();
     this.subjectCount();

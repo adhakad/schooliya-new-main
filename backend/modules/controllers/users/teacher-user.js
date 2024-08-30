@@ -1,24 +1,30 @@
 'use strict';
 const bcrypt = require('bcrypt');
 const tokenService = require('../../services/teacher-token');
+const AdminUserModel = require('../../models/users/admin-user');
 const TeacherUserModel = require('../../models/users/teacher-user');
 const TeacherModel = require('../../models/teacher');
 
 let SignupTeacher = async (req, res, next) => {
-    const { email, password, teacherUserId, otp } = req.body;
+    const { email, password,schoolId, teacherUserId, otp } = req.body;
     try {
-        const checkUser = await TeacherUserModel.findOne({ email: email });
-        if (checkUser) {
-            return res.status(400).json("Username already exist !");
+        const checkAdminUser = await AdminUserModel.findOne({ schoolId: schoolId }); 
+        if (!checkAdminUser) {
+            return res.status(404).json("Invailid register !")
         }
-        const teacher = await TeacherModel.findOne({ teacherUserId: teacherUserId });
+        let adminId = checkAdminUser._id;
+        const checkUser = await TeacherUserModel.findOne({adminId: adminId, email: email });
+        if (checkUser) {
+            return res.status(400).json("Username already register !");
+        }
+        const teacher = await TeacherModel.findOne({adminId: adminId,teacherUserId: teacherUserId });
         if (!teacher) {
-            return res.status(404).json("Teacher not exist in this institute !")
+            return res.status(404).json("Teacher not exist in this school !")
         }
         const teacherId = teacher._id;
-        const checkTeacherId = await TeacherUserModel.findOne({ teacherId: teacherId });
+        const checkTeacherId = await TeacherUserModel.findOne({adminId: adminId,teacherId: teacherId });
         if (checkTeacherId) {
-            return res.status(400).json("User id is invalid !")
+            return res.status(400).json("Teacher user id is invalid !")
         }
         const checkOtp = await teacher.otp;
         if (otp !== checkOtp) {
@@ -26,6 +32,7 @@ let SignupTeacher = async (req, res, next) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         let teacherData = {
+            adminId:adminId,
             teacherId: teacherId,
             email: email,
             password: hashedPassword
@@ -35,36 +42,41 @@ let SignupTeacher = async (req, res, next) => {
             return res.status(200).json('Teacher register successfully.');
         }
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });;
+        return res.status(500).json('Internal Server Error !');
     }
 }
 
 let LoginTeacher = async (req, res, next) => {
     try {
-        let teacher = await TeacherUserModel.findOne({ email: req.body.email})
+        const checkAdminUser = await AdminUserModel.findOne({ schoolId: req.body.schoolId }); 
+        if (!checkAdminUser) {
+            return res.status(404).json("Invailid login !")
+        }
+        let adminId = checkAdminUser._id;
+        let teacher = await TeacherUserModel.findOne({adminId: adminId, email: req.body.email})
         if (!teacher) {
-            return res.status(404).json({ errorMsg: 'Username or password invalid !' });
+            return res.status(404).json('Username or password invalid !');
         }
         const passwordMatch = await bcrypt.compare(req.body.password, teacher.password);
         if (!passwordMatch) {
-            return res.status(404).json({ errorMsg: 'Username or password invalid !' });
+            return res.status(404).json('Username or password invalid !');
         }
         let teacherId = await teacher.teacherId;
         let teacherInfo = await TeacherModel.findOne({ _id: teacherId });
         if (teacherInfo.status == "Inactive") {
-            return res.status(400).json({ errorMsg: 'Login permission blocked, please contact school administration !' })
+            return res.status(400).json('Login permission inactive, please contact school administration !')
         }
         if (teacherInfo.status == "Active") {
-            const payload = { id: teacher._id, email: teacher.email, name: teacherInfo.name };
+            const payload = { id: teacher._id,adminId:adminId, email: teacher.email, name: teacherInfo.name };
             const accessToken = await tokenService.getAccessToken(payload);
             const refreshToken = await tokenService.getRefreshToken(payload);
             if(accessToken && refreshToken){
                 return res.status(200).json({ teacherInfo: teacherInfo, accessToken, refreshToken });
             }
         }
-        return res.status(400).json({ errorMsg: 'Login error !' });
+        return res.status(400).json('Login error !');
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });
+        return res.status(500).json('Internal Server Error !');
     }
 }
 

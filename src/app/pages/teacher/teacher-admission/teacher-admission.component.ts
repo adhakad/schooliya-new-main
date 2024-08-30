@@ -4,12 +4,14 @@ import { Subject } from 'rxjs';
 import { StudentService } from 'src/app/services/student.service';
 import { ClassService } from 'src/app/services/class.service';
 import { FeesStructureService } from 'src/app/services/fees-structure.service';
+import { FeesService } from 'src/app/services/fees.service';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { ActivatedRoute } from '@angular/router';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-teacher-admission',
@@ -17,10 +19,11 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
   styleUrls: ['./teacher-admission.component.css']
 })
 export class TeacherAdmissionComponent implements OnInit {
-
   @ViewChild('receipt') receipt!: ElementRef;
+  public baseUrl = environment.API_URL;
   studentForm: FormGroup;
   showModal: boolean = false;
+  showAdmissionPrintModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
@@ -34,152 +37,220 @@ export class TeacherAdmissionComponent implements OnInit {
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
-
   className:any;
-  sessions: any;
+    sessions: any;
   categorys: any;
   religions: any;
   qualifications: any;
   occupations: any;
   stream: string = '';
-  notApplicable: String = "stream";
+  mediums: any;
+  // notApplicable: String = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   cls: number = 0;
-  rollNumberType: string = '';
-  admissionFeesPaymentType: string = '';
   clsFeesStructure: any;
   schoolInfo: any;
   admissionrReceiptInfo: any;
+  singleStudentInfo: any;
   teacherInfo:any;
   createdBy:String='';
   receiptMode: boolean = false;
-  loader:Boolean=true;
-  adminId!:any;
-  constructor(private adminAuthService:AdminAuthService,private fb: FormBuilder,private activatedRoute:ActivatedRoute,private teacherAuthService:TeacherAuthService,private teacherService:TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService) {
+  studentFeesCollection: any;
+  baseURL!: string;
+  loader: Boolean = true;
+  adminId!: String
+  constructor(private adminAuthService:AdminAuthService,private fb: FormBuilder,private activatedRoute:ActivatedRoute,private teacherAuthService:TeacherAuthService,private teacherService:TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService,private feesService: FeesService) {
     this.studentForm = this.fb.group({
       _id: [''],
+      adminId: [''],
       session: ['', Validators.required],
+      medium: ['', Validators.required],
       admissionNo: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       admissionFees: ['', Validators.required],
-      admissionFeesPaymentType: ['', Validators.required],
-      rollNumberType: ['', Validators.required],
       rollNumber: ['', [Validators.required, Validators.maxLength(8), Validators.pattern('^[0-9]+$')]],
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       stream: ['', Validators.required],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       dob: ['', Validators.required],
-      aadharNumber:['',[Validators.required, Validators.pattern('^\\d{12}$')]],
-      samagraId:['',[Validators.required, Validators.pattern('^\\d{9}$')]],
+      aadharNumber: ['', [Validators.pattern('^\\d{12}$')]],
+      samagraId: ['', [Validators.pattern('^\\d{9}$')]],
+      udiseNumber: ['', [Validators.pattern('^\\d{11}$')]],
+      bankAccountNo: ['', [Validators.minLength(9), Validators.maxLength(18), Validators.pattern('^[0-9]+$')]],
+      bankIfscCode: ['', [Validators.minLength(11), Validators.maxLength(11)]],
       gender: ['', Validators.required],
       category: ['', Validators.required],
       religion: ['', Validators.required],
       nationality: ['', Validators.required],
-      contact: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
-      address: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$'), Validators.maxLength(50)]],
-      lastSchool: ['', [Validators.pattern('^[a-zA-Z\\s]+$'), Validators.maxLength(50)]],
+      address: ['', [Validators.required, Validators.maxLength(50)]],
+      lastSchool: ['', [Validators.maxLength(50)]],
       fatherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       fatherQualification: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      fatherOccupation: ['', Validators.required],
-      fatherContact: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
-      fatherAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       motherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       motherQualification: ['', Validators.required],
-      motherOccupation: ['', Validators.required],
-      motherContact: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
-      motherAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      createdBy:[''],
-      
+      parentsOccupation: ['', Validators.required],
+      parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
+      parentsAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      createdBy: [''],
+
     })
   }
 
   ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
-    this.getSchool();
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
+    this.adminId = this.teacherInfo?.adminId;
     if(this.teacherInfo){
-      this.getTeacherById(this.teacherInfo.id)
+      this.getTeacherById(this.teacherInfo)
     }
-    this.className = this.activatedRoute.snapshot.paramMap.get('id');
-    let load:any = this.getStudentsByAdmissionAndClass({ page: 1 });
+    console.log(this.teacherInfo)
+    this.getSchool(this.adminId);
+    let load: any = this.getStudentsByAdmission({ page: 1 });
     this.getClass();
     this.allOptions();
-    if(load){
-      setTimeout(()=>{
+    if (load) {
+      setTimeout(() => {
         this.loader = false;
-      },1000);
+      }, 1000);
     }
+    var currentURL = window.location.href;
+    this.baseURL = new URL(currentURL).origin;
   }
-  getTeacherById(id:string){
-    this.teacherService.getTeacherById(id).subscribe((res:any)=> {
+  getTeacherById(teacherInfo:any){
+    let params = {
+      adminId:teacherInfo.adminId,
+      teacherUserId:teacherInfo.id,
+    }
+    this.teacherService.getTeacherById(params).subscribe((res:any)=> {
       if(res){
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
 
     })
   }
-  printReceipt() {
-    this.printPdfService.printElement(this.receipt.nativeElement);
+  
+  printStudentData() {
+    const printContent = this.getPrintContent();
+    this.printPdfService.printContent(printContent);
     this.closeModal();
   }
-  getSchool() {
-    this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
+
+  private getPrintContent(): string {
+    let schoolName = this.schoolInfo.schoolName;
+    let city = this.schoolInfo.city;
+    let printHtml = '<html>';
+    printHtml += '<head>';
+    printHtml += '<style>';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
+    printHtml += 'div {margin: 0; padding: 0;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
+    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
+    printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
+    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
+
+    printHtml += '.address{margin-top: -42px;}';
+    printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
+    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
+
+    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;padding-top:5px;}';
+    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+    printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
+    printHtml += '.custom-table tr{height: 30px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
+
+    printHtml += '.tc-codes-table {width: 100%;color: #252525 !important;display: inline-table;margin-top: 2vh;}';
+    printHtml += '.tc-codes-table tr{height: 2vh;border:none;}';
+    printHtml += '.tc-codes-table td {width:50%;border:none;font-size: 12px;}';
+    printHtml += '.tc-codes-table td p{margin-left: 20px;margin-right: 20px;}';
+    printHtml += '.text-bold { font-weight: bold;}';
+    printHtml += 'p {color: #2e2d6a !important;font-size:12px;}'
+    printHtml += 'h4 {color: #2e2d6a !important;}'
+    printHtml += '@media print {';
+    printHtml += '  body::before {';
+    printHtml += `    content: "${schoolName}, ${city}";`;
+    printHtml += '    position: fixed;';
+    printHtml += '    top: 45%;';
+    printHtml += '    left:10%;';
+    printHtml += '    font-size: 20px;';
+    printHtml += '    font-weight: bold;';
+    printHtml += '    font-family: Arial, sans-serif;';
+    printHtml += '    color: rgba(0, 0, 0, 0.08);';
+    printHtml += '    pointer-events: none;';
+    printHtml += '  }';
+    printHtml += '}';
+    printHtml += '</style>';
+    printHtml += '</head>';
+    printHtml += '<body>';
+    const studentElement = document.getElementById(`student`);
+    if (studentElement) {
+      printHtml += studentElement.outerHTML;
+    }
+    printHtml += '</body></html>';
+    return printHtml;
+  }
+
+  getSchool(adminId: any) {
+    this.schoolService.getSchool(adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
       }
     })
   }
-  chooseClass(event: any) {
-    this.errorCheck = false;
-    this.errorMsg = '';
-    this.cls = 0;
-    this.clsFeesStructure = {};
-    if (event) {
-      if (this.stream) {
-        this.studentForm.get('stream')?.setValue(null);
-      }
-      this.cls = event.value;
-      if (this.cls) {
-        this.studentForm.get('admissionFees')?.setValue(null);
-        const cls = this.cls;
-        this.feesStructureByClass(cls);
-      }
-    }
-  }
-  chooseStream(event: any) {
-    this.stream = event.value;
-  }
-  feesStructureByClass(cls: any) {
-    this.feesStructureService.feesStructureByClass(cls).subscribe((res: any) => {
+  addPrintModal(student: any) {
+    this.showAdmissionPrintModal = true;
+    this.feesService.singleStudentFeesCollectionById(student._id).subscribe((res: any) => {
       if (res) {
-        res.feesType = [{Admission:res.admissionFees},...res.feesType];
-        this.clsFeesStructure = res;
+        this.singleStudentInfo = student;
+        this.singleStudentInfo.admissionFees = res.studentFeesCollection.admissionFees;
       }
     })
   }
 
-  chooseAdmissionFeesPayment(event: any) {
-    if (event) {
-      if (event.value == 'Later') {
-        this.admissionFeesPaymentType = event.value;
-        const admissionFees = 0;
-        this.studentForm.get('admissionFees')?.setValue(admissionFees);
+  chooseClass(cls: any) {
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.cls = 0;
+    this.clsFeesStructure = {};
+    this.cls = cls;
+    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
+      this.studentForm.get('stream')?.setValue("N/A");
+      this.stream = '';
+      this.stream = 'stream';
+      if (this.stream) {
+        this.feesStructureByClassStream();
       }
     }
   }
-  chooseRollNumberType(event: any) {
-    if (event) {
-      if (event.value == 'generate') {
-        this.rollNumberType = event.value;
-        const rollNumber = Math.floor(Math.random() * 89999999 + 10000000);
-        this.studentForm.get('rollNumber')?.setValue(rollNumber);
-
-      }
-      if (event.value == 'manualFill') {
-        this.rollNumberType = event.value;
-        this.studentForm.get('rollNumber')?.setValue(null);
-      }
+  chooseStream(stream: any) {
+    this.stream = '';
+    this.stream = stream;
+    if (this.stream) {
+      this.feesStructureByClassStream();
     }
+  }
+  feesStructureByClassStream() {
+    let params = {
+      class: this.cls,
+      adminId: this.adminId,
+      stream: this.stream
+    }
+    this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
+      if (res) {
+        this.errorCheck = true;
+        this.errorMsg = '';
+        console.log(res)
+        res.feesType = [{ Admission: res.admissionFees }, ...res.feesType];
+        this.clsFeesStructure = res;
+        const admissionFees = this.clsFeesStructure?.admissionFees;
+        this.studentForm.get('admissionFees')?.setValue(admissionFees);
+      }
+    }, err => {
+      this.errorCheck = true;
+      this.errorMsg = err.error;
+      this.studentForm.get('admissionFees')?.setValue('');
+    })
   }
 
   date(e: any) {
@@ -191,14 +262,15 @@ export class TeacherAdmissionComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
+    this.showAdmissionPrintModal = false;
     this.updateMode = false;
     this.deleteMode = false;
+    this.successMsg = '';
     this.errorMsg = '';
     this.stream = '';
     this.cls = 0;
-    this.rollNumberType = '';
     this.receiptMode = false;
-    this.admissionrReceiptInfo;
+    this.admissionrReceiptInfo = null;
     this.studentForm.reset();
   }
   addStudentModel() {
@@ -208,6 +280,8 @@ export class TeacherAdmissionComponent implements OnInit {
     this.studentForm.reset();
     const admissionNo = Math.floor(Math.random() * 89999999 + 10000000);
     this.studentForm.get('admissionNo')?.setValue(admissionNo);
+    const rollNumber = Math.floor(Math.random() * 89999999 + 10000000);
+    this.studentForm.get('rollNumber')?.setValue(rollNumber);
   }
   updateStudentModel(student: any) {
     this.showModal = true;
@@ -233,25 +307,25 @@ export class TeacherAdmissionComponent implements OnInit {
     setTimeout(() => {
       this.closeModal();
       this.successMsg = '';
-      this.getStudentsByAdmissionAndClass({ page: this.page });
+      this.getStudentsByAdmission({ page: this.page });
     }, 1000)
   }
 
-  getStudentsByAdmissionAndClass($event: any) {
+  getStudentsByAdmission($event: any) {
     this.page = $event.page
     return new Promise((resolve, reject) => {
       let params: any = {
         filters: {},
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
-        class:this.className
+        adminId: this.adminId,
       };
       this.recordLimit = params.limit;
       if (this.filters.searchText) {
         params["filters"]["searchText"] = this.filters.searchText.trim();
       }
 
-      this.studentService.studentPaginationByAdmissionAndClass(params).subscribe((res: any) => {
+      this.studentService.studentPaginationByAdmission(params).subscribe((res: any) => {
         if (res) {
           this.studentInfo = res.studentList;
           this.number = params.page;
@@ -264,18 +338,13 @@ export class TeacherAdmissionComponent implements OnInit {
 
   studentAddUpdate() {
     if (this.studentForm.valid) {
+      this.studentForm.value.adminId = this.adminId;
       this.studentForm.value.admissionType = 'New';
       this.studentForm.value.createdBy = this.createdBy;
       this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
         if (res) {
-          // if (res.studentAdmissionData.admissionType == "New" && res.studentAdmissionData.admissionFeesPaymentType == 'Immediate') {
-          //   this.receiptMode = true;
-          //   this.admissionrReceiptInfo = res.studentAdmissionData;
-          // }
-          if (res.studentAdmissionData.admissionType == "New" && res.studentAdmissionData.admissionFeesPaymentType == 'Later') {
-            this.successDone();
-            this.successMsg = res.successMsg;
-          }
+          this.successDone();
+          this.successMsg = res;
         }
       }, err => {
         this.errorCheck = true;
@@ -287,9 +356,9 @@ export class TeacherAdmissionComponent implements OnInit {
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
     this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{ religion: 'Muslim' }, { religion: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
+    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
   }
-
 }

@@ -1,10 +1,11 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const { countTeacher, CreateTeacher, UpdateTeacher, ChangeStatus, DeleteTeacher, GetTeacherPagination, TeacherPermission } = require('../controllers/teacher');
+const { countTeacher,GetTeacherById, CreateTeacher, UpdateTeacher, ChangeStatus, DeleteTeacher, GetTeacherPagination, TeacherPermission } = require('../controllers/teacher');
 const { isAdminAuth } = require('../middleware/admin-auth');
 
 router.get('/teacher-count',countTeacher);
+router.get('/admin/:adminId/teacher/:teacherUserId',GetTeacherById);
 router.post('/teacher-pagination', GetTeacherPagination);
 router.post('/', isAdminAuth, CreateTeacher);
 router.put('/permission/admin/:id/teacher/:teacherId', TeacherPermission);

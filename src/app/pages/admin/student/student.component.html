@@ -22,10 +22,23 @@
                         <button class="submit-button" mat-raised-button *ngIf="cls && stream"
                           (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
                       </div>
-                      <div class="col-5">
+                      <div class="col-4">
                         <input *ngIf="cls && stream" type="text" class="form-control" placeholder="Student Search..."
                           id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                           (keyup)="getStudents({page : 1, limit : 0})">
+                      </div>
+                      <div class="col-2">
+                        <ng-container *ngIf="cls && stream">
+                          <mat-form-field class="custom-select">
+                            <mat-label>Bulk Excel</mat-label>
+                            <mat-select matInput>
+                              <div>
+                                <mat-option (click)="addBulkStudentImportModel()">Bulk Excel Import</mat-option>
+                                <mat-option (click)="addBulkStudentExportModel()">Bulk Excel Export</mat-option>
+                              </div>
+                            </mat-select>
+                          </mat-form-field>
+                        </ng-container>
                       </div>
                       <div class="col-2">
                         <mat-form-field class="custom-select">
@@ -54,11 +67,6 @@
                           </mat-select>
                         </mat-form-field>
                       </div>
-                      <div class="col-1">
-                        <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                          <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -67,15 +75,23 @@
             <div class="mobile-option">
               <div class="col-12">
                 <div class="row">
-                  <div class="col-9">
+                  <div class="col-6">
                     <button mat-button class="menu-button">
                       <span>Student List</span>
                     </button>
                   </div>
-                  <div class="col-3">
-                    <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                      <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-                    </button>
+                  <div class="col-6">
+                    <ng-container *ngIf="cls && stream">
+                      <mat-form-field class="custom-select">
+                        <mat-label>Bulk Excel</mat-label>
+                        <mat-select matInput>
+                          <div>
+                            <mat-option (click)="addBulkStudentImportModel()">Bulk Excel Import</mat-option>
+                            <mat-option (click)="addBulkStudentExportModel()">Bulk Excel Export</mat-option>
+                          </div>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-container>
                   </div>
                   <div class="col-6">
                     <mat-form-field class="custom-select">
@@ -118,20 +134,6 @@
               </div>
             </div>
           </div>
-          <mat-menu #settings="matMenu">
-            <button mat-menu-item (click)="addBulkStudentImportModel()" *ngIf="cls && stream">
-              <mat-icon>cloud_download</mat-icon>
-              <span>Bulk Excel Import</span>
-            </button>
-            <button mat-menu-item (click)="addBulkStudentExportModel()" *ngIf="cls && stream">
-              <mat-icon>cloud_upload</mat-icon>
-              <span>Bulk Excel Export</span>
-            </button>
-            <button mat-menu-item *ngIf="!cls || !stream">
-              <mat-icon>error</mat-icon>
-              <span>Please Choose Class & Stream</span>
-            </button>
-          </mat-menu>
         </div>
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
