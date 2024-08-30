@@ -8,11 +8,11 @@
       </button>
     </li>
     <li class="nav-item">
-      <button mat-button class="menu-button" routerLink="/teacher/student/admission" routerLinkActive="active-link">
+      <button *ngIf="admissionPermission" mat-button class="menu-button" routerLink="/teacher/student/admission" routerLinkActive="active-link">
         <mat-icon>dialpad</mat-icon>
         <span>Admissions</span>
       </button>
-      <button *ngIf="false" mat-button class="menu-button">
+      <button *ngIf="!admissionPermission" mat-button class="menu-button">
         <mat-icon>lock</mat-icon>
         <span>Admissions</span>
       </button>
@@ -36,8 +36,12 @@
       </button>
     </li>
     <li class="nav-item">
-      <button mat-button class="menu-button" routerLink="/teacher/student/fees" routerLinkActive="active-link">
+      <button *ngIf="feeCollectionPermission" mat-button class="menu-button" routerLink="/teacher/student/fees" routerLinkActive="active-link">
         <mat-icon>currency_rupee</mat-icon>
+        <span>Fee Payments</span>
+      </button>
+      <button *ngIf="!feeCollectionPermission" mat-button class="menu-button">
+        <mat-icon>lock</mat-icon>
         <span>Fee Payments</span>
       </button>
     </li>

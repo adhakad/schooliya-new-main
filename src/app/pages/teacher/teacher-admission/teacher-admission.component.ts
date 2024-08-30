@@ -102,10 +102,9 @@ export class TeacherAdmissionComponent implements OnInit {
     if(this.teacherInfo){
       this.getTeacherById(this.teacherInfo)
     }
-    console.log(this.teacherInfo)
     this.getSchool(this.adminId);
     let load: any = this.getStudentsByAdmission({ page: 1 });
-    this.getClass();
+    // this.getClass();
     this.allOptions();
     if (load) {
       setTimeout(() => {
@@ -122,6 +121,8 @@ export class TeacherAdmissionComponent implements OnInit {
     }
     this.teacherService.getTeacherById(params).subscribe((res:any)=> {
       if(res){
+        this.classInfo = res.admissionPermission.classes;
+        console.log(this.classInfo)
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
 
@@ -240,7 +241,6 @@ export class TeacherAdmissionComponent implements OnInit {
       if (res) {
         this.errorCheck = true;
         this.errorMsg = '';
-        console.log(res)
         res.feesType = [{ Admission: res.admissionFees }, ...res.feesType];
         this.clsFeesStructure = res;
         const admissionFees = this.clsFeesStructure?.admissionFees;
@@ -296,13 +296,14 @@ export class TeacherAdmissionComponent implements OnInit {
     this.deleteById = id;
   }
 
-  getClass() {
-    this.classService.getClassList().subscribe((res: any) => {
-      if (res) {
-        this.classInfo = res;
-      }
-    })
-  }
+  // getClass() {
+  //   this.classService.getClassList().subscribe((res: any) => {
+  //     if (res) {
+  //       this.classInfo = res;
+  //       console.log(res)
+  //     }
+  //   })
+  // }
   successDone() {
     setTimeout(() => {
       this.closeModal();

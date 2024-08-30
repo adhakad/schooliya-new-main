@@ -154,9 +154,9 @@
                               <mat-form-field appearance="outline">
                                 <mat-label>Class Applied for</mat-label>
                                 <mat-select matInput formControlName="class">
-                                  <div *ngFor="let classInfo of classInfo">
-                                    <mat-option value="{{classInfo.class}}"
-                                      (click)="chooseClass(classInfo.class)">{{classInfo.class |
+                                  <div *ngFor="let class of classInfo,let i=index">
+                                    <mat-option value="{{class}}"
+                                      (click)="chooseClass(class)">{{class |
                                       classSuffix}}</mat-option>
                                   </div>
                                 </mat-select>
@@ -584,7 +584,7 @@
                               <div class="table-container" style="position: relative;height: 100%;">
                                 <div class="row mt-5">
                                   <div class="col-2">
-                                    <img class="logo" src="{{baseUrl}}/public/school-logo/{{schoolInfo.schoolLogo}}"
+                                    <img class="logo" src="{{baseUrl}}/public/school-logo/{{schoolInfo?.schoolLogo}}"
                                       alt="">
                                   </div>
                                   <div class="col-10" style="text-align: center;">

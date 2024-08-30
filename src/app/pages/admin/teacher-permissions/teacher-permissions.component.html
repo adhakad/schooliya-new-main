@@ -7,25 +7,52 @@
     <div class="col-12 col-lg-10">
       <div class="row">
         <div class="col-12 main-container">
-          <div class="row">
-            <div class="col-3" style="text-align: left;">
-              <button mat-button class="menu-button">
-                <mat-icon>assistant_navigation</mat-icon>
-                <span>Teacher's > Permissions</span>
-              </button>
+          <div class="row big-option-container">
+            <div class="desktop-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <button mat-button class="menu-button">
+                      <span>Teacher | Permissions</span>
+                    </button>
+                  </div>
+                  <div class="col-9" style="text-align: right;">
+                    <div class="row">
+                      <div class="col-5 offset-7">
+                        <input type="text" class="form-control" placeholder="Teacher Permission Search..."
+                          id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                          (keyup)="getTeacher({page : 1, limit : 0})">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-9" style="text-align: right;">
-              <input type="text" class="form-control" placeholder="Teacher Permission Search..." id="searchText"
-                name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
-                (keyup)="getTeacher({page : 1, limit : 0})">
-
+            <div class="mobile-option">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-12">
+                    <button mat-button class="menu-button">
+                      <span>Teacher | Permissions</span>
+                    </button>
+                  </div>
+                  <div class="col-12 mt-3">
+                    <input type="text" class="form-control" placeholder="Teacher Permission Search..." id="searchText"
+                      name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                      (keyup)="getTeacher({page : 1, limit : 0})">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+
+
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
-              <table class="table table-hover align-middle mb-1 bg-white mt-3">
+              <table class="table table-hover align-middle bg-white">
                 <thead class="bg-light">
                   <tr class="text-muted">
                     <th>No.</th>
