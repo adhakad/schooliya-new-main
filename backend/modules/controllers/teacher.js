@@ -76,20 +76,20 @@ let TeacherPermission = async (req, res, next) => {
     try {
         const adminId = req.params.id;
         const teacherId = req.params.teacherId;
-        let { resultPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission } = req.body.type;
+        let { marksheetPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission } = req.body.type;
         const checkTeacher = await TeacherModel.findOne({ _id: teacherId, adminId: adminId });
         if (!checkTeacher) {
             return res.status(400).json("Invalid Request !")
         }
-        let resultClass = [];
+        let marksheetClass = [];
         let studentClass = [];
         let admissionClass = [];
         let admitCardClass = [];
         let feeCollectionClass = [];
-        if (resultPermission.length > 0) {
-            for (let i = 0; i < resultPermission.length; i++) {
-                let className = parseInt(Object.keys(resultPermission[i])[0]);
-                resultClass.push(className);
+        if (marksheetPermission.length > 0) {
+            for (let i = 0; i < marksheetPermission.length; i++) {
+                let className = parseInt(Object.keys(marksheetPermission[i])[0]);
+                marksheetClass.push(className);
             }
         }
         if (admissionPermission.length > 0) {
@@ -120,9 +120,9 @@ let TeacherPermission = async (req, res, next) => {
         }
 
         const teacherData = {
-            resultPermission: {
-                status: resultClass.length > 0 ? true : false,
-                classes: resultClass.length > 0 ? resultClass : [0],
+            marksheetPermission: {
+                status: marksheetClass.length > 0 ? true : false,
+                classes: marksheetClass.length > 0 ? marksheetClass : [0],
             },
             admitCardPermission: {
                 status: admitCardClass.length > 0 ? true : false,

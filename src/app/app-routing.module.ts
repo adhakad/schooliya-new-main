@@ -55,6 +55,7 @@ const routes: Routes = [
   
   { path: 'teacher/admission', loadChildren: () => import('src/app/pages/teacher/teacher-admission/teacher-admission.module').then((module) => module.TeacherAdmissionModule), canActivate: [TeacherAuthGuard] },
   { path: 'teacher/admit-card', loadChildren: () => import('src/app/pages/teacher/teacher-admit-card/teacher-admit-card.module').then((module) => module.TeacherAdmitCardModule), canActivate: [TeacherAuthGuard] },
+  { path: 'teacher/marksheet', loadChildren: () => import('src/app/pages/teacher/teacher-student-marksheet/teacher-student-marksheet.module').then((module) => module.TeacherStudentMarksheetModule), canActivate: [TeacherAuthGuard] },
   { path: 'teacher/student', loadChildren: () => import('src/app/pages/teacher/teacher-student/teacher-student.module').then((module) => module.TeacherStudentModule), canActivate: [TeacherAuthGuard] },
   { path: 'teacher/fees', loadChildren: () => import('src/app/pages/teacher/teacher-student-fees/teacher-student-fees.module').then((module) => module.TeacherStudentFeesModule), canActivate: [TeacherAuthGuard] },
   { path: 'teacher/fees/class/statement', loadChildren: () => import('src/app/pages/teacher/teacher-student-fee-statement/teacher-student-fee-statement.module').then((module) => module.TeacherStudentFeeStatementModule), canActivate: [TeacherAuthGuard] },

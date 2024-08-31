@@ -24,7 +24,7 @@ export class TeacherPermissionsComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
   classInfo: any[] = [];
-  selectedResultPermissionClass: any[] = [];
+  selectedMarksheetPermissionClass: any[] = [];
   selectedStudentPermissionClass: any[] = [];
   selectedAdmissionPermissionClass: any[] = [];
   selectedFeeCollectionPermissionClass: any[] = [];
@@ -38,7 +38,7 @@ export class TeacherPermissionsComponent implements OnInit {
       _id: [''],
       adminId:this.adminId,
       type: this.fb.group({
-        resultPermission: this.fb.array([], [Validators.required]),
+        marksheetPermission: this.fb.array([], [Validators.required]),
         admitCardPermission: this.fb.array([], [Validators.required]),
         studentPermission: this.fb.array([], [Validators.required]),
         admissionPermission: this.fb.array([], [Validators.required]),
@@ -71,12 +71,12 @@ export class TeacherPermissionsComponent implements OnInit {
     })
   }
 
-  resultPermission(option: any) {
-    const index = this.selectedResultPermissionClass.indexOf(option);
+  marksheetPermission(option: any) {
+    const index = this.selectedMarksheetPermissionClass.indexOf(option);
     if (index > -1) {
-      this.selectedResultPermissionClass.splice(index, 1);
+      this.selectedMarksheetPermissionClass.splice(index, 1);
     } else {
-      this.selectedResultPermissionClass.push(option)
+      this.selectedMarksheetPermissionClass.push(option)
     }
   }
 
@@ -131,7 +131,6 @@ export class TeacherPermissionsComponent implements OnInit {
       this.teacherService.teacherPaginationList(params).subscribe((res: any) => {
         if (res) {
           this.teacherInfo = res.teacherList;
-          console.log(res.teacherList);
           this.number = params.page;
           this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countTeacher });
           return resolve(true);
@@ -140,12 +139,12 @@ export class TeacherPermissionsComponent implements OnInit {
     });
   }
   falseAllValue() {
-    this.selectedResultPermissionClass = [];
+    this.selectedMarksheetPermissionClass = [];
     this.selectedStudentPermissionClass = [];
     this.selectedAdmissionPermissionClass = [];
     this.selectedFeeCollectionPermissionClass = [];
     this.selectedAdmitCardPermissionClass = [];
-    const controlOne = <FormArray>this.teacherPermissionForm.get('type.resultPermission');
+    const controlOne = <FormArray>this.teacherPermissionForm.get('type.marksheetPermission');
     const controlTwo = <FormArray>this.teacherPermissionForm.get('type.studentPermission');
     const controlThree = <FormArray>this.teacherPermissionForm.get('type.admissionPermission');
     const controlFour = <FormArray>this.teacherPermissionForm.get('type.admitCardPermission');
@@ -182,9 +181,9 @@ export class TeacherPermissionsComponent implements OnInit {
 
 
   patch() {
-    const controlOne = <FormArray>this.teacherPermissionForm.get('type.resultPermission');
-    this.selectedResultPermissionClass.forEach((x: any) => {
-      controlOne.push(this.patchResultValues(x))
+    const controlOne = <FormArray>this.teacherPermissionForm.get('type.marksheetPermission');
+    this.selectedMarksheetPermissionClass.forEach((x: any) => {
+      controlOne.push(this.patchMarksheetValues(x))
       this.teacherPermissionForm.reset();
     })
     const controlTwo = <FormArray>this.teacherPermissionForm.get('type.studentPermission');
@@ -209,9 +208,9 @@ export class TeacherPermissionsComponent implements OnInit {
     })
 
   }
-  patchResultValues(selectedResultPermissionClass: any) {
+  patchMarksheetValues(selectedMarksheetPermissionClass: any) {
     return this.fb.group(
-      { [selectedResultPermissionClass]: [selectedResultPermissionClass] }
+      { [selectedMarksheetPermissionClass]: [selectedMarksheetPermissionClass] }
     )
   }
   patchStudentValues(selectedStudentPermissionClass: any) {
