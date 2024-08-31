@@ -5,7 +5,8 @@ import { Subject } from 'rxjs';
 import { read, utils, writeFile } from 'xlsx';
 import { FeesService } from 'src/app/services/fees.service';
 import { MatRadioChange } from '@angular/material/radio';
-import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
+import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
+import { TeacherService } from 'src/app/services/teacher.service';
 import { FeesStructureService } from 'src/app/services/fees-structure.service';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { SchoolService } from 'src/app/services/school.service';
@@ -13,11 +14,11 @@ import { ClassService } from 'src/app/services/class.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-admin-student-fees',
-  templateUrl: './admin-student-fees.component.html',
-  styleUrls: ['./admin-student-fees.component.css']
+  selector: 'app-teacher-student-fees',
+  templateUrl: './teacher-student-fees.component.html',
+  styleUrls: ['./teacher-student-fees.component.css']
 })
-export class AdminStudentFeesComponent implements OnInit {
+export class TeacherStudentFeesComponent implements OnInit {
   @ViewChild('receipt') receipt!: ElementRef;
   public baseUrl = environment.API_URL;
   feesForm: FormGroup;
@@ -51,14 +52,14 @@ export class AdminStudentFeesComponent implements OnInit {
   payNow: boolean = false;
   receiptInstallment: any = {};
   receiptMode: boolean = false;
-
+  teacherInfo: any;
+  createdBy: String = '';
   stream: string = '';
   notApplicable: String = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   loader: Boolean = false;
-  baseURL!: string;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
       class: [''],
@@ -72,11 +73,25 @@ export class AdminStudentFeesComponent implements OnInit {
 
 
   ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
-    this.getClass();
+    this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
+    this.adminId = this.teacherInfo?.adminId;
+    if (this.teacherInfo) {
+      this.getTeacherById(this.teacherInfo)
+    }
     this.getSchool();
-    // this.getFees({ page: 1 });
+  }
+  getTeacherById(teacherInfo: any) {
+    let params = {
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
+    }
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
+        this.classInfo = res.feeCollectionPermission.classes;
+        this.createdBy = `${res.name} (${res.teacherUserId})`;
+      }
+
+    })
   }
 
   printStudentData() {
@@ -297,7 +312,7 @@ export class AdminStudentFeesComponent implements OnInit {
         console.log("this block is comment out");
       } else {
         this.feesForm.value.class = this.singleStudent.class;
-        this.feesForm.value.createdBy = "Admin";
+        this.feesForm.value.createdBy = this.createdBy;
         this.feesForm.value.studentId = this.singleStudent.studentId;
 
 

@@ -56,7 +56,6 @@ export class TeacherAdmissionComponent implements OnInit {
   createdBy: String = '';
   receiptMode: boolean = false;
   studentFeesCollection: any;
-  baseURL!: string;
   loader: Boolean = true;
   adminId!: String
   constructor(private adminAuthService: AdminAuthService, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService) {
@@ -111,8 +110,6 @@ export class TeacherAdmissionComponent implements OnInit {
         this.loader = false;
       }, 1000);
     }
-    var currentURL = window.location.href;
-    this.baseURL = new URL(currentURL).origin;
   }
   getTeacherById(teacherInfo: any) {
     let params = {
@@ -295,14 +292,6 @@ export class TeacherAdmissionComponent implements OnInit {
     this.deleteById = id;
   }
 
-  // getClass() {
-  //   this.classService.getClassList().subscribe((res: any) => {
-  //     if (res) {
-  //       this.classInfo = res;
-  //       console.log(res)
-  //     }
-  //   })
-  // }
   successDone() {
     setTimeout(() => {
       this.closeModal();
