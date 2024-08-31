@@ -37,8 +37,8 @@ export class TeacherAdmissionComponent implements OnInit {
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
-  className:any;
-    sessions: any;
+  className: any;
+  sessions: any;
   categorys: any;
   religions: any;
   qualifications: any;
@@ -52,14 +52,14 @@ export class TeacherAdmissionComponent implements OnInit {
   schoolInfo: any;
   admissionrReceiptInfo: any;
   singleStudentInfo: any;
-  teacherInfo:any;
-  createdBy:String='';
+  teacherInfo: any;
+  createdBy: String = '';
   receiptMode: boolean = false;
   studentFeesCollection: any;
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
-  constructor(private adminAuthService:AdminAuthService,private fb: FormBuilder,private activatedRoute:ActivatedRoute,private teacherAuthService:TeacherAuthService,private teacherService:TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService,private feesService: FeesService) {
+  constructor(private adminAuthService: AdminAuthService, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService) {
     this.studentForm = this.fb.group({
       _id: [''],
       adminId: [''],
@@ -99,7 +99,7 @@ export class TeacherAdmissionComponent implements OnInit {
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
-    if(this.teacherInfo){
+    if (this.teacherInfo) {
       this.getTeacherById(this.teacherInfo)
     }
     this.getSchool(this.adminId);
@@ -114,21 +114,20 @@ export class TeacherAdmissionComponent implements OnInit {
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
-  getTeacherById(teacherInfo:any){
+  getTeacherById(teacherInfo: any) {
     let params = {
-      adminId:teacherInfo.adminId,
-      teacherUserId:teacherInfo.id,
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
     }
-    this.teacherService.getTeacherById(params).subscribe((res:any)=> {
-      if(res){
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
         this.classInfo = res.admissionPermission.classes;
-        console.log(this.classInfo)
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
 
     })
   }
-  
+
   printStudentData() {
     const printContent = this.getPrintContent();
     this.printPdfService.printContent(printContent);

@@ -30,7 +30,6 @@ export class SideNavComponent implements OnInit {
     }
     this.teacherService.getTeacherById(params).subscribe((res:any)=> {
       if(res){
-        console.log(res)
         if(res.admissionPermission?.status==true){
           this.admissionPermission = true;
         }

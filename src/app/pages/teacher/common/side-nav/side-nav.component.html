@@ -24,8 +24,12 @@
       </button>
     </li>
     <li class="nav-item">
-      <button mat-button class="menu-button" routerLink="/teacher/student/admit-card" routerLinkActive="active-link">
+      <button *ngIf="admitCardPermission" mat-button class="menu-button" routerLink="/teacher/student/admit-card" routerLinkActive="active-link">
         <mat-icon>assignment</mat-icon>
+        <span>Admit Cards</span>
+      </button>
+      <button *ngIf="!admitCardPermission" mat-button class="menu-button">
+        <mat-icon>lock</mat-icon>
         <span>Admit Cards</span>
       </button>
     </li>
