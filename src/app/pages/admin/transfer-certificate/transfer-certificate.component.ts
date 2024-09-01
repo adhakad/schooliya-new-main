@@ -176,7 +176,7 @@ export class TransferCertificateComponent implements OnInit {
     printHtml += '.student-info-table .td-left {width:45%;border:none;font-size: 12px;}';
     printHtml += '.student-info-table .td-right {width:55%;border:none;font-size: 12px;}';
     printHtml += '.student-info-table td p{margin-left: 20px;}';
-
+    printHtml += '.sign-table {position: absolute;left: 0;bottom: 0;z-index: 2;}';
 
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
@@ -341,7 +341,6 @@ export class TransferCertificateComponent implements OnInit {
       }, err => {
         this.errorCheck = true;
         this.statusCode = err.status;
-        console.log(err.status)
       });
     });
   }

@@ -58,7 +58,6 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   schoolInfo: any;
   bulkStudentRecord: any;
   fileChoose: boolean = false;
-  loader: Boolean = true;
   promotedClass: any;
   singleStudentInfo: any
   singleStudentTCInfo: any
@@ -67,6 +66,8 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   isDate: string = '';
   readyTC: Boolean = false;
   baseURL!: string;
+  teacherInfo:any;
+  createdBy: String = '';
   adminId!: String
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentClassPromoteForm = this.fb.group({
@@ -84,16 +85,31 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
-    this.loader = false;
+    this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
+    this.adminId = this.teacherInfo?.adminId;
+    if (this.teacherInfo) {
+      this.getTeacherById(this.teacherInfo)
+    }
     this.getSchool();
-    this.getClass();
     this.allOptions();
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
   
+  getTeacherById(teacherInfo: any) {
+    let params = {
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
+    }
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
+        this.classInfo = res.promoteFailPermission.classes;
+        this.createdBy = `${res.name} (${res.teacherUserId})`;
+      }
+
+    })
+  }
+
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
@@ -177,14 +193,6 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
     this.deleteMode = true;
     this.deleteById = id;
   }
-
-  getClass() {
-    this.classService.getClassList().subscribe((res: any) => {
-      if (res) {
-        this.classInfo = res;
-      }
-    })
-  }
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
@@ -260,7 +268,6 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
       }, err => {
         this.errorCheck = true;
         this.statusCode = err.status;
-        console.log(err.status)
       });
     });
   }
@@ -280,8 +287,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   studentClassPromote() {
     if (this.studentClassPromoteForm.valid) {
       this.studentClassPromoteForm.value.adminId = this.adminId;
-      this.studentClassPromoteForm.value.class = parseInt(this.className);
-      this.studentClassPromoteForm.value.createdBy = 'Admin';
+      this.studentClassPromoteForm.value.class = this.createdBy
       this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
         if (res) {
           setTimeout(() => {

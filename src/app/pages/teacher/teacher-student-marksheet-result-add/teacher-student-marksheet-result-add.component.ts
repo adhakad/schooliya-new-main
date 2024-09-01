@@ -67,6 +67,7 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   coScholasticGrades: any[] = ['A', 'B', 'C'];
   loader: Boolean = false;
+  createdBy: String = '';
   adminId!: string;
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService, private studentService: StudentService) {
     this.examResultForm = this.fb.group({
@@ -94,6 +95,9 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
+    if (this.teacherInfo) {
+      this.getTeacherById(this.teacherInfo)
+    }
     this.cls = this.activatedRoute.snapshot.paramMap.get('class');
     this.stream = this.activatedRoute.snapshot.paramMap.get('stream');
     if (this.stream && this.cls) {
@@ -106,6 +110,20 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
       this.getSingleClassResultStrucByStream(params);
     }
   }
+
+  getTeacherById(teacherInfo: any) {
+    let params = {
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
+    }
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
+        this.createdBy = `${res.name} (${res.teacherUserId})`;
+      }
+
+    })
+  }
+
 
   addExamResultModel(rollnumber: number) {
     this.showModal = true;
@@ -236,11 +254,10 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         };
 
         this.mappedResults = mapExamResultsToStudents(this.studentInfo);
-        console.log(`mappedResults:`, this.mappedResults)
+        
       }
     }, err => {
-      console.log("error")
-      console.log(err.error)
+      
     })
     setTimeout(() => {
       this.loader = false;
@@ -560,7 +577,7 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         if (this.practicalSubjects.length === 0) {
           delete this.examResultForm.value.type.practicalMarks;
         }
-        this.examResultForm.value.createdBy = "Admin";
+        this.examResultForm.value.createdBy = this.createdBy;
         // this.examResultForm.value.examType = this.selectedExam;
         this.examResultForm.value.stream = this.stream;
         this.examResultForm.value.class = this.cls;

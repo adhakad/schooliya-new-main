@@ -94,8 +94,6 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
   chooseStream(stream: any) {
     this.stream = '';
     this.stream = stream;
-    console.log(stream)
-    console.log(stream)
     if (this.cls && this.stream) {
       let params = {
         cls: this.cls,
@@ -352,7 +350,6 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
         (response: any) => {
         },
         error => {
-          console.log(error)
         }
       );
   }

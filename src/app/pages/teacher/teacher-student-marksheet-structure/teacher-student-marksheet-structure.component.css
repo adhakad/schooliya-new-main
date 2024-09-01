@@ -1,5 +1,5 @@
 @import'../../admin/dashboard/dashboard.component.css';
-/* @import'../admin-student-fees/admin-student-fees.component.css'; */
+@import'../../admin/admin-student-fees/admin-student-fees.component.css';
 .selected-template-card{
    background-color: #fff;
    padding: 10px;

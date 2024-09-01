@@ -29,6 +29,8 @@ export class TeacherPermissionsComponent implements OnInit {
   selectedAdmissionPermissionClass: any[] = [];
   selectedFeeCollectionPermissionClass: any[] = [];
   selectedAdmitCardPermissionClass: any[] = [];
+  selectedPromoteFailPermissionClass: any[] = [];
+  selectedTransferCertificatePermissionClass: any[] = [];
   teacherObjId: string = '';
 
   loader: Boolean = true;
@@ -43,6 +45,8 @@ export class TeacherPermissionsComponent implements OnInit {
         studentPermission: this.fb.array([], [Validators.required]),
         admissionPermission: this.fb.array([], [Validators.required]),
         feeCollectionPermission: this.fb.array([], [Validators.required]),
+        promoteFailPermission: this.fb.array([], [Validators.required]),
+        transferCertificatePermission: this.fb.array([], [Validators.required]),
       }),
     });
   }
@@ -113,6 +117,22 @@ export class TeacherPermissionsComponent implements OnInit {
       this.selectedAdmitCardPermissionClass.push(option)
     }
   }
+  promoteFailPermission(option: any) {
+    const index = this.selectedPromoteFailPermissionClass.indexOf(option);
+    if (index > -1) {
+      this.selectedPromoteFailPermissionClass.splice(index, 1);
+    } else {
+      this.selectedPromoteFailPermissionClass.push(option)
+    }
+  }
+  transferCertificatePermission(option: any) {
+    const index = this.selectedTransferCertificatePermissionClass.indexOf(option);
+    if (index > -1) {
+      this.selectedTransferCertificatePermissionClass.splice(index, 1);
+    } else {
+      this.selectedTransferCertificatePermissionClass.push(option)
+    }
+  }
 
   getTeacher($event: any) {
     this.page = $event.page;
@@ -144,16 +164,22 @@ export class TeacherPermissionsComponent implements OnInit {
     this.selectedAdmissionPermissionClass = [];
     this.selectedFeeCollectionPermissionClass = [];
     this.selectedAdmitCardPermissionClass = [];
+    this.selectedPromoteFailPermissionClass = [];
+    this.selectedTransferCertificatePermissionClass = [];
     const controlOne = <FormArray>this.teacherPermissionForm.get('type.marksheetPermission');
     const controlTwo = <FormArray>this.teacherPermissionForm.get('type.studentPermission');
     const controlThree = <FormArray>this.teacherPermissionForm.get('type.admissionPermission');
     const controlFour = <FormArray>this.teacherPermissionForm.get('type.admitCardPermission');
     const controlFive = <FormArray>this.teacherPermissionForm.get('type.feeCollectionPermission');
+    const controlSix = <FormArray>this.teacherPermissionForm.get('type.promoteFailPermission');
+    const controlSeven = <FormArray>this.teacherPermissionForm.get('type.transferCertificatePermission');
     controlOne.clear();
     controlTwo.clear();
     controlThree.clear();
     controlFour.clear();
     controlFive.clear();
+    controlSix.clear();
+    controlSeven.clear();
     this.teacherObjId = '';
     this.teacherPermissionForm.reset();
 
@@ -206,6 +232,16 @@ export class TeacherPermissionsComponent implements OnInit {
       controlFive.push(this.patchFeeCollectionValues(x))
       this.teacherPermissionForm.reset();
     })
+    const controlSix = <FormArray>this.teacherPermissionForm.get('type.promoteFailPermission');
+    this.selectedPromoteFailPermissionClass.forEach((x: any) => {
+      controlSix.push(this.patchPromoteFailValues(x))
+      this.teacherPermissionForm.reset();
+    })
+    const controlSeven = <FormArray>this.teacherPermissionForm.get('type.transferCertificatePermission');
+    this.selectedTransferCertificatePermissionClass.forEach((x: any) => {
+      controlSeven.push(this.patchTransferCertificateValues(x))
+      this.teacherPermissionForm.reset();
+    })
 
   }
   patchMarksheetValues(selectedMarksheetPermissionClass: any) {
@@ -231,6 +267,16 @@ export class TeacherPermissionsComponent implements OnInit {
   patchFeeCollectionValues(selectedFeeCollectionPermissionClass: any) {
     return this.fb.group(
       { [selectedFeeCollectionPermissionClass]: [selectedFeeCollectionPermissionClass] }
+    )
+  }
+  patchPromoteFailValues(selectedPromoteFailPermissionClass: any) {
+    return this.fb.group(
+      { [selectedPromoteFailPermissionClass]: [selectedPromoteFailPermissionClass] }
+    )
+  }
+  patchTransferCertificateValues(selectedTransferCertificatePermissionClass: any) {
+    return this.fb.group(
+      { [selectedTransferCertificatePermissionClass]: [selectedTransferCertificatePermissionClass] }
     )
   }
 

@@ -87,6 +87,30 @@ const TeacherModel = mongoose.model('teacher', {
             default: [0]
         }
     },
+    promoteFailPermission: {
+        status: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        classes: {
+            type: [Number],
+            required: true,
+            default: [0]
+        }
+    },
+    transferCertificatePermission: {
+        status: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        classes: {
+            type: [Number],
+            required: true,
+            default: [0]
+        }
+    },
     status: {
         type: String,
         required: true,

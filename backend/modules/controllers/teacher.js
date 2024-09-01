@@ -76,7 +76,8 @@ let TeacherPermission = async (req, res, next) => {
     try {
         const adminId = req.params.id;
         const teacherId = req.params.teacherId;
-        let { marksheetPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission } = req.body.type;
+        console.log(req.body.type)
+        let { marksheetPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission,promoteFailPermission,transferCertificatePermission } = req.body.type;
         const checkTeacher = await TeacherModel.findOne({ _id: teacherId, adminId: adminId });
         if (!checkTeacher) {
             return res.status(400).json("Invalid Request !")
@@ -86,6 +87,8 @@ let TeacherPermission = async (req, res, next) => {
         let admissionClass = [];
         let admitCardClass = [];
         let feeCollectionClass = [];
+        let promoteFailClass = [];
+        let transferCertificateClass = [];
         if (marksheetPermission.length > 0) {
             for (let i = 0; i < marksheetPermission.length; i++) {
                 let className = parseInt(Object.keys(marksheetPermission[i])[0]);
@@ -118,6 +121,18 @@ let TeacherPermission = async (req, res, next) => {
                 feeCollectionClass.push(className);
             }
         }
+        if (promoteFailPermission) {
+            for (let i = 0; i < promoteFailPermission.length; i++) {
+                let className = parseInt(Object.keys(promoteFailPermission[i])[0]);
+                promoteFailClass.push(className);
+            }
+        }
+        if (transferCertificatePermission) {
+            for (let i = 0; i < transferCertificatePermission.length; i++) {
+                let className = parseInt(Object.keys(transferCertificatePermission[i])[0]);
+                transferCertificateClass.push(className);
+            }
+        }
 
         const teacherData = {
             marksheetPermission: {
@@ -139,6 +154,14 @@ let TeacherPermission = async (req, res, next) => {
             feeCollectionPermission: {
                 status: feeCollectionClass.length > 0 ? true : false,
                 classes: feeCollectionClass.length > 0 ? feeCollectionClass : [0],
+            },
+            promoteFailPermission: {
+                status: promoteFailClass.length > 0 ? true : false,
+                classes: promoteFailClass.length > 0 ? promoteFailClass : [0],
+            },
+            transferCertificatePermission: {
+                status: transferCertificateClass.length > 0 ? true : false,
+                classes: transferCertificateClass.length > 0 ? transferCertificateClass : [0],
             },
         };
 

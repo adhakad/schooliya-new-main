@@ -128,17 +128,20 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
       if (res) {
         this.studentFeesCollection = res.studentFeesCollection;
         this.studentInfo = res.studentInfo;
-        this.feesStructureByClass();
+        this.feesStructureByClass(res.studentInfo.class,res.studentInfo.stream);
         this.processData();
       }
     })
   }
 
-  feesStructureByClass() {
+  feesStructureByClass(cls:any,stream:string) {
+    if(stream=="N/A"){
+      stream = "stream";
+    }
     let params = {
-      class: this.cls,
+      class: cls,
       adminId: this.adminId,
-      stream:this.stream
+      stream: stream
     }
     this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
       if (res) {

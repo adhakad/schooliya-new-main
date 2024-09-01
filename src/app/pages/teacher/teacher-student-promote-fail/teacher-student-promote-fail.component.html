@@ -29,8 +29,8 @@
                                                     <mat-label *ngIf="!cls">Class</mat-label>
                                                     <mat-select type="number" matInput>
                                                         <div *ngFor="let classInfo of classInfo">
-                                                            <mat-option value="{{classInfo.class}}"
-                                                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                            <mat-option value="{{classInfo}}"
+                                                                (click)="chooseClass(classInfo)">{{classInfo
                                                                 | classSuffix}}</mat-option>
                                                         </div>
                                                     </mat-select>

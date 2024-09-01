@@ -234,11 +234,8 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         };
 
         this.mappedResults = mapExamResultsToStudents(this.studentInfo);
-        console.log(`mappedResults:`, this.mappedResults)
       }
     }, err => {
-      console.log("error")
-      console.log(err.error)
     })
     setTimeout(() => {
       this.loader = false;

@@ -174,7 +174,7 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
       this.closeModal();
       this.successMsg = '';
       this.getFeesStructureByClass();
-      console.log(this.cls)
+  
     }, 1000)
   }
 

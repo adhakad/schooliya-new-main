@@ -33,11 +33,9 @@ export class AdminStudentFeesStatementComponent implements OnInit {
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
-    this.cls = this.activatedRoute.snapshot.paramMap.get('class');
-    this.stream = this.activatedRoute.snapshot.paramMap.get('stream');
     this.studentId = this.activatedRoute.snapshot.paramMap.get('id');
     this.getSchool();
-    if (this.adminId && this.cls && this.stream && this.studentId) {
+    if (this.adminId && this.studentId) {
       this.singleStudentFeesCollectionById(this.studentId)
     }
   }
@@ -126,17 +124,20 @@ export class AdminStudentFeesStatementComponent implements OnInit {
       if (res) {
         this.studentFeesCollection = res.studentFeesCollection;
         this.studentInfo = res.studentInfo;
-        this.feesStructureByClass();
+        this.feesStructureByClass(res.studentInfo.class,res.studentInfo.stream);
         this.processData();
       }
     })
   }
 
-  feesStructureByClass() {
+  feesStructureByClass(cls:any,stream:string) {
+    if(stream=="N/A"){
+      stream = "stream";
+    }
     let params = {
-      class: this.cls,
+      class: cls,
       adminId: this.adminId,
-      stream:this.stream
+      stream: stream
     }
     this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
       if (res) {

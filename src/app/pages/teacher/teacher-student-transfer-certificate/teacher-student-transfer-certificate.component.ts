@@ -71,6 +71,8 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   serialNo!: number;
   isDate: string = '';
   readyTC: Boolean = false;
+  teacherInfo:any;
+  createdBy: String = '';
   adminId!: String
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.tcForm = this.fb.group({
@@ -85,12 +87,26 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
-    this.loader = false;
+    this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
+    this.adminId = this.teacherInfo?.adminId;
+    if (this.teacherInfo) {
+      this.getTeacherById(this.teacherInfo)
+    }
     this.getSchool();
-    this.getClass();
     this.allOptions();
+  }
+  getTeacherById(teacherInfo: any) {
+    let params = {
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
+    }
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
+        this.classInfo = res.transferCertificatePermission.classes;
+        this.createdBy = `${res.name} (${res.teacherUserId})`;
+      }
+
+    })
   }
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
@@ -178,7 +194,7 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     printHtml += '.student-info-table .td-left {width:45%;border:none;font-size: 12px;}';
     printHtml += '.student-info-table .td-right {width:55%;border:none;font-size: 12px;}';
     printHtml += '.student-info-table td p{margin-left: 20px;}';
-
+    printHtml += '.sign-table {position: absolute;left: 0;bottom: 0;z-index: 2;}';
 
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
@@ -261,13 +277,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     }
     this.getSingleClassSubjectByStream(params);
   }
-  getClass() {
-    this.classService.getClassList().subscribe((res: any) => {
-      if (res) {
-        this.classInfo = res;
-      }
-    })
-  }
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
@@ -343,7 +352,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
       }, err => {
         this.errorCheck = true;
         this.statusCode = err.status;
-        console.log(err.status)
       });
     });
   }

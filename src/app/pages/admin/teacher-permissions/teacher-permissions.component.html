@@ -228,6 +228,28 @@
                             </div>
                           </div>
                         </section>
+                        <ng-container>
+                          <h3>Promote/Fail Permissions</h3>
+                        </ng-container>
+                        <section class="example-section mb-3">
+                          <div class="row">
+                            <div class="col-4" *ngFor="let class of classInfo,let i=index;">
+                              <mat-checkbox class="example-margin" (click)="promoteFailPermission(class)">{{class |
+                                classSuffix}}</mat-checkbox>
+                            </div>
+                          </div>
+                        </section>
+                        <ng-container>
+                          <h3>Transfer Certificate Permissions</h3>
+                        </ng-container>
+                        <section class="example-section mb-3">
+                          <div class="row">
+                            <div class="col-4" *ngFor="let class of classInfo,let i=index;">
+                              <mat-checkbox class="example-margin" (click)="transferCertificatePermission(class)">{{class |
+                                classSuffix}}</mat-checkbox>
+                            </div>
+                          </div>
+                        </section>
                       </div>
                       <div class="modal-footer">
                         <button class="submit-button" mat-raised-button type="submit">Submit</button>
@@ -240,8 +262,3 @@
           </div>
         </div>
       </div>
-      <!-- <div class="spinner-container" *ngIf="loader">
-      <div class="spinner-overlay" *ngIf="loader">
-        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
-      </div>
-    </div> -->

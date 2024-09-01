@@ -9,9 +9,12 @@ import { TeacherService } from 'src/app/services/teacher.service';
 export class SideNavComponent implements OnInit {
   teacherInfo:any;
   admissionPermission:boolean = false;
+  studentPermission:boolean = false;
   admitCardPermission:boolean = false;
   marksheetPermission:boolean = false;
   feeCollectionPermission:boolean = false;
+  promoteFailPermission:boolean = false;
+  transferCertificatePermission:boolean = false;
   adminId!: String
   constructor(private teacherAuthService:TeacherAuthService,private teacherService:TeacherService,) { }
 
@@ -33,6 +36,9 @@ export class SideNavComponent implements OnInit {
         if(res.admissionPermission?.status==true){
           this.admissionPermission = true;
         }
+        if(res.studentPermission?.status==true){
+          this.studentPermission = true;
+        }
         if(res.feeCollectionPermission?.status==true){
           this.feeCollectionPermission = true;
         }
@@ -41,6 +47,12 @@ export class SideNavComponent implements OnInit {
         }
         if(res.marksheetPermission?.status==true){
           this.marksheetPermission = true;
+        }
+        if(res.promoteFailPermission?.status==true){
+          this.promoteFailPermission = true;
+        }
+        if(res.transferCertificatePermission?.status==true){
+          this.transferCertificatePermission = true;
         }
       }
     })

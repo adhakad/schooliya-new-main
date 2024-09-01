@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { read, utils, writeFile } from 'xlsx';
@@ -8,9 +8,11 @@ import { StudentService } from 'src/app/services/student.service';
 import { ClassService } from 'src/app/services/class.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { ExcelService } from 'src/app/services/excel/excel.service';
-import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { HttpClient } from '@angular/common/http';
+import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
+import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
+import { ClassSubjectService } from 'src/app/services/class-subject.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 @Component({
@@ -19,20 +21,20 @@ import { TeacherService } from 'src/app/services/teacher.service';
   styleUrls: ['./teacher-student.component.css']
 })
 export class TeacherStudentComponent implements OnInit {
+  @ViewChild('content') content!: ElementRef;
   studentForm: FormGroup;
   excelForm: FormGroup;
-  studentClassPromoteForm: FormGroup;
   showModal: boolean = false;
   showBulkImportModal: boolean = false;
   showBulkExportModal: boolean = false;
-  showClassPromoteModal: boolean = false;
-  showStudentInfoViewModal:boolean = false;
+  showStudentInfoViewModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
   successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
+  statusCode: Number = 0;
   classInfo: any[] = [];
   studentInfo: any[] = [];
   studentInfoByClass: any[] = [];
@@ -48,6 +50,7 @@ export class TeacherStudentComponent implements OnInit {
   religions: any;
   qualifications: any;
   occupations: any;
+  mediums: any;
   stream: string = '';
   notApplicable: String = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
@@ -55,83 +58,81 @@ export class TeacherStudentComponent implements OnInit {
   className: any;
   admissionType: string = '';
   schoolInfo: any;
-  teacherInfo:any;
-  createdBy:String = '';
   bulkStudentRecord: any;
   fileChoose: boolean = false;
   loader: Boolean = true;
   promotedClass: any;
   singleStudentInfo: any
-  adminId!:any;
-  constructor(private adminAuthService:AdminAuthService,private fb: FormBuilder, public activatedRoute: ActivatedRoute,private teacherAuthService:TeacherAuthService,private teacherService:TeacherService, private schoolService: SchoolService, public ete: ExcelService, private classService: ClassService, private studentService: StudentService) {
+  singleStudentTCInfo: any
+  classSubject: any[] = [];
+  serialNo!: number;
+  isDate: string = '';
+  baseURL!: string;
+  teacherInfo:any;
+  createdBy: String = '';
+  adminId!: String
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService,private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
       session: ['', Validators.required],
+      medium: ['', Validators.required],
+      adminId: [''],
       admissionNo: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       admissionType: ['', Validators.required],
-      class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      stream: ['', Validators.required],
+      class: [''],
+      admissionClass: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      stream: [''],
       rollNumber: ['', [Validators.required, Validators.maxLength(8), Validators.pattern('^[0-9]+$')]],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       dob: ['', Validators.required],
-      aadharNumber: ['', [Validators.required, Validators.pattern('^\\d{12}$')]],
-      samagraId: ['', [Validators.required, Validators.pattern('^\\d{9}$')]],
+      doa: ['', Validators.required],
+      aadharNumber: ['', [Validators.pattern('^\\d{12}$')]],
+      samagraId: ['', [Validators.pattern('^\\d{9}$')]],
+      udiseNumber: ['', [Validators.pattern('^\\d{11}$')]],
+      bankAccountNo: ['', [Validators.minLength(9), Validators.maxLength(18), Validators.pattern('^[0-9]+$')]],
+      bankIfscCode: ['', [Validators.minLength(11), Validators.maxLength(11)]],
       gender: ['', Validators.required],
       category: ['', Validators.required],
       religion: ['', Validators.required],
       nationality: ['', Validators.required],
-      contact: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
-      address: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$'), Validators.maxLength(50)]],
-      lastSchool: ['', [Validators.pattern('^[a-zA-Z\\s]+$'), Validators.maxLength(50)]],
+      address: ['', [Validators.required, Validators.maxLength(50)]],
+      lastSchool: ['', [Validators.maxLength(50)]],
       fatherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       fatherQualification: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      fatherOccupation: ['', Validators.required],
-      fatherContact: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
-      fatherAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       motherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       motherQualification: ['', Validators.required],
-      motherOccupation: ['', Validators.required],
-      motherContact: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
-      motherAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      createdBy:[''],
+      parentsOccupation: ['', Validators.required],
+      parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
+      parentsAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      createdBy: [''],
     })
 
     this.excelForm = this.fb.group({
-      excelData: [null]
+      excelData: [null],
     });
-
-    this.studentClassPromoteForm = this.fb.group({
-      _id: ['', Validators.required],
-      class: [''],
-      session: ['', Validators.required],
-      admissionNo: ['', Validators.required],
-      rollNumber: ['', Validators.required],
-    })
   }
 
   ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
-    this.className = this.activatedRoute.snapshot.paramMap.get('id');
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
-    if(this.teacherInfo){
-      this.getTeacherById(this.teacherInfo.id)
+    this.adminId = this.teacherInfo?.adminId;
+    if (this.teacherInfo) {
+      this.getTeacherById(this.teacherInfo)
     }
-    if (this.className) {
-      let load: any = this.getStudents({ page: 1 });
-      if (load) {
-        setTimeout(() => {
-          this.loader = false;
-        }, 1000);
-      }
-    }
+    this.loader = false;
     this.getSchool();
-    this.getClass();
     this.allOptions();
+    var currentURL = window.location.href;
+    this.baseURL = new URL(currentURL).origin;
   }
-  getTeacherById(id:string){
-    this.teacherService.getTeacherById(id).subscribe((res:any)=> {
-      if(res){
+  getTeacherById(teacherInfo: any) {
+    let params = {
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
+    }
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
+        this.classInfo = res.studentPermission.classes;
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
 
@@ -143,6 +144,27 @@ export class TeacherStudentComponent implements OnInit {
         this.schoolInfo = res;
       }
     })
+  }
+  chooseClass(cls: any) {
+    this.page = 0;
+    this.className = cls;
+    this.cls = cls;
+    this.stream = '';
+    this.studentInfo = [];
+  }
+  filterStream(stream: any) {
+    this.stream = stream;
+    if (stream && this.cls) {
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: stream,
+      }
+      this.getStudents({ page: 1 });
+    }
+  }
+  chooseStream(event: any) {
+    this.stream = event.value;
   }
   chooseAdmissionType(event: any) {
     if (event) {
@@ -156,17 +178,6 @@ export class TeacherStudentComponent implements OnInit {
         this.studentForm.get('admissionNo')?.setValue(null);
       }
     }
-  }
-  chooseClass(event: any) {
-    if (event) {
-      if (this.stream) {
-        this.studentForm.get('stream')?.setValue(null);
-      }
-      this.cls = event.value;
-    }
-  }
-  chooseStream(event: any) {
-    this.stream = event.value;
   }
 
   date(e: any) {
@@ -182,20 +193,19 @@ export class TeacherStudentComponent implements OnInit {
     this.showModal = false;
     this.showBulkImportModal = false;
     this.showBulkExportModal = false;
-    this.showClassPromoteModal = false;
     this.showStudentInfoViewModal = false;
     this.updateMode = false;
     this.deleteMode = false;
     this.fileChoose = false;
     this.errorCheck = false;
     this.errorMsg = '';
-    this.stream = '';
-    this.cls = 0;
+    this.successMsg = '';
+    this.classSubject = [];
     this.promotedClass;
     this.singleStudentInfo;
+    this.singleStudentTCInfo;
     this.admissionType = '';
     this.studentForm.reset();
-    this.studentClassPromoteForm.reset();
     this.excelForm.reset();
   }
   addStudentModel() {
@@ -203,6 +213,38 @@ export class TeacherStudentComponent implements OnInit {
     this.deleteMode = false;
     this.updateMode = false;
     this.studentForm.reset();
+    this.classStreamFormValueSet();
+  }
+  classStreamFormValueSet() {
+    let cls = '';
+    if (this.className == 1) {
+      cls = `${this.className}st`;
+    }
+    if (this.className == 2) {
+      cls = `${this.className}nd`;
+    }
+    if (this.className == 3) {
+      cls = `${this.className}rd`;
+    }
+    if (this.className >= 4 && this.className <= 12) {
+      cls = `${this.className}th`;
+    }
+    if (this.className == 200) {
+      cls = `Nursery`;
+    }
+    if (this.className == 201) {
+      cls = `LKG`;
+    }
+    if (this.className == 202) {
+      cls = `UKG`;
+    }
+    this.studentForm.get('class')?.setValue(cls);
+    if (this.cls < 11 && this.cls !== 0 || this.cls == 200 || this.cls == 201 || this.cls == 202) {
+      this.studentForm.get('stream')?.setValue("N/A");
+    }
+    if (this.cls == 12 || this.cls == 11) {
+      this.studentForm.get('stream')?.setValue(this.stream);
+    }
   }
   addBulkStudentImportModel() {
     this.showBulkImportModal = true;
@@ -213,11 +255,7 @@ export class TeacherStudentComponent implements OnInit {
     this.errorCheck = false;
     this.getStudentByClass(this.className);
   }
-  addStudentClassPromoteModel(student: any) {
-    this.showClassPromoteModal = true;
-    this.singleStudentInfo = student;
-    this.studentClassPromoteForm.patchValue(student);
-  }
+  
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
@@ -235,10 +273,13 @@ export class TeacherStudentComponent implements OnInit {
     this.deleteById = id;
   }
 
-  getClass() {
-    this.classService.getClassList().subscribe((res: any) => {
+  getSingleClassSubjectByStream(params: any) {
+    this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
-        this.classInfo = res;
+        this.classSubject = res.subject;
+      }
+      if (!res) {
+        this.classSubject = [];
       }
     })
   }
@@ -251,7 +292,12 @@ export class TeacherStudentComponent implements OnInit {
   }
 
   getStudentByClass(cls: any) {
-    this.studentService.getStudentByClass(cls).subscribe((res: any) => {
+    let params = {
+      class: cls,
+      stream: this.stream,
+      adminId: this.adminId,
+    }
+    this.studentService.getStudentByClass(params).subscribe((res: any) => {
       if (res) {
         this.studentInfoByClass = res;
         const classMappings: any = {
@@ -267,6 +313,7 @@ export class TeacherStudentComponent implements OnInit {
         }
         this.studentInfoByClass.forEach((student) => {
           student.class = classMappings[student.class] || "Unknown";
+          student.admissionClass = classMappings[student.admissionClass] || "Unknown";
         });
       }
     })
@@ -278,7 +325,9 @@ export class TeacherStudentComponent implements OnInit {
         filters: {},
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
-        class: this.className
+        adminId: this.adminId,
+        class: this.className,
+        stream: this.stream,
       };
       this.recordLimit = params.limit;
       if (this.filters.searchText) {
@@ -287,17 +336,27 @@ export class TeacherStudentComponent implements OnInit {
 
       this.studentService.studentPaginationList(params).subscribe((res: any) => {
         if (res) {
+          this.errorCheck = false;
+          this.statusCode = 200;
           this.studentInfo = res.studentList;
+          this.serialNo = res.serialNo;
+          this.isDate = res.isDate;
           this.number = params.page;
           this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countStudent });
           return resolve(true);
         }
+      }, err => {
+        this.errorCheck = true;
+        this.statusCode = err.status;
+        console.log(err.status)
       });
     });
   }
 
   studentAddUpdate() {
     if (this.studentForm.valid) {
+      this.studentForm.value.adminId = this.adminId;
+      this.studentForm.value.class = this.className;
       if (this.updateMode) {
         this.studentService.updateStudent(this.studentForm.value).subscribe((res: any) => {
           if (res) {
@@ -421,7 +480,10 @@ export class TeacherStudentComponent implements OnInit {
     let studentRecordData = {
       bulkStudentRecord: this.bulkStudentRecord,
       class: this.className,
+      stream: this.stream,
+      adminId: this.adminId,
       createdBy:this.createdBy,
+
     }
     if (studentRecordData) {
       this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
@@ -461,33 +523,33 @@ export class TeacherStudentComponent implements OnInit {
       className = `UKG`;
     }
     const header: string[] = [
+      'session',
+      'medium',
       'admissionNo',
       'name',
       'fatherName',
       'motherName',
       'rollNumber',
-      'class',
-      'stream',
+      'discountAmountInFees',
       'aadharNumber',
       'samagraId',
       'dob',
       'doa',
-      'session',
       'admissionType',
+      'admissionClass',
       'gender',
       'category',
       'religion',
       'nationality',
-      'contact',
       'address',
+      'udiseNumber',
+      'bankAccountNo',
+      'bankIfscCode',
       'fatherQualification',
-      'fatherOccupation',
-      'fatherContact',
-      'fatherAnnualIncome',
       'motherQualification',
-      'motherOccupation',
-      'motherContact',
-      'motherAnnualIncome',
+      'parentsOccupation',
+      'parentsContact',
+      'parentsAnnualIncome',
     ];
 
     function orderObjectsByHeaders(studentInfoByClass: any, header: any) {
@@ -522,31 +584,9 @@ export class TeacherStudentComponent implements OnInit {
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
     this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{ religion: 'Muslim' }, { religion: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-  }
-
-  studentClassPromote() {
-    if (this.studentClassPromoteForm.valid) {
-      this.studentClassPromoteForm.value.class = parseInt(this.className);
-      this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
-        if (res) {
-          setTimeout(() => {
-            this.successDone();
-          }, 2000)
-          this.promotedClass;
-          this.promotedClass = res.className;
-          this.successMsg = res.successMsg;
-        }
-      }, err => {
-        this.errorCheck = true;
-        this.promotedClass;
-        if (err.error.className) {
-          this.promotedClass = parseInt(err.error.className);
-        }
-        this.errorMsg = err.error.errorMsg;
-      })
-    }
+    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
   }
 }

@@ -29,8 +29,8 @@
                                                     <mat-label *ngIf="!cls">Class</mat-label>
                                                     <mat-select type="number" matInput>
                                                         <div *ngFor="let classInfo of classInfo">
-                                                            <mat-option value="{{classInfo.class}}"
-                                                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                            <mat-option value="{{classInfo}}"
+                                                                (click)="chooseClass(classInfo)">{{classInfo
                                                                 | classSuffix}}</mat-option>
                                                         </div>
                                                     </mat-select>
@@ -72,8 +72,8 @@
                                             <mat-label *ngIf="!cls">Class</mat-label>
                                             <mat-select type="number" matInput>
                                                 <div *ngFor="let classInfo of classInfo">
-                                                    <mat-option value="{{classInfo.class}}"
-                                                        (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                    <mat-option value="{{classInfo}}"
+                                                        (click)="chooseClass(classInfo)">{{classInfo
                                                         |
                                                         classSuffix}}</mat-option>
                                                 </div>
@@ -451,8 +451,8 @@
                                                 <ng-container *ngIf="singleStudentTCInfo">
                                                     <div id="student">
                                                         <div class="col-lg-10 offset-lg-1 custom-container">
-                                                            <div class="table-container">
-                                                                <div class="row mt-5">
+                                                            <div class="table-container mt-5">
+                                                                <div class="row">
                                                                     <div class="col-2">
                                                                         <img class="logo"
                                                                             src="{{baseUrl}}/public/school-logo/{{schoolInfo?.schoolLogo}}"
@@ -768,8 +768,7 @@
 
                                                                 </table>
                                                                 <div>
-                                                                    <table class="custom-table sign-table"
-                                                                        style="position: absolute;left: 0;bottom: 0;z-index: 2;">
+                                                                    <table class="custom-table sign-table">
                                                                         <tr>
                                                                             <td class="text-bold"
                                                                                 style="width:33.33%;font-size: 12px;text-align: left;border: none;">
