@@ -22,7 +22,7 @@
                                                 <ng-container
                                                     *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
                                                     <button class="submit-button" mat-raised-button
-                                                        routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                                                        routerLink="/teacher/marksheet/result/add/{{cls}}/{{stream}}"
                                                         *ngIf="cls && stream">Add Result</button>
                                                 </ng-container>
                                             </div>
@@ -30,7 +30,7 @@
                                                 <ng-container
                                                     *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
                                                     <button class="submit-button" mat-raised-button
-                                                        routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                                                        routerLink="/teacher/marksheet/result/add/{{cls}}/{{stream}}"
                                                         *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200">Add
                                                         Result</button>
                                                 </ng-container>
@@ -151,7 +151,7 @@
                                         <ng-container
                                             *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
                                             <button class="submit-button" mat-raised-button
-                                                routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                                                routerLink="/teacher/marksheet/result/add/{{cls}}/{{stream}}"
                                                 *ngIf="cls && stream">Add Result</button>
                                         </ng-container>
                                     </div>
@@ -159,7 +159,7 @@
                                         <ng-container
                                             *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
                                             <button class="submit-button" mat-raised-button
-                                                routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                                                routerLink="/teacher/marksheet/result/add/{{cls}}/{{stream}}"
                                                 *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200">Add
                                                 Result</button>
                                         </ng-container>
@@ -169,7 +169,7 @@
                         </div>
                     </div>
                     <mat-menu #settings="matMenu">
-                        <button mat-menu-item routerLink="/admin/marksheet/structure/{{cls}}/{{stream}}">
+                        <button mat-menu-item routerLink="/teacher/marksheet/structure/{{cls}}/{{stream}}">
                             <mat-icon>article</mat-icon>
                             <span>Marksheet Template Format</span>
                         </button>

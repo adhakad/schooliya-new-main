@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <mat-menu #settings="matMenu">
-                        <button mat-menu-item routerLink="/admin/fees/structure">
+                        <button mat-menu-item routerLink="/teacher/fees/structure">
                             <mat-icon>currency_rupee</mat-icon>
                             <span>Create Fee Structure</span>
                         </button>
@@ -162,8 +162,7 @@
                                             <p class="mb-0"> &#8377; {{student.totalFees}}</p>
                                         </td>
                                         <td class="mb-0">
-                                            <mat-icon
-                                                routerLink="/admin/fees/statement/{{student.class}}/{{stream}}/{{student.studentId}}"
+                                            <mat-icon routerLink="/teacher/fees/statement/{{student.studentId}}"
                                                 style="cursor: pointer;">launch</mat-icon>
                                         </td>
                                         <td>

@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'admin/transfer-certificate', loadChildren: () => import('src/app/pages/admin/transfer-certificate/transfer-certificate.module').then((module) => module.TransferCertificateModule), canActivate: [AdminAuthGuard] },  
   { path: 'admin/fees', loadChildren: () => import('src/app/pages/admin/admin-student-fees/admin-student-fees.module').then((module) => module.AdminStudentFeesModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/fees/structure', loadChildren: () => import('src/app/pages/admin/admin-student-fees-structure/admin-student-fees-structure.module').then((module) => module.AdminStudentFeesStructureModule), canActivate: [AdminAuthGuard] },
-  { path: 'admin/fees/statement/:class/:stream/:id', loadChildren: () => import('src/app/pages/admin/admin-student-fees-statement/admin-student-fees-statement.module').then((module) => module.AdminStudentFeesStatementModule), canActivate: [AdminAuthGuard] },
+  { path: 'admin/fees/statement/:id', loadChildren: () => import('src/app/pages/admin/admin-student-fees-statement/admin-student-fees-statement.module').then((module) => module.AdminStudentFeesStatementModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/admit-card', loadChildren: () => import('src/app/pages/admin/admin-student-admit-card/admin-student-admit-card.module').then((module) => module.AdminStudentAdmitCardModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/admit-card/structure', loadChildren: () => import('src/app/pages/admin/admin-student-admit-card-structure/admin-student-admit-card-structure.module').then((module) => module.AdminStudentAdmitCardStructureModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/marksheet', loadChildren: () => import('src/app/pages/admin/admin-student-marksheet/admin-student-marksheet.module').then((module) => module.AdminStudentMarksheetModule), canActivate: [AdminAuthGuard] },
@@ -58,7 +58,15 @@ const routes: Routes = [
   { path: 'teacher/marksheet', loadChildren: () => import('src/app/pages/teacher/teacher-student-marksheet/teacher-student-marksheet.module').then((module) => module.TeacherStudentMarksheetModule), canActivate: [TeacherAuthGuard] },
   { path: 'teacher/student', loadChildren: () => import('src/app/pages/teacher/teacher-student/teacher-student.module').then((module) => module.TeacherStudentModule), canActivate: [TeacherAuthGuard] },
   { path: 'teacher/fees', loadChildren: () => import('src/app/pages/teacher/teacher-student-fees/teacher-student-fees.module').then((module) => module.TeacherStudentFeesModule), canActivate: [TeacherAuthGuard] },
-  { path: 'teacher/fees/class/statement', loadChildren: () => import('src/app/pages/teacher/teacher-student-fee-statement/teacher-student-fee-statement.module').then((module) => module.TeacherStudentFeeStatementModule), canActivate: [TeacherAuthGuard] },
+  
+  
+  { path: 'teacher/fees/structure', loadChildren: () => import('src/app/pages/teacher/teacher-student-fees-structure/teacher-student-fees-structure.module').then((module) => module.TeacherStudentFeesStructureModule), canActivate: [TeacherAuthGuard] },
+  { path: 'teacher/fees/statement/:id', loadChildren: () => import('src/app/pages/teacher/teacher-student-fees-statement/teacher-student-fees-statement.module').then((module) => module.TeacherStudentFeesStatementModule), canActivate: [TeacherAuthGuard] },
+  { path: 'teacher/admit-card/structure', loadChildren: () => import('src/app/pages/teacher/teacher-student-admit-card-structure/teacher-student-admit-card-structure.module').then((module) => module.TeacherStudentAdmitCardStructureModule), canActivate: [TeacherAuthGuard] },
+  { path: 'teacher/marksheet/structure/:class/:stream', loadChildren: () => import('src/app/pages/teacher/teacher-student-marksheet-structure/teacher-student-marksheet-structure.module').then((module) => module.TeacherStudentMarksheetStructureModule), canActivate: [TeacherAuthGuard] },
+  { path: 'teacher/marksheet/result/add/:class/:stream', loadChildren: () => import('src/app/pages/teacher/teacher-student-marksheet-result-add/teacher-student-marksheet-result-add.module').then((module) => module.TeacherStudentMarksheetResultAddModule), canActivate: [TeacherAuthGuard] },
+  { path: 'teacher/promote-fail', loadChildren: () => import('src/app/pages/teacher/teacher-student-promote-fail/teacher-student-promote-fail.module').then((module) => module.TeacherStudentPromoteFailModule), canActivate: [TeacherAuthGuard] },
+  { path: 'teacher/transfer-certificate', loadChildren: () => import('src/app/pages/teacher/teacher-student-transfer-certificate/teacher-student-transfer-certificate.module').then((module) => module.TeacherStudentTransferCertificateModule), canActivate: [TeacherAuthGuard] },  
 
 ];
 

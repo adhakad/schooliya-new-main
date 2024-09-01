@@ -103,7 +103,6 @@ export class TeacherAdmissionComponent implements OnInit {
     }
     this.getSchool(this.adminId);
     let load: any = this.getStudentsByAdmission({ page: 1 });
-    // this.getClass();
     this.allOptions();
     if (load) {
       setTimeout(() => {
