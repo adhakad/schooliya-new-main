@@ -16,7 +16,7 @@ export class SideNavComponent implements OnInit {
   promoteFailPermission:boolean = false;
   transferCertificatePermission:boolean = false;
   adminId!: String
-  constructor(private teacherAuthService:TeacherAuthService,private teacherService:TeacherService,) { }
+  constructor(private teacherAuthService:TeacherAuthService,private teacherService:TeacherService) { }
 
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();

@@ -187,6 +187,7 @@ export class AdminAuthService {
 
   private deleteAccessToken() {
     this.cookieService.delete("adminAccessToken");
+    this.cookieService.delete("adminAccessToken");
     this.cookieService.delete("_uD");
     this.cookieService.delete("_vN");
   }

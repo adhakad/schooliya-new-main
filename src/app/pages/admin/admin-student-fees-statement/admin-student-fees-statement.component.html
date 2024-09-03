@@ -15,7 +15,7 @@
                                         <button mat-button class="menu-button">
                                             <span>Fees | Statement</span>
                                         </button>
-                                        <!-- Session - {{studentInfo[0]?.session}} -->
+                                        <!-- Session - {{studentInfo?.session}} -->
                                     </div>
                                 </div>
                             </div>
@@ -39,19 +39,19 @@
                             <table class="info-table text-center">
                                 <tr>
                                     <td class="text-bold">Admission No. :</td>
-                                    <td>{{studentInfo[0]?.admissionNo}}</td>
+                                    <td>{{studentInfo?.admissionNo}}</td>
                                     <td class="text-bold">Roll Number :</td>
-                                    <td>{{studentInfo[0]?.rollNumber}}</td>
+                                    <td>{{studentInfo?.rollNumber}}</td>
                                     <td class="text-bold">Class :</td>
-                                    <td>{{studentInfo[0]?.class | classSuffix}}</td>
+                                    <td>{{studentInfo?.class | classSuffix}}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-bold">Student Name :</td>
-                                    <td>{{studentInfo[0]?.name | titlecase}}</td>
+                                    <td>{{studentInfo?.name | titlecase}}</td>
                                     <td class="text-bold">Father Name :</td>
-                                    <td>{{studentInfo[0]?.fatherName | titlecase}}</td>
+                                    <td>{{studentInfo?.fatherName | titlecase}}</td>
                                     <td class="text-bold">Mother Name :</td>
-                                    <td>{{studentInfo[0]?.motherName | titlecase}}</td>
+                                    <td>{{studentInfo?.motherName | titlecase}}</td>
                                 </tr>
                             </table>
                             <table class="custom-table">
@@ -176,7 +176,7 @@
                                                 <div class="row">
                                                     <div class="col-12 title-lable">
                                                         <p>Fees Receipt -
-                                                            {{studentInfo[0]?.session}}</p>
+                                                            {{studentInfo?.session}}</p>
 
                                                     </div>
                                                 </div>
@@ -188,41 +188,41 @@
                                                         </td>
                                                         <td class="text-bold">ADMISSION NO.</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo[0]?.admissionNo}}
+                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.admissionNo}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-bold">STUDENT NAME</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo[0]?.name
+                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.name
                                                             | uppercase}}
                                                         </td>
                                                         <td class="text-bold">DATE OF BIRTH</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo[0]?.dob}}
+                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.dob}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-bold">MOTHER NAME</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo[0]?.motherName
+                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.motherName
                                                             | uppercase}}
                                                         </td>
                                                         <td class="text-bold">FATHER NAME</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo[0]?.fatherName
+                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.fatherName
                                                             | uppercase}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-bold">CLASS</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo[0]?.class
+                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.class
                                                             | classSuffix | uppercase}}
                                                         </td>
                                                         <td class="text-bold">STREAM</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo[0]?.stream
+                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.stream
                                                             | uppercase}}
                                                         </td>
                                                     </tr>

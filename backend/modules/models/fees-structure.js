@@ -6,6 +6,11 @@ const FeesModel = mongoose.model('fees-structure', {
     required: true,
     trim: true
   },
+  session: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   class: {
     type: Number,
     required: true,
@@ -30,7 +35,7 @@ const FeesModel = mongoose.model('fees-structure', {
   createdAt: {
     type: Date,
     default: Date.now,
-},
+  },
 
 });
 

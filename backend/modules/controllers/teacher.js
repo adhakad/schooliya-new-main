@@ -76,7 +76,6 @@ let TeacherPermission = async (req, res, next) => {
     try {
         const adminId = req.params.id;
         const teacherId = req.params.teacherId;
-        console.log(req.body.type)
         let { marksheetPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission,promoteFailPermission,transferCertificatePermission } = req.body.type;
         const checkTeacher = await TeacherModel.findOne({ _id: teacherId, adminId: adminId });
         if (!checkTeacher) {

@@ -26,7 +26,7 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
   studentId: any;
   processedData: any[] = [];
   singleReceiptInstallment: any[] = [];
-  studentInfo: any[] = [];
+  studentInfo: any;
   schoolInfo: any;
   stream: any;
   loader: Boolean = true;

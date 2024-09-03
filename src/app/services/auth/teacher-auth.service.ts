@@ -96,7 +96,23 @@ export class TeacherAuthService {
     this.authStatusListener.next(false);
     clearTimeout(this.tokenTimer);
     this.deleteAccessToken();
+    this.checkUserCookies();
     this.router.navigate(["/"], { replaceUrl: true });
+  }
+
+  private checkUserCookies() {
+    const accessToken = this.cookieService.get("teacherAccessToken");
+    const userDetail = this.cookieService.get("_uD");
+    if (!accessToken && !userDetail) {
+      return;
+    }
+    this.deleteAccessToken();
+    const accessTokenRepeat = this.cookieService.get("teacherAccessToken");
+    const userDetailRepeat = this.cookieService.get("_uD");
+    if (!accessTokenRepeat && !userDetailRepeat) {
+      return;
+    }
+    this.deleteAccessToken();
   }
 
   getAccessToken() {
@@ -154,12 +170,23 @@ export class TeacherAuthService {
     return payload;
   }
 
-
-
   private deleteAccessToken() {
+    this.cookieService.delete("teacherAccessToken");
     this.cookieService.delete("teacherAccessToken");
     this.cookieService.delete("_uD");
     this.cookieService.delete("_vN");
   }
 
+  deleteAllCookies() {
+    this.token = null;
+    this.isTeacherAuthenticated = false;
+    this.authStatusListener.next(false);
+    this.deleteAllCookie();
+  }
+  deleteAllCookie() {
+    this.cookieService.delete("_uD");
+    this.cookieService.delete("teacherAccessToken");
+    this.cookieService.delete("teacherRefreshToken");
+    this.cookieService.delete("_vN");
+  }
 }

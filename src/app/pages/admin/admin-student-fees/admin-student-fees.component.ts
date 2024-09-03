@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -78,6 +78,7 @@ export class AdminStudentFeesComponent implements OnInit {
     this.getSchool();
     // this.getFees({ page: 1 });
   }
+  
 
   printStudentData() {
     const printContent = this.getPrintContent();
@@ -140,18 +141,20 @@ export class AdminStudentFeesComponent implements OnInit {
     return printHtml;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
+  closeModal() {
+    this.showModal = false;
+    this.showPrintModal = false;
+    this.showBulkFeesModal = false;
+    this.updateMode = false;
+    this.successMsg = '';
+    this.errorMsg = '';
+    this.payNow = false;
+    this.paybleInstallment = [];
+    this.paybleInstallment = [0, 0];
+    this.receiptInstallment = {};
+    this.receiptMode = false;
+    this.getAllStudentFeesCollectionByClass()
+  }
 
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
@@ -211,21 +214,6 @@ export class AdminStudentFeesComponent implements OnInit {
     })
   }
 
-
-  closeModal() {
-    this.showModal = false;
-    this.showPrintModal = false;
-    this.showBulkFeesModal = false;
-    this.updateMode = false;
-    this.successMsg = '';
-    this.errorMsg = '';
-    this.payNow = false;
-    this.paybleInstallment = [];
-    this.paybleInstallment = [0, 0];
-    this.receiptInstallment = {};
-    this.receiptMode = false;
-    this.getAllStudentFeesCollectionByClass()
-  }
   feesPay(pay: boolean) {
     if (pay === false) {
       this.payNow = true;

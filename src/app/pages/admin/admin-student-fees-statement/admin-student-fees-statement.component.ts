@@ -23,7 +23,7 @@ export class AdminStudentFeesStatementComponent implements OnInit {
   studentId: any;
   processedData: any[] = [];
   singleReceiptInstallment: any[] = [];
-  studentInfo: any[] = [];
+  studentInfo: any;
   schoolInfo: any;
   stream: any;
   loader: Boolean = true;
@@ -124,6 +124,7 @@ export class AdminStudentFeesStatementComponent implements OnInit {
       if (res) {
         this.studentFeesCollection = res.studentFeesCollection;
         this.studentInfo = res.studentInfo;
+        console.log(this.studentInfo)
         this.feesStructureByClass(res.studentInfo.class,res.studentInfo.stream);
         this.processData();
       }

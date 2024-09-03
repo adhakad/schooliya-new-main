@@ -11,6 +11,11 @@ const FeesCollectionModel = mongoose.model('fees-collection', {
     required: true,
     trim: true,
   },
+  session: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   class: {
     type: Number,
     required: true,
