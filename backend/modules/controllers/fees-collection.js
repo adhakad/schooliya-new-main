@@ -8,12 +8,20 @@ let GetSingleStudentFeesCollectionById = async (req, res, next) => {
     let studentId = req.params.studentId;
 
     try {
-        const student = await StudentModel.findOne({ _id: studentId }, '_id session admissionNo name rollNumber class stream fatherName motherName dob');
+        const student = await StudentModel.findOne({ _id: studentId }, '_id adminId session admissionNo name rollNumber class stream fatherName motherName dob');
         if (!student) {
             return res.status(404).json('Student not found !')
         }
+        let adminId = student.adminId;
+        let session = student.session;
+        let className = student.class;
+        let stream = student.stream;
+        const singleFeesStr = await FeesStructureModel.findOne({adminId:adminId,session:session,class:className,stream:stream});
+        if (!singleFeesStr) {
+            return res.status(404).json('Fee Structure not found !')
+        }
         const studentFeesCollection = await FeesCollectionModel.findOne({ studentId: studentId });
-        return res.status(200).json({ studentInfo: student, studentFeesCollection: studentFeesCollection });
+        return res.status(200).json({ studentInfo: student,singleFeesStr:singleFeesStr, studentFeesCollection: studentFeesCollection });
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
     }

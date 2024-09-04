@@ -182,7 +182,7 @@ let CreateStudent = async (req, res, next) => {
         session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, parentsOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees, createdBy
     }
     try {
-        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
+        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
             return res.status(404).json(`Please create fees structure !`);
         }
@@ -235,6 +235,9 @@ let CreateStudent = async (req, res, next) => {
         }
         let studentFeesData = {
             adminId: adminId,
+            session: session,
+            previousSessionClass:0,
+            previousSessionStream:"empty",
             class: parseInt(className),
             stream: stream,
             admissionFees: admissionFees ? admissionFees : 0,
@@ -254,9 +257,10 @@ let CreateStudent = async (req, res, next) => {
             studentFeesData.studentId = studentId;
             let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
             if (createStudentFeesData) {
+                console.log("studentFeesData")
                 let studentAdmissionData = {
                     adminId: adminId,
-                    session: createStudent.session,
+                    session: session,
                     name: createStudent.name,
                     class: createStudent.class,
                     stream: stream,
@@ -578,7 +582,7 @@ let UpdateStudent = async (req, res, next) => {
 let StudentClassPromote = async (req, res, next) => {
     try {
         const studentId = req.params.id;
-        let { adminId, session, rollNumber, stream,discountAmountInFees } = req.body;
+        let { adminId, session, rollNumber, stream, discountAmountInFees } = req.body;
         if (stream == "stream") {
             stream = "N/A";
         }
@@ -601,14 +605,14 @@ let StudentClassPromote = async (req, res, next) => {
         }
         if (className == cls && className === 202) {
             className = 1;
-        }else{
+        } else {
             className = className + 1;
         }
-        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className,stream:stream });
+        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
         if (!checkFeesStr) {
             return res.status(404).json({ errorMsg: 'Please create fees structure for this class', className: className });
         }
-        const studentData = { rollNumber, class: className, stream, admissionType: 'Old',discountAmountInFees:discountAmountInFees };
+        const studentData = { rollNumber, class: className, stream, admissionType: 'Old', discountAmountInFees: discountAmountInFees };
         const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });
         if (updateStudent) {
             await Promise.all([
@@ -622,13 +626,13 @@ let StudentClassPromote = async (req, res, next) => {
                 adminId: adminId,
                 studentId,
                 class: className,
-                stream:stream,
+                stream: stream,
                 admissionFees: 0,
                 admissionFeesPayable: false,
                 totalFees: totalFees,
                 paidFees: 0,
                 dueFees: totalFees,
-                discountAmountInFees:discountAmountInFees,
+                discountAmountInFees: discountAmountInFees,
             };
             let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
             if (createStudentFeesData) {

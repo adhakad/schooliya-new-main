@@ -124,34 +124,40 @@ export class AdminStudentFeesStatementComponent implements OnInit {
       if (res) {
         this.studentFeesCollection = res.studentFeesCollection;
         this.studentInfo = res.studentInfo;
-        console.log(this.studentInfo)
-        this.feesStructureByClass(res.studentInfo.class,res.studentInfo.stream);
+        if (this.studentFeesCollection.admissionFeesPayable == true) {
+          res.singleFeesStr.feesType = [{ Admission: res.singleFeesStr.admissionFees }, ...res.singleFeesStr.feesType];
+          this.clsFeesStructure = res.singleFeesStr;
+        }
+        if (this.studentFeesCollection.admissionFeesPayable == false) {
+          this.clsFeesStructure = res.singleFeesStr;
+        }
+        // this.feesStructureByClass(res.studentInfo.class,res.studentInfo.stream);
         this.processData();
       }
     })
   }
 
-  feesStructureByClass(cls:any,stream:string) {
-    if(stream=="N/A"){
-      stream = "stream";
-    }
-    let params = {
-      class: cls,
-      adminId: this.adminId,
-      stream: stream
-    }
-    this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
-      if (res) {
-        if (this.studentFeesCollection.admissionFeesPayable == true) {
-          res.feesType = [{ Admission: res.admissionFees }, ...res.feesType];
-          this.clsFeesStructure = res;
-        }
-        if (this.studentFeesCollection.admissionFeesPayable == false) {
-          this.clsFeesStructure = res;
-        }
-      }
-    })
-  }
+  // feesStructureByClass(cls:any,stream:string) {
+  //   if(stream=="N/A"){
+  //     stream = "stream";
+  //   }
+  //   let params = {
+  //     class: cls,
+  //     adminId: this.adminId,
+  //     stream: stream
+  //   }
+  //   this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
+  //     if (res) {
+  //       if (this.studentFeesCollection.admissionFeesPayable == true) {
+  //         res.feesType = [{ Admission: res.admissionFees }, ...res.feesType];
+  //         this.clsFeesStructure = res;
+  //       }
+  //       if (this.studentFeesCollection.admissionFeesPayable == false) {
+  //         this.clsFeesStructure = res;
+  //       }
+  //     }
+  //   })
+  // }
 
   processData() {
     let allPaidAmount = this.studentFeesCollection.admissionFees;

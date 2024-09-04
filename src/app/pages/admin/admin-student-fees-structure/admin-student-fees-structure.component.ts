@@ -36,13 +36,14 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   classInfo: any[] = [];
   stream: string = '';
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
-
+  sessions: any;
   schoolInfo: any;
   loader: Boolean = true;
   adminId!: string;
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService,private classService: ClassService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
+      session: ['', Validators.required],
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       stream: ['', Validators.required],
       admissionFees: ['', Validators.required],
@@ -58,6 +59,7 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     this.adminId = getAdmin?.id;
     this.getClass();
     this.getFeesStructureByClass();
+    this.allOptions();
     this.loader = false;
   }
   getSchool() {
@@ -217,6 +219,10 @@ export class AdminStudentFeesStructureComponent implements OnInit {
         this.deleteById = '';
       }
     })
+  }
+
+  allOptions() {
+    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
   }
 
 }

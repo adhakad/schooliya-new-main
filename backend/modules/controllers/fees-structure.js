@@ -12,8 +12,8 @@ let GetSingleClassFeesStructureByStream = async (req, res, next) => {
         stream = "N/A";
     }
     try {
-        const singleFeesStr = await FeesStructureModel.findOne({adminId:adminId, class: className,stream:stream });
-        if(!singleFeesStr){
+        const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
+        if (!singleFeesStr) {
             return res.status(404).json('Fee Structure not found !')
         }
         return res.status(200).json(singleFeesStr);
@@ -36,7 +36,7 @@ let GetSingleClassFeesStructure = async (req, res, next) => {
 
 let CreateFeesStructure = async (req, res, next) => {
     let className = req.body.class;
-    let { adminId, stream, admissionFees, totalFees } = req.body;
+    let { adminId, stream, session, admissionFees, totalFees } = req.body;
     let feesType = req.body.type.feesType;
     if (stream === "stream") {
         stream = "N/A";
@@ -50,9 +50,9 @@ let CreateFeesStructure = async (req, res, next) => {
         if (!checkClassExist) {
             return res.status(404).json('Invalid Class !');
         }
-        const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
+        const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (checkFeesStructure) {
-            return res.status(400).json(`Fee structure already exist !`);
+            return res.status(400).json(`Fee structure already exist for session ${session} !`);
         }
         if (totalFees !== feesTypeTotal) {
             return res.status(400).json(`Total fees is not equal to all fees particulars total !`);
@@ -61,6 +61,7 @@ let CreateFeesStructure = async (req, res, next) => {
             adminId: adminId,
             class: className,
             stream: stream,
+            session,
             admissionFees: admissionFees,
             totalFees: totalFees,
             feesType: feesType,
@@ -68,17 +69,18 @@ let CreateFeesStructure = async (req, res, next) => {
         let feesStructure = await FeesStructureModel.create(feesStructureData);
         if (feesStructure) {
             let admissionFees = feesStructure.admissionFees;
-            let checkStudent = await StudentModel.find({ adminId: adminId, class: className, stream: stream });
-            
+            let checkStudent = await StudentModel.find({ adminId: adminId, session, class: className, stream: stream });
+
             if (checkStudent) {
                 let studentFeesData = [];
                 for (let i = 0; i < checkStudent.length; i++) {
                     let totalFees = feesStructure.totalFees - checkStudent[i].discountAmountInFees;
                     let feesObject = {
-                        adminId:adminId,
+                        adminId: adminId,
                         studentId: checkStudent[i]._id,
+                        session,
                         class: className,
-                        stream:stream,
+                        stream: stream,
                         admissionFeesPayable: false,
                         admissionFees: 0,
                         totalFees: totalFees,

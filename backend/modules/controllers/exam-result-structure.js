@@ -90,7 +90,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 
 // let CreateExamResultStructure = async (req, res, next) => {
 
-//     // TEMPLATE T1 OR T2 SECTION
+//     // TEMPLATE T5 OR T6 SECTION
 
 //     const gradeMinMarks = [
 //         { "A1": 91 }, { "A2": 81 }, { "B1": 71 }, { "B2": 61 },
@@ -102,7 +102,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     ];
 //     const coScholastic = ['work education', 'arts education','discipline'];
 //     const templateData = {
-//         templateName: "T1",
+//         templateName: "T6",
 //         examStructure: {
 //             term1: {
 //                 theoryMaxMarks: 80,
@@ -127,7 +127,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 //         }
 //     }
 
-//     // TEMPLATE T3 OR T4 SECTION
+//     // // TEMPLATE T3 OR T4 SECTION
 
 //     // const gradeMinMarks = [
 //     //     { "A1": 91 }, { "A2": 81 }, { "B1": 71 }, { "B2": 61 },
@@ -139,7 +139,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     // ];
 //     // const coScholastic = ['work education', 'arts education','discipline'];
 //     // const templateData = {
-//     //     templateName: "T4",
+//     //     templateName: "T3",
 //     //     examStructure: {
 //     //         term1: {
 //     //             theoryMaxMarks: 80,
@@ -160,7 +160,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     //     }
 //     // }
 
-//     // TEMPLATE T5 SECTION
+//     // // TEMPLATE T2 SECTION
 
 //     // const gradeMinMarks = [
 //     //     { "A+": 91 }, { "A": 81 }, { "B+": 71 }, { "B": 61 },
@@ -172,7 +172,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     // ];
 //     // const coScholastic = ['work education', 'arts education', 'discipline'];
 //     // const templateData = {
-//     //     templateName: "T5",
+//     //     templateName: "T2",
 //     //     examStructure: {
 //     //         term1: {
 //     //             theoryMaxMarks: 75,
@@ -187,7 +187,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     // }
 
 
-//     // TEMPLATE T6 SECTION
+//     // // TEMPLATE T1 SECTION
 
 //     // const gradeMinMarks = [
 //     //     { "A+": 91 }, { "A": 81 }, { "B+": 71 }, { "B": 61 },
@@ -199,7 +199,7 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     // ];
 //     // const coScholastic = ['work education', 'arts education', 'discipline'];
 //     // const templateData = {
-//     //     templateName: "T6",
+//     //     templateName: "T1",
 //     //     examStructure: {
 //     //         term1: {
 //     //             theoryMaxMarks: 100,

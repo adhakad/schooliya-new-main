@@ -16,6 +16,16 @@ const FeesCollectionModel = mongoose.model('fees-collection', {
     required: true,
     trim: true,
   },
+  previousSessionClass: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  previousSessionStream: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   class: {
     type: Number,
     required: true,
