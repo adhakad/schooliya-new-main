@@ -636,34 +636,32 @@ let StudentClassPromote = async (req, res, next) => {
                 let previousSessionPaidFees = checkFeesCollection.paidFees;
                 let previousSessionDueFees = checkFeesCollection.dueFees;
                 if (previousSessionDueFees == 0 && previousSessionTotalFees == previousSessionPaidFees) {
+                    const studentFeesData = {
+                        adminId: adminId,
+                        studentId: studentId,
+                        session: session,
+                        previousSessionFeesStatus: false,
+                        previousSessionClass: 0,
+                        previousSessionStream: "empty",
+                        class: className,
+                        stream: stream,
+                        admissionFees: 0,
+                        admissionFeesPayable: false,
+                        totalFees: totalFees,
+                        paidFees: 0,
+                        dueFees: totalFees,
+                        AllTotalFees: totalFees,
+                        AllPaidFees: 0,
+                        AllDueFees: totalFees,
+                        discountAmountInFees: discountAmountInFees,
+                    };
                     let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
-                    if (deleteFeesCollection) {
-                        const studentFeesData = {
-                            adminId: adminId,
-                            studentId,
-                            session: session,
-                            previousSessionFeesStatus: false,
-                            previousSessionClass: 0,
-                            previousSessionStream: "empty",
-                            class: className,
-                            stream: stream,
-                            admissionFees: 0,
-                            admissionFeesPayable: false,
-                            totalFees: totalFees,
-                            paidFees: 0,
-                            dueFees: totalFees,
-                            AllTotalFees: totalFees,
-                            AllPaidFees: 0,
-                            AllDueFees: dueFees,
-                            discountAmountInFees: discountAmountInFees,
-                        };
-                        let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
-                        if (createStudentFeesData) {
-                            return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
-                        }
+                    let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
+                    if (createStudentFeesData && deleteFeesCollection) {
+                        return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
                     }
-                }
 
+                }
                 const previousSessionClass = checkFeesCollection.class;
                 const previousSessionStream = checkFeesCollection.stream;
                 const id = checkFeesCollection._id;
@@ -687,7 +685,6 @@ let StudentClassPromote = async (req, res, next) => {
                     AllDueFees: totalFees + previousSessionDueFees,
                     discountAmountInFees: discountAmountInFees,
                 };
-
                 const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                     {
                         _id: id,
@@ -707,9 +704,7 @@ let StudentClassPromote = async (req, res, next) => {
                     {
                         new: true // Return the updated document
                     });
-
                 let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
-
                 if (createStudentFeesData) {
                     return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
                 }
