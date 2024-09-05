@@ -184,7 +184,7 @@ let CreateStudent = async (req, res, next) => {
     try {
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
-            return res.status(404).json(`Please create fees structure !`);
+            return res.status(404).json(`Please create fees structure for session ${session} !`);
         }
         const checkClassSubject = await ClassSubjectModal.findOne({ adminId: adminId, class: className, stream: stream });
         if (!checkClassSubject) {

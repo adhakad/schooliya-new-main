@@ -103,21 +103,74 @@ let CreateFeesCollection = async (req, res, next) => {
         if (!checkFeesCollection) {
             return res.status(404).json(`Fees record not found !`);
         }
-        const currentSession = checkFeesCollection.session;
+
+
+
+
+
+        if (checkFeesCollection.previousSessionFeesStatus == false) {
+            if (feesAmount > checkFeesCollection.dueFees) {
+                return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session} !`);
+            }
+            const totalFees = checkFeesCollection.totalFees;
+            const paidFees = checkFeesCollection.paidFees + feesAmount
+            const dueFees = totalFees - paidFees;
+            const AllPaidFees = checkFeesCollection.AllPaidFees + feesAmount;
+            const AllDueFees = checkFeesCollection.AllDueFees - feesAmount;
+            const feesData = {
+                receiptNo: receiptNo,
+                totalFees: totalFees,
+                discountAmountInFees: checkFeesCollection.discountAmountInFees,
+                paidFees: paidFees,
+                dueFees: dueFees,
+                feesAmount: feesAmount,
+                paymentDate: istDateTimeString,
+                admissionFeesPayable: checkFeesCollection.admissionFeesPayable,
+                admissionFees: checkFeesCollection.admissionFees,
+                createdBy: createdBy
+            }
+            const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
+                {
+                    adminId: adminId,
+                    studentId: studentId,
+                    session: session
+                },
+                {
+                    $push: {
+                        installment: feesAmount,
+                        receipt: receiptNo,
+                        paymentDate: istDateTimeString,
+                        createdBy: createdBy
+                    },
+                    $set: {
+                        totalFees: totalFees,
+                        paidFees: paidFees,
+                        dueFees: dueFees,
+                        AllPaidFees: AllPaidFees,
+                        AllDueFees: AllDueFees
+                    }
+                },
+                {
+                    new: true // Return the updated document
+                });
+            if (updatedDocument) {
+                return res.status(200).json(feesData);
+            }
+        }
+
+
+
         if (checkFeesCollection.previousSessionFeesStatus == true) {
             const checkPreviousFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, previousSessionFeesStatus: false });
             if (!checkPreviousFeesCollection) {
                 return res.status(404).json(`Fees record not found !`);
             }
-            const session = checkPreviousFeesCollection.session;
+            const previousSession = checkPreviousFeesCollection.session;
             const totalFees = checkPreviousFeesCollection.totalFees;
             const paidFees = checkPreviousFeesCollection.paidFees + feesAmount
             const dueFees = totalFees - paidFees;
             const AllPaidFees = checkPreviousFeesCollection.AllPaidFees + feesAmount;
             const AllDueFees = checkPreviousFeesCollection.AllDueFees - feesAmount;
-            if (feesAmount > checkFeesCollection.dueFees) {
-                return res.status(400).json(`Paying fees amount is greater then due fees amount ${dueFees} of session ${session} !`);
-            }
             const feesData = {
                 receiptNo: receiptNo,
                 totalFees: totalFees,
@@ -130,11 +183,111 @@ let CreateFeesCollection = async (req, res, next) => {
                 admissionFees: checkPreviousFeesCollection.admissionFees,
                 createdBy: createdBy
             }
+            if (feesAmount == checkPreviousFeesCollection.dueFees) {
+                const currentSessionTotalFees = checkFeesCollection.totalFees;
+                const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
+                    {
+                        adminId: adminId,
+                        studentId: studentId,
+                        session: previousSession
+                    },
+                    {
+                        $push: {
+                            installment: feesAmount,
+                            receipt: receiptNo,
+                            paymentDate: istDateTimeString,
+                            createdBy: createdBy
+                        },
+                        $set: {
+                            paidFees: paidFees,
+                            dueFees: dueFees,
+                            AllTotalFees: currentSessionTotalFees,
+                            AllPaidFees: 0,
+                            AllDueFees: currentSessionTotalFees
+                        }
+                    },
+                    {
+                        new: true
+                    });
+                const updated = await FeesCollectionModel.findOneAndUpdate(
+                    {
+                        adminId: adminId,
+                        studentId: studentId,
+                        session: session
+                    },
+                    {
+                        $set: {
+                            AllTotalFees: currentSessionTotalFees,
+                            AllPaidFees: 0,
+                            AllDueFees: currentSessionTotalFees
+                        }
+                    },
+                    {
+                        new: true
+                    });
+                if (updatedDocument && updated) {
+                    return res.status(200).json(feesData);
+                }
+            }
+            if (checkPreviousFeesCollection.dueFees == 0 && checkPreviousFeesCollection.AllPaidFees == 0) {
+
+                if (feesAmount > checkFeesCollection.dueFees) {
+                    return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session} !`);
+                }
+                const totalFees = checkFeesCollection.totalFees;
+                const paidFees = checkFeesCollection.paidFees + feesAmount
+                const dueFees = totalFees - paidFees;
+                const AllPaidFees = checkFeesCollection.AllPaidFees + feesAmount;
+                const AllDueFees = checkFeesCollection.AllDueFees - feesAmount;
+                const feesData = {
+                    receiptNo: receiptNo,
+                    totalFees: totalFees,
+                    discountAmountInFees: checkFeesCollection.discountAmountInFees,
+                    paidFees: paidFees,
+                    dueFees: dueFees,
+                    feesAmount: feesAmount,
+                    paymentDate: istDateTimeString,
+                    admissionFeesPayable: checkFeesCollection.admissionFeesPayable,
+                    admissionFees: checkFeesCollection.admissionFees,
+                    createdBy: createdBy
+                }
+                const deleteDocument = await FeesCollectionModel.findOneAndDelete({ adminId: adminId, studentId: studentId, session: previousSession });
+                const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
+                    {
+                        adminId: adminId,
+                        studentId: studentId,
+                        session: session
+                    },
+                    {
+                        $push: {
+                            installment: feesAmount,
+                            receipt: receiptNo,
+                            paymentDate: istDateTimeString,
+                            createdBy: createdBy
+                        },
+                        $set: {
+                            previousSessionFeesStatus:false,
+                            paidFees: paidFees,
+                            dueFees: dueFees,
+                            AllPaidFees: AllPaidFees,
+                            AllDueFees: AllDueFees
+                        }
+                    },
+                    {
+                        new: true // Return the updated document
+                    });
+                if (updatedDocument && deleteDocument) {
+                    return res.status(200).json(feesData);
+                }
+            }
+            if (feesAmount > checkPreviousFeesCollection.dueFees) {
+                return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkPreviousFeesCollection.dueFees} of session ${session} !`);
+            }
             const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                 {
                     adminId: adminId,
                     studentId: studentId,
-                    session: session
+                    session: previousSession
                 },
                 {
                     $push: {
@@ -157,7 +310,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 {
                     adminId: adminId,
                     studentId: studentId,
-                    session: currentSession
+                    session: session
                 },
                 {
                     $set: {
@@ -167,124 +320,17 @@ let CreateFeesCollection = async (req, res, next) => {
                 },
                 {
                     new: true
-                });
+                }
+            );
             if (updatedDocument && updated) {
                 return res.status(200).json(feesData);
             }
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        const totalFees = checkFeesCollection.totalFees;
-        const paidFees = checkFeesCollection.paidFees + feesAmount
-        const dueFees = totalFees - paidFees;
-        const AllPaidFees = checkFeesCollection.AllPaidFees + feesAmount;
-        const AllDueFees = checkFeesCollection.AllDueFees - feesAmount;
-        if (totalFees == checkFeesCollection.paidFees) {
-            return res.status(400).json(`All fees amount already paid !`);
-        }
-        if (feesAmount > checkFeesCollection.dueFees) {
-            return res.status(400).json(`Paying fees amount is greater then due fees amount !`);
-        }
-        const feesData = {
-            receiptNo: receiptNo,
-            totalFees: totalFees,
-            discountAmountInFees: checkFeesCollection.discountAmountInFees,
-            paidFees: paidFees,
-            dueFees: dueFees,
-            feesAmount: feesAmount,
-            paymentDate: istDateTimeString,
-            admissionFeesPayable: checkFeesCollection.admissionFeesPayable,
-            admissionFees: checkFeesCollection.admissionFees,
-            createdBy: createdBy
-        }
-        const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
-            {
-                adminId: adminId,
-                studentId: studentId,
-                session: currentSession
-            },
-            {
-                $push: {
-                    installment: feesAmount,
-                    receipt: receiptNo,
-                    paymentDate: istDateTimeString,
-                    createdBy: createdBy
-                },
-                $set: {
-                    totalFees: totalFees,
-                    paidFees: paidFees,
-                    dueFees: dueFees,
-                    AllPaidFees: AllPaidFees,
-                    AllDueFees: AllDueFees
-                }
-            },
-            {
-                new: true // Return the updated document
-            });
-        if (updatedDocument) {
-            return res.status(200).json(feesData);
-        }
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
     }
 }
-
-// let CreateAdmissionFeesCollection = async (req, res, next) => {
-//     let className = req.body.class;
-//     let {adminId, studentId,stream, feesAmount } = req.body;
-//     if (stream === "stream") {
-//         stream = "N/A";
-//     }
-//     let receiptNo = Math.floor(Math.random() * 899999 + 100000);
-//     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
-//     const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
-//     try {
-
-//         const checkFeesStructure = await FeesStructureModel.findOne({adminId:adminId, class: className,stream:stream });
-//         if (!checkFeesStructure) {
-//             return res.status(404).json(`Fees structure not found !`);
-//         }
-//         const checkFeesCollection = await FeesCollectionModel.findOne({adminId:adminId, studentId: studentId, class: className });
-//         if (!checkFeesCollection) {
-//             return res.status(404).json(`Fees record not found !`);
-//         }
-
-//         const id = checkFeesCollection._id;
-//         const totalFees = checkFeesCollection.totalFees;
-//         const paidFees = feesAmount;
-//         const dueFees = totalFees - paidFees
-//         const admissionFeesData = {
-//             studentId: studentId,
-//             class: className,
-//             admissionFees: feesAmount,
-//             totalFees: totalFees,
-//             paidFees: paidFees,
-//             dueFees: dueFees,
-//             admissionFeesReceiptNo: receiptNo,
-//             admissionFeesPaymentDate: istDateTimeString
-//         }
-//         // const updatedDocument = await FeesCollectionModel.findOneAndUpdate({_id:id}, { $set: admissionFeesData }, { new: true });
-//         // if (updatedDocument) {
-//         //     return res.status(200).json(admissionFeesData);
-//         // }
-//     } catch (error) {
-//         return res.status(500).json('Internal Server Error !');
-//     }
-// }
 
 module.exports = {
     GetAllStudentFeesCollectionByClass,
