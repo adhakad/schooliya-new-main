@@ -138,11 +138,11 @@
                                         </td>
                                         <td>
                                             <button
-                                                *ngIf="student.paidFees !== student.totalFees" class="submit-button"
+                                                *ngIf="student.AllPaidFees !== student.AllTotalFees" class="submit-button"
                                                 mat-raised-button (click)="studentFeesPay(student)">Pay
                                                 Offline</button>
-                                                <button *ngIf="student.paidFees === student.totalFees" class="submit-button"
-                                                mat-raised-button [disabled]="student.paidFees === student.totalFees"
+                                                <button *ngIf="student.AllPaidFees == student.AllTotalFees" class="submit-button"
+                                                mat-raised-button [disabled]="student.AllPaidFees == student.AllTotalFees"
                                                 style="background-color: transparent;color:#252525;">Fee
                                                 Paid</button>
     
@@ -154,13 +154,13 @@
                                             <p class="mb-0">{{student.admissionNo}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0"> &#8377; {{student.paidFees}}</p>
+                                            <p class="mb-0"> &#8377; {{student.AllPaidFees}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0"> &#8377; {{student.dueFees}}</p>
+                                            <p class="mb-0"> &#8377; {{student.AllDueFees}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0"> &#8377; {{student.totalFees}}</p>
+                                            <p class="mb-0"> &#8377; {{student.AllTotalFees}}</p>
                                         </td>
                                         <td class="mb-0">
                                             <mat-icon

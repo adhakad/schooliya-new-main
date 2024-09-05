@@ -25,6 +25,9 @@ export class FeesService {
   singleStudentFeesCollectionById(studentId:any){
     return this.http.get(`${this.url}/student/${studentId}`);
   }
+  payableSingleStudentFeesCollectionById(studentId:any){
+    return this.http.get(`${this.url}/payable/student/${studentId}`);
+  }
   // feesPaginationList(feesData:any){
   //   return this.http.post(`${this.url}/fees-pagination`,feesData);
   // }

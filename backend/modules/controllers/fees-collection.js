@@ -16,12 +16,48 @@ let GetSingleStudentFeesCollectionById = async (req, res, next) => {
         let session = student.session;
         let className = student.class;
         let stream = student.stream;
-        const singleFeesStr = await FeesStructureModel.findOne({adminId:adminId,session:session,class:className,stream:stream});
+        const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!singleFeesStr) {
+            session
             return res.status(404).json('Fee Structure not found !')
         }
-        const studentFeesCollection = await FeesCollectionModel.findOne({ studentId: studentId });
-        return res.status(200).json({ studentInfo: student,singleFeesStr:singleFeesStr, studentFeesCollection: studentFeesCollection });
+        const studentFeesCollection = await FeesCollectionModel.findOne({ studentId: studentId, session: session });
+        return res.status(200).json({ studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
+    } catch (error) {
+        return res.status(500).json('Internal Server Error !');
+    }
+}
+let GetPayableSingleStudentFeesCollectionById = async (req, res, next) => {
+    let studentId = req.params.studentId;
+
+    try {
+        const student = await StudentModel.findOne({ _id: studentId }, '_id adminId session admissionNo name rollNumber class stream fatherName motherName dob');
+        if (!student) {
+            return res.status(404).json('Student not found !')
+        }
+        let adminId = student.adminId;
+        const studentPeviousFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, previousSessionFeesStatus: true });
+        if (studentPeviousFeesCollection) {
+            let session = studentPeviousFeesCollection.session;
+            let className = studentPeviousFeesCollection.class;
+            let stream = studentPeviousFeesCollection.stream;
+            const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
+            if (!singleFeesStr) {
+                return res.status(404).json(`Fees structure not found !`);
+            }
+            return res.status(200).json({ studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentPeviousFeesCollection });
+        }
+        const studentFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, previousSessionFeesStatus: false });
+        if (studentFeesCollection) {
+            let session = studentFeesCollection.session;
+            let className = studentFeesCollection.class;
+            let stream = studentFeesCollection.stream;
+            const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
+            if (!singleFeesStr) {
+                return res.status(404).json(`Fees structure not found !`);
+            }
+            return res.status(200).json({ studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
+        }
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
     }
@@ -35,11 +71,11 @@ let GetAllStudentFeesCollectionByClass = async (req, res, next) => {
         stream = "N/A";
     }
     try {
-        const student = await StudentModel.find({ adminId: adminId, class: className,stream:stream }, '_id session admissionNo name rollNumber class stream fatherName motherName dob');
+        const student = await StudentModel.find({ adminId: adminId, class: className, stream: stream }, '_id session admissionNo name rollNumber class stream fatherName motherName dob');
         if (!student) {
             return res.status(404).json('Student not found !')
         }
-        const studentFeesCollection = await FeesCollectionModel.find({ adminId: adminId, class: className,stream:stream });
+        const studentFeesCollection = await FeesCollectionModel.find({ adminId: adminId, class: className, stream: stream, previousSessionClass: 0, previousSessionStream: 'empty' });
         if (!studentFeesCollection) {
             return res.status(404).json('Student fees collection not found !')
         }
@@ -51,7 +87,7 @@ let GetAllStudentFeesCollectionByClass = async (req, res, next) => {
 
 let CreateFeesCollection = async (req, res, next) => {
     let className = req.body.class;
-    let { adminId, studentId,stream, feesAmount, createdBy } = req.body;
+    let { adminId, session, studentId, stream, feesAmount, createdBy } = req.body;
     if (stream === "stream") {
         stream = "N/A";
     }
@@ -59,19 +95,104 @@ let CreateFeesCollection = async (req, res, next) => {
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
     try {
-        const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, class: className,stream:stream });
+        const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStructure) {
             return res.status(404).json(`Fees structure not found !`);
         }
-        const checkFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, class: className,stream:stream });
+        const checkFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, session: session, studentId: studentId, class: className, stream: stream });
         if (!checkFeesCollection) {
             return res.status(404).json(`Fees record not found !`);
         }
+        const currentSession = checkFeesCollection.session;
+        if (checkFeesCollection.previousSessionFeesStatus == true) {
+            const checkPreviousFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, previousSessionFeesStatus: false });
+            if (!checkPreviousFeesCollection) {
+                return res.status(404).json(`Fees record not found !`);
+            }
+            const session = checkPreviousFeesCollection.session;
+            const totalFees = checkPreviousFeesCollection.totalFees;
+            const paidFees = checkPreviousFeesCollection.paidFees + feesAmount
+            const dueFees = totalFees - paidFees;
+            const AllPaidFees = checkPreviousFeesCollection.AllPaidFees + feesAmount;
+            const AllDueFees = checkPreviousFeesCollection.AllDueFees - feesAmount;
+            if (feesAmount > checkFeesCollection.dueFees) {
+                return res.status(400).json(`Paying fees amount is greater then due fees amount ${dueFees} of session ${session} !`);
+            }
+            const feesData = {
+                receiptNo: receiptNo,
+                totalFees: totalFees,
+                discountAmountInFees: checkPreviousFeesCollection.discountAmountInFees,
+                paidFees: paidFees,
+                dueFees: dueFees,
+                feesAmount: feesAmount,
+                paymentDate: istDateTimeString,
+                admissionFeesPayable: checkPreviousFeesCollection.admissionFeesPayable,
+                admissionFees: checkPreviousFeesCollection.admissionFees,
+                createdBy: createdBy
+            }
+            const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
+                {
+                    adminId: adminId,
+                    studentId: studentId,
+                    session: session
+                },
+                {
+                    $push: {
+                        installment: feesAmount,
+                        receipt: receiptNo,
+                        paymentDate: istDateTimeString,
+                        createdBy: createdBy
+                    },
+                    $set: {
+                        paidFees: paidFees,
+                        dueFees: dueFees,
+                        AllPaidFees: AllPaidFees,
+                        AllDueFees: AllDueFees
+                    }
+                },
+                {
+                    new: true
+                });
+            const updated = await FeesCollectionModel.findOneAndUpdate(
+                {
+                    adminId: adminId,
+                    studentId: studentId,
+                    session: currentSession
+                },
+                {
+                    $set: {
+                        AllPaidFees: AllPaidFees,
+                        AllDueFees: AllDueFees
+                    }
+                },
+                {
+                    new: true
+                });
+            if (updatedDocument && updated) {
+                return res.status(200).json(feesData);
+            }
 
-        const id = checkFeesCollection._id;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         const totalFees = checkFeesCollection.totalFees;
         const paidFees = checkFeesCollection.paidFees + feesAmount
         const dueFees = totalFees - paidFees;
+        const AllPaidFees = checkFeesCollection.AllPaidFees + feesAmount;
+        const AllDueFees = checkFeesCollection.AllDueFees - feesAmount;
         if (totalFees == checkFeesCollection.paidFees) {
             return res.status(400).json(`All fees amount already paid !`);
         }
@@ -81,28 +202,39 @@ let CreateFeesCollection = async (req, res, next) => {
         const feesData = {
             receiptNo: receiptNo,
             totalFees: totalFees,
-            discountAmountInFees:checkFeesCollection.discountAmountInFees,
+            discountAmountInFees: checkFeesCollection.discountAmountInFees,
             paidFees: paidFees,
             dueFees: dueFees,
             feesAmount: feesAmount,
             paymentDate: istDateTimeString,
-            admissionFeesPayable:checkFeesCollection.admissionFeesPayable,
-            admissionFees:checkFeesCollection.admissionFees,
-            createdBy:createdBy
+            admissionFeesPayable: checkFeesCollection.admissionFeesPayable,
+            admissionFees: checkFeesCollection.admissionFees,
+            createdBy: createdBy
         }
-        const updatedDocument = await FeesCollectionModel.findByIdAndUpdate(id, {
-            $push: {
-                installment: feesAmount,
-                receipt: receiptNo,
-                paymentDate: istDateTimeString,
-                createdBy: createdBy
+        const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
+            {
+                adminId: adminId,
+                studentId: studentId,
+                session: currentSession
             },
-            $set: {
-                totalFees: totalFees,
-                paidFees: paidFees,
-                dueFees: dueFees
-            }
-        }, { new: true });
+            {
+                $push: {
+                    installment: feesAmount,
+                    receipt: receiptNo,
+                    paymentDate: istDateTimeString,
+                    createdBy: createdBy
+                },
+                $set: {
+                    totalFees: totalFees,
+                    paidFees: paidFees,
+                    dueFees: dueFees,
+                    AllPaidFees: AllPaidFees,
+                    AllDueFees: AllDueFees
+                }
+            },
+            {
+                new: true // Return the updated document
+            });
         if (updatedDocument) {
             return res.status(200).json(feesData);
         }
@@ -157,6 +289,7 @@ let CreateFeesCollection = async (req, res, next) => {
 module.exports = {
     GetAllStudentFeesCollectionByClass,
     GetSingleStudentFeesCollectionById,
+    GetPayableSingleStudentFeesCollectionById,
     CreateFeesCollection,
     // CreateAdmissionFeesCollection
 

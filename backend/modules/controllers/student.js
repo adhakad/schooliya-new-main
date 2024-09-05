@@ -236,8 +236,9 @@ let CreateStudent = async (req, res, next) => {
         let studentFeesData = {
             adminId: adminId,
             session: session,
-            previousSessionClass:0,
-            previousSessionStream:"empty",
+            previousSessionFeesStatus: false,
+            previousSessionClass: 0,
+            previousSessionStream: "empty",
             class: parseInt(className),
             stream: stream,
             admissionFees: admissionFees ? admissionFees : 0,
@@ -246,6 +247,9 @@ let CreateStudent = async (req, res, next) => {
             totalFees: totalFees,
             paidFees: paidFees,
             dueFees: dueFees,
+            AllTotalFees: totalFees,
+            AllPaidFees: paidFees,
+            AllDueFees: dueFees,
         }
         if (admissionType == 'New') {
             studentFeesData.admissionFeesReceiptNo = receiptNo;
@@ -257,7 +261,6 @@ let CreateStudent = async (req, res, next) => {
             studentFeesData.studentId = studentId;
             let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
             if (createStudentFeesData) {
-                console.log("studentFeesData")
                 let studentAdmissionData = {
                     adminId: adminId,
                     session: session,
@@ -608,36 +611,110 @@ let StudentClassPromote = async (req, res, next) => {
         } else {
             className = className + 1;
         }
-        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
+        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
-            return res.status(404).json({ errorMsg: 'Please create fees structure for this class', className: className });
+            return res.status(404).json({ errorMsg: `Please create the fee structure for this class for this session.` });
         }
-        const studentData = { rollNumber, class: className, stream, admissionType: 'Old', discountAmountInFees: discountAmountInFees };
+        const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'Old', discountAmountInFees: discountAmountInFees };
         const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });
+
         if (updateStudent) {
             await Promise.all([
                 AdmitCardModel.findOneAndDelete({ studentId: studentId }),
                 ExamResultModel.findOneAndDelete({ studentId: studentId }),
-                FeesCollectionModel.findOneAndDelete({ studentId: studentId }),
+                // FeesCollectionModel.findOneAndDelete({ studentId: studentId }),
             ]);
             let checkFeesStrTotalFees = checkFeesStr.totalFees
             const totalFees = checkFeesStrTotalFees - discountAmountInFees;
-            const studentFeesData = {
-                adminId: adminId,
-                studentId,
-                class: className,
-                stream: stream,
-                admissionFees: 0,
-                admissionFeesPayable: false,
-                totalFees: totalFees,
-                paidFees: 0,
-                dueFees: totalFees,
-                discountAmountInFees: discountAmountInFees,
-            };
-            let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
-            if (createStudentFeesData) {
-                return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
+            const checkFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId });
+            if (!checkFeesCollection) {
+                return res.status(404).json({ errorMsg: `This student previous session fees record not found.` });
             }
+            if (checkFeesCollection) {
+
+                let previousSessionTotalFees = checkFeesCollection.totalFees;
+                let previousSessionPaidFees = checkFeesCollection.paidFees;
+                let previousSessionDueFees = checkFeesCollection.dueFees;
+                if (previousSessionDueFees == 0 && previousSessionTotalFees == previousSessionPaidFees) {
+                    let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
+                    if (deleteFeesCollection) {
+                        const studentFeesData = {
+                            adminId: adminId,
+                            studentId,
+                            session: session,
+                            previousSessionFeesStatus: false,
+                            previousSessionClass: 0,
+                            previousSessionStream: "empty",
+                            class: className,
+                            stream: stream,
+                            admissionFees: 0,
+                            admissionFeesPayable: false,
+                            totalFees: totalFees,
+                            paidFees: 0,
+                            dueFees: totalFees,
+                            AllTotalFees: totalFees,
+                            AllPaidFees: 0,
+                            AllDueFees: dueFees,
+                            discountAmountInFees: discountAmountInFees,
+                        };
+                        let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
+                        if (createStudentFeesData) {
+                            return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
+                        }
+                    }
+                }
+
+                const previousSessionClass = checkFeesCollection.class;
+                const previousSessionStream = checkFeesCollection.stream;
+                const id = checkFeesCollection._id;
+                const previousSession = checkFeesCollection.session;
+                const studentFeesData = {
+                    adminId: adminId,
+                    studentId,
+                    session: session,
+                    previousSessionFeesStatus: true,
+                    previousSessionClass: 0,
+                    previousSessionStream: "empty",
+                    class: className,
+                    stream: stream,
+                    admissionFees: 0,
+                    admissionFeesPayable: false,
+                    totalFees: totalFees,
+                    paidFees: 0,
+                    dueFees: totalFees,
+                    AllTotalFees: totalFees + previousSessionTotalFees,
+                    AllPaidFees: previousSessionPaidFees,
+                    AllDueFees: totalFees + previousSessionDueFees,
+                    discountAmountInFees: discountAmountInFees,
+                };
+
+                const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
+                    {
+                        _id: id,
+                        session: previousSession
+                    },
+                    {
+                        $set: {
+                            previousSessionClass: previousSessionClass,
+                            previousSessionStream: previousSessionStream,
+                            class: className,
+                            stream: stream,
+                            AllTotalFees: totalFees + previousSessionTotalFees,
+                            AllPaidFees: previousSessionPaidFees,
+                            AllDueFees: totalFees + previousSessionDueFees,
+                        }
+                    },
+                    {
+                        new: true // Return the updated document
+                    });
+
+                let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
+
+                if (createStudentFeesData) {
+                    return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
+                }
+            }
+
         }
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });

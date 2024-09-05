@@ -16,6 +16,11 @@ const FeesCollectionModel = mongoose.model('fees-collection', {
     required: true,
     trim: true,
   },
+  previousSessionFeesStatus:{
+    type: Boolean,
+    required: true,
+    trim: true,
+  },
   previousSessionClass: {
     type: Number,
     required: true,
@@ -75,6 +80,21 @@ const FeesCollectionModel = mongoose.model('fees-collection', {
     trim: true,
   },
   dueFees: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  AllTotalFees: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  AllPaidFees: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  AllDueFees: {
     type: Number,
     required: true,
     trim: true,

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -61,6 +61,7 @@ export class AdminStudentFeesComponent implements OnInit {
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
+      session:[''],
       class: [''],
       stream: [''],
       studentId: [''],
@@ -78,7 +79,7 @@ export class AdminStudentFeesComponent implements OnInit {
     this.getSchool();
     // this.getFees({ page: 1 });
   }
-  
+
 
   printStudentData() {
     const printContent = this.getPrintContent();
@@ -170,7 +171,7 @@ export class AdminStudentFeesComponent implements OnInit {
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
-      this.feesStructureByClass();
+      // this.feesStructureByClass();
       this.getAllStudentFeesCollectionByClass();
     }
   }
@@ -181,18 +182,18 @@ export class AdminStudentFeesComponent implements OnInit {
       }
     })
   }
-  feesStructureByClass() {
-    let params = {
-      class: this.cls,
-      adminId: this.adminId,
-      stream: this.stream
-    }
-    this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
-      if (res) {
-        this.clsFeesStructure = res;
-      }
-    })
-  }
+  // feesStructureByClass() {
+  //   let params = {
+  //     class: this.cls,
+  //     adminId: this.adminId,
+  //     stream: this.stream
+  //   }
+  //   this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
+  //     if (res) {
+  //       this.clsFeesStructure = res;
+  //     }
+  //   })
+  // }
   getAllStudentFeesCollectionByClass() {
     let params = {
       class: this.cls,
@@ -209,7 +210,7 @@ export class AdminStudentFeesComponent implements OnInit {
           ...feeCollection
         }));
 
-         this.studentList = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
+        this.studentList = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
       }
     })
   }
@@ -223,12 +224,19 @@ export class AdminStudentFeesComponent implements OnInit {
     }
   }
   studentFeesPay(student: any) {
-    this.singleStudent = student;
-    this.showModal = true;
-    this.deleteMode = false;
-    this.updateMode = false;
-    this.feesForm.reset();
-
+    this.getPayableSingleStudentFeesCollectionById(student);
+  }
+  getPayableSingleStudentFeesCollectionById(student: any) {
+    this.feesService.payableSingleStudentFeesCollectionById(student.studentId).subscribe((res: any) => {
+      if (res) {
+        this.clsFeesStructure = res.singleFeesStr;
+        this.singleStudent = { ...res.studentInfo, ...res.studentFeesCollection };
+        this.showModal = true;
+        this.deleteMode = false;
+        this.updateMode = false;
+        this.feesForm.reset();
+      }
+    })
   }
   // updateFeesModel(fees: any) {
   //   this.showModal = true;
@@ -287,6 +295,7 @@ export class AdminStudentFeesComponent implements OnInit {
         this.feesForm.value.class = this.singleStudent.class;
         this.feesForm.value.createdBy = "Admin";
         this.feesForm.value.studentId = this.singleStudent.studentId;
+        this.feesForm.value.session = this.singleStudent.session;
 
 
 
