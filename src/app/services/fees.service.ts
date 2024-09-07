@@ -10,22 +10,25 @@ export class FeesService {
   url = `${environment.API_URL}/v1/fees`;
   constructor(private http: HttpClient) { }
 
-  addFees(feesForm:any) {
-    return this.http.post(`${this.url}`,feesForm);
+  addFees(feesForm: any) {
+    return this.http.post(`${this.url}`, feesForm);
   }
-  addAdmissionFees(feesForm:any) {
-    return this.http.post(`${this.url}/admission-fees`,feesForm);
+  addAdmissionFees(feesForm: any) {
+    return this.http.post(`${this.url}/admission-fees`, feesForm);
   }
   // addBulkFees(feesBulkResult:any) {
   //   return this.http.post(`${this.url}/bulk-fees`,feesBulkResult);
   // }
-  getAllStudentFeesCollectionByClass(params:any){
+  getAllStudentFeesCollectionByClass(params: any) {
     return this.http.get(`${this.url}/admin/${params.adminId}/class/${params.class}/stream/${params.stream}`);
   }
-  singleStudentFeesCollectionById(studentId:any){
-    return this.http.get(`${this.url}/student/${studentId}`);
+  singleStudentFeesCollectionByStudentId(params: any) {
+    return this.http.get(`${this.url}/admin/${params.adminId}/student/fees-statemant/${params.id}`);
   }
-  payableSingleStudentFeesCollectionById(studentId:any){
+  singleStudentFeesCollectionById(params: any) {
+    return this.http.get(`${this.url}/statemant/admin/${params.adminId}/student/${params.studentId}`);
+  }
+  payableSingleStudentFeesCollectionById(studentId: any) {
     return this.http.get(`${this.url}/payable/student/${studentId}`);
   }
   // feesPaginationList(feesData:any){
@@ -40,5 +43,5 @@ export class FeesService {
   // deleteFees(id:any){
   //   return this.http.delete(`${this.url}/${id}`);
   // }
-  
+
 }

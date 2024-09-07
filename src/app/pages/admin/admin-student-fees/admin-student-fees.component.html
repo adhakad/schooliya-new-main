@@ -128,7 +128,6 @@
                                         <th>Due Fee</th>
                                         <th>Total Fee</th>
                                         <th>Fee Statement</th>
-                                        <th>Session</th>
                                     </tr>
                                 </thead>
                                 <tbody *ngFor="let student of studentList,let i=index">
@@ -164,11 +163,8 @@
                                         </td>
                                         <td class="mb-0">
                                             <mat-icon
-                                                routerLink="/admin/fees/statement/{{student.studentId}}"
+                                                routerLink="/admin/fees/statement/{{student._id}}"
                                                 style="cursor: pointer;">launch</mat-icon>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{student.session}}</p>
                                         </td>
                                     </tr>
 

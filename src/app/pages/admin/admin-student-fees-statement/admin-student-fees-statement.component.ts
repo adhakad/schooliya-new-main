@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatRadioChange } from '@angular/material/radio';
 import { FeesStructureService } from 'src/app/services/fees-structure.service';
 import { FeesService } from 'src/app/services/fees.service';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
@@ -20,7 +21,7 @@ export class AdminStudentFeesStatementComponent implements OnInit {
   showModal: boolean = false;
   clsFeesStructure: any;
   studentFeesCollection: any;
-  studentId: any;
+  id: any;
   processedData: any[] = [];
   singleReceiptInstallment: any[] = [];
   studentInfo: any;
@@ -28,16 +29,21 @@ export class AdminStudentFeesStatementComponent implements OnInit {
   stream: any;
   loader: Boolean = true;
   adminId!: string;
+  allSessionData: any[] = [];
+  selectedValue: string = "1";
   constructor(public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) { }
 
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
-    this.studentId = this.activatedRoute.snapshot.paramMap.get('id');
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.getSchool();
-    if (this.adminId && this.studentId) {
-      this.singleStudentFeesCollectionById(this.studentId)
+    if (this.adminId && this.id) {
+      this.singleStudentFeesCollectionByStudentId(this.adminId, this.id);
     }
+  }
+  onChange(event: MatRadioChange) {
+    this.singleStudentFeesCollectionByStudentId(this.adminId, event.value);
   }
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
@@ -119,11 +125,18 @@ export class AdminStudentFeesStatementComponent implements OnInit {
     this.showModal = true;
 
   }
-  singleStudentFeesCollectionById(studentId: any) {
-    this.feesService.singleStudentFeesCollectionById(studentId).subscribe((res: any) => {
+  singleStudentFeesCollectionByStudentId(adminId: any, id: any) {
+    let params = {
+      adminId: adminId,
+      id: id
+    }
+    this.processedData = [];
+    this.feesService.singleStudentFeesCollectionByStudentId(params).subscribe((res: any) => {
       if (res) {
+        this.selectedValue = id;
         this.studentFeesCollection = res.studentFeesCollection;
         this.studentInfo = res.studentInfo;
+        this.allSessionData = res.allFeesSession;
         if (this.studentFeesCollection.admissionFeesPayable == true) {
           res.singleFeesStr.feesType = [{ Admission: res.singleFeesStr.admissionFees }, ...res.singleFeesStr.feesType];
           this.clsFeesStructure = res.singleFeesStr;
@@ -131,33 +144,11 @@ export class AdminStudentFeesStatementComponent implements OnInit {
         if (this.studentFeesCollection.admissionFeesPayable == false) {
           this.clsFeesStructure = res.singleFeesStr;
         }
-        // this.feesStructureByClass(res.studentInfo.class,res.studentInfo.stream);
+        console.log(this.clsFeesStructure);
         this.processData();
       }
     })
   }
-
-  // feesStructureByClass(cls:any,stream:string) {
-  //   if(stream=="N/A"){
-  //     stream = "stream";
-  //   }
-  //   let params = {
-  //     class: cls,
-  //     adminId: this.adminId,
-  //     stream: stream
-  //   }
-  //   this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
-  //     if (res) {
-  //       if (this.studentFeesCollection.admissionFeesPayable == true) {
-  //         res.feesType = [{ Admission: res.admissionFees }, ...res.feesType];
-  //         this.clsFeesStructure = res;
-  //       }
-  //       if (this.studentFeesCollection.admissionFeesPayable == false) {
-  //         this.clsFeesStructure = res;
-  //       }
-  //     }
-  //   })
-  // }
 
   processData() {
     let allPaidAmount = this.studentFeesCollection.admissionFees;
