@@ -514,13 +514,11 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             const spreadRollNumber = duplicateRollNumber.join(', ');
             return res.status(400).json(`Roll number(s) ${spreadRollNumber} already exist for this class !`);
         }
-        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
+        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: studentData[0].session, class: className, stream: stream });
         if (!checkFeesStr) {
             return res.status(404).json(`Please create fees structure !`);
         }
-
         const createStudent = await StudentModel.create(studentData, { session });
-
         let admissionFees = checkFeesStr.admissionFees;
         let studentFeesData = [];
         let totalFeesInStr = checkFeesStr.totalFees;
@@ -533,14 +531,20 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 studentId: student._id,
                 class: className,
                 stream: stream,
+                session: studentData[0].session,
+                previousSessionFeesStatus: false,
+                previousSessionClass: 0,
+                previousSessionStream: "empty",
                 admissionFeesPayable: false,
                 admissionFees: 0,
                 totalFees: totalFees,
                 discountAmountInFees: student.discountAmountInFees,
                 paidFees: 0,
                 dueFees: totalFees,
+                AllTotalFees: totalFees,
+                AllPaidFees: 0,
+                AllDueFees: totalFees,
             };
-
             if (student.admissionType === 'New') {
                 feesObject.admissionFeesPayable = true;
                 feesObject.totalFees += admissionFees;

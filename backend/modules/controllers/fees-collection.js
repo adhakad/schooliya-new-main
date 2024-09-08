@@ -7,7 +7,6 @@ const { DateTime } = require('luxon');
 let GetSingleStudentFeesCollectionByStudentId = async (req, res, next) => {
     let adminId = req.params.adminId;
     let id = req.params.id;
-    console.log(id)
     try {
         const studentFeesCollection = await FeesCollectionModel.findOne({ _id: id, adminId: adminId });
         const studentId = studentFeesCollection.studentId;
@@ -34,10 +33,6 @@ let GetSingleStudentFeesCollectionByStudentId = async (req, res, next) => {
             }
             return res.status(200).json({ allFeesSession: allFeesSession, studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
         }
-
-
-
-
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
     }
