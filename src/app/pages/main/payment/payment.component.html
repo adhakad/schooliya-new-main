@@ -247,6 +247,7 @@
                                                 <div class="col-6" style="text-align: right;">
                                                     <h3>{{singlePlanInfo?.price | currency:'INR':true}}</h3>
                                                 </div>
+
                                                 <!-- <div class="col-6" style="text-align: left;">
                                                     <h3>Taxes @ 18%</h3>
                                                 </div> -->
@@ -276,12 +277,22 @@
                                         </div>
                                     </div>
                                     <div class="row" style="padding-top: 15px;">
+                                        <div class="col-6" style="text-align: left;">
+                                            <h3>Student Limit</h3>
+                                        </div>
+                                        <div class="col-6 student-limit" style="text-align: right;">
+                                            <button class="decrement-button" [disabled]="numberOfStudent==singlePlanInfo.studentLimit"
+                                                (click)="updateNumber(-studentIncrementRange)"
+                                                mat-icon-button><mat-icon>remove</mat-icon></button>
+                                            <button class="button" mat-icon-button>{{numberOfStudent}}</button>
+                                            <button class="increment-button" (click)="updateNumber(studentIncrementRange)"
+                                                mat-icon-button><mat-icon>add</mat-icon></button>
+                                        </div>
                                         <div class="col-1"><mat-icon
                                                 style="color: rgb(41, 167, 113);font-size:21px;">lock</mat-icon>
                                         </div>
                                         <div class="col-11">
-                                            <h3 style="font-size: 15px;">Razorpay Secure ( UPI, Cards, Wallets,
-                                                NetBanking )</h3>
+                                            <h3 style="font-size: 15px;">Razorpay Secure ( UPI,Cards,Wallets,NetBanking )</h3>
                                         </div>
                                         <div class="col-9">
                                             <div class="row">
@@ -388,12 +399,23 @@
                                         </div>
                                     </div>
                                     <div class="row" style="padding-top: 15px;">
+                                        <div class="col-6" style="text-align: left;">
+                                            <h3>Student Limit</h3>
+                                        </div>
+                                        <div class="col-6 student-limit" style="text-align: right;">
+                                            <button class="decrement-button" [disabled]="numberOfStudent==singlePlanInfo.studentLimit"
+                                                (click)="updateNumber(-studentIncrementRange)"
+                                                mat-icon-button><mat-icon>remove</mat-icon></button>
+                                            <button class="button" mat-icon-button>{{numberOfStudent}}</button>
+                                            <button class="increment-button" (click)="updateNumber(studentIncrementRange)"
+                                                mat-icon-button><mat-icon>add</mat-icon></button>
+                                        </div>
                                         <div class="col-1"><mat-icon
                                                 style="color: rgb(41, 167, 113);font-size:21px;">lock</mat-icon>
                                         </div>
                                         <div class="col-11">
-                                            <h3 style="font-size: 15px;">Razorpay Secure ( UPI, Cards, Wallets,
-                                                NetBanking )</h3>
+                                            <h3 style="font-size: 15px;">Razorpay Secure ( UPI,Cards,Wallets,NetBanking
+                                                )</h3>
                                         </div>
                                         <div class="col-9">
                                             <div class="row">

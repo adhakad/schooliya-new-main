@@ -12,6 +12,21 @@ const PlansModel = mongoose.model('plan', {
         required: true,
         trim: true,
     },
+    studentLimit: {
+        type: Number,
+        required: true,
+        trim: true
+    },
+    perStudentIncrementPrice: {
+        type: Number,
+        required: true,
+        trim: true,
+    },
+    studentIncrementRange: {
+        type: Number,
+        required: true,
+        trim: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

@@ -45,7 +45,7 @@ let GetSinglePlans = async (req, res, next) => {
         return res.status(500).json('Internal Server Error !');
     }
 }
-let GetSinglePlansByPlans = async(req,res,next) => {
+let GetSinglePlansByPlans = async (req, res, next) => {
     try {
         const singlePlans = await PlansModel.findOne({ plans: req.params.id });
         return res.status(200).json(singlePlans);
@@ -54,20 +54,24 @@ let GetSinglePlansByPlans = async(req,res,next) => {
     }
 }
 let CreatePlans = async (req, res, next) => {
-    const { plans,price } = req.body;
+    const { plans, price, studentLimit ,perStudentIncrementPrice,studentIncrementRange} = req.body;
     const plansData = {
         plans: plans,
-        price:price
+        price: price,
+        studentLimit: studentLimit,
+        perStudentIncrementPrice:perStudentIncrementPrice,
+        studentIncrementRange:studentIncrementRange
+
     }
     try {
         const countPlans = await PlansModel.count();
-        if(countPlans==3){
+        if (countPlans == 3) {
             return res.status(400).json("Plans limit exceeded !")
         }
         const checkPlan = await PlansModel.findOne({ plans: plans });
-        if(checkPlan){
+        if (checkPlan) {
             return res.status(400).json("Plan already exist !");
-        }    
+        }
         const createPlan = await PlansModel.create(plansData);
         return res.status(200).json('Plan created successfully.');
     } catch (error) {

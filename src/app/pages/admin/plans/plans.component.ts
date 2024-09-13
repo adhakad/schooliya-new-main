@@ -24,36 +24,39 @@ export class PlansComponent implements OnInit {
   filters: any = {};
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
-  loader:Boolean=true;
+  loader: Boolean = true;
   constructor(private fb: FormBuilder, private plansService: PlansService) {
     this.plansForm = this.fb.group({
       _id: [''],
       plans: ['', Validators.required],
-      price:['',Validators.required],
+      price: ['', Validators.required],
+      studentLimit: ['', Validators.required],
+      perStudentIncrementPrice: ['', Validators.required],
+      studentIncrementRange: ['', Validators.required]
     })
   }
 
   ngOnInit(): void {
-    let load:any=this.getPlans({page:1});
-    if(load){
-      setTimeout(()=>{
+    let load: any = this.getPlans({ page: 1 });
+    if (load) {
+      setTimeout(() => {
         this.loader = false;
-      },1000);
+      }, 1000);
     }
   }
 
-  getPlans($event:any) {
+  getPlans($event: any) {
     return new Promise((resolve, reject) => {
-      let params:any = {
+      let params: any = {
         filters: {},
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit
       };
       this.recordLimit = params.limit;
-      if(this.filters.searchText) {
+      if (this.filters.searchText) {
         params["filters"]["searchText"] = this.filters.searchText.trim();
       }
-      
+
       this.plansService.plansPaginationList(params).subscribe((res: any) => {
         if (res) {
           this.plansInfo = res.plansList;
@@ -93,7 +96,7 @@ export class PlansComponent implements OnInit {
     setTimeout(() => {
       this.closeModal();
       this.successMsg = '';
-      this.getPlans({page:1});
+      this.getPlans({ page: 1 });
     }, 1000)
   }
   plansAddUpdate() {

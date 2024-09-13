@@ -33,6 +33,9 @@ export class PaymentComponent implements OnInit {
   taxes: any;
   totalAmount: any;
   step: number = 1;
+  numberOfStudent:number=0;
+  perStudentIncrementPrice:number = 5;
+  studentIncrementRange:number=50;
   constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.minLength(6)]],
@@ -68,6 +71,11 @@ export class PaymentComponent implements OnInit {
       this.loader = false;
     }, 1000)
   }
+  updateNumber(value: number): void {
+    this.numberOfStudent += value;
+    this.totalAmount += value*this.perStudentIncrementPrice;
+    console.log(this.totalAmount)
+  }
   loadRazorpayScript(): void {
     const script = this.renderer.createElement('script');
     script.type = 'text/javascript';
@@ -84,6 +92,9 @@ export class PaymentComponent implements OnInit {
         // this.taxes = price * 18 / 100;
         this.taxes = 0;
         this.totalAmount = price + this.taxes;
+        this.numberOfStudent = res.studentLimit;
+        this.perStudentIncrementPrice = res.perStudentIncrementPrice;
+        this.studentIncrementRange = res.studentIncrementRange;
         this.singlePlanInfo = res;
       }
     })
@@ -189,7 +200,7 @@ export class PaymentComponent implements OnInit {
       activePlan: this.singlePlanInfo.plans,
       amount: this.totalAmount,
       currency: 'INR',
-      studentLimit: 300,
+      studentLimit: this.singlePlanInfo.studentLimit,
 
     }
     this.paymentService.validatePayment(paymentData).subscribe(

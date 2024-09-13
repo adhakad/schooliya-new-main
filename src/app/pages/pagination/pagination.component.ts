@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 })
 export class PaginationComponent implements OnInit {
   @Input() totalTableRecords: number = 0;
-	@Input() paginationValues?: Subject<any>;
+  @Input() paginationValues?: Subject<any>;
   @Output() onChange: EventEmitter<any> = new EventEmitter();
   public recordLimit: number = 10;
 	public pages: number[] = [];
