@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as echarts from 'echarts';
 import { AdsService } from 'src/app/services/ads.service';
 
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
@@ -45,7 +46,146 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       this.loader = false;
     }, 1000)
+
+    // this.initLineChart();
+    this.initPieChart();
   }
+
+
+  initPieChart() {
+
+    var chart = echarts.init(document.getElementById('pieChart'));
+    var option = {
+      title: {
+        text: 'Customized Pie Chart',
+        left: 'center',
+        top: 20,
+        textStyle: {
+          color: '#ffffff',
+          fontSize: 18,
+          fontWeight: 'bold',
+        }
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        textStyle: {
+          color: '#ffffff' // Custom color for legend text
+        }
+      },
+      series: [
+        {
+          name: 'FEES RECORD',
+          type: 'pie',
+          radius: '50%', // Donut style pie chart
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 0,  // Rounded borders for each slice
+          borderColor: '#fff',
+          borderWidth: 1
+        },
+          data: [
+            { value: 1048, name: 'TOTAL FEES' ,itemStyle: { color: '#8C52FF' }},
+            { value: 735, name: 'PAID FEES',itemStyle:{color:'#a3e74b'} },
+            { value: 580, name: 'FEES DISCOUNT',itemStyle:{color:'#d8c5ff'}  },
+            { value: 484, name: 'DUE FEES',itemStyle:{color: '#ff7252'}},
+            { value: 300, name: 'OVERALL FEES CLLECTION',itemStyle:{color:'#d8c5ff'}  }
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          },
+          backgroundColor: '#2c343c',  // Dark background for a modern look
+    animationDuration: 1000,
+    animationEasing: 'cubicOut'
+        }
+      ]
+    };
+    chart.setOption(option);
+  }
+
+  // Initialize Line Chart
+  // initLineChart(): void {
+  //   const lineChartDom = document.getElementById('lineChart') as HTMLElement;
+  //   const lineChart = echarts.init(lineChartDom);
+  //   const lineOption = {
+  //     xAxis: {
+  //       type: 'category',
+  //       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  //     },
+  //     yAxis: {
+  //       type: 'value'
+  //     },
+  //     series: [
+  //       {
+  //         data: [50, 100, 150, 200, 250, 300, 350],
+  //         type: 'line'
+  //       }
+  //     ]
+  //   };
+  //   lineChart.setOption(lineOption);
+  // }
+
+
+
+
+
+
+
+  // const pieChartDom = document.getElementById('pieChart') as HTMLElement;
+  // const pieChart = echarts.init(pieChartDom);
+  // const pieOption = {
+  //   tooltip: {
+  //     trigger: 'item'
+  //   },
+  //   legend: {
+  //     top: '5%',
+  //     left: 'center'
+  //   },
+  //   series: [
+  //     {
+  //       name: 'Access From',
+  //       type: 'pie',
+  //       radius: ['40%', '70%'],
+  //       avoidLabelOverlap: false,
+  //       itemStyle: {
+  //         borderRadius: 10,
+  //         borderColor: '#fff',
+  //         borderWidth: 2
+  //       },
+  //       label: {
+  //         show: false,
+  //         position: 'center'
+  //       },
+  //       emphasis: {
+  //         label: {
+  //           show: true,
+  //           fontSize: '20',
+  //           fontWeight: 'bold'
+  //         }
+  //       },
+  //       labelLine: {
+  //         show: false
+  //       },
+  //       data: [
+  //         { value: 1048, name: 'Search Engine' },
+  //         { value: 735, name: 'Direct' },
+  //         { value: 580, name: 'Email' },
+  //         { value: 484, name: 'Union Ads' },
+  //         { value: 300, name: 'Video Ads' }
+  //       ]
+  //     }
+  //   ]
+  // };
+  // pieChart.setOption(pieOption);
+
 
 
   adsCount() {
