@@ -353,6 +353,8 @@
     #barChart, #lineChart, #pieChart {
       height: 400px;
       width: 100%;
+      color: #35a831;
+      color: #e45757;
   }
 
     .big-option-container .submit-button {

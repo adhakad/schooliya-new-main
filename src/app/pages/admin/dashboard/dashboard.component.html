@@ -20,17 +20,15 @@
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
               <div class="row">
-                <!-- <div class="scrollable-container"> -->
-                  <div class="col-12 col-lg-6 mt-2">
-                    <div id="pieChart"></div>
-                  </div>
-                  <div class="col-12 col-lg-6 mt-2">
-                    <div id="barChart"></div>
-                  </div>
-                  <div class="col-12 col-lg-6 mt-2">
-                    <div id="lineChart"></div>
-                  </div>
-                <!-- </div> -->
+                <div class="col-12 col-lg-6 mt-2">
+                  <div id="barChart"></div>
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                  <div id="pieChart"></div>
+                </div>
+                <!-- <div class="col-12 col-lg-4 mt-2">
+                  <div id="lineChart"></div>
+                </div> -->
               </div>
               <!-- <div class="row">
                   <div class="col-12 col-lg-4 pt-2 pb-4">
@@ -98,20 +96,13 @@
                   </div> -->
 
 
-
-
-
-
-
-
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="spinner-container" *ngIf="loader">
-    <div class="spinner-overlay" *ngIf="loader">
-      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
-    </div>
-  </div>
+      <div class="spinner-container" *ngIf="loader">
+        <div class="spinner-overlay" *ngIf="loader">
+          <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
+            strokeWidth="3"></mat-progress-spinner>
+        </div>
+      </div>

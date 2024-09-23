@@ -25,6 +25,11 @@ export class FeesService {
   singleStudentFeesCollectionByStudentId(params: any) {
     return this.http.get(`${this.url}/admin/${params.adminId}/student/fees-statemant/${params.id}`);
   }
+
+  feesCollectionBySession(params: any) {
+    return this.http.get(`${this.url}/admin/${params.adminId}/session/${params.session}`);
+  }
+
   singleStudentFeesCollectionById(params: any) {
     return this.http.get(`${this.url}/statemant/admin/${params.adminId}/student/${params.studentId}`);
   }

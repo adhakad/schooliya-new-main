@@ -4,6 +4,25 @@ const FeesStructureModel = require('../models/fees-structure');
 const StudentModel = require('../models/student');
 const { DateTime } = require('luxon');
 
+
+let GetStudentFeesCollectionBySession = async (req, res, next) => {
+    let adminId = req.params.adminId;
+    let session = req.params.session;
+    try {
+        const allFees = await FeesCollectionModel.find({ adminId: adminId, session: session });
+        let totalFeesSum = 0, paidFeesSum = 0, dueFeesSum = 0;
+
+        for (let i = 0; i < allFees.length; i++) {
+            totalFeesSum += allFees[i].totalFees;
+            paidFeesSum += allFees[i].paidFees;
+            dueFeesSum += allFees[i].dueFees;
+        }
+        return res.status(200).json({ totalFeesSum: totalFeesSum, paidFeesSum: paidFeesSum, dueFeesSum: dueFeesSum });
+    } catch (error) {
+        return res.status(500).json('Internal Server Error !');
+    }
+}
+
 let GetSingleStudentFeesCollectionByStudentId = async (req, res, next) => {
     let adminId = req.params.adminId;
     let id = req.params.id;
@@ -11,7 +30,7 @@ let GetSingleStudentFeesCollectionByStudentId = async (req, res, next) => {
         const studentFeesCollection = await FeesCollectionModel.findOne({ _id: id, adminId: adminId });
         const studentId = studentFeesCollection.studentId;
         const session = studentFeesCollection.session;
-        if (studentFeesCollection.previousSessionClass>0) {
+        if (studentFeesCollection.previousSessionClass > 0) {
             const className = studentFeesCollection.previousSessionClass;
             const stream = studentFeesCollection.previousSessionStream;
             const student = await StudentModel.findOne({ _id: studentId, adminId: adminId }, '_id adminId session admissionNo name rollNumber class stream fatherName motherName dob');
@@ -22,7 +41,7 @@ let GetSingleStudentFeesCollectionByStudentId = async (req, res, next) => {
             }
             return res.status(200).json({ allFeesSession: allFeesSession, studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
         }
-        if (studentFeesCollection.previousSessionClass==0) {
+        if (studentFeesCollection.previousSessionClass == 0) {
             const className = studentFeesCollection.class;
             const stream = studentFeesCollection.stream;
             const student = await StudentModel.findOne({ _id: studentId, adminId: adminId }, '_id adminId session admissionNo name rollNumber class stream fatherName motherName dob');
@@ -368,6 +387,7 @@ let CreateFeesCollection = async (req, res, next) => {
 }
 
 module.exports = {
+    GetStudentFeesCollectionBySession,
     GetAllStudentFeesCollectionByClass,
     GetSingleStudentFeesCollectionByStudentId,
     GetSingleStudentFeesCollectionById,
