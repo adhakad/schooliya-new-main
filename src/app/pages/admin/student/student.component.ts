@@ -148,19 +148,6 @@ export class StudentComponent implements OnInit {
   chooseStream(event: any) {
     this.stream = event.value;
   }
-  chooseAdmissionType(event: any) {
-    if (event) {
-      if (event.value == 'New') {
-        this.admissionType = event.value;
-        const admissionNo = Math.floor(Math.random() * 89999999 + 10000000);
-        this.studentForm.get('admissionNo')?.setValue(admissionNo);
-      }
-      if (event.value == 'Old') {
-        this.admissionType = event.value;
-        this.studentForm.get('admissionNo')?.setValue(null);
-      }
-    }
-  }
 
   date(e: any) {
     var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
@@ -237,7 +224,7 @@ export class StudentComponent implements OnInit {
     this.errorCheck = false;
     this.getStudentByClass(this.className);
   }
-  
+
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
@@ -572,7 +559,7 @@ export class StudentComponent implements OnInit {
 
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
+    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
     this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]

@@ -107,11 +107,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4e4caa11;
+  background: #4e4caa28;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4e4caa24;
+  background: #4e4caa3f;
 }
 
 ::ng-deep mat-form-field {
@@ -337,11 +337,11 @@ body {
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #4e4caa11;
+    background: #4e4caa28;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #4e4caa24;
+    background: #4e4caa3f;
     cursor: pointer;
   }
 
