@@ -257,10 +257,6 @@ export class AdmissionComponent implements OnInit {
     this.deleteMode = false;
     this.updateMode = false;
     this.studentForm.reset();
-    const admissionNo = Math.floor(Math.random() * 89999999 + 10000000);
-    this.studentForm.get('admissionNo')?.setValue(admissionNo);
-    const rollNumber = Math.floor(Math.random() * 89999999 + 10000000);
-    this.studentForm.get('rollNumber')?.setValue(rollNumber);
   }
   updateStudentModel(student: any) {
     this.showModal = true;

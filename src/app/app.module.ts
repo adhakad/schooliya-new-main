@@ -10,16 +10,16 @@ import { PortalModule } from '@angular/cdk/portal';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MaterialUiModule } from './material/material-ui/material-ui.module';
-import { HttpClientModule ,HTTP_INTERCEPTORS} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 import { MatDatetimepickerModule, MAT_DATETIME_FORMATS } from '@mat-datetimepicker/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { AdminSharedModule } from './pages/admin/admin-shared/admin-shared.module';
 import { TeacherSharedModule } from './pages/teacher/teacher-shared/teacher-shared.module';
 import { MainSharedModule } from './pages/main/main-shared/main-shared.module';
-
 
 @NgModule({
   declarations: [
@@ -38,13 +38,15 @@ import { MainSharedModule } from './pages/main/main-shared/main-shared.module';
     MatMomentDatetimeModule,
     MatDatetimepickerModule,
     NgxMatFileInputModule,
+    // MatNativeDateModule,
     MainSharedModule,
     AdminSharedModule,
     TeacherSharedModule,
   ],
   providers: [
-    {provide:HTTP_INTERCEPTORS,useClass:AdminAuthInterceptor,multi:true},
-    {provide:HTTP_INTERCEPTORS,useClass:TeacherAuthInterceptor,multi:true},
+    { provide: HTTP_INTERCEPTORS, useClass: AdminAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TeacherAuthInterceptor, multi: true },
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     {
       provide: MAT_DATETIME_FORMATS,
       useValue: {
