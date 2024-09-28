@@ -21,13 +21,13 @@
                       <div class="col-2 offset-5">
                         <ng-container *ngIf="cls && stream && templateStatusCode==200">
                           <mat-form-field class="custom-select">
-                            <mat-label>Bulk Print</mat-label>
+                            <mat-label>Print</mat-label>
                             <mat-select matInput>
                               <div>
                                 <mat-option (click)="bulkPrint(0)"
-                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One Student Entry in Every Print</mat-option>
+                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One student in one page</mat-option>
                                   <mat-option (click)="bulkPrint(1)"
-                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two Student Entry in Every Print</mat-option>
+                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two student in one page</mat-option>
                               </div>
                             </mat-select>
                           </mat-form-field>
@@ -115,13 +115,13 @@
                   <div class="col-12">
                     <ng-container *ngIf="cls && stream && templateStatusCode==200">
                       <mat-form-field class="custom-select">
-                        <mat-label>Bulk Print</mat-label>
+                        <mat-label>Print</mat-label>
                         <mat-select matInput>
                           <div>
                             <mat-option (click)="bulkPrint(0)"
-                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One Student Entry in Every Print</mat-option>
+                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One student in one page</mat-option>
                               <mat-option (click)="bulkPrint(1)"
-                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two Student Entry in Every Print</mat-option>
+                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two student in one page</mat-option>
                           </div>
                         </mat-select>
                       </mat-form-field>
@@ -153,7 +153,7 @@
                       <th>Roll Number</th>
                       <th>Class</th>
                       <th>Stream</th>
-                      <th>Exam</th>
+                      <th>Exam Name</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -196,7 +196,7 @@
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">ADMIT CARD'S PRINT/DOWNLOAD - {{cls | classSuffix | uppercase}} <span
+                      <h5 class="modal-title">ADMIT CARD PRINT<span
                           *ngIf="cls==12 || cls==11">{{stream | uppercase}}</span></h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
@@ -291,14 +291,11 @@
                                   style="border: none;margin-top: 35px;margin-bottom: 0;padding-bottom: 0;">
                                   <tr>
                                     <td class="text-bold"
-                                      style="width:50%;padding-left:10%;text-align: left;border: none;">Signature of
-                                      Class Teacher</td>
+                                      style="width:50%;padding-left:10%;text-align: left;border: none;">Class Teacher Signature</td>
                                     <td *ngIf="cls==9 || cls==10 || cls==11 || cls==12" class="text-bold"
-                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Signature of
-                                      Principal</td>
+                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Principal Signature</td>
                                     <td *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12" class="text-bold"
-                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Signature of
-                                      Principal / Head Master</td>
+                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Principal / Head Master Signature</td>
                                   </tr>
                                 </table>
                                 <div style="padding-left: 20px;padding-right: 20px;">
@@ -435,15 +432,12 @@
                                   style="border: none;margin-top: 15px;margin-bottom: 15px;padding-bottom: 0;">
                                   <tr>
                                     <td class="text-bold"
-                                      style="width:50%;padding-left:10%;text-align: left;border: none;">Signature of
-                                      Class Teacher
+                                      style="width:50%;padding-left:10%;text-align: left;border: none;">Class Teacher Signature
                                     </td>
                                     <td *ngIf="cls==9 || cls==10 || cls==11 || cls==12" class="text-bold"
-                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Signature of
-                                      Principal</td>
+                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Principal Signature</td>
                                     <td *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12" class="text-bold"
-                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Signature of
-                                      Principal / Head Master</td>
+                                      style="width:50%;padding-right:10%;text-align: right;border: none;">Principal / Head Master Signature</td>
                                   </tr>
                                 </table>
                               </div>

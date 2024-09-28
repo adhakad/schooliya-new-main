@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Fees | Structure</span>
+                                            <span>Fees Structure</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
@@ -32,7 +32,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Fees | Structure</span>
+                                            <span>Fees Structure</span>
                                         </button>
                                     </div>
                                     <div class="col-5 offset-4"><button class="submit-button" mat-raised-button
@@ -117,11 +117,11 @@
                                     </div>
                                     <div class="modal-body" *ngIf="feesTypeMode && !deleteMode">
                                         <ng-container>
-                                            <h3>Particular's</h3>
+                                            <h3>Particulars</h3>
                                         </ng-container>
                                         <div class="col-10 mb-4 example-margin">
                                             <mat-form-field appearance="outline">
-                                                <mat-label>Perticular Total
+                                                <mat-label>Particular Total
                                                     Fee</mat-label>
                                                 <input matInput type="number" [(ngModel)]="totalFees">
                                             </mat-form-field>
@@ -225,7 +225,7 @@
                                                     required</mat-hint>
                                             </mat-form-field>
                                             <h3>Fee Particulars</h3>
-                                            <p>Perticular Total Fee :&#8377; {{totalFees}}</p>
+                                            <p>Particular Total Fee :&#8377; {{totalFees}}</p>
                                             <div formGroupName="type">
                                                 <div formArrayName="feesType">
                                                     <div *ngFor="let singleFeesType of selectedFeesType; let i = index">
@@ -298,7 +298,7 @@
                                                         </tr>
                                                     </table>
                                                     <ng-container>
-                                                        <h3>Particular's</h3>
+                                                        <h3>Particulars</h3>
                                                     </ng-container>
                                                     <table class="custom-table">
                                                         <tr

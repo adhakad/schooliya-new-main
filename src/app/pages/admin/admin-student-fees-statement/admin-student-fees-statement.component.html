@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Payment List</span>
+                                            <span>Fee Statement</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
@@ -38,7 +38,7 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Payment List</span>
+                                            <span>Fee Statement</span>
                                         </button>
                                     </div>
                                     <div class="col-6">
@@ -283,28 +283,28 @@
                                                         <td style="border: none;padding-top: 5px;">
                                                         </td>
                                                         <td class="text-bold"
-                                                            style="text-align: right;border: none;padding-top: 8px;">
-                                                            Total Fee
+                                                            style="text-align: right;border: none;padding-top: 8px;font-size: 12px;">
+                                                            TOTAL FEE
                                                         </td>
-                                                        <td class="text-bold" style="border: none;padding-top: 5px;">
+                                                        <td class="text-bold" style="border: none;padding-top: 8px;font-size: 15px;">
                                                             &#8377;
                                                             {{studentFeesCollection?.totalFees}}</td>
                                                     </tr>
                                                     <tr class="text-center" style="height: 15px;">
                                                         <td style="border: none;"></td>
-                                                        <td class="text-bold" style="text-align: right;border: none;">
-                                                            Paid Fee
+                                                        <td class="text-bold" style="text-align: right;border: none;font-size: 12px;">
+                                                            PAID FEE
                                                         </td>
-                                                        <td class="text-bold" style="border: none;">
+                                                        <td class="text-bold" style="border: none;font-size: 15px;">
                                                             &#8377;
                                                             {{singleReceiptInstallment[0]?.allPaidAmount}}</td>
                                                     </tr>
                                                     <tr class="text-center" style="height: 15px;">
                                                         <td style="border: none;"></td>
-                                                        <td class="text-bold" style="text-align: right;border: none;">
-                                                            Due Fee
+                                                        <td class="text-bold" style="text-align: right;border: none;font-size: 12px;">
+                                                            DUE FEE
                                                         </td>
-                                                        <td class="text-bold" style="border: none;">
+                                                        <td class="text-bold" style="border: none;font-size: 15px;">
                                                             &#8377;
                                                             {{studentFeesCollection?.totalFees -
                                                             singleReceiptInstallment[0]?.allPaidAmount}}</td>

@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Admit Card | Structure</span>
+                                            <span>Admit Card Structure</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
@@ -31,7 +31,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Admit Card | Structure</span>
+                                            <span>Admit Card Structure</span>
                                         </button>
                                     </div>
                                     <div class="col-5 offset-4"><button class="submit-button" (click)="addAdmitCardModel()" mat-raised-button><mat-icon>add</mat-icon>Create</button></div>
@@ -47,7 +47,7 @@
                                     <thead class="bg-light">
                                         <tr class="text-muted">
                                             <th>S.No.</th>
-                                            <th>Exam</th>
+                                            <th>Exam Name</th>
                                             <th>Class</th>
                                             <th>Stream</th>
                                             <th>Admit Card Structure</th>
@@ -82,7 +82,7 @@
                                     </tbody>
                                 </table>
                                 <div *ngIf="examAdmitCard" style="text-align: center;margin-top: 200px;">
-                                    <p>Note : Delete this admit card structure to generate the new admit card for another exam.</p>
+                                    <p>Note : Remove the existing admit card to generate a new one.</p>
                                 </div>
 
                                 <div class="modal fade show" [class.show]="showModal">
@@ -118,7 +118,7 @@
                                                         <div class="row">
                                                             <div class="col-12 col-lg-6">
                                                                 <mat-form-field appearance="outline">
-                                                                    <mat-label>Class Applied for</mat-label>
+                                                                    <mat-label>Class</mat-label>
                                                                     <mat-select matInput formControlName="class">
                                                                         <div *ngFor="let classInfo of classInfo">
                                                                             <mat-option value="{{classInfo.class}}"
@@ -166,12 +166,12 @@
                                                             </div>
                                                             <div class="col-12 col-lg-6">
                                                                 <mat-form-field appearance="outline">
-                                                                    <mat-label>Exam Type</mat-label>
+                                                                    <mat-label>Exam Name</mat-label>
                                                                     <input type="text" matInput
                                                                         formControlName="examType">
                                                                     <mat-error
                                                                         *ngIf="admitcardForm.get('examType')?.hasError('required') && admitcardForm.get('examType')?.touched">
-                                                                        Address is required
+                                                                        Exam name is required
                                                                     </mat-error>
                                                                     <mat-error
                                                                         *ngIf="admitcardForm.get('examType')?.hasError('minlength') && admitcardForm.get('examType')?.touched">
