@@ -35,7 +35,7 @@
                             <mat-select matInput>
                               <div>
                                 <mat-option (click)="bulkPrint()"
-                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Bulk
+                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">
                                   Marksheet Print</mat-option>
                               </div>
                             </mat-select>
@@ -253,7 +253,7 @@
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">MARKSHEET'S PRINT/DOWNLOAD - {{cls | classSuffix | uppercase}} <span
+                      <h5 class="modal-title">MARKSHEET PRINT <span
                           *ngIf="cls==11 || cls ==12">{{stream
                           | uppercase}}</span></h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
@@ -477,7 +477,7 @@
                                       <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
                                         PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
                                       </th>
-                                      <th scope="col">HALF YEARLY
+                                      <th scope="col">THEORY
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
@@ -489,8 +489,7 @@
                                       <th scope="col">
                                         PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
                                       </th>
-                                      <th scope="col">YEARLY
-                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
@@ -618,7 +617,7 @@
                                       <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
                                         PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
                                       </th>
-                                      <th scope="col">HALF YEARLY
+                                      <th scope="col">THEORY
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
@@ -629,8 +628,7 @@
                                       <th scope="col">
                                         PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
                                       </th>
-                                      <th scope="col">YEARLY
-                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
@@ -707,7 +705,7 @@
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
                                       </th>
-                                      <th scope="col">HALF YEARLY
+                                      <th scope="col">THEORY
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
@@ -729,8 +727,7 @@
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
                                       </th>
-                                      <th scope="col">YEARLY
-                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
@@ -876,7 +873,7 @@
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
                                       </th>
-                                      <th scope="col">HALF YEARLY
+                                      <th scope="col">THEORY
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
@@ -897,8 +894,7 @@
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
                                       </th>
-                                      <th scope="col">YEARLY
-                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
@@ -1096,16 +1092,13 @@
                                       <p style="margin-left: 30px;">Issued Date</p>
                                     </td>
                                     <td class="text-bold"
-                                      style="width:33.33%;font-size: 12px;text-align: center;border: none;">Signature of
-                                      Class Teacher
+                                      style="width:33.33%;font-size: 12px;text-align: center;border: none;">Class Teacher Signature
                                     </td>
                                     <td class="text-bold"
                                       style="width:33.33%;font-size: 12px;text-align: right;border: none;">
                                       <p style="margin-right: 30px;">
-                                        <span *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Signature of
-                                          Principal</span>
-                                        <span *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Signature of
-                                          Principal / Head Master</span>
+                                        <span *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Principal Signature</span>
+                                        <span *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal/Head Master Signature</span>
                                       </p>
                                     </td>
                                   </tr>

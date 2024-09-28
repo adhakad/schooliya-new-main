@@ -167,7 +167,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
           }, {});
           return examResults.map((result: any) => {
             const student = studentInfoMap[result.studentId];
-            if (marksheetTemplateStructure.templateName == 'T1' || marksheetTemplateStructure.templateName == 'T2' || marksheetTemplateStructure.templateName == 'T3' || marksheetTemplateStructure.templateName == 'T4') {
+            if (marksheetTemplateStructure.templateName == 'T3' || marksheetTemplateStructure.templateName == 'T4' || marksheetTemplateStructure.templateName == 'T5' || marksheetTemplateStructure.templateName == 'T6') {
               let overallMarksAndGrades = this.calculateAverageMarksAndGrades(result.resultDetail.term1.marks, result.resultDetail.term2.marks, result.resultDetail.term1.totalMaxMarks, result.resultDetail.term1.totalMaxMarks, marksheetTemplateStructure.examStructure.term1.gradeMinMarks, marksheetTemplateStructure.examStructure.term1.gradeMaxMarks);
               result.resultDetail.overallMarksAndGrades = overallMarksAndGrades;
             }
@@ -295,16 +295,18 @@ export class AdminStudentMarksheetComponent implements OnInit {
     printHtml += 'p {color: #252525 !important;font-size:12px;}'
     printHtml += 'h4 {color: #252525 !important;}'
     printHtml += '@media print {';
-    printHtml += '  body::before {';
+    printHtml += '  body::after {';
     printHtml += `    content: "${schoolName}, ${city}";`;
     printHtml += '    position: fixed;';
-    printHtml += '    top: 40%;';
-    printHtml += '    left:10%;';
-    printHtml += '    font-size: 20px;';
+    printHtml += '    top: 50%;';
+    printHtml += '    left: 25%;';
+    printHtml += '    font-size: 30px;';
     printHtml += '    text-transform: uppercase;';
     printHtml += '    font-weight: bold;';
     printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    color: rgba(0, 0, 0, 0.08);';
+    printHtml += '    text-align: center;';
+    printHtml += '    color: rgba(50, 48, 65, 0.2);';
+    printHtml += '    transform:';
     printHtml += '    pointer-events: none;';
     printHtml += '  }';
     printHtml += '}';
