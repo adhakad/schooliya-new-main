@@ -80,7 +80,6 @@ const schoolSchema = new mongoose.Schema({
   },
   phoneSecond: {
     type: Number,
-    required: true,
     trim: true,
   },
   email: {

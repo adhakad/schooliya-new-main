@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SchoolService } from 'src/app/services/school.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-school',
@@ -9,7 +10,7 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
   styleUrls: ['./school.component.css']
 })
 export class SchoolComponent implements OnInit {
-
+  public baseUrl = environment.API_URL;
   schoolForm: FormGroup;
   showModal: boolean = false;
   updateMode: boolean = false;
@@ -20,11 +21,11 @@ export class SchoolComponent implements OnInit {
   errorCheck: Boolean = false;
   schoolInfo: any;
   loader: Boolean = true;
-  adminId!:String;
-  constructor(private fb: FormBuilder, private schoolService: SchoolService,private adminAuthService:AdminAuthService) {
+  adminId!: String;
+  constructor(private fb: FormBuilder, private schoolService: SchoolService, private adminAuthService: AdminAuthService) {
     this.schoolForm = this.fb.group({
       _id: [''],
-      adminId:[''],
+      adminId: [''],
       schoolName: ['', [Validators.required, Validators.maxLength(50)]],
       schoolLogo: [''],
       affiliationNumber: ['', [Validators.required, Validators.maxLength(15)]],
@@ -38,7 +39,7 @@ export class SchoolComponent implements OnInit {
       state: ['', [Validators.required, Validators.maxLength(50)]],
       pinCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
       phoneOne: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^\d+$/)]],
-      phoneSecond: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^\d+$/)]],
+      phoneSecond: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^\d+$/)]],
       email: ['', [Validators.required, Validators.email]],
     })
   }
@@ -58,6 +59,7 @@ export class SchoolComponent implements OnInit {
     this.schoolForm.reset();
   }
   addSchoolModel() {
+    this.getSchool();
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = false;
@@ -87,6 +89,8 @@ export class SchoolComponent implements OnInit {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
+        this.errorCheck = true;
+        this.errorMsg = 'School detail already exist !';
       }
     });
   }
