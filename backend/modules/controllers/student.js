@@ -160,7 +160,7 @@ let CreateStudent = async (req, res, next) => {
     let receiptNo = Math.floor(Math.random() * 899999 + 100000);
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
-    let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, parentsOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees, createdBy } = req.body;
+    let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees, createdBy } = req.body;
     let className = req.body.class;
     if (stream === "stream") {
         stream = "N/A";
@@ -179,7 +179,7 @@ let CreateStudent = async (req, res, next) => {
         dob = DateTime.fromISO(dob).toFormat("dd-MM-yyyy");
     }
     let studentData = {
-        session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, parentsOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees, createdBy
+        session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees, createdBy
     }
     try {
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
@@ -375,7 +375,8 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             fatherQualification: student.fatherQualification,
             motherName: student.motherName,
             motherQualification: student.motherQualification,
-            parentsOccupation: student.parentsOccupation,
+            fatherOccupation: student.fatherOccupation,
+            motherOccupation:student.motherOccupation,
             parentsContact: student.parentsContact,
             parentsAnnualIncome: student.parentsAnnualIncome,
             createdBy: createdBy,
@@ -456,7 +457,8 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 motherName,
                 fatherQualification,
                 motherQualification,
-                parentsOccupation,
+                fatherOccupation, 
+                motherOccupation,
                 parentsAnnualIncome,
                 rollNumber,
                 admissionNo,
@@ -478,7 +480,8 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 motherName !== null && motherName !== undefined &&
                 fatherQualification !== null && fatherQualification !== undefined &&
                 motherQualification !== null && motherQualification !== undefined &&
-                parentsOccupation !== null && parentsOccupation !== undefined &&
+                fatherOccupation !== null && fatherOccupation !== undefined &&
+                motherOccupation !== null && motherOccupation !== undefined &&
                 parentsAnnualIncome !== null && parentsAnnualIncome !== undefined &&
                 rollNumber !== null && rollNumber !== undefined &&
                 admissionNo !== null && admissionNo !== undefined &&

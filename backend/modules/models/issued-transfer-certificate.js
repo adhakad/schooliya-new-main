@@ -104,6 +104,11 @@ const IssuedTransferCertificateModel = mongoose.model('issued-transfer-certifica
         required: true,
         trim: true
     },
+    fatherOccupation: {
+        type: String,
+        required: true,
+        trim: true
+    },
     motherName: {
         type: String,
         required: true,
@@ -114,7 +119,7 @@ const IssuedTransferCertificateModel = mongoose.model('issued-transfer-certifica
         required: true,
         trim: true
     },
-    parentsOccupation: {
+    motherOccupation: {
         type: String,
         required: true,
         trim: true

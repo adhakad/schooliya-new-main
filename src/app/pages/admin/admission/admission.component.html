@@ -495,15 +495,15 @@
                                 </mat-error>
                               </mat-form-field>
                               <mat-form-field appearance="outline">
-                                <mat-label>Parents Occupation</mat-label>
-                                <mat-select type="text" matInput formControlName="parentsOccupation">
+                                <mat-label>Father Occupation</mat-label>
+                                <mat-select type="text" matInput formControlName="fatherOccupation">
                                   <div *ngFor="let occupation of occupations">
                                     <mat-option value="{{occupation.occupation}}">{{occupation.occupation}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
-                                  *ngIf="studentForm.get('parentsOccupation')?.hasError('required') && studentForm.get('parentsOccupation')?.touched">
-                                  Parents occupation is required
+                                  *ngIf="studentForm.get('fatherOccupation')?.hasError('required') && studentForm.get('fatherOccupation')?.touched">
+                                  Father occupation is required
                                 </mat-error>
                               </mat-form-field>
                               <mat-form-field appearance="outline">
@@ -543,6 +543,18 @@
                                 <mat-error
                                   *ngIf="studentForm.get('motherQualification')?.hasError('required') && studentForm.get('motherQualification')?.touched">
                                   Mother qualification is required
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Mother Occupation</mat-label>
+                                <mat-select type="text" matInput formControlName="motherOccupation">
+                                  <div *ngFor="let occupation of occupations">
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('motherOccupation')?.hasError('required') && studentForm.get('motherOccupation')?.touched">
+                                  Mother occupation is required
                                 </mat-error>
                               </mat-form-field>
                               <mat-form-field appearance="outline">
