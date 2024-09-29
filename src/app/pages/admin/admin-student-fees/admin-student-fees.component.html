@@ -18,7 +18,28 @@
                                     </div>
                                     <div class="col-9" style="text-align: right;">
                                         <div class="row">
-                                            <div class="col-2 offset-7">
+                                            <div class="col-7">
+                                            </div>
+                                            <ng-container *ngIf="cls!==11 && cls!==12">
+                                                <div class="col-2">
+                                                </div>
+                                              </ng-container>
+                                              <ng-container *ngIf="cls==11 || cls==12">
+                                                <div class="col-2">
+                                                  <mat-form-field class="custom-select">
+                                                    <mat-label *ngIf="stream ==''">Stream</mat-label>
+                                                    <mat-select type="text" matInput>
+                                                      <ng-container *ngIf="cls==12 || cls==11">
+                                                        <div *ngFor="let subject of streamMainSubject">
+                                                          <mat-option (click)="filterStream(subject)"
+                                                            value="{{subject}}">{{subject}}</mat-option>
+                                                        </div>
+                                                      </ng-container>
+                                                    </mat-select>
+                                                  </mat-form-field>
+                                                </div>
+                                              </ng-container>
+                                              <div class="col-2">
                                                 <mat-form-field class="custom-select">
                                                     <mat-label *ngIf="!cls">Class</mat-label>
                                                     <mat-select type="number" matInput>
@@ -27,24 +48,6 @@
                                                                 (click)="chooseClass(classInfo.class)">{{classInfo.class
                                                                 | classSuffix}}</mat-option>
                                                         </div>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
-                                            <div class="col-2">
-                                                <mat-form-field class="custom-select">
-                                                    <mat-label *ngIf="!stream">Stream</mat-label>
-                                                    <mat-select type="text" matInput>
-                                                        <ng-container *ngIf="cls==12 || cls==11">
-                                                            <div *ngFor="let subject of streamMainSubject">
-                                                                <mat-option (click)="filterStream(subject)"
-                                                                    value="{{subject}}">{{subject}}</mat-option>
-                                                            </div>
-                                                        </ng-container>
-                                                        <ng-container
-                                                            *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                            <mat-option value="{{notApplicable}}"
-                                                                (click)="filterStream(notApplicable)">N/A</mat-option>
-                                                        </ng-container>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </div>
@@ -72,37 +75,34 @@
                                             <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
                                         </button>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <mat-form-field class="custom-select">
-                                            <mat-label *ngIf="!cls">Class</mat-label>
-                                            <mat-select type="number" matInput>
-                                                <div *ngFor="let classInfo of classInfo">
-                                                    <mat-option value="{{classInfo.class}}"
-                                                        (click)="chooseClass(classInfo.class)">{{classInfo.class
-                                                        |
-                                                        classSuffix}}</mat-option>
-                                                </div>
-                                            </mat-select>
+                                          <mat-label *ngIf="!cls">Class</mat-label>
+                                          <mat-select type="number" matInput>
+                                            <div *ngFor="let classInfo of classInfo">
+                                              <mat-option value="{{classInfo.class}}"
+                                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                |
+                                                classSuffix}}</mat-option>
+                                            </div>
+                                          </mat-select>
                                         </mat-form-field>
-                                    </div>
-                                    <div class="col-6">
-                                        <mat-form-field class="custom-select">
-                                            <mat-label *ngIf="!stream">Stream</mat-label>
+                                      </div>
+                                      <ng-container *ngIf="cls==11 || cls==12">
+                                        <div class="col-12">
+                                          <mat-form-field class="custom-select">
+                                            <mat-label *ngIf="stream ==''">Stream</mat-label>
                                             <mat-select type="text" matInput>
-                                                <ng-container *ngIf="cls==12 || cls==11">
-                                                    <div *ngFor="let subject of streamMainSubject">
-                                                        <mat-option (click)="filterStream(subject)"
-                                                            value="{{subject}}">{{subject}}</mat-option>
-                                                    </div>
-                                                </ng-container>
-                                                <ng-container
-                                                    *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                    <mat-option value="{{notApplicable}}"
-                                                        (click)="filterStream(notApplicable)">N/A</mat-option>
-                                                </ng-container>
+                                              <ng-container *ngIf="cls==12 || cls==11">
+                                                <div *ngFor="let subject of streamMainSubject">
+                                                  <mat-option (click)="filterStream(subject)"
+                                                    value="{{subject}}">{{subject}}</mat-option>
+                                                </div>
+                                              </ng-container>
                                             </mat-select>
-                                        </mat-form-field>
-                                    </div>
+                                          </mat-form-field>
+                                        </div>
+                                      </ng-container>
                                 </div>
                             </div>
                         </div>
@@ -136,15 +136,16 @@
                                             <p class="mb-0">{{i+1}}</p>
                                         </td>
                                         <td>
-                                            <button
-                                                *ngIf="student.AllPaidFees !== student.AllTotalFees" class="submit-button"
-                                                mat-raised-button (click)="studentFeesPay(student)">Pay
+                                            <button *ngIf="student.AllPaidFees !== student.AllTotalFees"
+                                                class="submit-button" mat-raised-button
+                                                (click)="studentFeesPay(student)">Pay
                                                 Offline</button>
-                                                <button *ngIf="student.AllPaidFees == student.AllTotalFees" class="submit-button"
-                                                mat-raised-button [disabled]="student.AllPaidFees == student.AllTotalFees"
+                                            <button *ngIf="student.AllPaidFees == student.AllTotalFees"
+                                                class="submit-button" mat-raised-button
+                                                [disabled]="student.AllPaidFees == student.AllTotalFees"
                                                 style="background-color: transparent;color:#252525;">Fee
                                                 Paid</button>
-    
+
                                         </td>
                                         <td>
                                             <p class="mb-0">{{student.name | titlecase}}</p>
@@ -162,8 +163,7 @@
                                             <p class="mb-0"> &#8377; {{student.AllTotalFees}}</p>
                                         </td>
                                         <td class="mb-0">
-                                            <mat-icon
-                                                routerLink="/admin/fees/statement/{{student._id}}"
+                                            <mat-icon routerLink="/admin/fees/statement/{{student._id}}"
                                                 style="cursor: pointer;">launch</mat-icon>
                                         </td>
                                     </tr>
@@ -236,7 +236,7 @@
                                                                     <mat-form-field appearance="outline">
                                                                         <mat-label>Enter Fee Amount In
                                                                             &#8377;</mat-label>
-                                                                        <input  type="number"
+                                                                        <input type="number"
                                                                             formControlName="feesAmount" matInput>
                                                                     </mat-form-field>
                                                                 </div>
@@ -416,7 +416,8 @@
                                                                             style="text-align: right;border: none;font-size: 12px;">
                                                                             PAID FEE
                                                                         </td>
-                                                                        <td class="text-bold" style="border: none;font-size: 15px;">
+                                                                        <td class="text-bold"
+                                                                            style="border: none;font-size: 15px;">
                                                                             &#8377;
                                                                             {{receiptInstallment.paidFees}}</td>
                                                                     </tr>
@@ -426,7 +427,8 @@
                                                                             style="text-align: right;border: none;font-size: 12px;">
                                                                             DUE FEE
                                                                         </td>
-                                                                        <td class="text-bold" style="border: none;font-size: 15px;">
+                                                                        <td class="text-bold"
+                                                                            style="border: none;font-size: 15px;">
                                                                             &#8377;
                                                                             {{receiptInstallment.dueFees}}</td>
                                                                     </tr>

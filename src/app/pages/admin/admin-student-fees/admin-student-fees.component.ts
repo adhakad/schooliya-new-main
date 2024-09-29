@@ -53,7 +53,7 @@ export class AdminStudentFeesComponent implements OnInit {
   receiptMode: boolean = false;
 
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   loader: Boolean = false;
   baseURL!: string;
@@ -61,7 +61,7 @@ export class AdminStudentFeesComponent implements OnInit {
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
-      session:[''],
+      session: [''],
       class: [''],
       stream: [''],
       studentId: [''],
@@ -154,7 +154,7 @@ export class AdminStudentFeesComponent implements OnInit {
     this.paybleInstallment = [0, 0];
     this.receiptInstallment = {};
     this.receiptMode = false;
-    this.getAllStudentFeesCollectionByClass()
+    this.getAllStudentFeesCollectionByClass();
   }
 
   getClass() {
@@ -165,13 +165,26 @@ export class AdminStudentFeesComponent implements OnInit {
     })
   }
   chooseClass(cls: any) {
-    this.stream = '';
     this.cls = cls;
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      this.studentList = [];
+      this.getAllStudentFeesCollectionByClass();
+    }
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+      this.studentList = [];
+      this.getAllStudentFeesCollectionByClass();
+    }
+    console.log(this.cls);
+    console.log(this.stream);
   }
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
-      // this.feesStructureByClass();
+      this.studentList = [];
       this.getAllStudentFeesCollectionByClass();
     }
   }
