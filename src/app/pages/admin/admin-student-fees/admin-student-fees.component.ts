@@ -178,8 +178,6 @@ export class AdminStudentFeesComponent implements OnInit {
       this.studentList = [];
       this.getAllStudentFeesCollectionByClass();
     }
-    console.log(this.cls);
-    console.log(this.stream);
   }
   filterStream(stream: any) {
     this.stream = stream;

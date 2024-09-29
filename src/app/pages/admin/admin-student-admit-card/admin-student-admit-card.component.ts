@@ -32,7 +32,7 @@ export class AdminStudentAdmitCardComponent implements OnInit {
   schoolInfo: any;
   baseURL!: string;
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   examType: any[] = [];
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   selectedValue: number = 0;
@@ -63,8 +63,29 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     this.selectedValue = event.value;
   }
   chooseClass(cls: any) {
-    this.stream = '';
     this.cls = cls;
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
+      }
+      this.getAdmitCardStructureByClass(params);
+      this.getStudentAdmitCardByClass(params);
+    }
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
+      }
+      this.getAdmitCardStructureByClass(params);
+      this.getStudentAdmitCardByClass(params);
+    }
   }
   filterStream(stream: any) {
     this.stream = stream;
