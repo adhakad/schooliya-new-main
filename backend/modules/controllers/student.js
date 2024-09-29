@@ -403,7 +403,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
         //     const spreadAdmissionNo = otherClassAdmissionNo.join(', ');
         //     return res.status(400).json(`Admission number(s) ${spreadAdmissionNo} student(s) class is invailid !`);
         // }
-        const existRecords = await StudentModel.find({ adminId: adminId, class: className, stream: stream }).lean();
+        const existRecords = await StudentModel.find({ adminId: adminId}).lean();
         const duplicateAadharNumber = [];
         const duplicateSamagraId = [];
         const duplicateAdmissionNo = [];
