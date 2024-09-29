@@ -47,7 +47,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
   bulkResult: any[] = [];
   selectedExam: any = '';
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   examType: any[] = [];
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   loader: Boolean = false;
@@ -75,11 +75,28 @@ export class AdminStudentMarksheetComponent implements OnInit {
 
 
   chooseClass(cls: any) {
-    this.stream = '';
     this.cls = cls;
-    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
-      // this.studentForm.get('stream')?.setValue("N/A");
-      // this.getStudentExamResultByClass(this.cls);
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
+      }
+      this.getSingleClassResultStrucByStream(params);
+      this.getStudentExamResultByClass(params);
+    }
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
+      }
+      this.getSingleClassResultStrucByStream(params);
+      this.getStudentExamResultByClass(params);
     }
   }
   filterStream(stream: any) {

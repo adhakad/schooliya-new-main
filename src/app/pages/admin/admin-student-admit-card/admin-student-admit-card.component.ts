@@ -105,9 +105,9 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     this.showModal = false;
     this.processedData = [];
   }
-  bulkPrint(selectedValue:any) {
+  bulkPrint(selectedValue: any) {
     this.selectedValue = selectedValue;
-      this.processData();
+    this.processData();
 
     this.showModal = true;
   }
@@ -119,7 +119,7 @@ export class AdminStudentAdmitCardComponent implements OnInit {
         this.templateStatusCode = 200;
         this.admitCardStrInfo = res;
       }
-    },err => {
+    }, err => {
       this.errorCheck = true;
       this.templateStatusCode = err.status;
     })
@@ -319,7 +319,7 @@ export class AdminStudentAdmitCardComponent implements OnInit {
               examType: admitCard.examType,
               status: admitCard.status || "",
               name: studentInfo.name,
-              dob:studentInfo.dob,
+              dob: studentInfo.dob,
               fatherName: studentInfo.fatherName,
               motherName: studentInfo.motherName,
               rollNumber: studentInfo.rollNumber,
@@ -330,10 +330,10 @@ export class AdminStudentAdmitCardComponent implements OnInit {
           return result;
         }, []);
         if (combinedData) {
-        this.allAdmitCards = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
+          this.allAdmitCards = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
         }
       }
-    },err => {
+    }, err => {
       this.errorCheck = true;
       this.statusCode = err.status;
     })

@@ -18,15 +18,22 @@
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
-                      <div class="col-2 offset-3">
+                      <div class="col-3"></div>
+                      <ng-container *ngIf="cls !==11 && cls !==12">
+                        <div class="col-2"></div>
+                      </ng-container>
+                      <div class="col-2">
                         <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
-                          <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
-                            *ngIf="cls && stream">Add Result</button>
+                          <button class="submit-button" mat-raised-button
+                            routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}" *ngIf="cls && stream">Add
+                            Result</button>
                         </ng-container>
                       </div>
                       <div class="col-2">
-                        <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
-                          <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                        <ng-container
+                          *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
+                          <button class="submit-button" mat-raised-button
+                            routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
                             *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200">Add Result</button>
                         </ng-container>
                         <ng-container *ngIf="cls && stream && statusCode==200">
@@ -42,6 +49,21 @@
                           </mat-form-field>
                         </ng-container>
                       </div>
+                      <ng-container *ngIf="cls==11 || cls==12">
+                        <div class="col-2">
+                          <mat-form-field class="custom-select">
+                            <mat-label *ngIf="stream ==''">Stream</mat-label>
+                            <mat-select type="text" matInput>
+                              <ng-container *ngIf="cls==12 || cls==11">
+                                <div *ngFor="let subject of streamMainSubject">
+                                  <mat-option (click)="filterStream(subject)"
+                                    value="{{subject}}">{{subject}}</mat-option>
+                                </div>
+                              </ng-container>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </ng-container>
                       <div class="col-2">
                         <mat-form-field class="custom-select">
                           <mat-label *ngIf="!cls">Class</mat-label>
@@ -54,22 +76,7 @@
                           </mat-select>
                         </mat-form-field>
                       </div>
-                      <div class="col-2">
-                        <mat-form-field class="custom-select">
-                          <mat-label *ngIf="!stream">Stream</mat-label>
-                          <mat-select type="text" matInput>
-                            <ng-container *ngIf="cls==12 || cls==11">
-                              <div *ngFor="let subject of streamMainSubject">
-                                <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
-                              </div>
-                            </ng-container>
-                            <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                              <mat-option value="{{notApplicable}}"
-                                (click)="filterStream(notApplicable)">N/A</mat-option>
-                            </ng-container>
-                          </mat-select>
-                        </mat-form-field>
-                      </div>
+
                       <div class="col-1">
                         <button class="btn setting-button" [matMenuTriggerFor]="settings">
                           <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
@@ -93,7 +100,7 @@
                       <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
                     </button>
                   </div>
-                  <div class="col-6">
+                  <div class="col-12">
                     <mat-form-field class="custom-select">
                       <mat-label *ngIf="!cls">Class</mat-label>
                       <mat-select type="number" matInput>
@@ -106,21 +113,20 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col-6">
-                    <mat-form-field class="custom-select">
-                      <mat-label *ngIf="!stream">Stream</mat-label>
-                      <mat-select type="text" matInput>
-                        <ng-container *ngIf="cls==12 || cls==11">
-                          <div *ngFor="let subject of streamMainSubject">
-                            <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
-                          </div>
-                        </ng-container>
-                        <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                          <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
-                        </ng-container>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
+                  <ng-container *ngIf="cls==11 || cls==12">
+                    <div class="col-12">
+                      <mat-form-field class="custom-select">
+                        <mat-label *ngIf="stream ==''">Stream</mat-label>
+                        <mat-select type="text" matInput>
+                          <ng-container *ngIf="cls==12 || cls==11">
+                            <div *ngFor="let subject of streamMainSubject">
+                              <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                            </div>
+                          </ng-container>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </ng-container>
                   <div class="col-6">
                     <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
                       <mat-form-field class="custom-select">
@@ -137,13 +143,16 @@
                   </div>
                   <div class="col-6">
                     <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode==200">
-                      <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
-                        *ngIf="cls && stream">Add Result</button>
+                      <button class="submit-button" mat-raised-button
+                        routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}" *ngIf="cls && stream">Add
+                        Result</button>
                     </ng-container>
                   </div>
                   <div class="col-6 offset-3">
-                    <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
-                      <button class="submit-button" mat-raised-button routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
+                    <ng-container
+                      *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
+                      <button class="submit-button" mat-raised-button
+                        routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
                         *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200">Add Result</button>
                     </ng-container>
                   </div>
@@ -253,8 +262,7 @@
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">MARKSHEET PRINT <span
-                          *ngIf="cls==11 || cls ==12">{{stream
+                      <h5 class="modal-title">MARKSHEET PRINT <span *ngIf="cls==11 || cls ==12">{{stream
                           | uppercase}}</span></h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
@@ -489,7 +497,8 @@
                                       <th scope="col">
                                         PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
                                       </th>
-                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">
+                                        THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
@@ -628,7 +637,8 @@
                                       <th scope="col">
                                         PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
                                       </th>
-                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">
+                                        THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
@@ -727,7 +737,8 @@
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
                                       </th>
-                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">
+                                        THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
@@ -894,7 +905,8 @@
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
                                       </th>
-                                      <th scope="col">THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      <th scope="col">
+                                        THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
@@ -959,7 +971,7 @@
 
 
 
-                                
+
 
 
 
@@ -1092,13 +1104,15 @@
                                       <p style="margin-left: 30px;">Issued Date</p>
                                     </td>
                                     <td class="text-bold"
-                                      style="width:33.33%;font-size: 12px;text-align: center;border: none;">Class Teacher Signature
+                                      style="width:33.33%;font-size: 12px;text-align: center;border: none;">Class
+                                      Teacher Signature
                                     </td>
                                     <td class="text-bold"
                                       style="width:33.33%;font-size: 12px;text-align: right;border: none;">
                                       <p style="margin-right: 30px;">
                                         <span *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Principal Signature</span>
-                                        <span *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal/Head Master Signature</span>
+                                        <span *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal/Head
+                                          Master Signature</span>
                                       </p>
                                     </td>
                                   </tr>
