@@ -10,10 +10,11 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 export class FooterComponent implements OnInit {
   currentYear: any;
   schoolInfo:any;
-  facebook!:string;
-  linkedin!:string;
+  whatsapp:string = 'https://wa.me/919302798269';
+  facebook:string = 'https://www.facebook.com/profile.php?id=61563830046242';
+  linkedin:string = 'https://www.linkedin.com/company/schooliya-official';
   instagram:string='https://www.instagram.com/schooliya_official';
-  youtube!:string;
+  youtube:string = 'https://www.youtube.com/@Schooliya-f8f';
   softwareCompanyLink:string='https://schooliya.in';
   adminId!:any;
   constructor(private schoolService:SchoolService,private adminAuthService:AdminAuthService) { }
@@ -36,10 +37,11 @@ export class FooterComponent implements OnInit {
     this.schoolService.getSchool(this.adminId).subscribe((res:any)=> {
       if(res){
         this.schoolInfo = res;
-        this.facebook = res.facebookLink;
-        this.linkedin = res.linkedinLink;
+        this.whatsapp = 'https://wa.me/919302798269'
+        this.facebook = 'https://www.facebook.com/profile.php?id=61563830046242';
+        this.linkedin = 'https://www.linkedin.com/company/schooliya-official';
         this.instagram = 'https://www.instagram.com/schooliya_official';
-        this.youtube = res.youtubeLink;
+        this.youtube = 'https://www.youtube.com/@Schooliya-f8f';
         
       }
     })
