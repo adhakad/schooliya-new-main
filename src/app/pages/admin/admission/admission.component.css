@@ -1,6 +1,12 @@
 @import'../dashboard/dashboard.component.css';
 /* @import'../admin-student-fees/admin-student-fees.component.css'; */
 /* @import'../../../../assets/logo.png'; */
+.table{
+  display: block;
+}
+.table th{
+  min-width: 75px;
+}
 .sign-table{
   border: 1px solid transparent;
  }

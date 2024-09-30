@@ -51,8 +51,8 @@
                     </button>
                   </div>
                   <div class="col-7">
-                    <input type="text" class="form-control" placeholder="Search..." id="searchText"
-                      name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                    <input type="text" class="form-control" placeholder="Search..." id="searchText" name="searchText"
+                      #searchText="ngModel" [(ngModel)]="filters.searchText"
                       (keyup)="getStudentsByAdmission({page : 1, limit : 0})">
                   </div>
                   <div class="col-5">
@@ -79,7 +79,10 @@
                     <th>S.No.</th>
                     <th>Admission No.</th>
                     <th>Student</th>
+                    <th>Father Name</th>
+                    <th>Mother Name</th>
                     <th>Class</th>
+                    <th>Stream</th>
                     <th>Roll Number</th>
                     <th>Session</th>
                     <th>Admission By</th>
@@ -98,7 +101,16 @@
                       <p class="mb-0">{{students.name}}</p>
                     </td>
                     <td>
+                      <p class="mb-0">{{students.fatherName}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.motherName}}</p>
+                    </td>
+                    <td>
                       <p class="mb-0">{{students.class | classSuffix}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.stream}}</p>
                     </td>
                     <td>
                       <p class="mb-0">{{students.rollNumber}}</p>
@@ -604,11 +616,13 @@
                                       <h3 class="text-bold">{{schoolInfo?.schoolName | uppercase}}</h3>
                                     </div>
                                     <div class="address" style="text-align: center;">
-                                      <p style="color: #252525 !important;">Affiliated to {{schoolInfo?.board | uppercase}}, Affliation No. -
+                                      <p style="color: #252525 !important;">Affiliated to {{schoolInfo?.board |
+                                        uppercase}}, Affliation No. -
                                         {{schoolInfo?.affiliationNumber}}</p>
                                       <p><span style="color: #252525;">Contact - {{schoolInfo?.phoneOne}} &nbsp; Email -
                                           {{schoolInfo?.email}}</span></p>
-                                      <p><span style="color: #252525;">{{schoolInfo?.street | titlecase}}, {{schoolInfo?.city | titlecase}},
+                                      <p><span style="color: #252525;">{{schoolInfo?.street | titlecase}},
+                                          {{schoolInfo?.city | titlecase}},
                                           Dist.-
                                           {{schoolInfo?.district | titlecase}},
                                           {{schoolInfo?.state | titlecase}} - {{schoolInfo?.pinCode}}</span></p>
