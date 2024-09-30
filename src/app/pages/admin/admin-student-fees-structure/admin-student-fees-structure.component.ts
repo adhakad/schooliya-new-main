@@ -31,21 +31,23 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   feesMode: boolean = false;
   clsFeesStructure: any;
   particularsAdmissionFees: any[] = [];
-  singleFessStructure:any;
+  singleFessStructure: any;
   feePerticulars: any[] = ['Registration', 'Tution', 'Books', 'Uniform', 'Examination', 'Sports', 'Library', 'Transport'];
   classInfo: any[] = [];
   stream: string = '';
+  notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   sessions: any;
   schoolInfo: any;
   loader: Boolean = true;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService,private classService: ClassService, private feesStructureService: FeesStructureService) {
+  session: string = '';
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
-      session: ['', Validators.required],
-      class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      stream: ['', Validators.required],
+      session: [''],
+      class: [''],
+      stream: [''],
       admissionFees: ['', Validators.required],
       type: this.fb.group({
         feesType: this.fb.array([], [Validators.required]),
@@ -78,27 +80,38 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   }
 
 
-  chooseClass(cls: any) {
-    this.errorCheck = false;
+  filterSession(session: any) {
+    this.errorCheck = true;
     this.errorMsg = '';
-    this.cls = 0;
-    this.cls = cls;
-    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
-      this.feesForm.get('stream')?.setValue("N/A");
-      this.stream = '';
-      this.stream = 'stream';
+    this.session = session;
+    if (this.session !== '') {
+      this.feesForm.get('session')?.setValue(session);
     }
   }
-  chooseStream(stream: any) {
-    this.stream = '';
-    this.stream = stream;
+  chooseClass(cls: any) {
+    this.errorCheck = true;
+    this.errorMsg = '';
+    this.cls = cls;
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      this.feesForm.get('class')?.setValue(cls);
+      this.feesForm.get('stream')?.setValue("N/A");
+    }
+    if (cls == 11 || cls == 12) {
+      this.feesForm.get('class')?.setValue(cls);
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+    }
   }
-
-
-
-
-
-
+  filterStream(stream: any) {
+    this.errorCheck = true;
+    this.errorMsg = '';
+    this.stream = stream;
+    if (stream && this.cls) {
+      this.feesForm.get('stream')?.setValue(stream);
+    }
+  }
 
 
   getFeesStructureByClass() {
@@ -120,11 +133,26 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     this.feesTypeMode = true;
   }
   openFeesStructureModal(singleFessStructure: any) {
-    this.singleFessStructure= singleFessStructure;
+    this.singleFessStructure = singleFessStructure;
     this.particularsAdmissionFees = [{ Admission: singleFessStructure.admissionFees }, ...singleFessStructure.feesType];
     this.showFeesStructureModal = true;
   }
   selectFeesStructure() {
+    if (this.session == '') {
+      this.errorCheck = true;
+      this.errorMsg = 'Session is required';
+      return;
+    }
+    if (this.cls == 0) {
+      this.errorCheck = true;
+      this.errorMsg = 'Class is required';
+      return;
+    }
+    if (this.stream == '') {
+      this.errorCheck = true;
+      this.errorMsg = 'Stream is required';
+      return;
+    }
     this.feesTypeMode = false;
     this.feesMode = true;
     this.patch();
@@ -191,7 +219,6 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     this.feesForm.value.adminId = this.adminId;
     this.feesForm.value.totalFees = this.totalFees;
     let feesTypeObj = this.feesForm.value.type.feesType;
-
     let containsFeesTypeNull = feesTypeObj.some((item: any) => Object.values(item).includes(null));
     if (containsFeesTypeNull) {
       this.errorCheck = true;

@@ -116,10 +116,56 @@
                                         <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                     </div>
                                     <div class="modal-body" *ngIf="feesTypeMode && !deleteMode">
+                                        <div *ngIf="errorCheck">
+                                            <p class="error-message">{{errorMsg}}</p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Session</mat-label>
+                                                    <mat-select type="text" matInput>
+                                                        <ng-container>
+                                                            <div *ngFor="let session of sessions">
+                                                                <mat-option (click)="filterSession(session.year)"
+                                                                    value="{{session.year}}">{{session.year}}</mat-option>
+                                                            </div>
+                                                        </ng-container>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Class</mat-label>
+                                                    <mat-select type="number" matInput>
+                                                        <div *ngFor="let classInfo of classInfo">
+                                                            <mat-option value="{{classInfo.class}}"
+                                                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                                | classSuffix}}</mat-option>
+                                                        </div>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <ng-container *ngIf="cls==11 || cls==12">
+                                                <div class="col-12">
+                                                    <mat-form-field appearance="outline">
+                                                        <mat-label>Stream</mat-label>
+                                                        <mat-select type="text" matInput>
+                                                            <ng-container *ngIf="cls==12 || cls==11">
+                                                                <div *ngFor="let subject of streamMainSubject">
+                                                                    <mat-option (click)="filterStream(subject)"
+                                                                        value="{{subject}}">{{subject}}</mat-option>
+                                                                </div>
+                                                            </ng-container>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                        </div>
                                         <ng-container>
                                             <h3>Particulars</h3>
                                         </ng-container>
-                                        <div class="col-10 mb-4 example-margin">
+                                        <div class="col-12 mb-4 example-margin">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Particular Total
                                                     Fee</mat-label>
@@ -139,7 +185,7 @@
                                     </div>
                                     <div class="modal-footer" *ngIf="feesTypeMode">
                                         <button class="submit-button" mat-raised-button
-                                            [disabled]="!feesForm || totalFees<=0"
+                                            [disabled]="!feesForm || totalFees<=0 "
                                             (click)="selectFeesStructure()">Save</button>
                                     </div>
                                     <form [formGroup]="feesForm" (ngSubmit)="feesStructureAddUpdate()"
@@ -148,70 +194,6 @@
                                         <div class="modal-body">
                                             <div *ngIf="errorCheck">
                                                 <p class="error-message">{{errorMsg}}</p>
-                                            </div>
-                                            <div class="col-12 col-lg-12">
-                                                <mat-form-field appearance="outline">
-                                                  <mat-label>Session</mat-label>
-                                                  <mat-select type="text" matInput formControlName="session">
-                                                    <div *ngFor="let session of sessions">
-                                                      <mat-option value="{{session.year}}">{{session.year}}</mat-option>
-                                                    </div>
-                                                  </mat-select>
-                                                  <mat-error
-                                                    *ngIf="feesForm.get('session')?.hasError('required') && feesForm.get('session')?.touched">
-                                                    Session is required
-                                                  </mat-error>
-                                                </mat-form-field>
-                                              </div>
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6">
-                                                    <mat-form-field appearance="outline">
-                                                        <mat-label>Class Applied for</mat-label>
-                                                        <mat-select matInput formControlName="class">
-                                                            <div *ngFor="let classInfo of classInfo">
-                                                                <mat-option value="{{classInfo.class}}"
-                                                                    (click)="chooseClass(classInfo.class)">{{classInfo.class
-                                                                    |
-                                                                    classSuffix}}</mat-option>
-                                                            </div>
-                                                        </mat-select>
-                                                        <mat-error
-                                                            *ngIf="feesForm.get('class')?.hasError('required') && feesForm.get('class')?.touched">
-                                                            Class is required
-                                                        </mat-error>
-                                                        <mat-error
-                                                            *ngIf="feesForm.get('class')?.hasError('pattern') && feesForm.get('class')?.touched">
-                                                            Please enter a valid class (numeric characters only)
-                                                        </mat-error>
-                                                    </mat-form-field>
-                                                </div>
-                                                <div class="col-12 col-lg-6">
-                                                    <mat-form-field appearance="outline">
-                                                        <mat-label>Stream</mat-label>
-                                                        <mat-select type="text" matInput formControlName="stream">
-                                                            <ng-container *ngIf="cls==12 || cls==11">
-                                                                <div *ngFor="let subject of streamMainSubject">
-                                                                    <mat-option value="{{subject}}"
-                                                                        (click)="chooseStream(subject)">{{subject}}</mat-option>
-                                                                </div>
-                                                            </ng-container>
-                                                            <ng-container
-                                                                *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                                <div>
-                                                                    <mat-option value="N/A">N/A</mat-option>
-                                                                </div>
-                                                            </ng-container>
-                                                        </mat-select>
-                                                        <mat-error
-                                                            *ngIf="feesForm.get('stream')?.hasError('required') && feesForm.get('stream')?.touched">
-                                                            Stream is required
-                                                        </mat-error>
-                                                        <mat-error
-                                                            *ngIf="feesForm.get('stream')?.hasError('pattern') && feesForm.get('stream')?.touched">
-                                                            Please enter a valid Stream (only letters are allowed)
-                                                        </mat-error>
-                                                    </mat-form-field>
-                                                </div>
                                             </div>
                                             <ng-container>
                                                 <h3>Admission Fee</h3>
