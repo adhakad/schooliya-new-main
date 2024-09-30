@@ -48,7 +48,7 @@ export class PromoteFailComponent implements OnInit {
   occupations: any;
   mediums: any;
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   cls: number = 0;
   className: any;
@@ -103,8 +103,18 @@ export class PromoteFailComponent implements OnInit {
     this.page = 0;
     this.className = cls;
     this.cls = cls;
-    this.stream = '';
-    this.studentInfo = [];
+    if(cls !==11 && cls !==12){
+      this.stream = this.notApplicable;
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
+    if(cls ==11 || cls ==12){
+      if(this.stream=='stream'){
+        this.stream = '';
+      }
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
   }
   filterStream(stream: any) {
     this.stream = stream;

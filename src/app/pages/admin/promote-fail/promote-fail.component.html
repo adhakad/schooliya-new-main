@@ -18,12 +18,31 @@
                                     </div>
                                     <div class="col-9" style="text-align: right;">
                                         <div class="row">
-                                            <div class="col-5 offset-3">
+                                            <div class="col-3"></div>
+                                            <ng-container *ngIf="cls !==11 && cls !==12">
+                                                <div class="col-2"></div>
+                                            </ng-container>
+                                            <div class="col-5">
                                                 <input *ngIf="cls && stream" type="text" class="form-control"
                                                     placeholder="Student Search..." id="searchText" name="searchText"
                                                     #searchText="ngModel" [(ngModel)]="filters.searchText"
                                                     (keyup)="getStudents({page : 1, limit : 0})">
                                             </div>
+                                            <ng-container *ngIf="cls==11 || cls==12">
+                                                <div class="col-2">
+                                                    <mat-form-field class="custom-select">
+                                                        <mat-label *ngIf="stream ==''">Stream</mat-label>
+                                                        <mat-select type="text" matInput>
+                                                            <ng-container *ngIf="cls==12 || cls==11">
+                                                                <div *ngFor="let subject of streamMainSubject">
+                                                                    <mat-option (click)="filterStream(subject)"
+                                                                        value="{{subject}}">{{subject}}</mat-option>
+                                                                </div>
+                                                            </ng-container>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
                                             <div class="col-2">
                                                 <mat-form-field class="custom-select">
                                                     <mat-label *ngIf="!cls">Class</mat-label>
@@ -33,24 +52,6 @@
                                                                 (click)="chooseClass(classInfo.class)">{{classInfo.class
                                                                 | classSuffix}}</mat-option>
                                                         </div>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
-                                            <div class="col-2">
-                                                <mat-form-field class="custom-select">
-                                                    <mat-label *ngIf="!stream">Stream</mat-label>
-                                                    <mat-select type="text" matInput>
-                                                        <ng-container *ngIf="cls==12 || cls==11">
-                                                            <div *ngFor="let subject of streamMainSubject">
-                                                                <mat-option (click)="filterStream(subject)"
-                                                                    value="{{subject}}">{{subject}}</mat-option>
-                                                            </div>
-                                                        </ng-container>
-                                                        <ng-container
-                                                            *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                            <mat-option value="{{notApplicable}}"
-                                                                (click)="filterStream(notApplicable)">N/A</mat-option>
-                                                        </ng-container>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </div>
@@ -67,7 +68,7 @@
                                             <span>Promote/Fail</span>
                                         </button>
                                     </div>
-                                    <div class="col-6 mt-3">
+                                    <div class="col-12 mt-3">
                                         <mat-form-field class="custom-select">
                                             <mat-label *ngIf="!cls">Class</mat-label>
                                             <mat-select type="number" matInput>
@@ -80,24 +81,21 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-6 mt-3">
-                                        <mat-form-field class="custom-select">
-                                            <mat-label *ngIf="!stream">Stream</mat-label>
-                                            <mat-select type="text" matInput>
-                                                <ng-container *ngIf="cls==12 || cls==11">
-                                                    <div *ngFor="let subject of streamMainSubject">
-                                                        <mat-option (click)="filterStream(subject)"
-                                                            value="{{subject}}">{{subject}}</mat-option>
-                                                    </div>
-                                                </ng-container>
-                                                <ng-container
-                                                    *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                    <mat-option value="{{notApplicable}}"
-                                                        (click)="filterStream(notApplicable)">N/A</mat-option>
-                                                </ng-container>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
+                                    <ng-container *ngIf="cls==11 || cls==12">
+                                        <div class="col-12">
+                                            <mat-form-field class="custom-select">
+                                                <mat-label *ngIf="stream ==''">Stream</mat-label>
+                                                <mat-select type="text" matInput>
+                                                    <ng-container *ngIf="cls==12 || cls==11">
+                                                        <div *ngFor="let subject of streamMainSubject">
+                                                            <mat-option (click)="filterStream(subject)"
+                                                                value="{{subject}}">{{subject}}</mat-option>
+                                                        </div>
+                                                    </ng-container>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-container>
                                     <div class="col-12">
                                         <input *ngIf="cls && stream" type="text" class="form-control"
                                             placeholder="Student Search..." id="searchText" name="searchText"
