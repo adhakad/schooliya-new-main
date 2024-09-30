@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Payment List</span>
+                                            <span>Fee Collection</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
@@ -67,7 +67,7 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Payment List</span>
+                                            <span>Fee Collection</span>
                                         </button>
                                     </div>
                                     <div class="col-3">
@@ -121,7 +121,7 @@
                                 <thead class="bg-light">
                                     <tr class="text-muted">
                                         <th>No.</th>
-                                        <th>Fee Payment</th>
+                                        <th>Fee Collect</th>
                                         <th>Student Name</th>
                                         <th>Admission No.</th>
                                         <th>Paid Fee</th>
@@ -138,8 +138,7 @@
                                         <td>
                                             <button *ngIf="student.AllPaidFees !== student.AllTotalFees"
                                                 class="submit-button" mat-raised-button
-                                                (click)="studentFeesPay(student)">Pay
-                                                Offline</button>
+                                                (click)="studentFeesPay(student)">Collect</button>
                                             <button *ngIf="student.AllPaidFees == student.AllTotalFees"
                                                 class="submit-button" mat-raised-button
                                                 [disabled]="student.AllPaidFees == student.AllTotalFees"

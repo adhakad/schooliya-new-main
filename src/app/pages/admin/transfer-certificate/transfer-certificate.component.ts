@@ -134,18 +134,18 @@ export class TransferCertificateComponent implements OnInit {
 
   printStudentData(singleStudentInfo: any) {
 
-    // singleStudentInfo.serialNo = this.serialNo;
-    // this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
-    //   if (res == 'IssueTransferCertificate') {
+    singleStudentInfo.serialNo = this.serialNo;
+    this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
+      if (res == 'IssueTransferCertificate') {
         const printContent = this.getPrintOneAdmitCardContent();
         this.printPdfService.printContent(printContent);
         this.closeModal();
-    //     this.getStudents({ page: this.page });
-    //   }
-    // }, err => {
-    //   this.errorCheck = true;
-    //   this.errorMsg = err.error;
-    // })
+        this.getStudents({ page: this.page });
+      }
+    }, err => {
+      this.errorCheck = true;
+      this.errorMsg = err.error;
+    })
   }
 
 
