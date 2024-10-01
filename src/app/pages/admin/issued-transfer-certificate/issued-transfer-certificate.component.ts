@@ -110,7 +110,7 @@ export class IssuedTransferCertificateComponent implements OnInit {
         if (res) {
           this.studentInfo = res.issuedTransferCertificateList;
           this.number = params.page;
-          this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countStudent });
+          this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countIssuedTransferCertificate });
           return resolve(true);
         }
       });

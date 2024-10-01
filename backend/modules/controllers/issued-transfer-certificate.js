@@ -13,14 +13,9 @@ let countIssuedTransferCertificate = async (req, res, next) => {
 let GetIssuedTransferCertificatePagination = async (req, res, next) => {
     let searchText = req.body.filters.searchText;
     let adminId = req.body.adminId;
-
     let searchObj = {};
     if (searchText) {
-        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText)
-            ? {
-                $or: [{ contact: searchText }],
-            }
-            : { name: new RegExp(`${searchText.toString().trim()}`, 'i') };
+        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? { $or: [{ class: searchText }, { rollNumber: searchText }, { admissionNo: searchText }] } : { name: new RegExp(`${searchText.toString().trim()}`, 'i') }
     }
     try {
         let limit = (req.body.limit) ? parseInt(req.body.limit) : 10;
@@ -29,7 +24,7 @@ let GetIssuedTransferCertificatePagination = async (req, res, next) => {
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
-        const countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({adminId:adminId});
+            const countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({adminId:adminId});
         let issuedTransferCertificateData = { countIssuedTransferCertificate: 0 };
         issuedTransferCertificateData.issuedTransferCertificateList = issuedTransferCertificateList;
         issuedTransferCertificateData.countIssuedTransferCertificate = countIssuedTransferCertificate;
