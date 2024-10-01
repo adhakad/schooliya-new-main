@@ -28,7 +28,7 @@ let GetTeacherPagination = async (req, res, next) => {
     if (searchText) {
         searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText)
             ? {
-                $or: [{ discount: searchText }, { price: searchText }],
+                $or: [{ teacherUserId: searchText }],
             }
             : { name: new RegExp(`${searchText.toString().trim()}`, 'i') };
     }

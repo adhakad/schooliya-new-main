@@ -1,5 +1,6 @@
 @import'../admin-login/admin-login.component.css';
-.otp-input {
+@import '../../../main/payment/payment.component.css';
+/* .otp-input {
     display: flex;
     justify-content: center;
   }
@@ -47,4 +48,4 @@
         box-shadow: 0 0 5px #804beb78;
       }
     
-  }
+  } */

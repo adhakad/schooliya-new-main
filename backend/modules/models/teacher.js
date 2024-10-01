@@ -116,7 +116,7 @@ const TeacherModel = mongoose.model('teacher', {
         required: true,
         trim: true,
         enum: ['Active', 'Inactive'],
-        default: 'Inactive',
+        default: 'Active',
     },
     createdAt: {
         type: Date,

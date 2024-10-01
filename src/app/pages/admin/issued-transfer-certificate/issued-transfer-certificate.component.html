@@ -57,7 +57,10 @@
                     <th>S.No.</th>
                     <th>Admission No.</th>
                     <th>Student</th>
+                    <th>Father Name</th>
+                    <th>Mother Name</th>
                     <th>Class</th>
+                    <th>Stream</th>
                     <th>Roll Number</th>
                     <th>Session</th>
                     <th>View</th>
@@ -76,10 +79,19 @@
                       <p class="mb-0">{{students.admissionNo}}</p>
                     </td>
                     <td>
-                      <p class="mb-0">{{students.name}}</p>
+                      <p class="mb-0">{{students.name | titlecase}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.fatherName | titlecase}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.motherName | titlecase}}</p>
                     </td>
                     <td>
                       <p class="mb-0">{{students.class | classSuffix}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.stream}}</p>
                     </td>
                     <td>
                       <p class="mb-0">{{students.rollNumber}}</p>

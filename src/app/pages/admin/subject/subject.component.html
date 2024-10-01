@@ -70,7 +70,7 @@
                       <p class="mb-0">{{number*10+i+1-10}}</p>
                     </td>
                     <td>
-                      <p class="mb-0">{{subject.subject}}</p>
+                      <p class="mb-0">{{subject.subject | titlecase}}</p>
                     </td>
                     <td class="mb-0">
                       <mat-icon (click)="updateSubjectModel(subject)">edit</mat-icon>

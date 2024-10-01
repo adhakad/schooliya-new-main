@@ -134,12 +134,14 @@
                                 *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
                                 <thead class="bg-light">
                                     <tr class="text-muted">
-                                        <th>No.</th>
-                                        <th>Student</th>
+                                        <th>S.No.</th>
                                         <th>Admission No.</th>
-                                        <th>Roll Number</th>
+                                        <th>Student</th>
+                                        <th>Father Name</th>
+                                        <th>Mother Name</th>
                                         <th>Class</th>
                                         <th>Stream</th>
+                                        <th>Roll Number</th>
                                         <th>Session</th>
                                         <th>View</th>
                                         <th>Transfer Certificate</th>
@@ -151,19 +153,25 @@
                                             <p class="mb-0">{{number*10+i+1-10}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0">{{students.name}}</p>
-                                        </td>
-                                        <td>
                                             <p class="mb-0">{{students.admissionNo}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0">{{students.rollNumber}}</p>
+                                            <p class="mb-0">{{students.name | titlecase}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{students.fatherName | titlecase}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{students.motherName | titlecase}}</p>
                                         </td>
                                         <td>
                                             <p class="mb-0">{{students.class | classSuffix}}</p>
                                         </td>
                                         <td>
                                             <p class="mb-0">{{students.stream}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{students.rollNumber}}</p>
                                         </td>
                                         <td>
                                             <p class="mb-0">{{students.session}}</p>

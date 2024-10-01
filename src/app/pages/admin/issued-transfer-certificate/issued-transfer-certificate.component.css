@@ -1,1 +1,5 @@
 @import'../dashboard/dashboard.component.css';
+.table{
+    display: block;
+    text-align: center;
+}
