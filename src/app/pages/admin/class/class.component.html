@@ -13,7 +13,7 @@
                 <div class="row">
                   <div class="col-3">
                     <button mat-button class="menu-button">
-                      <span>Classes List</span>
+                      <span>Classes</span>
                     </button>
                   </div>
                   <div class="col-9" style="text-align: right;">
@@ -23,7 +23,7 @@
                             style="font-size: 20px;">add</mat-icon>Create</button>
                       </div>
                       <div class="col-5">
-                        <input type="text" class="form-control" placeholder="Class Search..." id="searchText"
+                        <input type="text" class="form-control" placeholder="Search..." id="searchText"
                           name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                           (keyup)="getClass({page : 1, limit : 0})">
                       </div>
@@ -37,11 +37,11 @@
                 <div class="row">
                   <div class="col-12">
                     <button mat-button class="menu-button">
-                      <span>Classes List</span>
+                      <span>Classes</span>
                     </button>
                   </div>
                   <div class="col-7 mt-3">
-                    <input type="text" class="form-control" placeholder="Class Search..." id="searchText"
+                    <input type="text" class="form-control" placeholder="Search..." id="searchText"
                       name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                       (keyup)="getClass({page : 1, limit : 0})">
                   </div>

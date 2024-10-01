@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Promote/Fail</span>
+                                            <span>Class Promote</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
@@ -24,7 +24,7 @@
                                             </ng-container>
                                             <div class="col-5">
                                                 <input *ngIf="cls && stream" type="text" class="form-control"
-                                                    placeholder="Student Search..." id="searchText" name="searchText"
+                                                    placeholder="Search..." id="searchText" name="searchText"
                                                     #searchText="ngModel" [(ngModel)]="filters.searchText"
                                                     (keyup)="getStudents({page : 1, limit : 0})">
                                             </div>
@@ -65,7 +65,7 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <button mat-button class="menu-button">
-                                            <span>Promote/Fail</span>
+                                            <span>Class Promote</span>
                                         </button>
                                     </div>
                                     <div class="col-12 mt-3">
@@ -98,7 +98,7 @@
                                     </ng-container>
                                     <div class="col-12">
                                         <input *ngIf="cls && stream" type="text" class="form-control"
-                                            placeholder="Student Search..." id="searchText" name="searchText"
+                                            placeholder="Search..." id="searchText" name="searchText"
                                             #searchText="ngModel" [(ngModel)]="filters.searchText"
                                             (keyup)="getStudents({page : 1, limit : 0})">
                                     </div>

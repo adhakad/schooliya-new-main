@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Statement</span>
+                                            <span>Fees > Statement</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
@@ -36,18 +36,20 @@
                         <div class="mobile-option">
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col-9">
+                                    <div class="col-12">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Statement</span>
+                                            <span>Fees > Statement</span>
                                         </button>
                                     </div>
-                                    <div class="col-6">
-                                        <mat-select matInput>
-                                            <div *ngFor="let sessions of allSessionData">
-                                                <mat-option
-                                                    value="{{sessions.session}}">{{sessions.session}}</mat-option>
-                                            </div>
-                                        </mat-select>
+                                    <div class="col-12 mt-2" style="padding-left: 20px;">
+                                        <ng-container>
+                                            <mat-radio-group (change)="onChange($event)">
+                                                <ng-container *ngFor="let session of allSessionData">
+                                                    <mat-radio-button [value]="session._id"
+                                                        [checked]="session._id==selectedValue">{{session.session}}</mat-radio-button>
+                                                </ng-container>
+                                            </mat-radio-group>
+                                        </ng-container>
                                     </div>
                                 </div>
                             </div>

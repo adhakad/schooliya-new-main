@@ -13,13 +13,13 @@
                 <div class="row">
                   <div class="col-3">
                     <button mat-button class="menu-button">
-                      <span>Teacher | Permissions</span>
+                      <span>Teacher > Permission</span>
                     </button>
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
                       <div class="col-5 offset-7">
-                        <input type="text" class="form-control" placeholder="Teacher Permission Search..."
+                        <input type="text" class="form-control" placeholder="Search..."
                           id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                           (keyup)="getTeacher({page : 1, limit : 0})">
                       </div>
@@ -33,11 +33,11 @@
                 <div class="row">
                   <div class="col-12">
                     <button mat-button class="menu-button">
-                      <span>Teacher | Permissions</span>
+                      <span>Teacher > Permission</span>
                     </button>
                   </div>
                   <div class="col-12 mt-3">
-                    <input type="text" class="form-control" placeholder="Teacher Permission Search..." id="searchText"
+                    <input type="text" class="form-control" placeholder="Search..." id="searchText"
                       name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                       (keyup)="getTeacher({page : 1, limit : 0})">
                   </div>

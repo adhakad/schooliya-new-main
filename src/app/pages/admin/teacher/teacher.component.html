@@ -13,24 +13,29 @@
                 <div class="row">
                   <div class="col-3">
                     <button mat-button class="menu-button">
-                      <span>Teacher List</span>
+                      <span>Teacher</span>
                     </button>
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
-                      <div class="col-2 offset-4">
+                      <div class="col-2 offset-2">
                         <button class="submit-button" mat-raised-button
                           (click)="addTeacherModel()"><mat-icon>add</mat-icon>Create</button>
                       </div>
                       <div class="col-5">
-                        <input type="text" class="form-control" placeholder="Teacher Search..." id="searchText"
+                        <input type="text" class="form-control" placeholder="Search..." id="searchText"
                           name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                           (keyup)="getTeacher({page : 1, limit : 0})">
                       </div>
-                      <div class="col-1">
-                        <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                          <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-                        </button>
+                      <div class="col-3">
+                        <mat-form-field class="custom-select">
+                          <mat-label>Teacher Permission</mat-label>
+                          <mat-select matInput>
+                              <div>
+                                  <mat-option routerLink="/admin/teacher/permissions">Teacher Permission</mat-option>
+                              </div>
+                          </mat-select>
+                      </mat-form-field>
                       </div>
                     </div>
                   </div>
@@ -40,18 +45,23 @@
             <div class="mobile-option">
               <div class="col-12">
                 <div class="row">
-                  <div class="col-9">
+                  <div class="col-12">
                     <button mat-button class="menu-button">
-                      <span>Teacher List</span>
+                      <span>Teachers</span>
                     </button>
                   </div>
-                  <div class="col-3">
-                    <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                      <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-                    </button>
+                  <div class="col-12 mt-2">
+                    <mat-form-field class="custom-select">
+                      <mat-label>Teacher Permission</mat-label>
+                      <mat-select matInput>
+                          <div>
+                              <mat-option routerLink="/admin/teacher/permissions">Teacher Permission</mat-option>
+                          </div>
+                      </mat-select>
+                  </mat-form-field>
                   </div>
                   <div class="col-7">
-                    <input type="text" class="form-control" placeholder="Teacher Search..." id="searchText"
+                    <input type="text" class="form-control" placeholder="Search..." id="searchText"
                       name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                       (keyup)="getTeacher({page : 1, limit : 0})">
                   </div>
@@ -62,12 +72,6 @@
                 </div>
               </div>
             </div>
-            <mat-menu #settings="matMenu">
-              <button mat-menu-item routerLink="/admin/teacher/permissions">
-                <mat-icon>key</mat-icon>
-                <span>Teacher's Permission</span>
-              </button>
-            </mat-menu>
           </div>
         </div>
 
