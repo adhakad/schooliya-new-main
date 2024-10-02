@@ -62,8 +62,8 @@
                     <th>State</th>
                     <th>Country</th>
                     <th>Pin Code</th>
-                    <th>First Phone</th>
-                    <th>Second Phone</th>
+                    <th>Contact Number</th>
+                    <th>Alternate Number</th>
                     <th>Email</th>
                     <th>Remove</th>
                   </tr>
@@ -341,17 +341,17 @@
                             </div>
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
-                                <mat-label>Alternative Number</mat-label>
+                                <mat-label>Alternate Number</mat-label>
                                 <input matInput type="number" inputmode="numeric" formControlName="phoneSecond"
                                   class="no-arrow">
                                 <mat-error *ngIf="schoolForm.get('phoneSecond')?.hasError('minlength')">
-                                  Alternative number must be at least 10 characters long
+                                  Alternate number must be at least 10 characters long
                                 </mat-error>
                                 <mat-error *ngIf="schoolForm.get('phoneSecond')?.hasError('maxlength')">
-                                  Alternative number cannot be more than 10 characters long
+                                  Alternate number cannot be more than 10 characters long
                                 </mat-error>
                                 <mat-error *ngIf="schoolForm.get('phoneSecond')?.hasError('pattern')">
-                                  Alternative number must contain only digits
+                                  Alternate number must contain only digits
                                 </mat-error>
                               </mat-form-field>
                             </div>

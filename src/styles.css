@@ -240,7 +240,16 @@ body {
 ::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
   background-color: #fff !important;
 }
+.no-arrow::-webkit-outer-spin-button,
+.no-arrow::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+/* For Firefox */
+.no-arrow[type="number"] {
+  -moz-appearance: textfield;
+}
 @media (min-width: 576px) and (max-width: 767.98px) {
   .header {
     background-color: var(--common-color);

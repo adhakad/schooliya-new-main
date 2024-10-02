@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { AcademicSessionService } from 'src/app/services/academic-session.service';
 import { StudentService } from 'src/app/services/student.service';
 import { ClassService } from 'src/app/services/class.service';
 import { FeesService } from 'src/app/services/fees.service';
@@ -28,6 +29,7 @@ export class AdmissionComponent implements OnInit {
   successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
+  academicSession!: string;
   classInfo: any[] = [];
   studentInfo: any[] = [];
   recordLimit: number = 10;
@@ -55,7 +57,7 @@ export class AdmissionComponent implements OnInit {
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
-  constructor(private fb: FormBuilder, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService,) {
+  constructor(private fb: FormBuilder, private adminAuthService: AdminAuthService, private academicSessionService: AcademicSessionService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService,) {
     this.studentForm = this.fb.group({
       _id: [''],
       adminId: [''],
@@ -97,8 +99,9 @@ export class AdmissionComponent implements OnInit {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
     this.getSchool(this.adminId);
-    let load: any = this.getStudentsByAdmission({ page: 1 });
     this.getClass();
+    this.getAcademicSession();
+    let load: any = this.getStudentsByAdmission({ page: 1 });
     this.allOptions();
     if (load) {
       setTimeout(() => {
@@ -108,7 +111,13 @@ export class AdmissionComponent implements OnInit {
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
-  
+  getAcademicSession() {
+    this.academicSessionService.getAcademicSession().subscribe((res: any) => {
+      if (res) {
+        this.academicSession = res.academicSession;
+      }
+    })
+  }
   printStudentData() {
     const printContent = this.getPrintContent();
     this.printPdfService.printContent(printContent);
@@ -258,6 +267,8 @@ export class AdmissionComponent implements OnInit {
     this.deleteMode = false;
     this.updateMode = false;
     this.studentForm.reset();
+    this.studentForm.get('session')?.setValue(this.academicSession);
+
   }
   updateStudentModel(student: any) {
     this.showModal = true;
@@ -331,7 +342,7 @@ export class AdmissionComponent implements OnInit {
 
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' },{ category: 'EWS' }, { category: 'Other' }]
+    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
     this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]

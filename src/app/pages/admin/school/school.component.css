@@ -5,13 +5,3 @@
 .table th{
     min-width: 75px;
 }
-.no-arrow::-webkit-outer-spin-button,
-.no-arrow::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* For Firefox */
-.no-arrow[type="number"] {
-  -moz-appearance: textfield;
-}

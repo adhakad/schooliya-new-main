@@ -160,8 +160,32 @@
                         <div class="container">
                           <div class="row">
                             <ng-container>
-                              <h3>Admission Fee</h3>
+                              <h3>Admission Info</h3>
                             </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Session</mat-label>
+                                <input matInput type="text" formControlName="session" readonly>
+                                <mat-error
+                                  *ngIf="studentForm.get('session')?.hasError('required') && studentForm.get('session')?.touched">
+                                  Session is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Medium</mat-label>
+                                <mat-select type="text" matInput formControlName="medium">
+                                  <div *ngFor="let medium of mediums">
+                                    <mat-option value="{{medium.medium}}">{{medium.medium}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('medium')?.hasError('required') && studentForm.get('medium')?.touched">
+                                  Medium is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Class Applied for</mat-label>
@@ -208,25 +232,10 @@
                                 </mat-error>
                               </mat-form-field>
                             </div>
-
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Admission Fee In &#8377;</mat-label>
-                                <input matInput type="number" formControlName="admissionFees" readonly>
-                                <mat-error
-                                  *ngIf="studentForm.get('admissionFees')?.hasError('required') && studentForm.get('admissionFees')?.touched">
-                                  Admission fee is required
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-
-                            <ng-container>
-                              <h3>Academic Info</h3>
-                            </ng-container>
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Admission No.</mat-label>
-                                <input matInput type="number" formControlName="admissionNo">
+                                <input matInput type="number" formControlName="admissionNo" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('admissionNo')?.hasError('required') && studentForm.get('admissionNo')?.touched">
                                   Admission no. is required
@@ -237,38 +246,11 @@
                                 </mat-error>
                               </mat-form-field>
                             </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Session</mat-label>
-                                <mat-select type="text" matInput formControlName="session">
-                                  <div *ngFor="let session of sessions">
-                                    <mat-option value="{{session.year}}">{{session.year}}</mat-option>
-                                  </div>
-                                </mat-select>
-                                <mat-error
-                                  *ngIf="studentForm.get('session')?.hasError('required') && studentForm.get('session')?.touched">
-                                  Session is required
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Medium</mat-label>
-                                <mat-select type="text" matInput formControlName="medium">
-                                  <div *ngFor="let medium of mediums">
-                                    <mat-option value="{{medium.medium}}">{{medium.medium}}</mat-option>
-                                  </div>
-                                </mat-select>
-                                <mat-error
-                                  *ngIf="studentForm.get('medium')?.hasError('required') && studentForm.get('medium')?.touched">
-                                  Medium is required
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
+                            
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Roll Number</mat-label>
-                                <input matInput type="number" formControlName="rollNumber">
+                                <input matInput type="number" formControlName="rollNumber" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('rollNumber')?.hasError('required') && studentForm.get('rollNumber')?.touched">
                                   Roll number is required
@@ -285,8 +267,18 @@
                             </div>
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
+                                <mat-label>Admission Fee In &#8377;</mat-label>
+                                <input matInput type="number" formControlName="admissionFees" readonly>
+                                <mat-error
+                                  *ngIf="studentForm.get('admissionFees')?.hasError('required') && studentForm.get('admissionFees')?.touched">
+                                  Admission fee is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
                                 <mat-label>Fees Discount Amount (&#8377;)</mat-label>
-                                <input matInput type="number" formControlName="discountAmountInFees">
+                                <input matInput type="number" formControlName="discountAmountInFees" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('discountAmountInFees')?.hasError('required') && studentForm.get('discountAmountInFees')?.touched">
                                   Fees discount amount is required
@@ -330,7 +322,7 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Aadhar Card Number (Optional)</mat-label>
-                                <input matInput type="number" formControlName="aadharNumber">
+                                <input matInput type="number" formControlName="aadharNumber" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('aadharNumber')?.hasError('pattern') && studentForm.get('aadharNumber')?.touched">
                                   Aadhar number must be a 12-digit number
@@ -340,7 +332,7 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Samagra Id (Optional)</mat-label>
-                                <input matInput type="number" formControlName="samagraId">
+                                <input matInput type="number" formControlName="samagraId" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('samagraId')?.hasError('pattern') && studentForm.get('samagraId')?.touched">
                                   Samagra id must be a 9-digit number
@@ -428,7 +420,7 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>UDISE Number (Optional)</mat-label>
-                                <input matInput type="number" formControlName="udiseNumber">
+                                <input matInput type="number" formControlName="udiseNumber" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('udiseNumber')?.hasError('pattern') && studentForm.get('udiseNumber')?.touched">
                                   UDISE Number must be a 11-digit number
@@ -438,7 +430,7 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Bank A/C Number (Optional)</mat-label>
-                                <input matInput type="number" formControlName="bankAccountNo">
+                                <input matInput type="number" formControlName="bankAccountNo" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('bankAccountNo')?.hasError('pattern') && studentForm.get('bankAccountNo')?.touched">
                                   Please enter a valid Bank Account Number (numeric characters only)
@@ -520,7 +512,7 @@
                               </mat-form-field>
                               <mat-form-field appearance="outline">
                                 <mat-label>Faimly Annual Income (&#8377;)</mat-label>
-                                <input matInput type="number" formControlName="parentsAnnualIncome">
+                                <input matInput type="number" formControlName="parentsAnnualIncome" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('parentsAnnualIncome')?.hasError('required') && studentForm.get('parentsAnnualIncome')?.touched">
                                   Faimly annual income is required
@@ -571,7 +563,7 @@
                               </mat-form-field>
                               <mat-form-field appearance="outline">
                                 <mat-label>Parents Contact (Optional)</mat-label>
-                                <input matInput type="number" formControlName="parentsContact">
+                                <input matInput type="number" formControlName="parentsContact" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('parentsContact')?.hasError('pattern') && studentForm.get('parentsContact')?.touched">
                                   Please enter a valid Contact (10-digit phone number starting with 6, 7, 8, or 9)

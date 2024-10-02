@@ -10,8 +10,6 @@ const checkAndUpdateExpiredPlans = async () => {
       expiryStatus: false
     });
 
-    console.log(expiredPlans)
-
     if (expiredPlans.length > 0) {
       await AdminPlan.updateMany(
         { _id: { $in: expiredPlans.map(plan => plan._id) } },
