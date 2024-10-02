@@ -215,13 +215,7 @@
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Session</mat-label>
-                                                                <mat-select type="text" matInput
-                                                                    formControlName="session">
-                                                                    <div *ngFor="let session of sessions">
-                                                                        <mat-option
-                                                                            value="{{session.year}}">{{session.year}}</mat-option>
-                                                                    </div>
-                                                                </mat-select>
+                                                                <input matInput type="text" formControlName="session" readonly>
                                                                 <mat-error
                                                                     *ngIf="studentClassPromoteForm.get('session')?.hasError('required') && studentClassPromoteForm.get('session')?.touched">
                                                                     Session is required

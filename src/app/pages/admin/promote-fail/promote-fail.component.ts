@@ -91,7 +91,7 @@ export class PromoteFailComponent implements OnInit {
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
-  
+
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
@@ -103,13 +103,13 @@ export class PromoteFailComponent implements OnInit {
     this.page = 0;
     this.className = cls;
     this.cls = cls;
-    if(cls !==11 && cls !==12){
+    if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
       this.studentInfo = [];
       this.getStudents({ page: 1 });
     }
-    if(cls ==11 || cls ==12){
-      if(this.stream=='stream'){
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
         this.stream = '';
       }
       this.studentInfo = [];
@@ -149,12 +149,19 @@ export class PromoteFailComponent implements OnInit {
     this.singleStudentTCInfo;
     this.studentClassPromoteForm.reset();
   }
-  
-  
+
+
   addStudentClassPromoteModel(student: any) {
     this.showClassPromoteModal = true;
     this.singleStudentInfo = student;
+    let sessionYears = student.session.split("-"); 
+    let startYear = parseInt(sessionYears[0]);
+    let endYear = parseInt(sessionYears[1]);
+    let newStartYear = startYear + 1;
+    let newEndYear = endYear + 1;
+    let newSession = newStartYear + "-" + newEndYear;
     this.studentClassPromoteForm.patchValue(student);
+    this.studentClassPromoteForm.get('session')?.setValue(newSession);
     this.studentClassPromoteForm.get('stream')?.setValue(this.stream);
     this.studentClassPromoteForm.get('discountAmountInFees')?.setValue(null);
   }
@@ -268,14 +275,13 @@ export class PromoteFailComponent implements OnInit {
       }, err => {
         this.errorCheck = true;
         this.statusCode = err.status;
-        console.log(err.status)
       });
     });
   }
 
-  
 
-  
+
+
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
     this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
@@ -309,7 +315,7 @@ export class PromoteFailComponent implements OnInit {
       })
     }
   }
-  
+
 
 
   // studentClassPromote() {
