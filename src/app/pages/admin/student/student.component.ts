@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { read, utils, writeFile } from 'xlsx';
 import * as ExcelJS from 'exceljs';
 import { Subject } from 'rxjs';
+import { AcademicSessionService } from 'src/app/services/academic-session.service';
 import { StudentService } from 'src/app/services/student.service';
 import { ClassService } from 'src/app/services/class.service';
 import { MatRadioChange } from '@angular/material/radio';
@@ -34,6 +35,7 @@ export class StudentComponent implements OnInit {
   errorMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
+  academicSession!: string;
   classInfo: any[] = [];
   studentInfo: any[] = [];
   studentInfoByClass: any[] = [];
@@ -68,7 +70,7 @@ export class StudentComponent implements OnInit {
   isDate: string = '';
   baseURL!: string;
   adminId!: String
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute,private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
       session: ['', Validators.required],
@@ -116,10 +118,18 @@ export class StudentComponent implements OnInit {
     this.adminId = getAdmin?.id;
     this.loader = false;
     this.getSchool();
+    this.getAcademicSession();
     this.getClass();
     this.allOptions();
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
+  }
+  getAcademicSession() {
+    this.academicSessionService.getAcademicSession().subscribe((res: any) => {
+      if (res) {
+        this.academicSession = res.academicSession;
+      }
+    })
   }
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
@@ -191,6 +201,7 @@ export class StudentComponent implements OnInit {
     this.updateMode = false;
     this.studentForm.reset();
     this.classStreamFormValueSet();
+    this.studentForm.get('session')?.setValue(this.academicSession);
   }
   classStreamFormValueSet() {
     let cls = '';
