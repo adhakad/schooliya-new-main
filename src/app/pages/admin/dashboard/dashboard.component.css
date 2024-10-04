@@ -378,7 +378,7 @@
     #barChart,
     #lineChart,
     #pieChart {
-      height: 400px;
+      height: 50vh;
       width: 100%;
       color: #5dc77b;
       color: #00c57d;

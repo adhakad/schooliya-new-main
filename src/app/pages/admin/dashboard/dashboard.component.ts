@@ -54,6 +54,7 @@ export class DashboardComponent implements OnInit {
       this.loader = false;
     }, 1000)
     // this.initLineChart();
+    this.initBarCharts();
   }
   initPieChart(): void {
     const chartDom = document.getElementById('pieChart') as HTMLElement;
@@ -61,7 +62,7 @@ export class DashboardComponent implements OnInit {
 
     const option = {
       title: {
-        text: 'Fees Record',
+        text: 'Fees Collection Ratio',
         left:'3.5%',
         top: 20,
         textStyle: {
@@ -103,7 +104,7 @@ export class DashboardComponent implements OnInit {
           label: {
             show: true,  // Enable labels in the pie chart
             formatter: function (params: any) {
-              return `₹${params.value}  ${params.name}`;  // Show name and amount
+              return `₹${params.value}`;  // Show name and amount
             },
             textStyle: {
               color: '#2c343c',  // Label text color
@@ -139,13 +140,124 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+
+
+
+
+  initBarCharts(): void {
+    const chartDom = document.getElementById('lineChart') as HTMLElement;
+    const chart = echarts.init(chartDom);
+  
+    
+    const option = {
+      title: {
+        text: 'Monthly Fees Collection',
+        left:'3.5%',
+        top: 20,
+        textStyle: {
+          color: '#2c343c',
+          fontSize: 18,
+          fontWeight: 'bold',
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        formatter: function(params: any) {
+          const param = params[0];
+          return `${param.name} <br/> ${param.marker}  ₹${param.value}`;
+        },
+        axisPointer: {
+          type: 'shadow'
+        },
+        textStyle: {
+          color: '#2c343c',
+          fontSize: 12,
+        }
+      },
+      grid: {
+        top: 100,  // Increase this value to give more space under the title
+        left: '5%',
+        right: '5%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: ['January', 'February', 'March', 'April', 'May','June','July','August','September','October', 'November','November'],
+        axisLine: {
+          lineStyle: {
+            color: '#2c343c'
+          }
+        },
+        axisTick: {
+          show: false
+        }
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: {
+          lineStyle: {
+            color: '#2c343c'
+          }
+        },
+        splitLine: {
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
+        axisLabel: {
+          formatter: function(value: number) {
+            return '₹' + value;
+          }
+        }
+      },
+      series: [
+        {
+          name: 'Fees',
+          type: 'bar',
+          data: [
+            { value: 1048, itemStyle: { color: '#8C52FF' } },  // TOTAL FEES
+            { value: 735, itemStyle: { color: '#8C52FF' } },   // PAID FEES
+            { value: 580, itemStyle: { color: '#8C52FF' } },   // FEES DISCOUNT
+            { value: 484, itemStyle: { color: '#8C52FF' } },   // DUE FEES
+            { value: 300, itemStyle: { color: '#8C52FF' } },
+            { value: 300, itemStyle: { color: '#8C52FF' } },
+            { value: 500, itemStyle: { color: '#8C52FF' } },
+            { value: 3900, itemStyle: { color: '#8C52FF' } },
+            { value: 3300, itemStyle: { color: '#8C52FF' } },
+            { value: 3800, itemStyle: { color: '#8C52FF' } },
+            { value: 450, itemStyle: { color: '#8C52FF' } },
+            { value: 1000, itemStyle: { color: '#8C52FF' } },   // OVERALL FEES COLLECTION
+          ],
+          barWidth: '50%',
+        }
+      ],
+      backgroundColor: '#fff',
+      animationDuration: 1000,
+      animationEasing: 'cubicOut' as 'cubicOut'
+    };
+  
+    chart.setOption(option);
+    window.addEventListener('resize', function() {
+      chart.resize();  // Make chart responsive on window resize
+    });
+
+
+  }
+
+
+
+
+
+
+
   initBarChart(): void {
     const chartDom = document.getElementById('barChart') as HTMLElement;
     const chart = echarts.init(chartDom);
 
     const option = {
       title: {
-        text: 'Fees Record 2023-2024',
+        text: 'Overall Fees Status',
         left:'3.5%',
         top: 20,
         textStyle: {
@@ -198,6 +310,11 @@ export class DashboardComponent implements OnInit {
           lineStyle: {
             type: 'dashed'
           }
+        },
+        axisLabel: {
+          formatter: function(value: number) {
+            return '₹' + value;
+          }
         }
       },
       series: [
@@ -222,82 +339,6 @@ export class DashboardComponent implements OnInit {
       chart.resize();  // Make chart responsive on window resize
     });
   }
-
-
-  // initLineChart(): void {
-  //   const chartDom = document.getElementById('lineChart') as HTMLElement;
-  //   const chart = echarts.init(chartDom);
-
-  //   const option = {
-  //     title: {
-  //       text: 'Fees Collection Line Chart',
-  //       left: 'center',
-  //       top: 20,
-  //       textStyle: {
-  //         color: '#ffffff',
-  //         fontSize: 18,
-  //         fontWeight: 'bold',
-  //       }
-  //     },
-  //     tooltip: {
-  //       trigger: 'axis',
-  //       axisPointer: {
-  //         type: 'line'
-  //       }
-  //     },
-  //     xAxis: {
-  //       type: 'category',
-  //       data: ['TOTAL FEES', 'PAID FEES', 'FEES DISCOUNT', 'DUE FEES', 'OVERALL FEES'],
-  //       axisLine: {
-  //         lineStyle: {
-  //           color: '#ffffff'
-  //         }
-  //       },
-  //       axisTick: {
-  //         show: false
-  //       }
-  //     },
-  //     yAxis: {
-  //       type: 'value',
-  //       axisLine: {
-  //         lineStyle: {
-  //           color: '#ffffff'
-  //         }
-  //       },
-  //       splitLine: {
-  //         lineStyle: {
-  //           type: 'dashed'
-  //         }
-  //       }
-  //     },
-  //     series: [
-  //       {
-  //         name: 'Fees',
-  //         type: 'line',
-  //         data: [
-  //           { value: 1048, itemStyle: { color: '#8C52FF' } },  // TOTAL FEES
-  //           { value: 735, itemStyle: { color: '#a3e74b' } },   // PAID FEES
-  //           { value: 580, itemStyle: { color: '#d8c5ff' } },   // FEES DISCOUNT
-  //           { value: 484, itemStyle: { color: '#ff7252' } },   // DUE FEES
-  //           { value: 300, itemStyle: { color: '#d8c5ff' } }    // OVERALL FEES COLLECTION
-  //         ],
-  //         lineStyle: {
-  //           width: 3
-  //         },
-  //         symbol: 'circle',
-  //         symbolSize: 10
-  //       }
-  //     ],
-  //     backgroundColor: '#2c343c',
-  //     animationDuration: 1000,
-  //     animationEasing: 'cubicOut' as 'cubicOut'
-  //   };
-
-  //   chart.setOption(option);
-  //   window.addEventListener('resize', function() {
-  //     chart.resize();  // Make chart responsive on window resize
-  //   });
-  // }
 
   adsCount() {
     this.adsService.getAdsCount().subscribe((res: any) => {

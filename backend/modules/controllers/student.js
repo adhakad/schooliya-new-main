@@ -554,8 +554,13 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             };
             if (student.admissionType === 'New') {
                 feesObject.admissionFeesPayable = true;
-                feesObject.totalFees += admissionFees;
-                feesObject.dueFees += admissionFees;
+                feesObject.admissionFees += admissionFees;
+                    feesObject.totalFees += admissionFees;
+                    feesObject.paidFees += admissionFees;
+                    feesObject.dueFees += admissionFees;
+                    feesObject.AllTotalFees += admissionFees;
+                    feesObject.AllPaidFees += admissionFees;
+                    feesObject.AllDueFees += admissionFees;
             }
 
             studentFeesData.push(feesObject);
