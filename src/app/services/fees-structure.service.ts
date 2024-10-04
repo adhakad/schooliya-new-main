@@ -10,11 +10,14 @@ export class FeesStructureService {
   url = `${environment.API_URL}/v1/fees-structure`;
   constructor(private http: HttpClient) { }
 
-  addFeesStructure(feesForm:any) {
-    return this.http.post(`${this.url}`,feesForm);
+  addFeesStructure(feesForm: any) {
+    return this.http.post(`${this.url}`, feesForm);
   }
   feesStructureByClass(params: any) {
     return this.http.get(`${this.url}/admin/${params.adminId}`);
+  }
+  feesStructureBySession(params: any) {
+    return this.http.get(`${this.url}/admin/${params.adminId}/session/${params.session}`);
   }
   feesStructureByClassStream(params: any) {
     return this.http.get(`${this.url}/admin/${params.adminId}/class/${params.class}/stream/${params.stream}`);
@@ -29,8 +32,8 @@ export class FeesStructureService {
   // updateFees(feesForm:any){
   //   return this.http.put(`${this.url}`,feesForm);
   // }
-  
-  deleteFeesStructure(id:any){
+
+  deleteFeesStructure(id: any) {
     return this.http.delete(`${this.url}/${id}`);
   }
 }

@@ -7,6 +7,15 @@ const AcademicSessionModel = mongoose.model('academic-session', {
         required: true,
         trim: true,
     },
+    previousAcademicSession: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    allSession: [{
+        type: String,
+        trim: true
+    }],
     createdAt: {
         type: Date,
         default: Date.now,

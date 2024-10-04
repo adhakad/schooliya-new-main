@@ -33,6 +33,19 @@ let GetSingleClassFeesStructure = async (req, res, next) => {
         return res.status(500).json('Internal Server Error !');
     }
 }
+let GetSingleSessionFeesStructure = async (req, res, next) => {
+    let adminId = req.params.id;
+    let session = req.params.session;
+    try {
+        const singleFeesStr = await FeesStructureModel.find({ adminId: adminId, session: session });
+        if (!singleFeesStr) {
+            return res.status(404).json('Fee Structure not found !')
+        }
+        return res.status(200).json(singleFeesStr);
+    } catch (error) {
+        return res.status(500).json('Internal Server Error !');
+    }
+}
 
 let CreateFeesStructure = async (req, res, next) => {
     let className = req.body.class;
@@ -135,6 +148,7 @@ let DeleteFeesStructure = async (req, res, next) => {
 
 module.exports = {
     GetSingleClassFeesStructure,
+    GetSingleSessionFeesStructure,
     GetSingleClassFeesStructureByStream,
     CreateFeesStructure,
     DeleteFeesStructure

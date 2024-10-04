@@ -376,7 +376,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             motherName: student.motherName,
             motherQualification: student.motherQualification,
             fatherOccupation: student.fatherOccupation,
-            motherOccupation:student.motherOccupation,
+            motherOccupation: student.motherOccupation,
             parentsContact: student.parentsContact,
             parentsAnnualIncome: student.parentsAnnualIncome,
             createdBy: createdBy,
@@ -403,7 +403,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
         //     const spreadAdmissionNo = otherClassAdmissionNo.join(', ');
         //     return res.status(400).json(`Admission number(s) ${spreadAdmissionNo} student(s) class is invailid !`);
         // }
-        const existRecords = await StudentModel.find({ adminId: adminId}).lean();
+        const existRecords = await StudentModel.find({ adminId: adminId }).lean();
         const duplicateAadharNumber = [];
         const duplicateSamagraId = [];
         const duplicateAdmissionNo = [];
@@ -445,10 +445,18 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             return res.status(400).json(`Admission number(s) ${spreadAdmissionNo} already exist !`);
         }
 
+
+
+        // Helper function to convert string to Title Case
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, (txt) => {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
+
         const existingRecords = await StudentModel.find({ adminId: adminId, class: className }).lean();
-        const unFillRows = [];
-        const duplicateRollNumber = [];
         let index = 3;
+
         for (const student of studentData) {
             const {
                 medium,
@@ -457,7 +465,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 motherName,
                 fatherQualification,
                 motherQualification,
-                fatherOccupation, 
+                fatherOccupation,
                 motherOccupation,
                 parentsAnnualIncome,
                 rollNumber,
@@ -473,50 +481,46 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 nationality,
                 address
             } = student;
-            if (
-                medium !== null && medium !== undefined &&
-                name !== null && name !== undefined &&
-                fatherName !== null && fatherName !== undefined &&
-                motherName !== null && motherName !== undefined &&
-                fatherQualification !== null && fatherQualification !== undefined &&
-                motherQualification !== null && motherQualification !== undefined &&
-                fatherOccupation !== null && fatherOccupation !== undefined &&
-                motherOccupation !== null && motherOccupation !== undefined &&
-                parentsAnnualIncome !== null && parentsAnnualIncome !== undefined &&
-                rollNumber !== null && rollNumber !== undefined &&
-                admissionNo !== null && admissionNo !== undefined &&
-                discountAmountInFees !== null && discountAmountInFees !== undefined &&
-                admissionType !== null && admissionType !== undefined &&
-                admissionClass !== null && admissionClass !== undefined && !isNaN(admissionClass) && //this line generate error
-                dob !== null && dob !== undefined &&
-                doa !== null && doa !== undefined &&
-                gender !== null && gender !== undefined &&
-                category !== null && category !== undefined &&
-                religion !== null && religion !== undefined &&
-                nationality !== null && nationality !== undefined &&
-                address !== null && address !== undefined
-            ) {
 
-                // At least one field is filled
-            } else {
-                unFillRows.push(index);
+            // Track missing fields
+            const missingFields = [];
+
+            if (medium === null || medium === undefined) missingFields.push('medium');
+            if (name === null || name === undefined) missingFields.push('name');
+            if (fatherName === null || fatherName === undefined) missingFields.push('fatherName');
+            if (motherName === null || motherName === undefined) missingFields.push('motherName');
+            if (fatherQualification === null || fatherQualification === undefined) missingFields.push('fatherQualification');
+            if (motherQualification === null || motherQualification === undefined) missingFields.push('motherQualification');
+            if (fatherOccupation === null || fatherOccupation === undefined) missingFields.push('fatherOccupation');
+            if (motherOccupation === null || motherOccupation === undefined) missingFields.push('motherOccupation');
+            if (parentsAnnualIncome === null || parentsAnnualIncome === undefined) missingFields.push('parentsAnnualIncome');
+            if (rollNumber === null || rollNumber === undefined) missingFields.push('rollNumber');
+            if (admissionNo === null || admissionNo === undefined) missingFields.push('admissionNo');
+            if (discountAmountInFees === null || discountAmountInFees === undefined) missingFields.push('discountAmountInFees');
+            if (admissionType === null || admissionType === undefined) missingFields.push('admissionType');
+            if (admissionClass === null || admissionClass === undefined || isNaN(admissionClass)) missingFields.push('admissionClass');
+            if (dob === null || dob === undefined) missingFields.push('dob');
+            if (doa === null || doa === undefined) missingFields.push('doa');
+            if (gender === null || gender === undefined) missingFields.push('gender');
+            if (category === null || category === undefined) missingFields.push('category');
+            if (religion === null || religion === undefined) missingFields.push('religion');
+            if (nationality === null || nationality === undefined) missingFields.push('nationality');
+            if (address === null || address === undefined) missingFields.push('address');
+
+            // If there are missing fields, return error for current row
+            if (missingFields.length > 0) {
+                const formattedMissingFields = missingFields.map(toTitleCase); // Convert to Title Case
+                return res.status(400).json(`Row ${index} is missing required fields: ( ${formattedMissingFields.join(', ')} ). Please fill in all mandatory fields before continuing!`);
             }
 
             const rollNumberExists = existingRecords.some(record => record.rollNumber == rollNumber);
             if (rollNumberExists) {
-                duplicateRollNumber.push(rollNumber);
+                return res.status(400).json(`Row ${index} has a roll number (${rollNumber}) that already exists. Please fix it before continuing!`);
             }
+
             index++;
         }
-        if (unFillRows.length > 0) {
-            const spreadIndex = unFillRows.join(', ');
-            return res.status(400).json(`
-                Row(s) ${spreadIndex} are missing required information. Please fill in all mandatory fields before continuing !`);
-        }
-        if (duplicateRollNumber.length > 0) {
-            const spreadRollNumber = duplicateRollNumber.join(', ');
-            return res.status(400).json(`Roll number(s) ${spreadRollNumber} already exist for this class !`);
-        }
+
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: studentData[0].session, class: className, stream: stream });
         if (!checkFeesStr) {
             return res.status(404).json(`Please create fees structure !`);
@@ -620,7 +624,7 @@ let StudentClassPromote = async (req, res, next) => {
         }
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
-            return res.status(404).json({ errorMsg: `Please create the fee structure for this class for this session.` });
+            return res.status(404).json({ errorMsg: `Please create the fee structure for next class for session ${session}.` });
         }
         const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'Old', discountAmountInFees: discountAmountInFees };
         const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });

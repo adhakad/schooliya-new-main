@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit {
           label: {
             show: true,  // Enable labels in the pie chart
             formatter: function (params: any) {
-              return `₹${params.value}`;  // Show name and amount
+              return `₹${params.value}  ${params.name}`;  // Show name and amount
             },
             textStyle: {
               color: '#2c343c',  // Label text color
@@ -307,13 +307,14 @@ export class DashboardComponent implements OnInit {
   feesCollectionBySession() {
     let params = {
       adminId: this.adminId,
-      session: '2023-2024'
+      session: '2024-2025'
     }
     this.feesService.feesCollectionBySession(params).subscribe((res: any) => {
       if (res) {
         this.totalFeesSum = res.totalFeesSum;
         this.paidFeesSum = res.paidFeesSum;
         this.dueFeesSum = res.dueFeesSum;
+        console.log(res)
         this.initPieChart();
         this.initBarChart();
       }

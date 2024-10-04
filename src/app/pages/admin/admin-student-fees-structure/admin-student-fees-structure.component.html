@@ -18,7 +18,17 @@
                                     </div>
                                     <div class="col-9" style="text-align: right;">
                                         <div class="row">
-                                            <div class="col-2 offset-10">
+                                            <div class="col-5 offset-5 mt-2" style="padding-left: 20px;">
+                                                <ng-container>
+                                                    <mat-radio-group (change)="onChange($event)">
+                                                        <ng-container *ngFor="let session of allSession">
+                                                            <mat-radio-button [value]="session"
+                                                                [checked]="session==selectedSession">{{session}}</mat-radio-button>
+                                                        </ng-container>
+                                                    </mat-radio-group>
+                                                </ng-container>
+                                            </div>
+                                            <div class="col-2">
                                                 <button class="submit-button" mat-raised-button
                                                     (click)="addFeesModel()"><mat-icon>add</mat-icon>Create</button>
                                             </div>
@@ -123,13 +133,10 @@
                                             <div class="col-6">
                                                 <mat-form-field appearance="outline">
                                                     <mat-label>Session</mat-label>
-                                                    <mat-select type="text" matInput>
-                                                        <ng-container>
-                                                            <div *ngFor="let session of sessions">
-                                                                <mat-option (click)="filterSession(session.year)"
-                                                                    value="{{session.year}}">{{session.year}}</mat-option>
-                                                            </div>
-                                                        </ng-container>
+                                                    <mat-select [(ngModel)]="selectedSession"
+                                                        (selectionChange)="filterSession($event.value)">
+                                                        <mat-option *ngFor="let session of allSession"
+                                                            [value]="session">{{session}}</mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </div>
@@ -249,7 +256,7 @@
                             <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Fee Structure Class - {{cls | classSuffix}}</h5>
+                                        <h5 class="modal-title">Fee Structure Class - {{singleFessStructure?.class | classSuffix}} <span *ngIf="singleFessStructure?.class==11 || singleFessStructure?.class==12">( {{singleFessStructure?.stream}} )</span></h5>
                                         <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                     </div>
                                     <div class="modal-body">

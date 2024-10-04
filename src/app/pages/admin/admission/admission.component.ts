@@ -30,6 +30,7 @@ export class AdmissionComponent implements OnInit {
   errorMsg: String = '';
   errorCheck: Boolean = false;
   academicSession!: string;
+  allSession:any=[];
   classInfo: any[] = [];
   studentInfo: any[] = [];
   recordLimit: number = 10;
