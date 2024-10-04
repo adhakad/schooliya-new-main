@@ -20,10 +20,12 @@ import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { AdminSharedModule } from './pages/admin/admin-shared/admin-shared.module';
 import { TeacherSharedModule } from './pages/teacher/teacher-shared/teacher-shared.module';
 import { MainSharedModule } from './pages/main/main-shared/main-shared.module';
+// import { SecureEmailPipe } from './pipes/secure-email.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
+    // SecureEmailPipe
   ],
   imports: [
     BrowserModule,
