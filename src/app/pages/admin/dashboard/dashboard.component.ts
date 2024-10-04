@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
     const option = {
       title: {
         text: 'Fees Record',
-        left: 'center',
+        left:'3.5%',
         top: 20,
         textStyle: {
           color: '#2c343c',
@@ -117,14 +117,14 @@ export class DashboardComponent implements OnInit {
               fontWeight: 'bold',
             },
             itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
+              // shadowBlur: 10,
+              // shadowOffsetX: 0,
+              // shadowColor: 'rgba(0, 0, 0, 0.3)',
             },
           },
           data: [
             { value: this.paidFeesSum, name: 'Paid Fees', itemStyle: { color: '#8C52FF' } },
-            { value: this.dueFeesSum, name: 'Due Fees', itemStyle: { color: '#e9ecff' } },
+            { value: this.dueFeesSum, name: 'Due Fees', itemStyle: { color: '#d0cdff' } },
           ],
         }
       ],
@@ -146,7 +146,7 @@ export class DashboardComponent implements OnInit {
     const option = {
       title: {
         text: 'Fees Record 2023-2024',
-        left: 'center',
+        left:'3.5%',
         top: 20,
         textStyle: {
           color: '#2c343c',
@@ -170,8 +170,8 @@ export class DashboardComponent implements OnInit {
       },
       grid: {
         top: 100,  // Increase this value to give more space under the title
-        left: '2%',
-        right: '2%',
+        left: '5%',
+        right: '5%',
         bottom: '3%',
         containLabel: true
       },
@@ -206,8 +206,8 @@ export class DashboardComponent implements OnInit {
           type: 'bar',
           data: [
             { value: this.totalFeesSum, itemStyle: { color: '#8C52FF' } },
-            { value: this.paidFeesSum, itemStyle: { color: '#35a831' } },
-            { value: this.dueFeesSum, itemStyle: { color: '#e45757' } },
+            { value: this.paidFeesSum, itemStyle: { color: '#00c57d' } },
+            { value: this.dueFeesSum, itemStyle: { color: '#d0cdff' } },
           ],
           barWidth: '50%',
         }

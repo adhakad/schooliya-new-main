@@ -5,10 +5,30 @@
     padding-bottom: 1.5vh;
   }
 
-  #barChart, #lineChart, #pieChart {
+  .chart-main-container {
+    padding-left: 3.5%;
+    padding-right: 3.5%;
+  }
+
+  .chart-card {
+    background-color: #fff;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #d5d0e1af;
+    box-shadow: none;
+    border-radius: 20px;
+    margin-bottom: 5vh;
+  }
+
+  #barChart,
+  #lineChart,
+  #pieChart {
     height: 400px;
     width: 100%;
-}
+  }
+
   .main-container {
     padding: 0 5% 0 3%;
   }
@@ -350,12 +370,20 @@
       padding: 0 5% 0 3%;
     }
 
-    #barChart, #lineChart, #pieChart {
+    .chart-main-container {
+      padding-left: 4%;
+      padding-right: 4.5%;
+    }
+
+    #barChart,
+    #lineChart,
+    #pieChart {
       height: 400px;
       width: 100%;
-      color: #35a831;
-      color: #e45757;
-  }
+      color: #5dc77b;
+      color: #00c57d;
+      color: #d0cdff;
+    }
 
     .big-option-container .submit-button {
       width: 100% !important;

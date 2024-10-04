@@ -5,104 +5,28 @@
       <app-side-navbar></app-side-navbar>
     </div>
     <div class="col-12 col-lg-10">
-      <div class="row">
-        <div class="col-12 main-container">
+      <div class="row mt-5">
+        <!-- <div class="col-12 main-container">
           <div class="row">
             <div class="col-3">
               <button mat-button class="menu-button">
-                <!-- <mat-icon>assistant_navigation</mat-icon> -->
                 <span>Dashboard</span>
               </button>
             </div>
           </div>
-        </div>
-        <div class="main-container">
-          <div class="col-12 col-lg-12 big-container">
-            <div class="main-card">
-              <div class="row">
-                <div class="col-12 col-lg-6 mt-2">
-                  <div id="barChart"></div>
-                </div>
-                <div class="col-12 col-lg-6 mt-2">
+        </div> -->
+        <div class="chart-main-container">
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              <div class="chart-card">
+                <div id="barChart"></div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="chart-card">
                   <div id="pieChart"></div>
                 </div>
-                <!-- <div class="col-12 col-lg-4 mt-2">
-                  <div id="lineChart"></div>
-                </div> -->
-              </div>
-              <!-- <div class="row">
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/students/student']">
-                        <h3 class="category-title">Students - {{studentCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/teacher']">
-                        <h3 class="category-title">Teachers - {{teacherCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/class']">
-                        <h3 class="category-title">Classes - {{classCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/subject']">
-                        <h3 class="category-title">Subjects - {{subjectCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/class-subject']">
-                        <h3 class="category-title">Class With Subjects - {{classSubjectCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/topper']">
-                        <h3 class="category-title">Toppers - {{topperCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/testimonial']">
-                        <h3 class="category-title">Testimonials - {{testimonialCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/banner']">
-                        <h3 class="category-title">Banners - {{bannerCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/ads']">
-                        <h3 class="category-title">Ads - {{adsCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div> -->
-
-
             </div>
           </div>
         </div>
       </div>
-      <!-- <div class="spinner-container" *ngIf="loader">
-        <div class="spinner-overlay" *ngIf="loader">
-          <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
-            strokeWidth="3"></mat-progress-spinner>
-        </div>
-      </div> -->
