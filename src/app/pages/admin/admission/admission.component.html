@@ -562,7 +562,7 @@
                                 </mat-error>
                               </mat-form-field>
                               <mat-form-field appearance="outline">
-                                <mat-label>Parents Contact (Optional)</mat-label>
+                                <mat-label>Contact (Optional)</mat-label>
                                 <input matInput type="number" formControlName="parentsContact" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('parentsContact')?.hasError('pattern') && studentForm.get('parentsContact')?.touched">
@@ -682,8 +682,8 @@
                                     <td colspan="3">{{singleStudentInfo?.nationality | titlecase}}</td>
                                   </tr>
                                   <tr>
-                                    <td class="text-bold">Contact :</td>
-                                    <td colspan="3">{{singleStudentInfo?.contact}}</td>
+                                    <td class="text-bold">Medium :</td>
+                                    <td colspan="3">{{singleStudentInfo?.medium | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Last School :</td>
@@ -712,16 +712,10 @@
                                     <td>{{singleStudentInfo?.motherOccupation | titlecase}}</td>
                                   </tr>
                                   <tr>
-                                    <td class="text-bold">Father Contact :</td>
-                                    <td>{{singleStudentInfo?.fatherContact}}</td>
-                                    <td class="text-bold">Mother Contact :</td>
-                                    <td>{{singleStudentInfo?.motherContact}}</td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-bold">Father Annual Income :</td>
-                                    <td>{{singleStudentInfo?.fatherContact}}</td>
-                                    <td class="text-bold">Mother Annual Income :</td>
-                                    <td>{{singleStudentInfo?.motherAnnualIncome}}</td>
+                                    <td class="text-bold">Family Annual Income :</td>
+                                    <td>{{singleStudentInfo?.parentsAnnualIncome}}</td>
+                                    <td class="text-bold">Contact :</td>
+                                    <td>{{singleStudentInfo?.parentsContact}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Admission Fee :</td>

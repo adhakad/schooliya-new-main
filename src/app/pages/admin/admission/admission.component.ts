@@ -159,7 +159,7 @@ export class AdmissionComponent implements OnInit {
     printHtml += 'p {color: #2e2d6a !important;font-size:12px;}'
     printHtml += 'h4 {color: #2e2d6a !important;}'
     printHtml += '@media print {';
-    printHtml += '  body::before {';
+    printHtml += '  body::after {';
     printHtml += `    content: "${schoolName}, ${city}";`;
     printHtml += '    position: fixed;';
     printHtml += '    top: 45%;';
@@ -167,7 +167,7 @@ export class AdmissionComponent implements OnInit {
     printHtml += '    font-size: 20px;';
     printHtml += '    font-weight: bold;';
     printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    color: rgba(0, 0, 0, 0.08);';
+    printHtml += '    color: rgba(50, 48, 65, 0.2);';
     printHtml += '    pointer-events: none;';
     printHtml += '  }';
     printHtml += '}';
@@ -190,8 +190,12 @@ export class AdmissionComponent implements OnInit {
     })
   }
   addPrintModal(student: any) {
+    let params = {
+      adminId : this.adminId,
+      studentId:student._id,
+    }
     this.showAdmissionPrintModal = true;
-    this.feesService.singleStudentFeesCollectionById(student._id).subscribe((res: any) => {
+    this.feesService.singleStudentFeesCollectionById(params).subscribe((res: any) => {
       if (res) {
         this.singleStudentInfo = student;
         this.singleStudentInfo.admissionFees = res.studentFeesCollection.admissionFees;

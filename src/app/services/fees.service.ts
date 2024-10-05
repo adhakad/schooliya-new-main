@@ -31,7 +31,7 @@ export class FeesService {
   }
 
   singleStudentFeesCollectionById(params: any) {
-    return this.http.get(`${this.url}/statemant/admin/${params.adminId}/student/${params.studentId}`);
+    return this.http.get(`${this.url}/admin/${params.adminId}/fees/student/${params.studentId}`);
   }
   payableSingleStudentFeesCollectionById(studentId: any) {
     return this.http.get(`${this.url}/payable/student/${studentId}`);
