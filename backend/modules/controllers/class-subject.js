@@ -23,7 +23,7 @@ let GetClassSubjectPagination = async (req, res, next) => {
             ? {
                 $or: [{ class: searchText }],
             }
-            : { subject: new RegExp(`${searchText.toString().trim()}`, 'i') };
+            : { stream: new RegExp(`${searchText.toString().trim()}`, 'i') };
     }
 
     try {

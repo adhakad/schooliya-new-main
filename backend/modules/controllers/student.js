@@ -15,19 +15,33 @@ let countStudent = async (req, res, next) => {
 
 let GetStudentPaginationByAdmission = async (req, res, next) => {
     let searchText = req.body.filters.searchText;
-    if(searchText=='NURSERY' || searchText=='Nursery' || searchText=='nursery'){
+    if (searchText == 'NURSERY' || searchText == 'Nursery' || searchText == 'nursery') {
         searchText = 200;
     }
-    if(searchText=='LKG' || searchText=='lkg' || searchText=='Lkg'){
+    if (searchText == 'LKG' || searchText == 'lkg' || searchText == 'Lkg') {
         searchText = 201;
     }
-    if(searchText=='UKG' || searchText=='ukg' || searchText=='Ukg'){
+    if (searchText == 'UKG' || searchText == 'ukg' || searchText == 'Ukg') {
         searchText = 202;
     }
     let adminId = req.body.adminId;
     let searchObj = {};
     if (searchText) {
-        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? { $or: [{ class: searchText }, { rollNumber: searchText }, { admissionNo: searchText }] } : { name: new RegExp(`${searchText.toString().trim()}`, 'i') }
+        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? 
+        { 
+            $or: [
+                { class: searchText }, 
+                { rollNumber: searchText }, 
+                { admissionNo: searchText }
+            ] 
+        } : 
+        { 
+            $or: [
+                { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
+            ]
+        }
     }
 
     try {
@@ -49,19 +63,33 @@ let GetStudentPaginationByAdmission = async (req, res, next) => {
 let GetStudentPaginationByAdmissionAndClass = async (req, res, next) => {
 
     let searchText = req.body.filters.searchText;
-    if(searchText=='NURSERY' || searchText=='Nursery' || searchText=='nursery'){
+    if (searchText == 'NURSERY' || searchText == 'Nursery' || searchText == 'nursery') {
         searchText = 200;
     }
-    if(searchText=='LKG' || searchText=='lkg' || searchText=='Lkg'){
+    if (searchText == 'LKG' || searchText == 'lkg' || searchText == 'Lkg') {
         searchText = 201;
     }
-    if(searchText=='UKG' || searchText=='ukg' || searchText=='Ukg'){
+    if (searchText == 'UKG' || searchText == 'ukg' || searchText == 'Ukg') {
         searchText = 202;
     }
     let className = req.body.class;
     let searchObj = {};
     if (searchText) {
-        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? { $or: [{ class: searchText }, { rollNumber: searchText }, { admissionNo: searchText }] } : { name: new RegExp(`${searchText.toString().trim()}`, 'i') }
+        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? 
+        { 
+            $or: [
+                { class: searchText }, 
+                { rollNumber: searchText }, 
+                { admissionNo: searchText }
+            ] 
+        } : 
+        { 
+            $or: [
+                { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
+            ]
+        }
     }
     try {
         let limit = (req.body.limit) ? parseInt(req.body.limit) : 10;
@@ -111,13 +139,13 @@ let GetStudentPaginationByClass = async (req, res, next) => {
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     let isDate = currentDateIst.toFormat('dd-MM-yyyy');
     let searchText = req.body.filters.searchText;
-    if(searchText=='NURSERY' || searchText=='Nursery' || searchText=='nursery'){
+    if (searchText == 'NURSERY' || searchText == 'Nursery' || searchText == 'nursery') {
         searchText = 200;
     }
-    if(searchText=='LKG' || searchText=='lkg' || searchText=='Lkg'){
+    if (searchText == 'LKG' || searchText == 'lkg' || searchText == 'Lkg') {
         searchText = 201;
     }
-    if(searchText=='UKG' || searchText=='ukg' || searchText=='Ukg'){
+    if (searchText == 'UKG' || searchText == 'ukg' || searchText == 'Ukg') {
         searchText = 202;
     }
     let className = req.body.class;
@@ -128,7 +156,21 @@ let GetStudentPaginationByClass = async (req, res, next) => {
     }
     let searchObj = {};
     if (searchText) {
-        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? { $or: [{ class: searchText }, { rollNumber: searchText }, { admissionNo: searchText }] } : { name: new RegExp(`${searchText.toString().trim()}`, 'i') }
+        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? 
+        { 
+            $or: [
+                { class: searchText }, 
+                { rollNumber: searchText }, 
+                { admissionNo: searchText }
+            ] 
+        } : 
+        { 
+            $or: [
+                { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
+            ]
+        }
     }
     try {
         let serialNo = 0;
@@ -582,12 +624,12 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             if (student.admissionType === 'New') {
                 feesObject.admissionFeesPayable = true;
                 feesObject.admissionFees += admissionFees;
-                    feesObject.totalFees += admissionFees;
-                    feesObject.paidFees += admissionFees;
-                    feesObject.dueFees += admissionFees;
-                    feesObject.AllTotalFees += admissionFees;
-                    feesObject.AllPaidFees += admissionFees;
-                    feesObject.AllDueFees += admissionFees;
+                feesObject.totalFees += admissionFees;
+                feesObject.paidFees += admissionFees;
+                feesObject.dueFees += admissionFees;
+                feesObject.AllTotalFees += admissionFees;
+                feesObject.AllPaidFees += admissionFees;
+                feesObject.AllDueFees += admissionFees;
             }
 
             studentFeesData.push(feesObject);
