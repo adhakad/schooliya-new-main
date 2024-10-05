@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 import { read, utils, writeFile } from 'xlsx';
 import { FeesService } from 'src/app/services/fees.service';
 import { MatRadioChange } from '@angular/material/radio';
@@ -35,8 +36,9 @@ export class AdminStudentFeesComponent implements OnInit {
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
-  cls: any;
+  cls:number=0;
   classInfo: any[] = [];
+  
   classSubject: any;
   showBulkFeesModal: boolean = false;
   movies: any[] = [];
@@ -58,7 +60,8 @@ export class AdminStudentFeesComponent implements OnInit {
   loader: Boolean = false;
   baseURL!: string;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
+  a:boolean=false;
+  constructor(private fb: FormBuilder,private router:Router, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
       session: [''],
@@ -77,6 +80,14 @@ export class AdminStudentFeesComponent implements OnInit {
     this.adminId = getAdmin?.id;
     this.getClass();
     this.getSchool();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.cls = +params['cls'] || 0;
+      this.stream = params['stream'];
+      this.a=true;
+      if (this.cls) {
+        this.getAllStudentFeesCollectionByClass();
+      }
+    });
     // this.getFees({ page: 1 });
   }
 
@@ -156,19 +167,21 @@ export class AdminStudentFeesComponent implements OnInit {
     this.receiptMode = false;
     this.getAllStudentFeesCollectionByClass();
   }
-
+  
+  
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
       if (res) {
-        this.classInfo = res;
+        this.classInfo = res.map((item:any) => item.class);
       }
     })
   }
-  chooseClass(cls: any) {
+  chooseClass(cls:number) {
     this.cls = cls;
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
       this.studentList = [];
+      this.updateRouteParams();
       this.getAllStudentFeesCollectionByClass();
     }
     if (cls == 11 || cls == 12) {
@@ -176,15 +189,25 @@ export class AdminStudentFeesComponent implements OnInit {
         this.stream = '';
       }
       this.studentList = [];
+      this.updateRouteParams();
       this.getAllStudentFeesCollectionByClass();
     }
+    console.log(cls)
   }
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
       this.studentList = [];
+      this.updateRouteParams();
       this.getAllStudentFeesCollectionByClass();
     }
+  }
+  updateRouteParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { cls: this.cls, stream: this.stream },
+      queryParamsHandling: 'merge'
+    });
   }
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
