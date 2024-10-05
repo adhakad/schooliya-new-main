@@ -7,6 +7,15 @@ let countClassSubject = async (req, res, next) => {
 }
 let GetClassSubjectPagination = async (req, res, next) => {
     let searchText = req.body.filters.searchText;
+    if(searchText=='NURSERY' || searchText=='Nursery' || searchText=='nursery'){
+        searchText = 200;
+    }
+    if(searchText=='LKG' || searchText=='lkg' || searchText=='Lkg'){
+        searchText = 201;
+    }
+    if(searchText=='UKG' || searchText=='ukg' || searchText=='Ukg'){
+        searchText = 202;
+    }
     const adminId = req.body.adminId;
     let searchObj = {};
     if (searchText) {

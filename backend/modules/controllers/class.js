@@ -8,6 +8,15 @@ let countClass = async(req,res,next) => {
 
 let GetClassPagination = async(req,res,next) => {
     let searchText = req.body.filters.searchText;
+    if(searchText=='NURSERY' || searchText=='Nursery' || searchText=='nursery'){
+        searchText = 200;
+    }
+    if(searchText=='LKG' || searchText=='lkg' || searchText=='Lkg'){
+        searchText = 201;
+    }
+    if(searchText=='UKG' || searchText=='ukg' || searchText=='Ukg'){
+        searchText = 202;
+    }
     let searchObj = {};
     if (searchText) {
         searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText)
