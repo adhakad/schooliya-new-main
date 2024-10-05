@@ -19,7 +19,8 @@
                                     <div class="col-9" style="text-align: right;">
                                         <div class="row">
                                             <div class="col-2 offset-10">
-                                                <button class="submit-button" (click)="addAdmitCardModel()" mat-raised-button><mat-icon>add</mat-icon>Create</button>
+                                                <button class="submit-button" (click)="addAdmitCardModel()"
+                                                    mat-raised-button><mat-icon>add</mat-icon>Create</button>
                                             </div>
                                         </div>
                                     </div>
@@ -34,7 +35,9 @@
                                             <span>Admit Card > Structure</span>
                                         </button>
                                     </div>
-                                    <div class="col-5 offset-4"><button class="submit-button" (click)="addAdmitCardModel()" mat-raised-button><mat-icon>add</mat-icon>Create</button></div>
+                                    <div class="col-5 offset-4"><button class="submit-button"
+                                            (click)="addAdmitCardModel()"
+                                            mat-raised-button><mat-icon>add</mat-icon>Create</button></div>
                                 </div>
                             </div>
                         </div>
@@ -43,328 +46,328 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                                <table class="table align-middle bg-white">
-                                    <thead class="bg-light">
-                                        <tr class="text-muted">
-                                            <th>S.No.</th>
-                                            <th>Exam Name</th>
-                                            <th>Class</th>
-                                            <th>Stream</th>
-                                            <th>Admit Card Structure</th>
-                                            <!-- <th>Result Publish</th> -->
-                                            <th>Remove</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody *ngIf="examAdmitCard && examAdmitCard.length>0">
-                                        <tr *ngFor="let examAdmitCard of examAdmitCard,let i=index">
-                                            <td>
-                                                <p class="mb-0">{{i+1}}</p>
-                                            </td>
-                                            <td>
-                                                <p class="mb-0">{{examAdmitCard.examType | titlecase}}</p>
-                                            </td>
-                                            <td>
-                                                <p class="mb-0">{{examAdmitCard.class | classSuffix}}</p>
-                                            </td>
-                                            <td>
-                                                <p class="mb-0">{{examAdmitCard.stream}}</p>
-                                            </td>
-                                            <td class="mb-0">
-                                                <mat-icon
-                                                    (click)="openAdmitCardStructureModal(examAdmitCard)">launch</mat-icon>
-                                            </td>
-                                            <td class="mb-0">
-                                                <mat-icon
-                                                    (click)="deleteAdmitCardStructureModel(examAdmitCard._id)">delete</mat-icon>
-                                            </td>
-                                        </tr>
-    
-                                    </tbody>
-                                </table>
-                                <div *ngIf="examAdmitCard" style="text-align: center;margin-top: 200px;">
-                                    <p>Note : Remove the existing admit card to generate a new one.</p>
-                                </div>
+                            <table class="table align-middle bg-white">
+                                <thead class="bg-light">
+                                    <tr class="text-muted">
+                                        <th>S.No.</th>
+                                        <th>Exam Name</th>
+                                        <th>Class</th>
+                                        <th>Stream</th>
+                                        <th>Admit Card Structure</th>
+                                        <!-- <th>Result Publish</th> -->
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="examAdmitCard && examAdmitCard.length>0">
+                                    <tr *ngFor="let examAdmitCard of examAdmitCard,let i=index">
+                                        <td>
+                                            <p class="mb-0">{{i+1}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examAdmitCard.examType | titlecase}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examAdmitCard.class | classSuffix}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examAdmitCard.stream}}</p>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon
+                                                (click)="openAdmitCardStructureModal(examAdmitCard)">launch</mat-icon>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon
+                                                (click)="deleteAdmitCardStructureModel(examAdmitCard._id)">delete</mat-icon>
+                                        </td>
+                                    </tr>
 
-                                <div class="modal fade show" [class.show]="showModal">
-                                    <div class="modal-dialog modal-dialog-scrollable"
-                                        [class.modal-lg]="!deleteMode && !successMsg">
-                                        <div class="modal-content" *ngIf="successMsg">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p class="success-message">{{successMsg}}</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <mat-icon></mat-icon>
-                                            </div>
+                                </tbody>
+                            </table>
+                            <div *ngIf="examAdmitCard" style="text-align: center;margin-top: 200px;">
+                                <p>Note : Remove the existing admit card to generate a new one.</p>
+                            </div>
+
+                            <div class="modal fade show" [class.show]="showModal">
+                                <div class="modal-dialog modal-dialog-scrollable"
+                                    [class.modal-lg]="!deleteMode && !successMsg">
+                                    <div class="modal-content" *ngIf="successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="success-message">{{successMsg}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <mat-icon></mat-icon>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-content" *ngIf="!successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete'
+                                                :'Create'}} Admit Card Structure {{cls | classSuffix}} <span
+                                                    *ngIf="cls==12 || cls==11">{{stream}}</span></h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
 
-                                        <div class="modal-content" *ngIf="!successMsg">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete'
-                                                    :'Create'}} Admit Card Structure {{cls | classSuffix}} <span *ngIf="cls==12 || cls==11">{{stream}}</span></h5>
-                                                    <mat-icon matRipple (click)="closeModal()">close</mat-icon>
-                                            </div>
+                                        <form [formGroup]="admitcardForm" (ngSubmit)="admitcardAddUpdate()"
+                                            *ngIf="classSubject">
 
-                                            <form [formGroup]="admitcardForm" (ngSubmit)="admitcardAddUpdate()"
-                                                *ngIf="classSubject">
-
-                                                <div class="modal-body" *ngIf="!deleteMode">
-                                                    <div *ngIf="errorCheck">
-                                                        <p class="error-message">{{errorMsg}}</p>
-                                                    </div>
-                                                    <div class="container mt-3 mb-3">
-                                                        <div class="row">
-                                                            <div class="col-12 col-lg-6">
-                                                                <mat-form-field appearance="outline">
-                                                                    <mat-label>Class</mat-label>
-                                                                    <mat-select matInput formControlName="class">
-                                                                        <div *ngFor="let classInfo of classInfo">
-                                                                            <mat-option value="{{classInfo.class}}"
-                                                                                (click)="chooseClass(classInfo.class)">{{classInfo.class
-                                                                                |
-                                                                                classSuffix}}</mat-option>
+                                            <div class="modal-body" *ngIf="!deleteMode">
+                                                <div *ngIf="errorCheck">
+                                                    <p class="error-message">{{errorMsg}}</p>
+                                                </div>
+                                                <div class="container mt-3 mb-3">
+                                                    <div class="row">
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Class</mat-label>
+                                                                <mat-select matInput formControlName="class">
+                                                                    <div *ngFor="let classInfo of classInfo">
+                                                                        <mat-option value="{{classInfo.class}}"
+                                                                            (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                                            |
+                                                                            classSuffix}}</mat-option>
+                                                                    </div>
+                                                                </mat-select>
+                                                                <mat-error
+                                                                    *ngIf="admitcardForm.get('class')?.hasError('required') && admitcardForm.get('class')?.touched">
+                                                                    Class is required
+                                                                </mat-error>
+                                                                <mat-error
+                                                                    *ngIf="admitcardForm.get('class')?.hasError('pattern') && admitcardForm.get('class')?.touched">
+                                                                    Please enter a valid class (numeric characters only)
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Stream</mat-label>
+                                                                <mat-select type="text" matInput
+                                                                    formControlName="stream">
+                                                                    <ng-container *ngIf="cls==12 || cls==11">
+                                                                        <div *ngFor="let subject of streamMainSubject">
+                                                                            <mat-option value="{{subject}}"
+                                                                                (click)="chooseStream(subject)">{{subject}}</mat-option>
                                                                         </div>
-                                                                    </mat-select>
-                                                                    <mat-error
-                                                                        *ngIf="admitcardForm.get('class')?.hasError('required') && admitcardForm.get('class')?.touched">
-                                                                        Class is required
-                                                                    </mat-error>
-                                                                    <mat-error
-                                                                        *ngIf="admitcardForm.get('class')?.hasError('pattern') && admitcardForm.get('class')?.touched">
-                                                                        Please enter a valid class (numeric characters only)
-                                                                    </mat-error>
-                                                                </mat-form-field>
-                                                            </div>
-                                                            <div class="col-12 col-lg-6">
-                                                                <mat-form-field appearance="outline">
-                                                                    <mat-label>Stream</mat-label>
-                                                                    <mat-select type="text" matInput formControlName="stream">
-                                                                        <ng-container *ngIf="cls==12 || cls==11">
-                                                                            <div *ngFor="let subject of streamMainSubject">
-                                                                                <mat-option value="{{subject}}"
-                                                                                    (click)="chooseStream(subject)">{{subject}}</mat-option>
-                                                                            </div>
-                                                                        </ng-container>
-                                                                        <ng-container
-                                                                            *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                                            <div>
-                                                                                <mat-option value="N/A">N/A</mat-option>
-                                                                            </div>
-                                                                        </ng-container>
-                                                                    </mat-select>
-                                                                    <mat-error
-                                                                        *ngIf="admitcardForm.get('stream')?.hasError('required') && admitcardForm.get('stream')?.touched">
-                                                                        Stream is required
-                                                                    </mat-error>
-                                                                    <mat-error
-                                                                        *ngIf="admitcardForm.get('stream')?.hasError('pattern') && admitcardForm.get('stream')?.touched">
-                                                                        Please enter a valid Stream (only letters are allowed)
-                                                                    </mat-error>
-                                                                </mat-form-field>
-                                                            </div>
-                                                            <div class="col-12 col-lg-6">
-                                                                <mat-form-field appearance="outline">
-                                                                    <mat-label>Exam Name</mat-label>
-                                                                    <input type="text" matInput
-                                                                        formControlName="examType">
-                                                                    <mat-error
-                                                                        *ngIf="admitcardForm.get('examType')?.hasError('required') && admitcardForm.get('examType')?.touched">
-                                                                        Exam name is required
-                                                                    </mat-error>
-                                                                    <mat-error
-                                                                        *ngIf="admitcardForm.get('examType')?.hasError('minlength') && admitcardForm.get('examType')?.touched">
-                                                                        Minimum 5 characters is required
-                                                                    </mat-error>
-                                                                    <mat-error
-                                                                        *ngIf="admitcardForm.get('examType')?.hasError('maxlength') && admitcardForm.get('examType')?.touched">
-                                                                        Maximum length exceeded (maximum 20 characters
-                                                                        allowed)
-                                                                    </mat-error>
-                                                                </mat-form-field>
-                                                            </div>
+                                                                    </ng-container>
+                                                                    <ng-container
+                                                                        *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                                                        <div>
+                                                                            <mat-option value="N/A">N/A</mat-option>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </mat-select>
+                                                                <mat-error
+                                                                    *ngIf="admitcardForm.get('stream')?.hasError('required') && admitcardForm.get('stream')?.touched">
+                                                                    Stream is required
+                                                                </mat-error>
+                                                                <mat-error
+                                                                    *ngIf="admitcardForm.get('stream')?.hasError('pattern') && admitcardForm.get('stream')?.touched">
+                                                                    Please enter a valid Stream (only letters are
+                                                                    allowed)
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Exam Name</mat-label>
+                                                                <input type="text" matInput formControlName="examType">
+                                                                <mat-error
+                                                                    *ngIf="admitcardForm.get('examType')?.hasError('required') && admitcardForm.get('examType')?.touched">
+                                                                    Exam name is required
+                                                                </mat-error>
+                                                                <mat-error
+                                                                    *ngIf="admitcardForm.get('examType')?.hasError('minlength') && admitcardForm.get('examType')?.touched">
+                                                                    Minimum 5 characters is required
+                                                                </mat-error>
+                                                                <mat-error
+                                                                    *ngIf="admitcardForm.get('examType')?.hasError('maxlength') && admitcardForm.get('examType')?.touched">
+                                                                    Maximum length exceeded (maximum 20 characters
+                                                                    allowed)
+                                                                </mat-error>
+                                                            </mat-form-field>
                                                         </div>
                                                     </div>
+                                                </div>
 
-                                                    <div class="scroll-content">
-                                                        <div class="wide-content">
-                                                            <div class="container">
-                                                                <ng-container *ngIf="classSubject.length>0">
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <div
-                                                                                *ngFor="let subjects of classSubject; let i = index">
-                                                                                <a mat-raised-button
-                                                                                    class="pt-2 pb-2 mb-4"
-                                                                                    style="background-color: transparent;box-shadow: none;">{{subjects.subject}}</a>
-                                                                            </div>
+                                                <div class="scroll-content">
+                                                    <div class="wide-content">
+                                                        <div class="container">
+                                                            <ng-container *ngIf="classSubject.length>0">
+                                                                <div class="row">
+                                                                    <div class="col-3">
+                                                                        <div
+                                                                            *ngFor="let subjects of classSubject; let i = index">
+                                                                            <a mat-raised-button class="pt-2 pb-2 mb-4"
+                                                                                style="background-color: transparent;box-shadow: none;">{{subjects.subject | titlecase}}</a>
                                                                         </div>
-                                                                        <div class="col-3">
-                                                                            <div formGroupName="type">
-                                                                                <div formArrayName="examDate">
-                                                                                    <div
-                                                                                        *ngFor="let subjects of classSubject; let i = index">
-                                                                                        <div [formGroupName]="i">
-                                                                                            <mat-form-field
-                                                                                                class="custom-date-input"
-                                                                                                appearance="outline">
-                                                                                                <mat-label>Exam
-                                                                                                    Date</mat-label>
-                                                                                                <input type="date"
-                                                                                                    matInput
-                                                                                                    [formControlName]="subjects.subject">
-                                                                                            </mat-form-field>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-3">
-                                                                            <div formGroupName="type">
-                                                                                <div formArrayName="startTime">
-                                                                                    <div
-                                                                                        *ngFor="let subjects of classSubject; let i = index">
-                                                                                        <div [formGroupName]="i">
-                                                                                            <mat-form-field
-                                                                                                appearance="outline">
-                                                                                                <mat-label>Start
-                                                                                                    Time</mat-label>
-                                                                                                <mat-select type="text"
-                                                                                                    matInput
-                                                                                                    [formControlName]="subjects.subject">
-                                                                                                    <div
-                                                                                                        *ngFor="let subject of examTime">
-                                                                                                        <mat-option
-                                                                                                            value="{{subject}}">{{subject}}</mat-option>
-                                                                                                    </div>
-                                                                                                </mat-select>
-                                                                                            </mat-form-field>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-3">
-                                                                            <div formGroupName="type">
-                                                                                <div formArrayName="endTime">
-                                                                                    <div
-                                                                                        *ngFor="let subjects of classSubject; let i = index">
-                                                                                        <div [formGroupName]="i">
-                                                                                            <mat-form-field
-                                                                                                appearance="outline">
-                                                                                                <mat-label>End
-                                                                                                    Time</mat-label>
-                                                                                                <mat-select type="text"
-                                                                                                    matInput
-                                                                                                    [formControlName]="subjects.subject">
-                                                                                                    <div
-                                                                                                        *ngFor="let subject of examTime">
-                                                                                                        <mat-option
-                                                                                                            value="{{subject}}">{{subject}}</mat-option>
-                                                                                                    </div>
-                                                                                                </mat-select>
-                                                                                            </mat-form-field>
-                                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <div formGroupName="type">
+                                                                            <div formArrayName="examDate">
+                                                                                <div
+                                                                                    *ngFor="let subjects of classSubject; let i = index">
+                                                                                    <div [formGroupName]="i">
+                                                                                        <mat-form-field
+                                                                                            class="custom-date-input"
+                                                                                            appearance="outline">
+                                                                                            <mat-label>Exam
+                                                                                                Date</mat-label>
+                                                                                            <input type="date" matInput
+                                                                                                [formControlName]="subjects.subject" (keydown)="preventManualInput($event)">
+                                                                                        </mat-form-field>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </ng-container>
-                                                            </div>
+                                                                    <div class="col-3">
+                                                                        <div formGroupName="type">
+                                                                            <div formArrayName="startTime">
+                                                                                <div
+                                                                                    *ngFor="let subjects of classSubject; let i = index">
+                                                                                    <div [formGroupName]="i">
+                                                                                        <mat-form-field
+                                                                                            appearance="outline">
+                                                                                            <mat-label>Start
+                                                                                                Time</mat-label>
+                                                                                            <mat-select type="text"
+                                                                                                matInput
+                                                                                                [formControlName]="subjects.subject">
+                                                                                                <div
+                                                                                                    *ngFor="let subject of examTime">
+                                                                                                    <mat-option
+                                                                                                        value="{{subject}}">{{subject | titlecase}}</mat-option>
+                                                                                                </div>
+                                                                                            </mat-select>
+                                                                                        </mat-form-field>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <div formGroupName="type">
+                                                                            <div formArrayName="endTime">
+                                                                                <div
+                                                                                    *ngFor="let subjects of classSubject; let i = index">
+                                                                                    <div [formGroupName]="i">
+                                                                                        <mat-form-field
+                                                                                            appearance="outline">
+                                                                                            <mat-label>End
+                                                                                                Time</mat-label>
+                                                                                            <mat-select type="text"
+                                                                                                matInput
+                                                                                                [formControlName]="subjects.subject">
+                                                                                                <div
+                                                                                                    *ngFor="let subject of examTime">
+                                                                                                    <mat-option
+                                                                                                        value="{{subject}}">{{subject}}</mat-option>
+                                                                                                </div>
+                                                                                            </mat-select>
+                                                                                        </mat-form-field>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
                                                         </div>
                                                     </div>
-                                                    <ng-container *ngIf="classSubject.length>0">
-                                                        <h3 style="font-size: 16px;letter-spacing: normal;">Note : As
-                                                            soon
-                                                            as the admit card structure for the {{cls | classSuffix}}
-                                                            class <span *ngIf="cls==12 || cls==11">{{stream}}</span>
-                                                            is
-                                                            created, the admit cards for all the students will be
-                                                            automatically generated.</h3>
+                                                </div>
+                                                <ng-container *ngIf="classSubject.length>0">
+                                                    <h3 style="font-size: 16px;letter-spacing: normal;">Note : As
+                                                        soon
+                                                        as the admit card structure for the {{cls | classSuffix}}
+                                                        class <span *ngIf="cls==12 || cls==11">{{stream}}</span>
+                                                        is
+                                                        created, the admit cards for all the students will be
+                                                        automatically generated.</h3>
+                                                </ng-container>
+                                            </div>
+                                            <div class="modal-footer" *ngIf="!deleteMode && classSubject.length>0">
+                                                <button class="submit-button" mat-raised-button
+                                                    [disabled]="!admitcardForm.valid" type="submit">Submit</button>
+                                            </div>
+                                            <div *ngIf="deleteMode">
+                                                <div class="modal-body">
+                                                    <ng-container>
+                                                        <h3 style="font-size: 16px;letter-spacing: normal;">Note :
+                                                            As
+                                                            soon as the admit card structure for the {{cls |
+                                                            classSuffix}} class <span
+                                                                *ngIf="cls==12 || cls==11">{{stream}}</span> is
+                                                            deleted, the admit cards for all the students will be
+                                                            automatically deleted.</h3>
                                                     </ng-container>
                                                 </div>
-                                                <div class="modal-footer" *ngIf="!deleteMode && classSubject.length>0">
-                                                    <button class="submit-button" mat-raised-button
-                                                        [disabled]="!admitcardForm.valid" type="submit">Submit</button>
+                                                <div class="modal-footer">
+                                                    <button class="delete-button" mat-raised-button type="button"
+                                                        (click)="admitCardStructureDelete(deleteById)">Ok</button>
                                                 </div>
-                                                <div *ngIf="deleteMode">
-                                                    <div class="modal-body">
-                                                        <ng-container>
-                                                            <h3 style="font-size: 16px;letter-spacing: normal;">Note :
-                                                                As
-                                                                soon as the admit card structure for the {{cls |
-                                                                classSuffix}} class <span *ngIf="cls==12 || cls==11">{{stream}}</span> is
-                                                                deleted, the admit cards for all the students will be
-                                                                automatically deleted.</h3>
-                                                        </ng-container>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="delete-button" mat-raised-button type="button"
-                                                            (click)="admitCardStructureDelete(deleteById)">Ok</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="modal fade show" [class.show]="showAdmitCardStructureModal">
-                                    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Class {{cls | classSuffix}}</h5>
-                                                <mat-icon matRipple (click)="closeModal()">close</mat-icon>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="custom-container">
-                                                        <div class="table-container">
-                                                            <ng-container>
-                                                                <h3>{{admitCardInfo?.examType | titlecase}} Admit
-                                                                    Card
-                                                                    <span *ngIf="cls==11 || cls==12">-
-                                                                        {{admitCardInfo?.stream}}</span>
-                                                                </h3>
-                                                            </ng-container>
-                                                            <table class="custom-table">
-                                                                <tr>
-                                                                    <th>S.No.</th>
-                                                                    <th>Subject</th>
-                                                                    <th>Exam Date</th>
-                                                                    <th>Exam Timing</th>
+                            </div>
+                            <div class="modal fade show" [class.show]="showAdmitCardStructureModal">
+                                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Class {{cls | classSuffix}}</h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="custom-container">
+                                                    <div class="table-container">
+                                                        <ng-container>
+                                                            <h3>{{admitCardInfo?.examType | titlecase}} Admit
+                                                                Card
+                                                                <span *ngIf="cls==11 || cls==12">-
+                                                                    {{admitCardInfo?.stream}}</span>
+                                                            </h3>
+                                                        </ng-container>
+                                                        <table class="custom-table">
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Subject</th>
+                                                                <th>Exam Date</th>
+                                                                <th>Exam Timing</th>
+                                                            </tr>
+                                                            <ng-container
+                                                                *ngIf="processedData && processedData.length > 0">
+                                                                <tr *ngFor="let exam of processedData; let i = index">
+                                                                    <td>
+                                                                        {{ i + 1 }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.subject | titlecase}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.date }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.timing }}
+                                                                    </td>
                                                                 </tr>
-                                                                <ng-container
-                                                                    *ngIf="processedData && processedData.length > 0">
-                                                                    <tr
-                                                                        *ngFor="let exam of processedData; let i = index">
-                                                                        <td>
-                                                                            {{ i + 1 }}
-                                                                        </td>
-                                                                        <td>
-                                                                            {{ exam.subject | titlecase}}
-                                                                        </td>
-                                                                        <td>
-                                                                            {{ exam.date }}
-                                                                        </td>
-                                                                        <td>
-                                                                            {{ exam.timing }}
-                                                                        </td>
-                                                                    </tr>
-                                                                </ng-container>
-                                                            </table>
-                                                        </div>
+                                                            </ng-container>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button style="background-color: transparent;" class="submit-button"
-                                                    mat-raised-button type="submit"></button>
-                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button style="background-color: transparent;" class="submit-button"
+                                                mat-raised-button type="submit"></button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>

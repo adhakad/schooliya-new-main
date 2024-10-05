@@ -94,7 +94,9 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
       this.getSingleClassSubjectByStream(params);
     }
   }
-
+  preventManualInput(event: KeyboardEvent) {
+    event.preventDefault();  // यह मैन्युअल एंट्री को रोकेगा
+  }
   falseFormValue() {
     const controlOne = <FormArray>this.admitcardForm.get('type.examDate');
     const controlTwo = <FormArray>this.admitcardForm.get('type.startTime');
