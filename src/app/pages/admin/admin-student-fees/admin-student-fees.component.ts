@@ -60,7 +60,6 @@ export class AdminStudentFeesComponent implements OnInit {
   loader: Boolean = false;
   baseURL!: string;
   adminId!: string;
-  a:boolean=false;
   constructor(private fb: FormBuilder,private router:Router, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
@@ -73,8 +72,6 @@ export class AdminStudentFeesComponent implements OnInit {
     });
   }
 
-
-
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
@@ -82,13 +79,15 @@ export class AdminStudentFeesComponent implements OnInit {
     this.getSchool();
     this.activatedRoute.queryParams.subscribe((params) => {
       this.cls = +params['cls'] || 0;
-      this.stream = params['stream'];
-      this.a=true;
+      this.stream = params['stream'] || '';
       if (this.cls) {
         this.getAllStudentFeesCollectionByClass();
+      }else{
+        this.cls=0;
+        this.stream='';
+        this.studentList = [];
       }
     });
-    // this.getFees({ page: 1 });
   }
 
 
@@ -192,7 +191,6 @@ export class AdminStudentFeesComponent implements OnInit {
       this.updateRouteParams();
       this.getAllStudentFeesCollectionByClass();
     }
-    console.log(cls)
   }
   filterStream(stream: any) {
     this.stream = stream;
@@ -205,8 +203,8 @@ export class AdminStudentFeesComponent implements OnInit {
   updateRouteParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { cls: this.cls, stream: this.stream },
-      queryParamsHandling: 'merge'
+      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
+      queryParamsHandling: 'merge' // Keep other query params
     });
   }
   getSchool() {
