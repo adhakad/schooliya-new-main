@@ -27,21 +27,21 @@ let GetStudentPaginationByAdmission = async (req, res, next) => {
     let adminId = req.body.adminId;
     let searchObj = {};
     if (searchText) {
-        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? 
-        { 
-            $or: [
-                { class: searchText }, 
-                { rollNumber: searchText }, 
-                { admissionNo: searchText }
-            ] 
-        } : 
-        { 
-            $or: [
-                { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
-                { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
-                { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
-            ]
-        }
+        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ?
+            {
+                $or: [
+                    { class: searchText },
+                    { rollNumber: searchText },
+                    { admissionNo: searchText }
+                ]
+            } :
+            {
+                $or: [
+                    { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                    { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                    { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
+                ]
+            }
     }
 
     try {
@@ -75,21 +75,21 @@ let GetStudentPaginationByAdmissionAndClass = async (req, res, next) => {
     let className = req.body.class;
     let searchObj = {};
     if (searchText) {
-        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? 
-        { 
-            $or: [
-                { class: searchText }, 
-                { rollNumber: searchText }, 
-                { admissionNo: searchText }
-            ] 
-        } : 
-        { 
-            $or: [
-                { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
-                { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
-                { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
-            ]
-        }
+        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ?
+            {
+                $or: [
+                    { class: searchText },
+                    { rollNumber: searchText },
+                    { admissionNo: searchText }
+                ]
+            } :
+            {
+                $or: [
+                    { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                    { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                    { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
+                ]
+            }
     }
     try {
         let limit = (req.body.limit) ? parseInt(req.body.limit) : 10;
@@ -156,21 +156,21 @@ let GetStudentPaginationByClass = async (req, res, next) => {
     }
     let searchObj = {};
     if (searchText) {
-        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ? 
-        { 
-            $or: [
-                { class: searchText }, 
-                { rollNumber: searchText }, 
-                { admissionNo: searchText }
-            ] 
-        } : 
-        { 
-            $or: [
-                { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
-                { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
-                { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
-            ]
-        }
+        searchObj = /^(?:\d*\.\d{1,2}|\d+)$/.test(searchText) ?
+            {
+                $or: [
+                    { class: searchText },
+                    { rollNumber: searchText },
+                    { admissionNo: searchText }
+                ]
+            } :
+            {
+                $or: [
+                    { name: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                    { fatherName: new RegExp(`^${searchText.toString().trim()}`, 'i') },
+                    { motherName: new RegExp(`^${searchText.toString().trim()}`, 'i') }
+                ]
+            }
     }
     try {
         let serialNo = 0;
@@ -626,10 +626,10 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 feesObject.admissionFees += admissionFees;
                 feesObject.totalFees += admissionFees;
                 feesObject.paidFees += admissionFees;
-                feesObject.dueFees += admissionFees;
+                feesObject.dueFees = feesObject.totalFees - feesObject.paidFees;
                 feesObject.AllTotalFees += admissionFees;
                 feesObject.AllPaidFees += admissionFees;
-                feesObject.AllDueFees += admissionFees;
+                feesObject.AllDueFees = feesObject.totalFees - feesObject.paidFees;
             }
 
             studentFeesData.push(feesObject);
