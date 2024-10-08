@@ -158,10 +158,6 @@ let CreateFeesCollection = async (req, res, next) => {
             return res.status(404).json(`Fees record not found !`);
         }
 
-
-
-
-
         if (checkFeesCollection.previousSessionFeesStatus == false) {
             if (feesAmount > checkFeesCollection.dueFees) {
                 return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session} !`);
@@ -257,7 +253,8 @@ let CreateFeesCollection = async (req, res, next) => {
                             dueFees: dueFees,
                             AllTotalFees: currentSessionTotalFees,
                             AllPaidFees: 0,
-                            AllDueFees: currentSessionTotalFees
+                            AllDueFees: currentSessionTotalFees,
+                            allDiscountAmountInFees:checkFeesCollection.discountAmountInFees,
                         }
                     },
                     {
@@ -273,7 +270,8 @@ let CreateFeesCollection = async (req, res, next) => {
                         $set: {
                             AllTotalFees: currentSessionTotalFees,
                             AllPaidFees: 0,
-                            AllDueFees: currentSessionTotalFees
+                            AllDueFees: currentSessionTotalFees,
+                            allDiscountAmountInFees:checkFeesCollection.discountAmountInFees,
                         }
                     },
                     {
@@ -284,7 +282,6 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             }
             if (checkPreviousFeesCollection.dueFees == 0 && checkPreviousFeesCollection.AllPaidFees == 0) {
-
                 if (feesAmount > checkFeesCollection.dueFees) {
                     return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session} !`);
                 }

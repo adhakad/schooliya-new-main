@@ -313,6 +313,7 @@ let CreateStudent = async (req, res, next) => {
             admissionFees: admissionFees ? admissionFees : 0,
             admissionFeesPayable: admissionFeesPayable,
             discountAmountInFees: discountAmountInFees,
+            allDiscountAmountInFees:discountAmountInFees,
             totalFees: totalFees,
             paidFees: paidFees,
             dueFees: dueFees,
@@ -615,6 +616,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 admissionFees: 0,
                 totalFees: totalFees,
                 discountAmountInFees: student.discountAmountInFees,
+                allDiscountAmountInFees: student.discountAmountInFees,
                 paidFees: 0,
                 dueFees: totalFees,
                 AllTotalFees: totalFees,
@@ -739,6 +741,7 @@ let StudentClassPromote = async (req, res, next) => {
                         AllPaidFees: 0,
                         AllDueFees: totalFees,
                         discountAmountInFees: discountAmountInFees,
+                        allDiscountAmountInFees:discountAmountInFees,
                     };
                     let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
                     let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
@@ -751,6 +754,7 @@ let StudentClassPromote = async (req, res, next) => {
                 const previousSessionStream = checkFeesCollection.stream;
                 const id = checkFeesCollection._id;
                 const previousSession = checkFeesCollection.session;
+                const previousDiscountAmountInFees = checkFeesCollection.discountAmountInFees;
                 const studentFeesData = {
                     adminId: adminId,
                     studentId,
@@ -769,6 +773,7 @@ let StudentClassPromote = async (req, res, next) => {
                     AllPaidFees: previousSessionPaidFees,
                     AllDueFees: totalFees + previousSessionDueFees,
                     discountAmountInFees: discountAmountInFees,
+                    allDiscountAmountInFees : discountAmountInFees + previousDiscountAmountInFees,
                 };
                 const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                     {
@@ -784,6 +789,8 @@ let StudentClassPromote = async (req, res, next) => {
                             AllTotalFees: totalFees + previousSessionTotalFees,
                             AllPaidFees: previousSessionPaidFees,
                             AllDueFees: totalFees + previousSessionDueFees,
+                            allDiscountAmountInFees : discountAmountInFees + previousDiscountAmountInFees,
+
                         }
                     },
                     {
