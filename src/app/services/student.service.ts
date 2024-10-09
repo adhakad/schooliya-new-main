@@ -56,4 +56,7 @@ export class StudentService {
   studentClassPromote(studentData:any){
     return this.http.put(`${this.url}/class-promote/${studentData._id}`, studentData);
   }
+  studentClassFail(studentData:any){
+    return this.http.put(`${this.url}/class-fail/${studentData._id}`, studentData);
+  }
 }

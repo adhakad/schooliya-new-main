@@ -808,6 +808,159 @@ let StudentClassPromote = async (req, res, next) => {
     }
 }
 
+
+
+
+
+
+
+
+
+let StudentClassFail = async (req, res, next) => {
+    try {
+        const studentId = req.params.id;
+        let { adminId, session, rollNumber, stream, discountAmountInFees } = req.body;
+        if (stream == "stream") {
+            stream = "N/A";
+        }
+        let className = parseInt(req.body.class);
+        let checkStudent = await StudentModel.findOne({ _id: studentId });
+        if (!checkStudent) {
+            return res.status(404).json({ errorMsg: 'Student not found' });
+        }
+        let cls = checkStudent.class;
+        // if (className == cls && className === 12) {
+        //     return res.status(400).json({ errorMsg: `In this school, students cannot be promoted after the ${className}th class` });
+        // }
+        // if (className === 10 && stream == "N/A" || className === 11 && stream == "N/A") {
+        //     return res.status(400).json({ errorMsg: `Invalid stream for this class !` });
+        // }
+
+        let isSession = checkStudent.session;
+        if (session == isSession) {
+            return res.status(400).json({ errorMsg: `The student is currently in the ${isSession} session, please choose the academic session for the next year.` });
+        }
+        // if (className == cls && className === 202) {
+        //     className = 1;
+        // } else {
+        //     className = className + 1;
+        // }
+        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
+        if (!checkFeesStr) {
+            return res.status(404).json({ errorMsg: `Please create the fee structure for next class for session ${session}.` });
+        }
+        const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'Old', discountAmountInFees: discountAmountInFees };
+        const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });
+
+        if (updateStudent) {
+            await Promise.all([
+                AdmitCardModel.findOneAndDelete({ studentId: studentId }),
+                ExamResultModel.findOneAndDelete({ studentId: studentId }),
+                // FeesCollectionModel.findOneAndDelete({ studentId: studentId }),
+            ]);
+            let checkFeesStrTotalFees = checkFeesStr.totalFees
+            const totalFees = checkFeesStrTotalFees - discountAmountInFees;
+            const checkFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId });
+            if (!checkFeesCollection) {
+                return res.status(404).json({ errorMsg: `This student previous session fees record not found.` });
+            }
+            if (checkFeesCollection) {
+
+                let previousSessionTotalFees = checkFeesCollection.totalFees;
+                let previousSessionPaidFees = checkFeesCollection.paidFees;
+                let previousSessionDueFees = checkFeesCollection.dueFees;
+                if (previousSessionDueFees == 0 && previousSessionTotalFees == previousSessionPaidFees) {
+                    const studentFeesData = {
+                        adminId: adminId,
+                        studentId: studentId,
+                        session: session,
+                        previousSessionFeesStatus: false,
+                        previousSessionClass: 0,
+                        previousSessionStream: "empty",
+                        class: className,
+                        stream: stream,
+                        admissionFees: 0,
+                        admissionFeesPayable: false,
+                        totalFees: totalFees,
+                        paidFees: 0,
+                        dueFees: totalFees,
+                        AllTotalFees: totalFees,
+                        AllPaidFees: 0,
+                        AllDueFees: totalFees,
+                        discountAmountInFees: discountAmountInFees,
+                        allDiscountAmountInFees:discountAmountInFees,
+                    };
+                    let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
+                    let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
+                    if (createStudentFeesData && deleteFeesCollection) {
+                        return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
+                    }
+
+                }
+                const previousSessionClass = checkFeesCollection.class;
+                const previousSessionStream = checkFeesCollection.stream;
+                const id = checkFeesCollection._id;
+                const previousSession = checkFeesCollection.session;
+                const previousDiscountAmountInFees = checkFeesCollection.discountAmountInFees;
+                const studentFeesData = {
+                    adminId: adminId,
+                    studentId,
+                    session: session,
+                    previousSessionFeesStatus: true,
+                    previousSessionClass: 0,
+                    previousSessionStream: "empty",
+                    class: className,
+                    stream: stream,
+                    admissionFees: 0,
+                    admissionFeesPayable: false,
+                    totalFees: totalFees,
+                    paidFees: 0,
+                    dueFees: totalFees,
+                    AllTotalFees: totalFees + previousSessionTotalFees,
+                    AllPaidFees: previousSessionPaidFees,
+                    AllDueFees: totalFees + previousSessionDueFees,
+                    discountAmountInFees: discountAmountInFees,
+                    allDiscountAmountInFees : discountAmountInFees + previousDiscountAmountInFees,
+                };
+                const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
+                    {
+                        _id: id,
+                        session: previousSession
+                    },
+                    {
+                        $set: {
+                            previousSessionClass: previousSessionClass,
+                            previousSessionStream: previousSessionStream,
+                            class: className,
+                            stream: stream,
+                            AllTotalFees: totalFees + previousSessionTotalFees,
+                            AllPaidFees: previousSessionPaidFees,
+                            AllDueFees: totalFees + previousSessionDueFees,
+                            allDiscountAmountInFees : discountAmountInFees + previousDiscountAmountInFees,
+
+                        }
+                    },
+                    {
+                        new: true // Return the updated document
+                    });
+                let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
+                if (createStudentFeesData) {
+                    return res.status(200).json({ successMsg: `The student has successfully been fail to the class`, className: className });
+                }
+            }
+
+        }
+    } catch (error) {
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
+    }
+}
+
+
+
+
+
+
+
 let ChangeStatus = async (req, res, next) => {
     try {
         const id = req.params.id;
@@ -866,6 +1019,7 @@ module.exports = {
     CreateBulkStudentRecord,
     UpdateStudent,
     StudentClassPromote,
+    StudentClassFail,
     ChangeStatus,
     DeleteStudent,
     // DeleteAdmissionEnquiry

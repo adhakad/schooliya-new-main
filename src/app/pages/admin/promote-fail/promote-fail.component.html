@@ -122,7 +122,8 @@
                                         <th>Stream</th>
                                         <th>Session</th>
                                         <th>View</th>
-                                        <th *ngIf="className!=12">Class Promote</th>
+                                        <th *ngIf="className!=12">Promote</th>
+                                        <th>Fail</th>
                                     </tr>
                                 </thead>
                                 <tbody *ngIf="studentInfo && studentInfo.length>0">
@@ -151,11 +152,17 @@
                                         <td class="mb-0">
                                             <mat-icon (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
                                         </td>
-                                        <td *ngIf="className!=12">
+                                        <td>
                                             <button
                                                 style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
                                                 class="submit-button" (click)="addStudentClassPromoteModel(students)"
                                                 mat-raised-button>Promote</button>
+                                        </td>
+                                        <td *ngIf="className!=12">
+                                            <button
+                                                style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
+                                                class="submit-button" (click)="addStudentClassFailModel(students)"
+                                                mat-raised-button>Fail</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -292,6 +299,118 @@
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+
+
+                            <div class="modal fade show" [class.show]="showClassFailModal">
+                                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!successMsg">
+                                    <div class="modal-content" *ngIf="successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="success-message" *ngIf="failClass">{{successMsg}}
+                                                {{failClass |
+                                                classSuffix}}
+                                            </p>
+                                            <p class="success-message" *ngIf="!failClass">{{successMsg}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <mat-icon></mat-icon>
+                                        </div>
+                                    </div>
+                                    <div class="modal-content" *ngIf="!successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Student Class Fail</h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                                        </div>
+                                        <form [formGroup]="studentClassFailForm" (ngSubmit)="studentClassFail()">
+                                            <div class="modal-body">
+                                                <div *ngIf="errorCheck">
+                                                    <p class="error-message" *ngIf="failClass">{{errorMsg}}
+                                                        {{failClass |
+                                                        classSuffix}}
+                                                    </p>
+                                                    <p class="error-message" *ngIf="!failClass">{{errorMsg}}</p>
+                                                </div>
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <ng-container>
+                                                            <p>Admission No. : {{singleStudentInfo?.admissionNo}}</p>
+                                                            <p>Name : {{singleStudentInfo?.name | titlecase}}</p>
+                                                            <p>Father Name : {{singleStudentInfo?.fatherName |
+                                                                titlecase}}</p>
+                                                            <p>Class : {{singleStudentInfo?.class | classSuffix}}</p>
+                                                        </ng-container>
+                                                        <div class="mb-5"></div>
+                                                        <input matInput type="hidden" formControlName="admissionNo"
+                                                            readonly>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Session</mat-label>
+                                                                <input matInput type="text" formControlName="session" readonly>
+                                                                <mat-error
+                                                                    *ngIf="studentClassFailForm.get('session')?.hasError('required') && studentClassFailForm.get('session')?.touched">
+                                                                    Session is required
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Roll Number</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="rollNumber" min="0">
+                                                                <mat-hint
+                                                                    *ngIf="!studentClassFailForm.get('rollNumber')?.valid && studentClassFailForm.get('rollNumber')?.touched"
+                                                                    class="form-text text-danger">Roll number is
+                                                                    required</mat-hint>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Stream</mat-label>
+                                                                <input matInput type="text"
+                                                                    formControlName="stream" readonly>
+                                                                <mat-error
+                                                                    *ngIf="studentClassFailForm.get('stream')?.hasError('required') && studentClassFailForm.get('stream')?.touched">
+                                                                    stream is required
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Fees Discount Amount (&#8377;)</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="discountAmountInFees" min="0">
+                                                                <mat-error
+                                                                    *ngIf="studentClassFailForm.get('discountAmountInFees')?.hasError('required') && studentClassFailForm.get('discountAmountInFees')?.touched">
+                                                                    Fees discount amount is required
+                                                                </mat-error>
+                                                                <mat-error
+                                                                    *ngIf="studentClassFailForm.get('discountAmountInFees')?.hasError('pattern') && studentClassFailForm.get('discountAmountInFees')?.touched">
+                                                                    Please enter a valid fees discount amount (numeric
+                                                                    characters only)
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="submit-button"
+                                                    [disabled]="!studentClassFailForm.valid" mat-raised-button
+                                                    type="submit">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
 
 
 

@@ -22,6 +22,12 @@ export class PromoteFailComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
   studentClassPromoteForm: FormGroup;
   showClassPromoteModal: boolean = false;
+  
+  
+  studentClassFailForm: FormGroup;
+  showClassFailModal: boolean = false;
+
+
   showStudentInfoViewModal: boolean = false;
   showStudentTCModal: boolean = false;
   updateMode: boolean = false;
@@ -58,6 +64,7 @@ export class PromoteFailComponent implements OnInit {
   fileChoose: boolean = false;
   loader: Boolean = true;
   promotedClass: any;
+  failClass: any;
   singleStudentInfo: any
   singleStudentTCInfo: any
   classSubject: any[] = [];
@@ -74,6 +81,18 @@ export class PromoteFailComponent implements OnInit {
       adminId: [''],
       class: [''],
       stream: [''],
+      rollNumber: ['', Validators.required],
+      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      createdBy: ['']
+    })
+
+    this.studentClassFailForm = this.fb.group({
+      _id: ['', Validators.required],
+      session: ['', Validators.required],
+      admissionNo: ['', Validators.required],
+      adminId: [''],
+      class: [''],
+      stream: ['',Validators.required],
       rollNumber: ['', Validators.required],
       discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: ['']
@@ -136,6 +155,7 @@ export class PromoteFailComponent implements OnInit {
   }
   closeModal() {
     this.showClassPromoteModal = false;
+    this.showClassFailModal = false;
     this.showStudentInfoViewModal = false;
     this.showStudentTCModal = false;
     this.updateMode = false;
@@ -145,6 +165,7 @@ export class PromoteFailComponent implements OnInit {
     this.successMsg = '';
     this.classSubject = [];
     this.promotedClass;
+    this.failClass;
     this.singleStudentInfo;
     this.singleStudentTCInfo;
     this.studentClassPromoteForm.reset();
@@ -165,6 +186,25 @@ export class PromoteFailComponent implements OnInit {
     this.studentClassPromoteForm.get('stream')?.setValue(this.stream);
     this.studentClassPromoteForm.get('discountAmountInFees')?.setValue(null);
   }
+
+
+  addStudentClassFailModel(student: any) {
+    this.showClassFailModal = true;
+    this.singleStudentInfo = student;
+    let sessionYears = student.session.split("-"); 
+    let startYear = parseInt(sessionYears[0]);
+    let endYear = parseInt(sessionYears[1]);
+    let newStartYear = startYear + 1;
+    let newEndYear = endYear + 1;
+    let newSession = newStartYear + "-" + newEndYear;
+    this.studentClassFailForm.patchValue(student);
+    this.studentClassFailForm.get('session')?.setValue(newSession);
+    this.studentClassFailForm.get('stream')?.setValue(student.stream);
+    this.studentClassFailForm.get('discountAmountInFees')?.setValue(null);
+  }
+
+
+
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
@@ -317,6 +357,30 @@ export class PromoteFailComponent implements OnInit {
   }
 
 
+  studentClassFail() {
+    if (this.studentClassFailForm.valid) {
+      this.studentClassFailForm.value.adminId = this.adminId;
+      this.studentClassFailForm.value.class = parseInt(this.className);
+      this.studentClassFailForm.value.createdBy = 'Admin';
+      this.studentService.studentClassFail(this.studentClassFailForm.value).subscribe((res: any) => {
+        if (res) {
+          setTimeout(() => {
+            this.successDone();
+          }, 1000)
+          this.failClass;
+          this.failClass = res.className;
+          this.successMsg = res.successMsg;
+        }
+      }, err => {
+        this.errorCheck = true;
+        this.failClass;
+        if (err.error.className) {
+          this.failClass = parseInt(err.error.className);
+        }
+        this.errorMsg = err.error.errorMsg;
+      })
+    }
+  }
 
   // studentClassPromote() {
   //   if (this.studentClassPromoteForm.valid) {
