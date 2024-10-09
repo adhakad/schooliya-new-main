@@ -168,6 +168,7 @@ let CreateFeesCollection = async (req, res, next) => {
             const AllPaidFees = checkFeesCollection.AllPaidFees + feesAmount;
             const AllDueFees = checkFeesCollection.AllDueFees - feesAmount;
             const feesData = {
+                session:checkFeesCollection.session,
                 receiptNo: receiptNo,
                 totalFees: totalFees,
                 discountAmountInFees: checkFeesCollection.discountAmountInFees,
@@ -222,6 +223,7 @@ let CreateFeesCollection = async (req, res, next) => {
             const AllPaidFees = checkPreviousFeesCollection.AllPaidFees + feesAmount;
             const AllDueFees = checkPreviousFeesCollection.AllDueFees - feesAmount;
             const feesData = {
+                session:previousSession,
                 receiptNo: receiptNo,
                 totalFees: totalFees,
                 discountAmountInFees: checkPreviousFeesCollection.discountAmountInFees,
@@ -291,6 +293,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 const AllPaidFees = checkFeesCollection.AllPaidFees + feesAmount;
                 const AllDueFees = checkFeesCollection.AllDueFees - feesAmount;
                 const feesData = {
+                    session:checkFeesCollection.session,
                     receiptNo: receiptNo,
                     totalFees: totalFees,
                     discountAmountInFees: checkFeesCollection.discountAmountInFees,

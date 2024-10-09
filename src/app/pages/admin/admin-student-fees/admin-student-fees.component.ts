@@ -60,6 +60,7 @@ export class AdminStudentFeesComponent implements OnInit {
   loader: Boolean = false;
   baseURL!: string;
   adminId!: string;
+  receiptSession:any;
   constructor(private fb: FormBuilder,private router:Router, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
@@ -334,6 +335,8 @@ export class AdminStudentFeesComponent implements OnInit {
         this.feesService.addFees(this.feesForm.value).subscribe((res: any) => {
           if (res) {
             this.receiptMode = true;
+            this.receiptSession = res.session;
+            console.log(res.session)
             this.receiptInstallment = res;
             if (res.admissionFeesPayable == true) {
               this.clsFeesStructure.feesType = [{ Admission: res.admissionFees }, ...this.clsFeesStructure.feesType];
