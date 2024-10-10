@@ -36,6 +36,8 @@ export class DashboardComponent implements OnInit {
   totalFeesSum: number = 0;
   paidFeesSum: number = 0;
   dueFeesSum: number = 0;
+  selectedSession: string = '2023-2024';
+  allSession:any=['2023-2024','2024-2025'];
   constructor(private adminAuthService: AdminAuthService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
 
   ngOnInit(): void {
@@ -62,15 +64,25 @@ export class DashboardComponent implements OnInit {
 
     const option = {
       title: {
-        text: 'Fees Collection Ratio',
-        left:'3.5%',
+        text: '{title|Fees Ratio :}  {subTitle|2023-2024}', // Combine title and subtitle
+        left: '3.5%',
         top: 20,
         textStyle: {
-          color: '#2c343c',
-          fontSize: 18,
-          fontWeight: 'bold',
+          rich: {
+            title: {
+              color: '#2c343c',
+              fontSize: 16,
+              fontWeight: 'bold',
+            },
+            subTitle: {
+              color:'#434445',
+              fontSize: 16,
+              fontWeight: 'normal',
+            }
+          }
         }
       },
+      
       tooltip: {
         trigger: 'item',
         formatter: function (params: any) {
@@ -85,7 +97,7 @@ export class DashboardComponent implements OnInit {
       legend: {
         orient: 'horizontal',    // Horizontal legend
         left: 'center',          // Center align horizontally
-        bottom: 0,               // Position it at the bottom
+        bottom: 10,               // Position it at the bottom
         textStyle: {
           color: '#2c343c',      // Custom color for legend text
         }
@@ -96,6 +108,7 @@ export class DashboardComponent implements OnInit {
           type: 'pie',
           radius: ['40%', '50%'], // Donut style pie chart
           avoidLabelOverlap: false,
+          top:20,
           itemStyle: {
             borderRadius: 0, // Rounded borders for each slice
             borderColor: '#2c343c',
@@ -151,13 +164,22 @@ export class DashboardComponent implements OnInit {
     
     const option = {
       title: {
-        text: 'Monthly Fees Collection',
-        left:'3.5%',
+        text: '{title|Monthly Collection :}  {subTitle|2023-2024}', // Combine title and subtitle
+        left: '3.5%',
         top: 20,
         textStyle: {
-          color: '#2c343c',
-          fontSize: 18,
-          fontWeight: 'bold',
+          rich: {
+            title: {
+              color: '#2c343c',
+              fontSize: 16,
+              fontWeight: 'bold',
+            },
+            subTitle: {
+              color:'#434445',
+              fontSize: 16,
+              fontWeight: 'normal',
+            }
+          }
         }
       },
       tooltip: {
@@ -257,12 +279,12 @@ export class DashboardComponent implements OnInit {
 
     const option = {
       title: {
-        text: 'Overall Fees Status',
+        text: 'Fees Overview',
         left:'3.5%',
         top: 20,
         textStyle: {
           color: '#2c343c',
-          fontSize: 18,
+          fontSize: 16,
           fontWeight: 'bold',
         }
       },
@@ -339,6 +361,12 @@ export class DashboardComponent implements OnInit {
       chart.resize();  // Make chart responsive on window resize
     });
   }
+
+
+  filterSession(selectedSession: string) {
+    this.selectedSession = selectedSession;
+  }
+
 
   adsCount() {
     this.adsService.getAdsCount().subscribe((res: any) => {

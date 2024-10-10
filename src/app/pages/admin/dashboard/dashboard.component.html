@@ -13,16 +13,16 @@
               </div>
             </div>
             <div class="col-12 col-lg-3">
-                <div class="chart-card" style="height: 22vh;">
-                </div>
+              <div class="chart-card" style="height: 22vh;">
+              </div>
             </div>
             <div class="col-12 col-lg-3">
               <div class="chart-card" style="height: 22vh;">
               </div>
             </div>
             <div class="col-12 col-lg-3">
-                <div class="chart-card" style="height: 22vh;">
-                </div>
+              <div class="chart-card" style="height: 22vh;">
+              </div>
             </div>
           </div>
         </div>
@@ -32,17 +32,39 @@
           <div class="row">
             <div class="col-12 col-lg-4">
               <div class="chart-card">
-                <div id="barChart"></div>
+                <div style="position: relative;">
+                  <div id="barChart"></div>
+                  <mat-form-field class="custom-session-select position-absolute" style="top: 15px; right: 10px;">
+                    <mat-select [(ngModel)]="selectedSession" (selectionChange)="filterSession($event.value)">
+                      <mat-option *ngFor="let session of allSession" [value]="session">{{session}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
             </div>
             <div class="col-12 col-lg-4">
-                <div class="chart-card">
+              <div class="chart-card">
+                <div class="position-relative">
                   <div id="pieChart"></div>
+                  <!-- <mat-form-field class="custom-session-select position-absolute" style="top: 15px; right: 10px;">
+                    <mat-select [(ngModel)]="selectedSession" (selectionChange)="filterSession($event.value)">
+                      <mat-option *ngFor="let session of allSession" [value]="session">{{session}}</mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
                 </div>
+              </div>
             </div>
+
             <div class="col-12 col-lg-4">
               <div class="chart-card">
-                <div id="lineChart"></div>
+                <div style="position: relative;">
+                  <div id="lineChart"></div>
+                  <!-- <mat-form-field class="custom-session-select position-absolute" style="top: 15px; right: 10px;">
+                    <mat-select [(ngModel)]="selectedSession" (selectionChange)="filterSession($event.value)">
+                      <mat-option *ngFor="let session of allSession" [value]="session">{{session}}</mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+                </div>
               </div>
             </div>
           </div>
