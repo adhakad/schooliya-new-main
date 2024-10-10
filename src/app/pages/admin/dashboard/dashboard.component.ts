@@ -106,7 +106,7 @@ export class DashboardComponent implements OnInit {
       legend: {
         orient: 'horizontal',    // Horizontal legend
         left: 'center',          // Center align horizontally
-        bottom: 10,               // Position it at the bottom
+        bottom: 15,               // Position it at the bottom
         textStyle: {
           color: '#2c343c',      // Custom color for legend text
         }
