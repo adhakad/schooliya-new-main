@@ -70,7 +70,13 @@ export class StudentComponent implements OnInit {
   isDate: string = '';
   baseURL!: string;
   adminId!: String
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute,private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  classMap: any = {
+    200: 'Nursery',
+    201: 'LKG',
+    202: 'UKG',
+    // अन्य क्लासेज़ भी यहाँ मैप करें
+  };
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
       session: ['', Validators.required],
@@ -142,13 +148,13 @@ export class StudentComponent implements OnInit {
     this.page = 0;
     this.className = cls;
     this.cls = cls;
-    if(cls !==11 && cls !==12){
+    if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
       this.studentInfo = [];
       this.getStudents({ page: 1 });
     }
-    if(cls ==11 || cls ==12){
-      if(this.stream=='stream'){
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
         this.stream = '';
       }
       this.studentInfo = [];
@@ -252,7 +258,55 @@ export class StudentComponent implements OnInit {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = true;
-    this.studentForm.patchValue(student);
+    const dobArray = student.dob.split('-'); // Assuming format is 'dd-mm-yyyy'
+    const doaArray = student.doa.split('-'); // Assuming format is 'dd-mm-yyyy'
+
+    const dobISO = new Date(`${dobArray[2]}-${dobArray[1]}-${dobArray[0]}`); // 'yyyy-mm-dd'
+    const doaISO = new Date(`${doaArray[2]}-${doaArray[1]}-${doaArray[0]}`); // 'yyyy-mm-dd'
+
+    // Patch the form with the student data
+    this.studentForm.patchValue({
+      _id: student._id,
+      session: student.session,
+      medium: student.medium,
+      adminId: student.adminId,
+      admissionNo: student.admissionNo,
+      admissionType: student.admissionType,
+      class: student.class,
+      admissionClass: student.admissionClass,
+      stream: student.stream,
+      rollNumber: student.rollNumber,
+      name: student.name,
+      dob: dobISO, // Set Date of Birth
+      doa: doaISO, // Set Date of Admission
+      aadharNumber: student.aadharNumber,
+      samagraId: student.samagraId,
+      udiseNumber: student.udiseNumber,
+      bankAccountNo: student.bankAccountNo,
+      bankIfscCode: student.bankIfscCode,
+      gender: student.gender,
+      category: student.category,
+      religion: student.religion,
+      nationality: student.nationality,
+      address: student.address,
+      lastSchool: student.lastSchool,
+      fatherName: student.fatherName,
+      fatherQualification: student.fatherQualification,
+      fatherOccupation: student.fatherOccupation,
+      motherName: student.motherName,
+      motherQualification: student.motherQualification,
+      motherOccupation: student.motherOccupation,
+      parentsContact: student.parentsContact,
+      parentsAnnualIncome: student.parentsAnnualIncome,
+      discountAmountInFees: student.discountAmountInFees,
+      createdBy: student.createdBy
+    });
+    const classValue = student.class;
+    if (classValue && this.classMap[classValue]) {
+      this.studentForm.patchValue({
+        class: this.classMap[classValue] // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
+      });
+    }
   }
   deleteStudentModel(id: String) {
     this.showModal = true;
@@ -348,12 +402,40 @@ export class StudentComponent implements OnInit {
     });
   }
 
+
   studentAddUpdate() {
     if (this.studentForm.valid) {
       this.studentForm.value.adminId = this.adminId;
       this.studentForm.value.class = this.className;
+
       if (this.updateMode) {
-        this.studentService.updateStudent(this.studentForm.value).subscribe((res: any) => {
+
+        const classText = this.studentForm.get('class')?.value;
+
+        // टेक्स्ट को ओरिजिनल वैल्यू (जैसे 200, 201, 202) में कन्वर्ट करें
+        const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
+
+        // अगर वैल्यू मिली, तो उसे फॉर्म में अपडेट करें ताकि सही वैल्यू डेटाबेस में जाए
+        if (classValue) {
+          this.studentForm.patchValue({
+            class: classValue
+          });
+        }
+        const dob = new Date(this.studentForm.get('dob')?.value);
+        const formattedDob = `${dob.getDate()}-${dob.getMonth() + 1}-${dob.getFullYear()}`;
+
+        const doa = new Date(this.studentForm.get('doa')?.value);
+        const formattedDoa = `${doa.getDate()}-${doa.getMonth() + 1}-${doa.getFullYear()}`;
+
+        // Prepare the final form data
+        const formData = {
+          ...this.studentForm.value,
+          dob: formattedDob, // Convert back to 'dd-mm-yyyy'
+          doa: formattedDoa  // Convert back to 'dd-mm-yyyy'
+        };
+
+
+        this.studentService.updateStudent(formData).subscribe((res: any) => {
           if (res) {
             this.successDone();
             this.successMsg = res;

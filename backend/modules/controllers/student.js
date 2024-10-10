@@ -658,9 +658,9 @@ let CreateBulkStudentRecord = async (req, res, next) => {
 let UpdateStudent = async (req, res, next) => {
     try {
         const id = req.params.id;
-        let { name, rollNumber, aadharNumber, samagraId, session, admissionType, stream, admissionNo, dob, gender, category, religion, nationality, address, fatherName, fatherQualification, fatherOccupation, fatherContact, fatherAnnualIncome, motherName, motherQualification, motherOccupation, motherContact, motherAnnualIncome } = req.body;
+        let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees } = req.body;
         const studentData = {
-            name, rollNumber, aadharNumber, samagraId, session, admissionType, stream, admissionNo, class: className, dob: dob, doa: doa, gender, category, religion, nationality, address, fatherName, fatherQualification, fatherOccupation, fatherContact, fatherAnnualIncome, motherName, motherQualification, motherOccupation, motherContact, motherAnnualIncome
+            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees
         }
         const updateStudent = await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
         return res.status(200).json('Student update successfully.');

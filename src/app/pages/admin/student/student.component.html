@@ -157,7 +157,7 @@
                     <th>Roll Number</th>
                     <th>Session</th>
                     <th>View</th>
-                    <!-- <th>Edit</th> -->
+                    <th>Edit</th>
                     <th>Remove</th>
                   </tr>
                 </thead>
@@ -193,9 +193,9 @@
                     <td class="mb-0">
                       <mat-icon (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
                     </td>
-                    <!-- <td class="mb-0">
+                    <td class="mb-0">
                       <mat-icon (click)="updateStudentModel(students)">edit</mat-icon>
-                    </td> -->
+                    </td>
                     <td class="mb-0">
                       <mat-icon (click)="deleteStudentModel(students._id)">delete</mat-icon>
                     </td>
@@ -295,6 +295,7 @@
                                 </mat-error>
                               </mat-form-field>
                             </div>
+
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Date of Admission (dd/mm/yyyy)</mat-label>
