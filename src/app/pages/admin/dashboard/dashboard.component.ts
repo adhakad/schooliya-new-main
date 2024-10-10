@@ -12,6 +12,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
 import { TestimonialService } from 'src/app/services/testimonial.service';
 import { TopperService } from 'src/app/services/topper.service';
 import { FeesService } from 'src/app/services/fees.service';
+import { AcademicSessionService } from 'src/app/services/academic-session.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,15 +37,16 @@ export class DashboardComponent implements OnInit {
   totalFeesSum: number = 0;
   paidFeesSum: number = 0;
   dueFeesSum: number = 0;
-  selectedSession: string = '2023-2024';
-  allSession:any=['2023-2024','2024-2025'];
-  constructor(private adminAuthService: AdminAuthService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
+  academicSession: string = '';
+  allSession: any = [];
+  selectedSession: string = '';
+  constructor(private adminAuthService: AdminAuthService,private academicSessionService: AcademicSessionService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
 
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
+    this.getAcademicSession();
     this.adsCount();
-    this.feesCollectionBySession();
     this.classSubjectCount();
     this.classCount();
     this.studentCount();
@@ -55,8 +57,15 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       this.loader = false;
     }, 1000)
-    // this.initLineChart();
-    this.initBarCharts();
+  }
+  getAcademicSession() {
+    this.academicSessionService.getAcademicSession().subscribe((res: any) => {
+      if (res) {
+        this.selectedSession = res.academicSession;
+        this.allSession = res.allSession;
+        this.feesCollectionBySession(this.adminId, this.selectedSession);
+      }
+    })
   }
   initPieChart(): void {
     const chartDom = document.getElementById('pieChart') as HTMLElement;
@@ -64,7 +73,7 @@ export class DashboardComponent implements OnInit {
 
     const option = {
       title: {
-        text: '{title|Fees Ratio :}  {subTitle|2023-2024}', // Combine title and subtitle
+        text: `{title|Fees Ratio :}  {subTitle|${this.selectedSession}}`, // Combine title and subtitle
         left: '3.5%',
         top: 20,
         textStyle: {
@@ -164,7 +173,7 @@ export class DashboardComponent implements OnInit {
     
     const option = {
       title: {
-        text: '{title|Monthly Collection :}  {subTitle|2023-2024}', // Combine title and subtitle
+        text: `{title|Monthly Collection :}  {subTitle|${this.selectedSession}}`, // Combine title and subtitle
         left: '3.5%',
         top: 20,
         textStyle: {
@@ -363,8 +372,9 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  filterSession(selectedSession: string) {
+  filterSession(selectedSession: any) {
     this.selectedSession = selectedSession;
+    this.feesCollectionBySession(this.adminId, selectedSession);
   }
 
 
@@ -373,19 +383,19 @@ export class DashboardComponent implements OnInit {
       this.adsCountInfo = res.countAds;
     })
   }
-  feesCollectionBySession() {
-    let params = {
-      adminId: this.adminId,
-      session: '2024-2025'
-    }
+  feesCollectionBySession(adminId: string, session: string) {
+      let params = {
+        adminId: adminId,
+        session: session
+      }
     this.feesService.feesCollectionBySession(params).subscribe((res: any) => {
       if (res) {
         this.totalFeesSum = res.totalFeesSum;
         this.paidFeesSum = res.paidFeesSum;
         this.dueFeesSum = res.dueFeesSum;
-        console.log(res)
         this.initPieChart();
         this.initBarChart();
+        this.initBarCharts();
       }
     })
   }
