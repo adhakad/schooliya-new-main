@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
   academicSession: string = '';
   allSession: any = [];
   selectedSession: string = '';
+  monthlyFeesCollection:any={};
   constructor(private adminAuthService: AdminAuthService,private academicSessionService: AcademicSessionService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
 
   ngOnInit(): void {
@@ -214,7 +215,7 @@ export class DashboardComponent implements OnInit {
       },
       xAxis: {
         type: 'category',
-        data: ['January', 'February', 'March', 'April', 'May','June','July','August','September','October', 'November','November'],
+        data: ['January', 'February', 'March', 'April', 'May','June','July','August','September','October', 'November','December'],
         axisLine: {
           lineStyle: {
             color: '#2c343c'
@@ -247,18 +248,18 @@ export class DashboardComponent implements OnInit {
           name: 'Fees',
           type: 'bar',
           data: [
-            { value: 1048, itemStyle: { color: '#8C52FF' } },  // TOTAL FEES
-            { value: 735, itemStyle: { color: '#8C52FF' } },   // PAID FEES
-            { value: 580, itemStyle: { color: '#8C52FF' } },   // FEES DISCOUNT
-            { value: 484, itemStyle: { color: '#8C52FF' } },   // DUE FEES
-            { value: 300, itemStyle: { color: '#8C52FF' } },
-            { value: 300, itemStyle: { color: '#8C52FF' } },
-            { value: 500, itemStyle: { color: '#8C52FF' } },
-            { value: 3900, itemStyle: { color: '#8C52FF' } },
-            { value: 3300, itemStyle: { color: '#8C52FF' } },
-            { value: 3800, itemStyle: { color: '#8C52FF' } },
-            { value: 450, itemStyle: { color: '#8C52FF' } },
-            { value: 1000, itemStyle: { color: '#8C52FF' } },   // OVERALL FEES COLLECTION
+            { value: this.monthlyFeesCollection.January, itemStyle: { color: '#8C52FF' } },  // TOTAL FEES
+            { value: this.monthlyFeesCollection.February, itemStyle: { color: '#8C52FF' } },   // PAID FEES
+            { value: this.monthlyFeesCollection.March, itemStyle: { color: '#8C52FF' } },   // FEES DISCOUNT
+            { value: this.monthlyFeesCollection.April, itemStyle: { color: '#8C52FF' } },   // DUE FEES
+            { value: this.monthlyFeesCollection.May, itemStyle: { color: '#8C52FF' } },
+            { value: this.monthlyFeesCollection.June, itemStyle: { color: '#8C52FF' } },
+            { value: this.monthlyFeesCollection.July, itemStyle: { color: '#8C52FF' } },
+            { value: this.monthlyFeesCollection.August, itemStyle: { color: '#8C52FF' } },
+            { value: this.monthlyFeesCollection.September, itemStyle: { color: '#8C52FF' } },
+            { value: this.monthlyFeesCollection.October, itemStyle: { color: '#8C52FF' } },
+            { value: this.monthlyFeesCollection.November, itemStyle: { color: '#8C52FF' } },
+            { value: this.monthlyFeesCollection.December, itemStyle: { color: '#8C52FF' } },   // OVERALL FEES COLLECTION
           ],
           barWidth: '50%',
         }
@@ -393,6 +394,7 @@ export class DashboardComponent implements OnInit {
         this.totalFeesSum = res.totalFeesSum;
         this.paidFeesSum = res.paidFeesSum;
         this.dueFeesSum = res.dueFeesSum;
+        this.monthlyFeesCollection = res.monthlyPaymentFees;
         this.initPieChart();
         this.initBarChart();
         this.initBarCharts();

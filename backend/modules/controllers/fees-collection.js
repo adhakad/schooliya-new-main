@@ -9,15 +9,85 @@ let GetStudentFeesCollectionBySession = async (req, res, next) => {
     let adminId = req.params.adminId;
     let session = req.params.session;
     try {
+    
         const allFees = await FeesCollectionModel.find({ adminId: adminId, session: session });
         let totalFeesSum = 0, paidFeesSum = 0, dueFeesSum = 0;
 
+        console.log(allFees)
         for (let i = 0; i < allFees.length; i++) {
             totalFeesSum += allFees[i].totalFees;
             paidFeesSum += allFees[i].paidFees;
             dueFeesSum += allFees[i].dueFees;
         }
-        return res.status(200).json({ totalFeesSum: totalFeesSum, paidFeesSum: paidFeesSum, dueFeesSum: dueFeesSum });
+
+
+
+
+
+        function findMonthlyPayments(feesData) {
+            const monthsMap = {
+                '01': 'January',
+                '02': 'February',
+                '03': 'March',
+                '04': 'April',
+                '05': 'May',
+                '06': 'June',
+                '07': 'July',
+                '08': 'August',
+                '09': 'September',
+                '10': 'October',
+                '11': 'November',
+                '12': 'December'
+            };
+        
+            const monthlyPayments = {};
+        
+            // Initialize all 12 months with 0
+            for (let monthNum in monthsMap) {
+                monthlyPayments[monthsMap[monthNum]] = 0;
+            }
+        
+            for (let i = 0; i < feesData.length; i++) {
+                let data = feesData[i];
+        
+                // Check and add admission fees
+                if (data.admissionFees > 0 && data.admissionFeesPaymentDate) {
+                    const admissionPaymentDate = data.admissionFeesPaymentDate;
+                    const [admissionDatePart] = admissionPaymentDate.split(' '); 
+                    const [day, month] = admissionDatePart.split('-').slice(0, 2);
+                    const monthName = monthsMap[month];
+        
+                    if (monthName) {
+                        monthlyPayments[monthName] += data.admissionFees;
+                        console.log(`Added Admission Fee: ${data.admissionFees} to ${monthName}`);
+                    }
+                }
+        
+                // Loop through each installment
+                for (let j = 0; j < data.installment.length; j++) {
+                    let amount = data.installment[j];
+                    let paymentDate = data.paymentDate[j];
+        
+                    if (paymentDate) {
+                        const [datePart] = paymentDate.split(' ');
+                        const [day, month] = datePart.split('-');
+                        const monthName = monthsMap[month];
+        
+                        if (monthName) {
+                            monthlyPayments[monthName] += amount;
+                            console.log(`Added Installment: ${amount} to ${monthName}`);
+                        }
+                    }
+                }
+            }
+        
+            return monthlyPayments;
+        }
+        
+        // Call function and log results
+        const monthlyPaymentFees = findMonthlyPayments(allFees);
+
+        return res.status(200).json({monthlyPaymentFees:monthlyPaymentFees, totalFeesSum: totalFeesSum, paidFeesSum: paidFeesSum, dueFeesSum: dueFeesSum });
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
     }
