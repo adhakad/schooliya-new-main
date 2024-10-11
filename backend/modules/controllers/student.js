@@ -385,6 +385,8 @@ let CreateStudent = async (req, res, next) => {
 // }
 
 let CreateBulkStudentRecord = async (req, res, next) => {
+    const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
+    const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
     let bulkStudentRecord = req.body.bulkStudentRecord;
     let className = req.body.class;
     let stream = req.body.stream;
@@ -632,6 +634,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 feesObject.AllTotalFees += admissionFees;
                 feesObject.AllPaidFees += admissionFees;
                 feesObject.AllDueFees = feesObject.totalFees - feesObject.paidFees;
+                feesObject.admissionFeesPaymentDate = istDateTimeString;
             }
 
             studentFeesData.push(feesObject);
