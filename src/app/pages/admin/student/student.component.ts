@@ -307,6 +307,9 @@ export class StudentComponent implements OnInit {
         class: this.classMap[classValue] // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
       });
     }
+    if (this.updateMode) {
+      this.studentForm.get('feesDiscount')?.disable();  // Disable in edit mode
+    }
   }
   deleteStudentModel(id: String) {
     this.showModal = true;
