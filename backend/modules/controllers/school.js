@@ -24,10 +24,10 @@ let GetSingleSchool = async (req, res, next) => {
 }
 let CreateSchool = async (req, res, next) => {
     let { adminId, schoolName, affiliationNumber, schoolCode, foundedYear, board, medium, street, city, district, state, country, pinCode, phoneOne, phoneSecond, email } = req.body;
-        let schoolData = { adminId, schoolName, schoolLogo: req.file.filename, affiliationNumber, schoolCode, foundedYear, board, medium, street, city, district, state, country, pinCode, phoneOne, email };
-        if(phoneSecond){
-            schoolData.phoneSecond;
-        }
+    let schoolData = { adminId, schoolName, schoolLogo: req.file.filename, affiliationNumber, schoolCode, foundedYear, board, medium, street, city, district, state, country, pinCode, phoneOne, email };
+    if (phoneSecond) {
+        schoolData.phoneSecond;
+    }
 
     try {
         let countSchool = await SchoolModel.count({ adminId: adminId });
@@ -51,7 +51,24 @@ let UpdateSchool = async (req, res, next) => {
         const id = req.params.id;
 
         // Extract school details from request body
-        let { adminId, schoolName, affiliationNumber, schoolCode, foundedYear, board, medium, street, city, district, state, country, pinCode, phoneOne, phoneSecond, email } = req.body;
+        let {
+            adminId,
+            schoolName,
+            affiliationNumber,
+            schoolCode,
+            foundedYear,
+            board,
+            medium,
+            street,
+            city,
+            district,
+            state,
+            country,
+            pinCode,
+            phoneOne,
+            phoneSecond,
+            email
+        } = req.body;
 
         // Prepare the school data object
         let schoolData = {
@@ -72,9 +89,11 @@ let UpdateSchool = async (req, res, next) => {
             email
         };
 
-        // Include phoneSecond if available
-        if (phoneSecond) {
+        // Handle phoneSecond properly (only include if it's a valid number)
+        if (phoneSecond && phoneSecond !== 'null' && phoneSecond.trim() !== '') {
             schoolData.phoneSecond = phoneSecond;
+        } else {
+            schoolData.phoneSecond = null; // or remove it from the update if not needed
         }
 
         // Check if a new school logo file is uploaded and set it
@@ -82,8 +101,13 @@ let UpdateSchool = async (req, res, next) => {
             schoolData.schoolLogo = req.file.filename;
         }
 
-        console.log(schoolData.schoolLogo)
-        // Update the school information
+        // Find the existing school to remove the old logo if needed
+        const singleSchool = await SchoolModel.findOne({ _id: id });
+        const singleImage = singleSchool.schoolLogo;
+        if (req.file && req.file.filename) {
+            await fs.unlinkSync('./public/school-logo/' + singleImage);
+        }
+        // Update the school data
         const updateSchool = await SchoolModel.findByIdAndUpdate(id, { $set: schoolData }, { new: true });
 
         // If the update was successful, send success response
@@ -98,12 +122,13 @@ let UpdateSchool = async (req, res, next) => {
     }
 };
 
+
 let DeleteSchool = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const singleSchool = await SchoolModel.findOne({_id:id});
+        const singleSchool = await SchoolModel.findOne({ _id: id });
         const singleImage = singleSchool.schoolLogo;
-        await fs.unlinkSync('./public/school-logo/'+singleImage);
+        // await fs.unlinkSync('./public/school-logo/' + singleImage);
         const deleteSchool = await SchoolModel.findByIdAndRemove(id);
         if (deleteSchool) {
             return res.status(200).json('School delete successfully.');
