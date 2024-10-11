@@ -65,6 +65,7 @@
                     <th>Contact Number</th>
                     <th>Alternate Number</th>
                     <th>Email</th>
+                    <th>Edit</th>
                     <th>Remove</th>
                   </tr>
                 </thead>
@@ -120,6 +121,9 @@
                     </td>
                     <td>
                       <p class="mb-0">{{schoolInfo?.email}}</p>
+                    </td>
+                    <td class="mb-0">
+                      <mat-icon (click)="updateSchoolModel(schoolInfo)">edit</mat-icon>
                     </td>
                     <td class="mb-0">
                       <!-- <mat-icon (click)="updateSchoolModel(schoolInfo)">edit</mat-icon> -->
@@ -184,6 +188,7 @@
                                 </ngx-mat-file-input>
                               </mat-form-field>
                             </div>
+                            
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Affiliation Number</mat-label>

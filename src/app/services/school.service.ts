@@ -30,15 +30,40 @@ export class SchoolService {
     formData.append('phoneOne', schoolData.phoneOne);
     formData.append('phoneSecond', schoolData.phoneSecond);
     formData.append('email', schoolData.email);
-    console.log(formData)
     return this.http.post(this.url,formData);
   }
   getSchool(adminId:any) {
     return this.http.get<any>(`${this.url}/${adminId}`);
   }
   updateSchool(schoolData: any) {
-    return this.http.put(`${this.url}/${schoolData._id}`, schoolData);
+    // Use FormData for handling file updates if needed
+    const formData = new FormData();
+    formData.append('_id', schoolData._id);
+    formData.append('adminId', schoolData.adminId);
+    formData.append('schoolName', schoolData.schoolName);
+    
+    if (schoolData.schoolLogo && typeof schoolData.schoolLogo !== 'string') {
+      formData.append('schoolLogo', schoolData.schoolLogo);
+    }
+
+    formData.append('affiliationNumber', schoolData.affiliationNumber);
+    formData.append('schoolCode', schoolData.schoolCode);
+    formData.append('foundedYear', schoolData.foundedYear);
+    formData.append('board', schoolData.board);
+    formData.append('medium', schoolData.medium);
+    formData.append('street', schoolData.street);
+    formData.append('city', schoolData.city);
+    formData.append('district', schoolData.district);
+    formData.append('state', schoolData.state);
+    formData.append('pinCode', schoolData.pinCode);
+    formData.append('phoneOne', schoolData.phoneOne);
+    formData.append('phoneSecond', schoolData.phoneSecond);
+    formData.append('email', schoolData.email);
+
+    // Use PUT request to update school details
+    return this.http.put(`${this.url}/${schoolData._id}`, formData);
   }
+
   deleteSchool(id: String) {
     return this.http.delete(`${this.url}/${id}`);
   }

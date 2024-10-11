@@ -7,7 +7,7 @@ const {GetSingleSchoolNameLogo,GetSingleSchool,CreateSchool,UpdateSchool,DeleteS
 router.get('/name-logo',GetSingleSchoolNameLogo);
 router.get('/:id',GetSingleSchool);
 router.post('/',fileUpload.schoolLogo.single('schoolLogo'),CreateSchool);
-router.put('/:id',UpdateSchool);
+router.put('/:id', fileUpload.schoolLogo.single('schoolLogo'), UpdateSchool);
 router.delete('/:id',DeleteSchool);
 
 module.exports = router;

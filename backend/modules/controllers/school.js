@@ -49,17 +49,55 @@ let CreateSchool = async (req, res, next) => {
 let UpdateSchool = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const schoolData = {
-            title: req.body.title
+
+        // Extract school details from request body
+        let { adminId, schoolName, affiliationNumber, schoolCode, foundedYear, board, medium, street, city, district, state, country, pinCode, phoneOne, phoneSecond, email } = req.body;
+
+        // Prepare the school data object
+        let schoolData = {
+            adminId,
+            schoolName,
+            affiliationNumber,
+            schoolCode,
+            foundedYear,
+            board,
+            medium,
+            street,
+            city,
+            district,
+            state,
+            country,
+            pinCode,
+            phoneOne,
+            email
+        };
+
+        // Include phoneSecond if available
+        if (phoneSecond) {
+            schoolData.phoneSecond = phoneSecond;
         }
+
+        // Check if a new school logo file is uploaded and set it
+        if (req.file && req.file.filename) {
+            schoolData.schoolLogo = req.file.filename;
+        }
+
+        console.log(schoolData.schoolLogo)
+        // Update the school information
         const updateSchool = await SchoolModel.findByIdAndUpdate(id, { $set: schoolData }, { new: true });
+
+        // If the update was successful, send success response
         if (updateSchool) {
-            return res.status(200).json('School update successfully.');
+            return res.status(200).json('School updated successfully.');
+        } else {
+            return res.status(404).json('School not found.');
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        console.error(error);  // Log the error for debugging
+        return res.status(500).json('Internal Server Error!');
     }
-}
+};
+
 let DeleteSchool = async (req, res, next) => {
     try {
         const id = req.params.id;
