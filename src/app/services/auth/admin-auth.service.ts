@@ -111,7 +111,8 @@ export class AdminAuthService {
     this.authStatusListener.next(false);
     clearTimeout(this.tokenTimer);
     this.deleteAccessToken();
-    this.checkUserCookies();
+    // this.checkUserCookies();
+    this.deleteAccessToken();
     this.router.navigate(["/"], { replaceUrl: true });
   }
 
@@ -196,6 +197,7 @@ export class AdminAuthService {
     this.token = null;
     this.isAdminAuthenticated = false;
     this.authStatusListener.next(false);
+    this.deleteAllCookie();
     this.deleteAllCookie();
   }
   deleteAllCookie() {

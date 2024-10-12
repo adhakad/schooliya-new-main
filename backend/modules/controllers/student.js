@@ -1,5 +1,6 @@
 'use strict';
 const StudentModel = require('../models/student');
+const AdminPlan = require('../models/users/admin-plan');
 const FeesStructureModel = require('../models/fees-structure');
 const FeesCollectionModel = require('../models/fees-collection');
 const AdmitCardModel = require('../models/admit-card');
@@ -252,6 +253,15 @@ let CreateStudent = async (req, res, next) => {
         session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, discountAmountInFees, createdBy
     }
     try {
+        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId});
+        if (!checkAdminPlan) {
+            return res.status(404).json(`Invalid Entry`);
+        }
+        let studentLimit = checkAdminPlan.studentLimit;
+        let countStudent = await StudentModel.count({adminId: adminId});
+        if (countStudent==studentLimit || countStudent>studentLimit) {
+            return res.status(400).json(`You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue.`);
+        }
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
             return res.status(404).json(`Please create fees structure for session ${session} !`);
@@ -458,7 +468,16 @@ let CreateBulkStudentRecord = async (req, res, next) => {
     const session = await StudentModel.startSession();
     session.startTransaction();
     try {
-
+        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId});
+        if (!checkAdminPlan) {
+            return res.status(404).json(`Invalid Entry`);
+        }
+        let studentLimit = checkAdminPlan.studentLimit;
+        let countStudent = await StudentModel.count({adminId: adminId});
+        let allStudentCount = studentData.length + countStudent;
+        if (countStudent==studentLimit || countStudent>studentLimit || allStudentCount>studentLimit) {
+            return res.status(400).json(`You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue.`);
+        }
         if (studentData.length > 100) {
             return res.status(400).json('File too large, Please make sure that file records to less then or equals to 100 !');
         }
