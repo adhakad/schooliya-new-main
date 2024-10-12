@@ -26,8 +26,8 @@ export class StudentService {
   getStudentByClass(params:any){
     return this.http.get(`${this.url}/admin/${params.adminId}/student/${params.class}/stream/${params.stream}`);
   }
-  getStudentCount() {
-    return this.http.get(`${this.url}/student-count`);
+  getStudentCount(params:any) {
+    return this.http.get(`${this.url}/student-count/${params.adminId}`);
   }
   studentPaginationList(studentData:any){
     return this.http.post(`${this.url}/student-pagination`,studentData);

@@ -6,8 +6,10 @@ const ExamResultModel = require('../models/exam-result');
 const IssuedTransferCertificateModel = require('../models/issued-transfer-certificate');
 
 let countIssuedTransferCertificate = async (req, res, next) => {
-    let countStudent = await StudentModel.count();
-    return res.status(200).json({ countStudent });
+    let adminId = req.params.adminId;
+    console.log(adminId)
+    let countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({adminId:adminId});
+    return res.status(200).json({ countIssuedTransferCertificate });
 }
 
 let GetIssuedTransferCertificatePagination = async (req, res, next) => {
@@ -76,7 +78,7 @@ let DeleteIssuedTransferCertificate = async (req, res, next) => {
         const lastIssuedTC = await IssuedTransferCertificateModel.findOne({}).sort({ _id: -1 });
         const objectId = lastIssuedTC._id;
         if (id == objectId) {
-            return res.status(400).json('Last issued transfer certificate detail delete not possible !');
+            return res.status(400).json('The most recently issued transfer certificate cannot be deleted to maintain accurate records !');
         }
 
         const issuedTransferCertificate = await IssuedTransferCertificateModel.findByIdAndRemove(id);
@@ -87,7 +89,7 @@ let DeleteIssuedTransferCertificate = async (req, res, next) => {
 }
 
 module.exports = {
-    // countIssuedTransferCertificate,
+    countIssuedTransferCertificate,
     GetIssuedTransferCertificatePagination,
     CreateIssuedTransferCertificate,
     DeleteIssuedTransferCertificate

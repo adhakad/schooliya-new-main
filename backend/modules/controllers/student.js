@@ -9,7 +9,8 @@ const IssuedTransferCertificateModel = require('../models/issued-transfer-certif
 const { DateTime } = require('luxon');
 
 let countStudent = async (req, res, next) => {
-    let countStudent = await StudentModel.count();
+    let adminId = req.params.adminId;
+    let countStudent = await StudentModel.count({adminId: adminId});
     return res.status(200).json({ countStudent });
 }
 

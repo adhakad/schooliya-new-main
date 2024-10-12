@@ -18,7 +18,7 @@
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
-                      <div class="col-2 offset-4">
+                      <div class="col-2 offset-5">
                         <button class="submit-button" mat-raised-button
                           (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
                       </div>
@@ -27,11 +27,11 @@
                           name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                           (keyup)="getStudentsByAdmission({page : 1, limit : 0})">
                       </div>
-                      <div class="col-1">
+                      <!-- <div class="col-1">
                         <button class="btn setting-button" [matMenuTriggerFor]="settings">
                           <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
                         </button>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -40,16 +40,16 @@
             <div class="mobile-option">
               <div class="col-12">
                 <div class="row">
-                  <div class="col-9">
+                  <div class="col-12">
                     <button mat-button class="menu-button">
                       <span>Admission</span>
                     </button>
                   </div>
-                  <div class="col-3">
+                  <!-- <div class="col-3">
                     <button class="btn setting-button" [matMenuTriggerFor]="settings">
                       <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
                     </button>
-                  </div>
+                  </div> -->
                   <div class="col-7">
                     <input type="text" class="form-control" placeholder="Search..." id="searchText" name="searchText"
                       #searchText="ngModel" [(ngModel)]="filters.searchText"

@@ -6,6 +6,12 @@ const StudentModel = require('../models/student');
 const AdminUsersModel = require('../models/users/admin-user');
 const { DateTime } = require('luxon');
 
+
+let countExamResult = async (req, res, next) => {
+    let adminId = req.params.adminId;
+    let countExamResult  = await ExamResultModel.count({adminId:adminId});
+    return res.status(200).json({ countExamResult  });
+}
 let GetSingleStudentExamResult = async (req, res, next) => {
     let { schoolId, admissionNo, rollNumber } = req.body;
     let className = req.body.class;
@@ -329,6 +335,7 @@ let DeleteMarksheetResult = async (req, res, next) => {
     }
 }
 module.exports = {
+    countExamResult,
     GetSingleStudentExamResult,
     GetSingleStudentExamResultById,
     GetAllStudentExamResultByClass,

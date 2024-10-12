@@ -8,6 +8,8 @@ import { ClassSubjectService } from 'src/app/services/class-subject.service';
 import { ClassService } from 'src/app/services/class.service';
 import { StudentService } from 'src/app/services/student.service';
 import { SubjectService } from 'src/app/services/subject.service';
+import { ExamResultService } from 'src/app/services/exam-result.service';
+import { IssuedTransferCertificateService } from 'src/app/services/issued-transfer-certificate.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { TestimonialService } from 'src/app/services/testimonial.service';
 import { TopperService } from 'src/app/services/topper.service';
@@ -27,9 +29,9 @@ export class DashboardComponent implements OnInit {
   classCountInfo: any;
   studentCountInfo: any;
   studyMaterialCountInfo: any;
-  subjectCountInfo: any;
+  markshhetCountInfo: any;
   teacherCountInfo: any;
-  testCountInfo: any;
+  transferCertificateCountInfo: any;
   testimonialCountInfo: any;
   topperCountInfo: any;
   loader: Boolean = true;
@@ -40,21 +42,19 @@ export class DashboardComponent implements OnInit {
   academicSession: string = '';
   allSession: any = [];
   selectedSession: string = '';
-  monthlyFeesCollection:any={};
-  constructor(private adminAuthService: AdminAuthService,private academicSessionService: AcademicSessionService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
+  monthlyFeesCollection: any = {};
+  constructor(private adminAuthService: AdminAuthService, private academicSessionService: AcademicSessionService, private examResultService: ExamResultService, private issuedTransferCertificateService: IssuedTransferCertificateService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
 
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
-    this.getAcademicSession();
-    this.adsCount();
-    this.classSubjectCount();
-    this.classCount();
-    this.studentCount();
-    this.subjectCount();
-    this.teacherCount();
-    this.testimonialCount();
-    this.topperCount();
+    this.getAcademicSession();;
+    if (this.adminId) {
+      this.studentCount();
+      this.teacherCount();
+      this.marksheetCount();
+      this.transferCertificateCount();
+    }
     setTimeout(() => {
       this.loader = false;
     }, 1000)
@@ -85,14 +85,14 @@ export class DashboardComponent implements OnInit {
               fontWeight: 'bold',
             },
             subTitle: {
-              color:'#434445',
+              color: '#434445',
               fontSize: 16,
               fontWeight: 'normal',
             }
           }
         }
       },
-      
+
       tooltip: {
         trigger: 'item',
         formatter: function (params: any) {
@@ -118,7 +118,7 @@ export class DashboardComponent implements OnInit {
           type: 'pie',
           radius: ['40%', '50%'], // Donut style pie chart
           avoidLabelOverlap: false,
-          top:20,
+          top: 20,
           itemStyle: {
             borderRadius: 0, // Rounded borders for each slice
             borderColor: '#2c343c',
@@ -170,8 +170,8 @@ export class DashboardComponent implements OnInit {
   initBarCharts(): void {
     const chartDom = document.getElementById('lineChart') as HTMLElement;
     const chart = echarts.init(chartDom);
-  
-    
+
+
     const option = {
       title: {
         text: `{title|Monthly Collection :}  {subTitle|${this.selectedSession}}`, // Combine title and subtitle
@@ -185,7 +185,7 @@ export class DashboardComponent implements OnInit {
               fontWeight: 'bold',
             },
             subTitle: {
-              color:'#434445',
+              color: '#434445',
               fontSize: 16,
               fontWeight: 'normal',
             }
@@ -194,7 +194,7 @@ export class DashboardComponent implements OnInit {
       },
       tooltip: {
         trigger: 'axis',
-        formatter: function(params: any) {
+        formatter: function (params: any) {
           const param = params[0];
           return `${param.name} <br/> ${param.marker}  ₹${param.value}`;
         },
@@ -215,7 +215,7 @@ export class DashboardComponent implements OnInit {
       },
       xAxis: {
         type: 'category',
-        data: ['January', 'February', 'March', 'April', 'May','June','July','August','September','October', 'November','December'],
+        data: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         axisLine: {
           lineStyle: {
             color: '#2c343c'
@@ -238,7 +238,7 @@ export class DashboardComponent implements OnInit {
           }
         },
         axisLabel: {
-          formatter: function(value: number) {
+          formatter: function (value: number) {
             return '₹' + value;
           }
         }
@@ -248,18 +248,32 @@ export class DashboardComponent implements OnInit {
           name: 'Fees',
           type: 'bar',
           data: [
-            { value: this.monthlyFeesCollection.January, itemStyle: { color: '#8C52FF' } },  // TOTAL FEES
-            { value: this.monthlyFeesCollection.February, itemStyle: { color: '#8C52FF' } },   // PAID FEES
-            { value: this.monthlyFeesCollection.March, itemStyle: { color: '#8C52FF' } },   // FEES DISCOUNT
-            { value: this.monthlyFeesCollection.April, itemStyle: { color: '#8C52FF' } },   // DUE FEES
-            { value: this.monthlyFeesCollection.May, itemStyle: { color: '#8C52FF' } },
-            { value: this.monthlyFeesCollection.June, itemStyle: { color: '#8C52FF' } },
-            { value: this.monthlyFeesCollection.July, itemStyle: { color: '#8C52FF' } },
-            { value: this.monthlyFeesCollection.August, itemStyle: { color: '#8C52FF' } },
-            { value: this.monthlyFeesCollection.September, itemStyle: { color: '#8C52FF' } },
+            { value: 15000, itemStyle: { color: '#8C52FF' } },
+            { value: 6000, itemStyle: { color: '#8C52FF' } },
+            { value: 9000, itemStyle: { color: '#8C52FF' } },
+            { value: 15000, itemStyle: { color: '#8C52FF' } },
+            { value: 8000, itemStyle: { color: '#8C52FF' } },
+            { value: 16000, itemStyle: { color: '#8C52FF' } },
+            { value: 9000, itemStyle: { color: '#8C52FF' } },
+            { value: 11000, itemStyle: { color: '#8C52FF' } },
+            { value: 20000, itemStyle: { color: '#8C52FF' } },
             { value: this.monthlyFeesCollection.October, itemStyle: { color: '#8C52FF' } },
-            { value: this.monthlyFeesCollection.November, itemStyle: { color: '#8C52FF' } },
-            { value: this.monthlyFeesCollection.December, itemStyle: { color: '#8C52FF' } },   // OVERALL FEES COLLECTION
+            { value: 9000, itemStyle: { color: '#8C52FF' } },
+            { value: 7500, itemStyle: { color: '#8C52FF' } },
+
+
+            // { value: this.monthlyFeesCollection.January, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.February, itemStyle: { color: '#8C52FF' } }, 
+            // { value: this.monthlyFeesCollection.March, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.April, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.May, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.June, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.July, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.August, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.September, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.October, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.November, itemStyle: { color: '#8C52FF' } },
+            // { value: this.monthlyFeesCollection.December, itemStyle: { color: '#8C52FF' } },
           ],
           barWidth: '50%',
         }
@@ -268,9 +282,9 @@ export class DashboardComponent implements OnInit {
       animationDuration: 1000,
       animationEasing: 'cubicOut' as 'cubicOut'
     };
-  
+
     chart.setOption(option);
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
       chart.resize();  // Make chart responsive on window resize
     });
 
@@ -290,7 +304,7 @@ export class DashboardComponent implements OnInit {
     const option = {
       title: {
         text: 'Fees Overview',
-        left:'3.5%',
+        left: '3.5%',
         top: 20,
         textStyle: {
           color: '#2c343c',
@@ -300,7 +314,7 @@ export class DashboardComponent implements OnInit {
       },
       tooltip: {
         trigger: 'axis',
-        formatter: function(params: any) {
+        formatter: function (params: any) {
           const param = params[0];
           return `${param.name} <br/> ${param.marker}  ₹${param.value}`;
         },
@@ -344,7 +358,7 @@ export class DashboardComponent implements OnInit {
           }
         },
         axisLabel: {
-          formatter: function(value: number) {
+          formatter: function (value: number) {
             return '₹' + value;
           }
         }
@@ -379,16 +393,12 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  adsCount() {
-    this.adsService.getAdsCount().subscribe((res: any) => {
-      this.adsCountInfo = res.countAds;
-    })
-  }
+
   feesCollectionBySession(adminId: string, session: string) {
-      let params = {
-        adminId: adminId,
-        session: session
-      }
+    let params = {
+      adminId: adminId,
+      session: session
+    }
     this.feesService.feesCollectionBySession(params).subscribe((res: any) => {
       if (res) {
         this.totalFeesSum = res.totalFeesSum;
@@ -401,39 +411,37 @@ export class DashboardComponent implements OnInit {
       }
     })
   }
-  classSubjectCount() {
-    this.classSubjectService.getClassSubjectCount().subscribe((res: any) => {
-      this.classSubjectCountInfo = res.countClassSubject;
-    })
-  }
-  classCount() {
-    this.classService.getClassCount().subscribe((res: any) => {
-      this.classCountInfo = res.countClass;
-    })
-  }
   studentCount() {
-    this.studentService.getStudentCount().subscribe((res: any) => {
+    let params = {
+      adminId: this.adminId
+    }
+    this.studentService.getStudentCount(params).subscribe((res: any) => {
       this.studentCountInfo = res.countStudent;
     })
   }
-  subjectCount() {
-    this.subjectService.getSubjectCount().subscribe((res: any) => {
-      this.subjectCountInfo = res.countSubject;
-    })
-  }
   teacherCount() {
-    this.teacherService.getTeacherCount().subscribe((res: any) => {
+    let params = {
+      adminId: this.adminId
+    }
+    this.teacherService.getTeacherCount(params).subscribe((res: any) => {
       this.teacherCountInfo = res.countTeacher;
     })
   }
-  testimonialCount() {
-    this.testimonialService.getTestimonialCount().subscribe((res: any) => {
-      this.testimonialCountInfo = res.countTestimonial;
+
+  marksheetCount() {
+    let params = {
+      adminId: this.adminId
+    }
+    this.examResultService.geteExamResultCount(params).subscribe((res: any) => {
+      this.markshhetCountInfo = res.countExamResult;
     })
   }
-  topperCount() {
-    this.topperService.getTopperCount().subscribe((res: any) => {
-      this.topperCountInfo = res.countTopper;
+  transferCertificateCount() {
+    let params = {
+      adminId: this.adminId
+    }
+    this.issuedTransferCertificateService.getIssuedTransferCertificateCount(params).subscribe((res: any) => {
+      this.transferCertificateCountInfo = res.countIssuedTransferCertificate;
     })
   }
 

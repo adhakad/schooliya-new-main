@@ -248,7 +248,7 @@
                       </div>
                     </div>
                     <div *ngIf="deleteMode">
-                      <h4>To delete marksheet detail, click ok to confirm.</h4>
+                      <h4 style="margin-left: 30px;">To delete marksheet detail, click ok to confirm.</h4>
                       <div class="modal-footer">
                         <button class="delete-button" mat-raised-button type="button"
                           (click)="marksheetResultDelete(deleteById)">Ok</button>
@@ -262,8 +262,7 @@
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">MARKSHEET PRINT <span *ngIf="cls==11 || cls ==12">{{stream
-                          | uppercase}}</span></h5>
+                      <h5 class="modal-title">MARKSHEET PRINT</h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
                     <div class="modal-body print-model-body">
@@ -318,7 +317,7 @@
                                   <tr>
                                     <td class="text-bold">CLASS</td>
                                     <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.class | classSuffix |
-                                      uppercase}}</td>
+                                      uppercase}} <span *ngIf="result?.class==11 || result?.class==12">{{result?.stream | uppercase}}</span></td>
                                     <td class="text-bold">DATE OF BIRTH</td>
                                     <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.dob}}</td>
                                   </tr>
@@ -1110,9 +1109,7 @@
                                     <td class="text-bold"
                                       style="width:33.33%;font-size: 12px;text-align: right;border: none;">
                                       <p style="margin-right: 30px;">
-                                        <span *ngIf="cls==9 || cls==10 || cls==11 || cls==12">Principal Signature</span>
-                                        <span *ngIf="cls !==9 && cls !==10 && cls !==11 && cls !==12">Principal/Head
-                                          Master Signature</span>
+                                        <span>Principal Signature</span>
                                       </p>
                                     </td>
                                   </tr>

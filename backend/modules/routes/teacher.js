@@ -4,7 +4,7 @@ const router = express.Router();
 const { countTeacher,GetTeacherById, CreateTeacher, UpdateTeacher, ChangeStatus, DeleteTeacher, GetTeacherPagination, TeacherPermission } = require('../controllers/teacher');
 const { isAdminAuth } = require('../middleware/admin-auth');
 
-router.get('/teacher-count',countTeacher);
+router.get('/teacher-count/:adminId',countTeacher);
 router.get('/admin/:adminId/teacher/:teacherUserId',GetTeacherById);
 router.post('/teacher-pagination', GetTeacherPagination);
 router.post('/', isAdminAuth, CreateTeacher);

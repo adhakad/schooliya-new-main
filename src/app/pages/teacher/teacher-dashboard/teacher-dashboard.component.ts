@@ -47,7 +47,10 @@ export class TeacherDashboardComponent implements OnInit {
     })
   }
   studentCount() {
-    this.studentService.getStudentCount().subscribe((res: any) => {
+    let params = {
+      adminId:this.adminId
+    }
+    this.studentService.getStudentCount(params).subscribe((res: any) => {
       if (res) {
         this.studentCountInfo = res.countStudent;
       }

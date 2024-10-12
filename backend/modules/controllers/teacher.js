@@ -4,7 +4,8 @@ const TeacherModel = require('../models/teacher');
 const TeacherUserModel = require('../models/users/teacher-user');
 
 let countTeacher = async (req, res, next) => {
-    let countTeacher = await TeacherModel.count();
+    let adminId = req.params.adminId;
+    let countTeacher = await TeacherModel.count({adminId:adminId});
     return res.status(200).json({ countTeacher });
 }
 let GetTeacherById = async (req, res, next) => {

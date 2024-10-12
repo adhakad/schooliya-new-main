@@ -13,7 +13,6 @@ let GetStudentFeesCollectionBySession = async (req, res, next) => {
         const allFees = await FeesCollectionModel.find({ adminId: adminId, session: session });
         let totalFeesSum = 0, paidFeesSum = 0, dueFeesSum = 0;
 
-        console.log(allFees)
         for (let i = 0; i < allFees.length; i++) {
             totalFeesSum += allFees[i].totalFees;
             paidFeesSum += allFees[i].paidFees;
@@ -59,7 +58,6 @@ let GetStudentFeesCollectionBySession = async (req, res, next) => {
         
                     if (monthName) {
                         monthlyPayments[monthName] += data.admissionFees;
-                        console.log(`Added Admission Fee: ${data.admissionFees} to ${monthName}`);
                     }
                 }
         
@@ -75,7 +73,6 @@ let GetStudentFeesCollectionBySession = async (req, res, next) => {
         
                         if (monthName) {
                             monthlyPayments[monthName] += amount;
-                            console.log(`Added Installment: ${amount} to ${monthName}`);
                         }
                     }
                 }

@@ -100,7 +100,7 @@
                                 </tbody>
                             </table>
                             <div class="modal fade show" [class.show]="showModal">
-                                <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-dialog modal-lg" role="document" [class.modal-lg]="!deleteMode && !successMsg">
                                     <div class="modal-content" *ngIf="successMsg">
                                         <div class="modal-header">
                                             <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>

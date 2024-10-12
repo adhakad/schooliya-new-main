@@ -9,6 +9,10 @@ export class ExamResultService {
   url = `${environment.API_URL}/v1/exam-result`;
   constructor(private http: HttpClient) { }
 
+
+  geteExamResultCount(params:any) {
+    return this.http.get(`${this.url}/exam-result-count/${params.adminId}`);
+  }
   addExamResult(userForm:any) {
     // console.log(userForm);
     return this.http.post(`${this.url}`,userForm);

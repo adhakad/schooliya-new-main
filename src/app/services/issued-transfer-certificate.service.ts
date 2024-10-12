@@ -14,7 +14,9 @@ export class IssuedTransferCertificateService {
   createTransferCertificate(studentData:any){
     return this.http.post(this.url,studentData);
   }
-  
+  getIssuedTransferCertificateCount(params:any) {
+    return this.http.get(`${this.url}/issued-transfer-certificate-count/${params.adminId}`);
+  }
   issuedTransferCertificatePagination(studentData:any){
     return this.http.post(`${this.url}/issued-transfer-certificate-pagination`,studentData);
   }
