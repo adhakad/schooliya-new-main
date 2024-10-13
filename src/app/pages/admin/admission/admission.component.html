@@ -271,20 +271,20 @@
                                 <input matInput type="number" formControlName="admissionFees" readonly>
                                 <mat-error
                                   *ngIf="studentForm.get('admissionFees')?.hasError('required') && studentForm.get('admissionFees')?.touched">
-                                  Admission fee is required
+                                  Admission fees is required
                                 </mat-error>
                               </mat-form-field>
                             </div>
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
-                                <mat-label>Fees Discount Amount (&#8377;)</mat-label>
-                                <input matInput type="number" formControlName="discountAmountInFees" class="no-arrow">
+                                <mat-label>Fees Concession Amount (&#8377;)</mat-label>
+                                <input matInput type="number" formControlName="feesConcession" class="no-arrow">
                                 <mat-error
-                                  *ngIf="studentForm.get('discountAmountInFees')?.hasError('required') && studentForm.get('discountAmountInFees')?.touched">
+                                  *ngIf="studentForm.get('feesConcession')?.hasError('required') && studentForm.get('feesConcession')?.touched">
                                   Fees discount amount is required
                                 </mat-error>
                                 <mat-error
-                                  *ngIf="studentForm.get('discountAmountInFees')?.hasError('pattern') && studentForm.get('discountAmountInFees')?.touched">
+                                  *ngIf="studentForm.get('feesConcession')?.hasError('pattern') && studentForm.get('feesConcession')?.touched">
                                   Please enter a valid fees discount amount (numeric characters only)
                                 </mat-error>
                               </mat-form-field>

@@ -64,12 +64,12 @@ const FeesCollectionModel = mongoose.model('fees-collection', {
     trim: true,
     default: 'empty'
   },
-  discountAmountInFees: {
+  feesConcession: {
     type: Number,
     required: true,
     trim: true,
   },
-  allDiscountAmountInFees: {
+  allFeesConcession: {
     type: Number,
     required: true,
     trim: true,

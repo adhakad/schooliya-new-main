@@ -82,7 +82,7 @@ export class PromoteFailComponent implements OnInit {
       class: [''],
       stream: [''],
       rollNumber: ['', Validators.required],
-      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: ['']
     })
 
@@ -94,7 +94,7 @@ export class PromoteFailComponent implements OnInit {
       class: [''],
       stream: ['',Validators.required],
       rollNumber: ['', Validators.required],
-      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: ['']
     })
 
@@ -184,7 +184,7 @@ export class PromoteFailComponent implements OnInit {
     this.studentClassPromoteForm.patchValue(student);
     this.studentClassPromoteForm.get('session')?.setValue(newSession);
     this.studentClassPromoteForm.get('stream')?.setValue(this.stream);
-    this.studentClassPromoteForm.get('discountAmountInFees')?.setValue(null);
+    this.studentClassPromoteForm.get('feesConcession')?.setValue(null);
   }
 
 
@@ -200,7 +200,7 @@ export class PromoteFailComponent implements OnInit {
     this.studentClassFailForm.patchValue(student);
     this.studentClassFailForm.get('session')?.setValue(newSession);
     this.studentClassFailForm.get('stream')?.setValue(student.stream);
-    this.studentClassFailForm.get('discountAmountInFees')?.setValue(null);
+    this.studentClassFailForm.get('feesConcession')?.setValue(null);
   }
 
 

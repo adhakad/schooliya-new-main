@@ -121,7 +121,7 @@ export class AdminStudentFeesStatementComponent implements OnInit {
     const data: any = this.processedData
     const desiredInstallment = singleInstallment;
     this.singleReceiptInstallment = data.filter((item: any) => item.paymentDate === desiredInstallment);
-    this.singleReceiptInstallment[0].discountAmountInFees = this.studentFeesCollection.discountAmountInFees;
+    this.singleReceiptInstallment[0].feesConcession = this.studentFeesCollection.feesConcession;
     this.showModal = true;
 
   }

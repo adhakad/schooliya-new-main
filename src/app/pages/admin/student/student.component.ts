@@ -110,7 +110,7 @@ export class StudentComponent implements OnInit {
       motherOccupation: ['', Validators.required],
       parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
       parentsAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: [''],
     })
 
@@ -298,7 +298,7 @@ export class StudentComponent implements OnInit {
       motherOccupation: student.motherOccupation,
       parentsContact: student.parentsContact,
       parentsAnnualIncome: student.parentsAnnualIncome,
-      discountAmountInFees: student.discountAmountInFees,
+      feesConcession: student.feesConcession,
       createdBy: student.createdBy
     });
     const classValue = student.class;
@@ -308,7 +308,7 @@ export class StudentComponent implements OnInit {
       });
     }
     if (this.updateMode) {
-      this.studentForm.get('feesDiscount')?.disable();  // Disable in edit mode
+      this.studentForm.get('feesConcession')?.disable();  // Disable in edit mode
     }
   }
   deleteStudentModel(id: String) {
@@ -610,7 +610,7 @@ export class StudentComponent implements OnInit {
       'fatherName',
       'motherName',
       'rollNumber',
-      'discountAmountInFees',
+      'feesConcession',
       'aadharNumber',
       'samagraId',
       'dob',

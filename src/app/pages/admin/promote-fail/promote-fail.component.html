@@ -273,15 +273,15 @@
                                                         </div>
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
-                                                                <mat-label>Fees Discount Amount (&#8377;)</mat-label>
+                                                                <mat-label>Fees Concession Amount (&#8377;)</mat-label>
                                                                 <input matInput type="number"
-                                                                    formControlName="discountAmountInFees" min="0">
+                                                                    formControlName="feesConcession" min="0">
                                                                 <mat-error
-                                                                    *ngIf="studentClassPromoteForm.get('discountAmountInFees')?.hasError('required') && studentClassPromoteForm.get('discountAmountInFees')?.touched">
+                                                                    *ngIf="studentClassPromoteForm.get('feesConcession')?.hasError('required') && studentClassPromoteForm.get('feesConcession')?.touched">
                                                                     Fees discount amount is required
                                                                 </mat-error>
                                                                 <mat-error
-                                                                    *ngIf="studentClassPromoteForm.get('discountAmountInFees')?.hasError('pattern') && studentClassPromoteForm.get('discountAmountInFees')?.touched">
+                                                                    *ngIf="studentClassPromoteForm.get('feesConcession')?.hasError('pattern') && studentClassPromoteForm.get('feesConcession')?.touched">
                                                                     Please enter a valid fees discount amount (numeric
                                                                     characters only)
                                                                 </mat-error>
@@ -382,15 +382,15 @@
                                                         </div>
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
-                                                                <mat-label>Fees Discount Amount (&#8377;)</mat-label>
+                                                                <mat-label>Fees Concession Amount (&#8377;)</mat-label>
                                                                 <input matInput type="number"
-                                                                    formControlName="discountAmountInFees" min="0">
+                                                                    formControlName="feesConcession" min="0">
                                                                 <mat-error
-                                                                    *ngIf="studentClassFailForm.get('discountAmountInFees')?.hasError('required') && studentClassFailForm.get('discountAmountInFees')?.touched">
+                                                                    *ngIf="studentClassFailForm.get('feesConcession')?.hasError('required') && studentClassFailForm.get('feesConcession')?.touched">
                                                                     Fees discount amount is required
                                                                 </mat-error>
                                                                 <mat-error
-                                                                    *ngIf="studentClassFailForm.get('discountAmountInFees')?.hasError('pattern') && studentClassFailForm.get('discountAmountInFees')?.touched">
+                                                                    *ngIf="studentClassFailForm.get('feesConcession')?.hasError('pattern') && studentClassFailForm.get('feesConcession')?.touched">
                                                                     Please enter a valid fees discount amount (numeric
                                                                     characters only)
                                                                 </mat-error>
@@ -449,8 +449,8 @@
                                                             <p>Stream - {{singleStudentInfo.stream}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
-                                                            <p>Fees Discount - &#8377;
-                                                                {{singleStudentInfo.discountAmountInFees}}</p>
+                                                            <p>Fees Concession - &#8377;
+                                                                {{singleStudentInfo.feesConcession}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
                                                             <p>Last School - <span

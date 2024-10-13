@@ -151,7 +151,7 @@ const StudentModel = mongoose.model('student', {
         required: true,
         trim: true
     },
-    discountAmountInFees: {
+    feesConcession: {
         type: Number,
         required: true,
         trim: true,

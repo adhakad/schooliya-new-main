@@ -238,7 +238,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 session:checkFeesCollection.session,
                 receiptNo: receiptNo,
                 totalFees: totalFees,
-                discountAmountInFees: checkFeesCollection.discountAmountInFees,
+                feesConcession: checkFeesCollection.feesConcession,
                 paidFees: paidFees,
                 dueFees: dueFees,
                 feesAmount: feesAmount,
@@ -293,7 +293,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 session:previousSession,
                 receiptNo: receiptNo,
                 totalFees: totalFees,
-                discountAmountInFees: checkPreviousFeesCollection.discountAmountInFees,
+                feesConcession: checkPreviousFeesCollection.feesConcession,
                 paidFees: paidFees,
                 dueFees: dueFees,
                 feesAmount: feesAmount,
@@ -323,7 +323,7 @@ let CreateFeesCollection = async (req, res, next) => {
                             AllTotalFees: currentSessionTotalFees,
                             AllPaidFees: 0,
                             AllDueFees: currentSessionTotalFees,
-                            allDiscountAmountInFees:checkFeesCollection.discountAmountInFees,
+                            allFeesConcession:checkFeesCollection.feesConcession,
                         }
                     },
                     {
@@ -340,7 +340,7 @@ let CreateFeesCollection = async (req, res, next) => {
                             AllTotalFees: currentSessionTotalFees,
                             AllPaidFees: 0,
                             AllDueFees: currentSessionTotalFees,
-                            allDiscountAmountInFees:checkFeesCollection.discountAmountInFees,
+                            allFeesConcession:checkFeesCollection.feesConcession,
                         }
                     },
                     {
@@ -363,7 +363,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     session:checkFeesCollection.session,
                     receiptNo: receiptNo,
                     totalFees: totalFees,
-                    discountAmountInFees: checkFeesCollection.discountAmountInFees,
+                    feesConcession: checkFeesCollection.feesConcession,
                     paidFees: paidFees,
                     dueFees: dueFees,
                     feesAmount: feesAmount,

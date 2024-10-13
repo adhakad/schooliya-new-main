@@ -155,7 +155,7 @@
                                             <p class="mb-0">{{student.admissionNo}}</p>
                                         </td>
                                         <td>
-                                            <p class="mb-0"> &#8377; {{student.allDiscountAmountInFees}}</p>
+                                            <p class="mb-0"> &#8377; {{student.allFeesConcession}}</p>
                                         </td>
                                         <td>
                                             <p class="mb-0"> &#8377; {{student.AllPaidFees}}</p>
@@ -206,35 +206,6 @@
                                                                     <td>{{singleStudent.fatherName}}</td>
                                                                 </tr>
                                                             </table>
-                                                            <table class="custom-table">
-                                                                <tr>
-                                                                    <td class="text-bold">Paid Fee</td>
-                                                                    <td>&#8377; {{singleStudent.paidFees}}</td>
-                                                                    <td class="text-bold">Due Fee</td>
-                                                                    <td>&#8377; {{singleStudent.dueFees}}</td>
-                                                                    <td class="text-bold">Total Fee</td>
-                                                                    <td>&#8377; {{singleStudent.totalFees}}</td>
-                                                                </tr>
-                                                            </table>
-                                                            <table class="custom-table">
-                                                                <tr
-                                                                    *ngFor="let installmentGroup of singleStudent.installment | chunk: 3; let i = index">
-                                                                    <ng-container>
-                                                                        <ng-container
-                                                                            *ngFor="let installmentObject of installmentGroup; let j = index">
-                                                                            <ng-container
-                                                                                *ngFor="let entry of installmentObject | keyvalue">
-                                                                                <td class="text-bold">
-                                                                                    {{ entry.key }}
-                                                                                </td>
-                                                                                <td style="font-weight: 400">
-                                                                                    &#8377; {{ entry.value }}
-                                                                                </td>
-                                                                            </ng-container>
-                                                                        </ng-container>
-                                                                    </ng-container>
-                                                                </tr>
-                                                            </table>
                                                             <div class="row">
                                                                 <div class="col-6 col-lg-6">
                                                                     <mat-form-field appearance="outline">
@@ -247,7 +218,7 @@
                                                                 <div class="col-4 offset-2 col-lg-4">
                                                                     <button class="submit-button" mat-raised-button
                                                                         style="height: 48px !important;padding-top:5px;padding-bottom:10px !important;"
-                                                                        type="button" (click)="feesAddUpdate()">Pay
+                                                                        type="button" (click)="feesAddUpdate()">Collect
                                                                         Now
                                                                     </button>
                                                                 </div>
@@ -396,10 +367,10 @@
                                                                         <td class="border" style="border-left: none;">
                                                                         </td>
                                                                         <td class="border">
-                                                                            Discount Amount</td>
+                                                                            Concession Amount</td>
                                                                         <td class="border" style="border-right: none;">
                                                                             - &#8377;
-                                                                            {{receiptInstallment.discountAmountInFees}}
+                                                                            {{receiptInstallment.feesConcession}}
                                                                         </td>
                                                                     </tr>
                                                                     <tr class="text-center" style="height: 15px;">

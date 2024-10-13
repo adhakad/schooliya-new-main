@@ -7,7 +7,6 @@ const IssuedTransferCertificateModel = require('../models/issued-transfer-certif
 
 let countIssuedTransferCertificate = async (req, res, next) => {
     let adminId = req.params.adminId;
-    console.log(adminId)
     let countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({adminId:adminId});
     return res.status(200).json({ countIssuedTransferCertificate });
 }

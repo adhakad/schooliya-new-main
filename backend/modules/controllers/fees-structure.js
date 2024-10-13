@@ -87,7 +87,7 @@ let CreateFeesStructure = async (req, res, next) => {
             if (checkStudent) {
                 let studentFeesData = [];
                 for (let i = 0; i < checkStudent.length; i++) {
-                    let totalFees = feesStructure.totalFees - checkStudent[i].discountAmountInFees;
+                    let totalFees = feesStructure.totalFees - checkStudent[i].feesConcession;
                     let feesObject = {
                         adminId: adminId,
                         studentId: checkStudent[i]._id,
@@ -99,7 +99,7 @@ let CreateFeesStructure = async (req, res, next) => {
                         totalFees: totalFees,
                         paidFees: 0,
                         dueFees: totalFees,
-                        discountAmountInFees: checkStudent[i].discountAmountInFees,
+                        feesConcession: checkStudent[i].feesConcession,
                     };
 
                     if (checkStudent.admissionType === 'New') {

@@ -55,7 +55,7 @@ let ValidatePayment = async (req, res) => {
   const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit } = req.body;
   const adminInfo = { id, email, activePlan, amount, currency };
   const paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
-  const secretKey = 'GksjQRDECjxd4sY4pS9jn8nB';
+  const secretKey = 'l4eS2FCVYOKESgX4b1qZsDJh';
   const body = `${orderId}|${paymentId}`;
   
   try {
