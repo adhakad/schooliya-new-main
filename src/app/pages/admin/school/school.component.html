@@ -188,7 +188,7 @@
                                 </ngx-mat-file-input>
                               </mat-form-field>
                             </div>
-                            
+
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Affiliation Number</mat-label>
@@ -299,7 +299,11 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>State</mat-label>
-                                <input matInput type="text" formControlName="state">
+                                <mat-select type="text" matInput formControlName="state">
+                                  <div *ngFor="let state of indianStates">
+                                    <mat-option value="{{state}}">{{state}}</mat-option>
+                                  </div>
+                                </mat-select>
                                 <mat-error
                                   *ngIf="schoolForm.get('state')?.hasError('required') && schoolForm.get('state')?.touched">
                                   State is required
@@ -382,7 +386,7 @@
                           [disabled]="!schoolForm.valid">Submit</button>
                       </div>
                       <div *ngIf="deleteMode">
-                        <h3>To delete school detail, click ok to confirm.</h3>
+                        <h3 style="margin-left: 20px;">To delete school detail, click ok to confirm.</h3>
                         <div class="modal-footer">
                           <button class="delete-button" mat-raised-button type="button"
                             (click)="schoolDelete(deleteById)">Ok</button>

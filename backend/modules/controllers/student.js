@@ -11,7 +11,7 @@ const { DateTime } = require('luxon');
 
 let countStudent = async (req, res, next) => {
     let adminId = req.params.adminId;
-    let countStudent = await StudentModel.count({adminId: adminId});
+    let countStudent = await StudentModel.count({ adminId: adminId });
     return res.status(200).json({ countStudent });
 }
 
@@ -253,14 +253,13 @@ let CreateStudent = async (req, res, next) => {
         session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy
     }
     try {
-        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId});
-        console.log(adminId)
+        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
         if (!checkAdminPlan) {
             return res.status(404).json(`Invalid Entry`);
         }
         let studentLimit = checkAdminPlan.studentLimit;
-        let countStudent = await StudentModel.count({adminId: adminId});
-        if (countStudent==studentLimit || countStudent>studentLimit) {
+        let countStudent = await StudentModel.count({ adminId: adminId });
+        if (countStudent == studentLimit || countStudent > studentLimit) {
             return res.status(400).json(`You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue.`);
         }
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
@@ -302,6 +301,9 @@ let CreateStudent = async (req, res, next) => {
         if (checkRollNumber) {
             return res.status(400).json(`Roll number already exist for this class !`);
         }
+        if (feesConcession > checkFeesStr.totalFees) {
+            return res.status(400).json(`Concession cannot be greater than the total academic session fee. !`);
+        }
         let totalFees = checkFeesStr.totalFees - feesConcession;
         const admissionFee = checkFeesStr.admissionFees;
         let admissionFeesPayable = false;
@@ -325,7 +327,7 @@ let CreateStudent = async (req, res, next) => {
             admissionFees: admissionFees ? admissionFees : 0,
             admissionFeesPayable: admissionFeesPayable,
             feesConcession: feesConcession,
-            allFeesConcession:feesConcession,
+            allFeesConcession: feesConcession,
             totalFees: totalFees,
             paidFees: paidFees,
             dueFees: dueFees,
@@ -469,20 +471,22 @@ let CreateBulkStudentRecord = async (req, res, next) => {
     const session = await StudentModel.startSession();
     session.startTransaction();
     try {
-        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId});
-        console.log(adminId)
-        console.log(checkAdminPlan)
+        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
         if (!checkAdminPlan) {
             return res.status(404).json(`Invalid Entry`);
         }
         let studentLimit = checkAdminPlan.studentLimit;
-        let countStudent = await StudentModel.count({adminId: adminId});
+        let countStudent = await StudentModel.count({ adminId: adminId });
         let allStudentCount = studentData.length + countStudent;
-        if (countStudent==studentLimit || countStudent>studentLimit || allStudentCount>studentLimit) {
+        if (countStudent == studentLimit || countStudent > studentLimit || allStudentCount > studentLimit) {
             return res.status(400).json(`You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue.`);
         }
         if (studentData.length > 100) {
             return res.status(400).json('File too large, Please make sure that file records to less then or equals to 100 !');
+        }
+        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: studentData[0].session, class: className, stream: stream });
+        if (!checkFeesStr) {
+            return res.status(404).json(`Please create fees structure !`);
         }
         const otherClassAdmissionNo = [];
         // for (const student of studentData) {
@@ -605,6 +609,9 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 const formattedMissingFields = missingFields.map(toTitleCase); // Convert to Title Case
                 return res.status(400).json(`Row ${index} is missing required fields: ( ${formattedMissingFields.join(', ')} ). Please fill in all mandatory fields before continuing!`);
             }
+            if (feesConcession > checkFeesStr.totalFees) {
+                return res.status(400).json(`Row ${index} shows a fee concession amount greater than the total academic fee.`);
+            }
 
             const rollNumberExists = existingRecords.some(record => record.rollNumber == rollNumber);
             if (rollNumberExists) {
@@ -614,10 +621,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             index++;
         }
 
-        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: studentData[0].session, class: className, stream: stream });
-        if (!checkFeesStr) {
-            return res.status(404).json(`Please create fees structure !`);
-        }
+
         const createStudent = await StudentModel.create(studentData, { session });
         let admissionFees = checkFeesStr.admissionFees;
         let studentFeesData = [];
@@ -726,6 +730,9 @@ let StudentClassPromote = async (req, res, next) => {
         if (!checkFeesStr) {
             return res.status(404).json({ errorMsg: `Please create the fee structure for next class for session ${session}.` });
         }
+        if (feesConcession > checkFeesStr.totalFees) {
+            return res.status(400).json({ errorMsg: `Concession cannot be greater than the total academic session fee. !` });
+        }
         const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'Old', feesConcession: feesConcession };
         const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });
 
@@ -765,7 +772,7 @@ let StudentClassPromote = async (req, res, next) => {
                         AllPaidFees: 0,
                         AllDueFees: totalFees,
                         feesConcession: feesConcession,
-                        allFeesConcession:feesConcession,
+                        allFeesConcession: feesConcession,
                     };
                     let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
                     let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
@@ -797,7 +804,7 @@ let StudentClassPromote = async (req, res, next) => {
                     AllPaidFees: previousSessionPaidFees,
                     AllDueFees: totalFees + previousSessionDueFees,
                     feesConcession: feesConcession,
-                    allFeesConcession : feesConcession + previousFeesConcession,
+                    allFeesConcession: feesConcession + previousFeesConcession,
                 };
                 const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                     {
@@ -813,7 +820,7 @@ let StudentClassPromote = async (req, res, next) => {
                             AllTotalFees: totalFees + previousSessionTotalFees,
                             AllPaidFees: previousSessionPaidFees,
                             AllDueFees: totalFees + previousSessionDueFees,
-                            allFeesConcession : feesConcession + previousFeesConcession,
+                            allFeesConcession: feesConcession + previousFeesConcession,
 
                         }
                     },
@@ -873,6 +880,9 @@ let StudentClassFail = async (req, res, next) => {
         if (!checkFeesStr) {
             return res.status(404).json({ errorMsg: `Please create the fee structure for next class for session ${session}.` });
         }
+        if (feesConcession > checkFeesStr.totalFees) {
+            return res.status(400).json({ errorMsg: `Concession cannot be greater than the total academic session fee. !` });
+        }
         const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'Old', feesConcession: feesConcession };
         const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });
 
@@ -912,7 +922,7 @@ let StudentClassFail = async (req, res, next) => {
                         AllPaidFees: 0,
                         AllDueFees: totalFees,
                         feesConcession: feesConcession,
-                        allFeesConcession:feesConcession,
+                        allFeesConcession: feesConcession,
                     };
                     let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
                     let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
@@ -944,7 +954,7 @@ let StudentClassFail = async (req, res, next) => {
                     AllPaidFees: previousSessionPaidFees,
                     AllDueFees: totalFees + previousSessionDueFees,
                     feesConcession: feesConcession,
-                    allFeesConcession : feesConcession + previousFeesConcession,
+                    allFeesConcession: feesConcession + previousFeesConcession,
                 };
                 const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                     {
@@ -960,7 +970,7 @@ let StudentClassFail = async (req, res, next) => {
                             AllTotalFees: totalFees + previousSessionTotalFees,
                             AllPaidFees: previousSessionPaidFees,
                             AllDueFees: totalFees + previousSessionDueFees,
-                            allFeesConcession : feesConcession + previousFeesConcession,
+                            allFeesConcession: feesConcession + previousFeesConcession,
 
                         }
                     },
@@ -1008,7 +1018,7 @@ let DeleteStudent = async (req, res, next) => {
             const [deleteAdmitCard, deleteExamResult, deleteFeesCollection] = await Promise.all([
                 AdmitCardModel.deleteOne({ studentId: id }),
                 ExamResultModel.deleteOne({ studentId: id }),
-                FeesCollectionModel.deleteOne({ studentId: id }),
+                FeesCollectionModel.deleteMany({ studentId: id }),
             ]);
 
             if (deleteAdmitCard || deleteExamResult || deleteFeesCollection) {

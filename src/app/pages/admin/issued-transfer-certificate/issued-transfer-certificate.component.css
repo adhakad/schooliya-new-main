@@ -1,5 +1,5 @@
 @import'../dashboard/dashboard.component.css';
 .table{
-    display: block;
+    display: inline-table;
     text-align: center;
 }

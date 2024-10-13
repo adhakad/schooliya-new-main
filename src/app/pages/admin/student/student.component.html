@@ -156,6 +156,7 @@
                     <th>Stream</th>
                     <th>Roll Number</th>
                     <th>Session</th>
+                    <th>Created By</th>
                     <th>View</th>
                     <th>Edit</th>
                     <th>Remove</th>
@@ -189,6 +190,9 @@
                     </td>
                     <td>
                       <p class="mb-0">{{students.session}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.createdBy}}</p>
                     </td>
                     <td class="mb-0">
                       <mat-icon (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
