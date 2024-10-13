@@ -157,7 +157,7 @@
                     <form [formGroup]="schoolForm" (ngSubmit)="schoolAddUpdate()">
                       <div class="modal-body" *ngIf="!deleteMode">
 
-                        <div *ngIf="errorCheck">
+                        <div *ngIf="errorCheck && !updateMode">
                           <p class="error-message">{{errorMsg}}</p>
                         </div>
 

@@ -146,7 +146,7 @@ const StudentModel = mongoose.model('student', {
         type: Number,
         trim: true
     },
-    parentsAnnualIncome: {
+    familyAnnualIncome: {
         type: String,
         required: true,
         trim: true

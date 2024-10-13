@@ -128,7 +128,7 @@ const IssuedTransferCertificateModel = mongoose.model('issued-transfer-certifica
         type: Number,
         trim: true
     },
-    parentsAnnualIncome: {
+    familyAnnualIncome: {
         type: String,
         required: true,
         trim: true

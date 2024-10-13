@@ -89,7 +89,7 @@ export class AdmissionComponent implements OnInit {
       motherQualification: ['', Validators.required],
       motherOccupation: ['', Validators.required],
       parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
-      parentsAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      familyAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: [''],
 

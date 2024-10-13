@@ -231,7 +231,7 @@ let CreateStudent = async (req, res, next) => {
     let receiptNo = Math.floor(Math.random() * 899999 + 100000);
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
-    let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, feesConcession, createdBy } = req.body;
+    let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy } = req.body;
     let className = req.body.class;
     if (stream === "stream") {
         stream = "N/A";
@@ -250,7 +250,7 @@ let CreateStudent = async (req, res, next) => {
         dob = DateTime.fromISO(dob).toFormat("dd-MM-yyyy");
     }
     let studentData = {
-        session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, feesConcession, createdBy
+        session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy
     }
     try {
         const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId});
@@ -462,7 +462,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             fatherOccupation: student.fatherOccupation,
             motherOccupation: student.motherOccupation,
             parentsContact: student.parentsContact,
-            parentsAnnualIncome: student.parentsAnnualIncome,
+            familyAnnualIncome: student.familyAnnualIncome,
             createdBy: createdBy,
         });
     }
@@ -560,7 +560,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 motherQualification,
                 fatherOccupation,
                 motherOccupation,
-                parentsAnnualIncome,
+                familyAnnualIncome,
                 rollNumber,
                 admissionNo,
                 feesConcession,
@@ -586,7 +586,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             if (motherQualification === null || motherQualification === undefined) missingFields.push('motherQualification');
             if (fatherOccupation === null || fatherOccupation === undefined) missingFields.push('fatherOccupation');
             if (motherOccupation === null || motherOccupation === undefined) missingFields.push('motherOccupation');
-            if (parentsAnnualIncome === null || parentsAnnualIncome === undefined) missingFields.push('parentsAnnualIncome');
+            if (familyAnnualIncome === null || familyAnnualIncome === undefined) missingFields.push('familyAnnualIncome');
             if (rollNumber === null || rollNumber === undefined) missingFields.push('rollNumber');
             if (admissionNo === null || admissionNo === undefined) missingFields.push('admissionNo');
             if (feesConcession === null || feesConcession === undefined) missingFields.push('feesConcession');
@@ -682,9 +682,9 @@ let CreateBulkStudentRecord = async (req, res, next) => {
 let UpdateStudent = async (req, res, next) => {
     try {
         const id = req.params.id;
-        let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, feesConcession } = req.body;
+        let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession } = req.body;
         const studentData = {
-            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, parentsAnnualIncome, motherName, motherQualification, feesConcession
+            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession
         }
         const updateStudent = await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
         return res.status(200).json('Student update successfully.');

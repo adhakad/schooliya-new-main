@@ -577,13 +577,13 @@
                               </mat-form-field>
                               <mat-form-field appearance="outline">
                                 <mat-label>Family Annual Income (&#8377;)</mat-label>
-                                <input matInput type="number" formControlName="parentsAnnualIncome">
+                                <input matInput type="number" formControlName="familyAnnualIncome">
                                 <mat-error
-                                  *ngIf="studentForm.get('parentsAnnualIncome')?.hasError('required') && studentForm.get('parentsAnnualIncome')?.touched">
+                                  *ngIf="studentForm.get('familyAnnualIncome')?.hasError('required') && studentForm.get('familyAnnualIncome')?.touched">
                                   Family annual income is required
                                 </mat-error>
                                 <mat-error
-                                  *ngIf="studentForm.get('parentsAnnualIncome')?.hasError('pattern') && studentForm.get('parentsAnnualIncome')?.touched">
+                                  *ngIf="studentForm.get('familyAnnualIncome')?.hasError('pattern') && studentForm.get('familyAnnualIncome')?.touched">
                                   Please enter a valid Family Annual Income (numeric characters only)
                                 </mat-error>
                               </mat-form-field>
@@ -855,7 +855,7 @@
                               <p>Father Name - {{singleStudentInfo.fatherName | titlecase}}</p>
                               <p>Father Qualification - {{singleStudentInfo.fatherQualification | titlecase}}</p>
                               <p>Father Occupation - {{singleStudentInfo.fatherOccupation | titlecase}}</p>
-                              <p>Family Annual Income - &#8377; {{singleStudentInfo.parentsAnnualIncome}}</p>
+                              <p>Family Annual Income - &#8377; {{singleStudentInfo.familyAnnualIncome}}</p>
                             </div>
                             <div class="col-12 col-lg-6">
                               <p>Mother Name - {{singleStudentInfo.motherName | titlecase}}</p>

@@ -512,13 +512,13 @@
                               </mat-form-field>
                               <mat-form-field appearance="outline">
                                 <mat-label>Faimly Annual Income (&#8377;)</mat-label>
-                                <input matInput type="number" formControlName="parentsAnnualIncome" class="no-arrow">
+                                <input matInput type="number" formControlName="familyAnnualIncome" class="no-arrow">
                                 <mat-error
-                                  *ngIf="studentForm.get('parentsAnnualIncome')?.hasError('required') && studentForm.get('parentsAnnualIncome')?.touched">
+                                  *ngIf="studentForm.get('familyAnnualIncome')?.hasError('required') && studentForm.get('familyAnnualIncome')?.touched">
                                   Faimly annual income is required
                                 </mat-error>
                                 <mat-error
-                                  *ngIf="studentForm.get('parentsAnnualIncome')?.hasError('pattern') && studentForm.get('parentsAnnualIncome')?.touched">
+                                  *ngIf="studentForm.get('familyAnnualIncome')?.hasError('pattern') && studentForm.get('familyAnnualIncome')?.touched">
                                   Please enter a valid Faimly Annual Income (numeric characters only)
                                 </mat-error>
                               </mat-form-field>
@@ -713,7 +713,7 @@
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Family Annual Income :</td>
-                                    <td>{{singleStudentInfo?.parentsAnnualIncome}}</td>
+                                    <td>{{singleStudentInfo?.familyAnnualIncome}}</td>
                                     <td class="text-bold">Contact :</td>
                                     <td>{{singleStudentInfo?.parentsContact}}</td>
                                   </tr>
