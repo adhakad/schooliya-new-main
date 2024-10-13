@@ -45,95 +45,96 @@
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
-              <table class="table align-middle bg-white">
-                <thead class="bg-light">
-                  <tr class="text-muted">
-                    <th>No.</th>
-                    <th>Logo</th>
-                    <th>School Name</th>
-                    <th>Affiliation Number</th>
-                    <th>School Code</th>
-                    <th>Founded Year</th>
-                    <th>Board</th>
-                    <th>Medium</th>
-                    <th>Street</th>
-                    <th>City/Town</th>
-                    <th>District</th>
-                    <th>State</th>
-                    <th>Country</th>
-                    <th>Pin Code</th>
-                    <th>Contact Number</th>
-                    <th>Alternate Number</th>
-                    <th>Email</th>
-                    <th>Edit</th>
-                    <th>Remove</th>
-                  </tr>
-                </thead>
-                <tbody *ngIf="schoolInfo">
-                  <tr>
-                    <td>
-                      <p class="mb-0">1</p>
-                    </td>
-                    <td>
-                      <img src="{{baseUrl}}/public/school-logo/{{schoolInfo?.schoolLogo}}" alt="" height="50x;">
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.schoolName | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.affiliationNumber}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.schoolCode}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.foundedYear}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.board | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.medium | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.street | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.city | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.district | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.state | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.country | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.pinCode}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.phoneOne}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.phoneSecond}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{schoolInfo?.email}}</p>
-                    </td>
-                    <td class="mb-0">
-                      <mat-icon (click)="updateSchoolModel(schoolInfo)">edit</mat-icon>
-                    </td>
-                    <td class="mb-0">
-                      <!-- <mat-icon (click)="updateSchoolModel(schoolInfo)">edit</mat-icon> -->
-                      <mat-icon (click)="deleteSchoolModel(schoolInfo?._id)">delete</mat-icon>
-                    </td>
-                  </tr>
+              <div class="table-wrapper">
+                <table class="table align-middle bg-white">
+                  <thead class="bg-light">
+                    <tr class="text-muted">
+                      <th>No.</th>
+                      <th>Logo</th>
+                      <th>School Name</th>
+                      <th>Affiliation Number</th>
+                      <th>School Code</th>
+                      <th>Founded Year</th>
+                      <th>Board</th>
+                      <th>Medium</th>
+                      <th>Street</th>
+                      <th>City/Town</th>
+                      <th>District</th>
+                      <th>State</th>
+                      <th>Country</th>
+                      <th>Pin Code</th>
+                      <th>Contact Number</th>
+                      <th>Alternate Number</th>
+                      <th>Email</th>
+                      <th>Edit</th>
+                      <th>Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="schoolInfo">
+                    <tr>
+                      <td>
+                        <p class="mb-0">1</p>
+                      </td>
+                      <td>
+                        <img src="{{baseUrl}}/public/school-logo/{{schoolInfo?.schoolLogo}}" alt="" height="50x;">
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.schoolName | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.affiliationNumber}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.schoolCode}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.foundedYear}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.board | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.medium | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.street | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.city | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.district | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.state | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.country | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.pinCode}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.phoneOne}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.phoneSecond}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{schoolInfo?.email}}</p>
+                      </td>
+                      <td class="mb-0">
+                        <mat-icon (click)="updateSchoolModel(schoolInfo)">edit</mat-icon>
+                      </td>
+                      <td class="mb-0">
+                        <!-- <mat-icon (click)="updateSchoolModel(schoolInfo)">edit</mat-icon> -->
+                        <mat-icon (click)="deleteSchoolModel(schoolInfo?._id)">delete</mat-icon>
+                      </td>
+                    </tr>
 
-                </tbody>
-              </table>
-
+                  </tbody>
+                </table>
+              </div>
               <div class="modal fade show" [class.show]="showModal">
                 <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode && !successMsg">
                   <div class="modal-content" *ngIf="successMsg">

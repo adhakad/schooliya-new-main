@@ -55,50 +55,52 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                            <table class="table table-hover align-middle bg-white">
-                                <thead class="bg-light">
-                                    <tr class="text-muted">
-                                        <th>S.No.</th>
-                                        <th>Seesion</th>
-                                        <th>Class</th>
-                                        <th>Stream</th>
-                                        <th>Particular Total Fee</th>
-                                        <th>Admission Fee</th>
-                                        <th>Fee Structure</th>
-                                        <th>Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody *ngFor="let singleFessStructure of clsFeesStructure,let i = index">
-                                    <tr>
-                                        <td>
-                                            <p class="mb-0">{{i+1}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{clsFeesStructure[i]?.session}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{clsFeesStructure[i]?.class | classSuffix}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{clsFeesStructure[i]?.stream}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">&#8377; {{clsFeesStructure[i]?.totalFees}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">&#8377; {{clsFeesStructure[i]?.admissionFees}}</p>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon
-                                                (click)="openFeesStructureModal(singleFessStructure)">launch</mat-icon>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon
-                                                (click)="deleteFeesStructureModel(clsFeesStructure[i]._id)">delete</mat-icon>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-wrapper">
+                                <table class="table table-hover align-middle bg-white">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>S.No.</th>
+                                            <th>Seesion</th>
+                                            <th>Class</th>
+                                            <th>Stream</th>
+                                            <th>Particular Total Fee</th>
+                                            <th>Admission Fee</th>
+                                            <th>Fee Structure</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let singleFessStructure of clsFeesStructure,let i = index">
+                                        <tr>
+                                            <td>
+                                                <p class="mb-0">{{i+1}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{clsFeesStructure[i]?.session}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{clsFeesStructure[i]?.class | classSuffix}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{clsFeesStructure[i]?.stream}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">&#8377; {{clsFeesStructure[i]?.totalFees}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">&#8377; {{clsFeesStructure[i]?.admissionFees}}</p>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon
+                                                    (click)="openFeesStructureModal(singleFessStructure)">launch</mat-icon>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon
+                                                    (click)="deleteFeesStructureModel(clsFeesStructure[i]._id)">delete</mat-icon>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <ng-container *ngIf="!clsFeesStructure">
                                 <h2 style="text-align: center;margin-top: 150px;">No Record Found</h2>
                             </ng-container>
@@ -256,7 +258,10 @@
                             <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Fee Structure Class - {{singleFessStructure?.class | classSuffix}} <span *ngIf="singleFessStructure?.class==11 || singleFessStructure?.class==12">( {{singleFessStructure?.stream}} )</span></h5>
+                                        <h5 class="modal-title">Fee Structure Class - {{singleFessStructure?.class |
+                                            classSuffix}} <span
+                                                *ngIf="singleFessStructure?.class==11 || singleFessStructure?.class==12">(
+                                                {{singleFessStructure?.stream}} )</span></h5>
                                         <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                     </div>
                                     <div class="modal-body">

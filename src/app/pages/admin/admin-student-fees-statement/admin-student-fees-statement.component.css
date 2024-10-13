@@ -13,12 +13,4 @@
     overflow-y: hidden;
   }
 
-  .table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* For smooth scrolling on touch devices */
-}
-
-.table-wrapper table {
-    width: 100%; /* Ensures the table can expand fully */
-    min-width: 700px; /* You can adjust this value based on the content */
-}
+  

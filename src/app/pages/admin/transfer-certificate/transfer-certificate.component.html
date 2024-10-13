@@ -32,7 +32,9 @@
                                                     <mat-label>Issued Transfer Certificate</mat-label>
                                                     <mat-select matInput>
                                                         <div>
-                                                            <mat-option routerLink="/admin/issued-transfer-certificate">Issued Transfer Certificate</mat-option>
+                                                            <mat-option
+                                                                routerLink="/admin/issued-transfer-certificate">Issued
+                                                                Transfer Certificate</mat-option>
                                                         </div>
                                                     </mat-select>
                                                 </mat-form-field>
@@ -111,7 +113,8 @@
                                             <mat-label>Issued Transfer Certificate</mat-label>
                                             <mat-select matInput>
                                                 <div>
-                                                    <mat-option routerLink="/admin/issued-transfer-certificate">Issued Transfer Certificate</mat-option>
+                                                    <mat-option routerLink="/admin/issued-transfer-certificate">Issued
+                                                        Transfer Certificate</mat-option>
                                                 </div>
                                             </mat-select>
                                         </mat-form-field>
@@ -130,65 +133,69 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                            <table class="table table-hover align-middle bg-white"
-                                *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
-                                <thead class="bg-light">
-                                    <tr class="text-muted">
-                                        <th>S.No.</th>
-                                        <th>Admission No.</th>
-                                        <th>Student</th>
-                                        <th>Father Name</th>
-                                        <th>Mother Name</th>
-                                        <th>Class</th>
-                                        <th>Stream</th>
-                                        <th>Roll Number</th>
-                                        <th>Session</th>
-                                        <th>View</th>
-                                        <th>Transfer Certificate</th>
-                                    </tr>
-                                </thead>
-                                <tbody *ngIf="studentInfo && studentInfo.length>0">
-                                    <tr *ngFor="let students of studentInfo,let i=index">
-                                        <td>
-                                            <p class="mb-0">{{number*10+i+1-10}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.admissionNo}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.name | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.fatherName | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.motherName | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.class | classSuffix}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.stream}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.rollNumber}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.session}}</p>
-                                        </td>
+                            <div class="table-wrapper">
+                                <table class="table table-hover align-middle bg-white"
+                                    *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>S.No.</th>
+                                            <th>Admission No.</th>
+                                            <th>Student</th>
+                                            <th>Father Name</th>
+                                            <th>Mother Name</th>
+                                            <th>Class</th>
+                                            <th>Stream</th>
+                                            <th>Roll Number</th>
+                                            <th>Session</th>
+                                            <th>View</th>
+                                            <th>Transfer Certificate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="studentInfo && studentInfo.length>0">
+                                        <tr *ngFor="let students of studentInfo,let i=index">
+                                            <td>
+                                                <p class="mb-0">{{number*10+i+1-10}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.admissionNo}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.name | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.fatherName | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.motherName | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.class | classSuffix}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.stream}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.rollNumber}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.session}}</p>
+                                            </td>
 
-                                        <td class="mb-0">
-                                            <mat-icon (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
-                                        </td>
-                                        <td>
-                                            <button
-                                                style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
-                                                class="submit-button print-pdf" (click)="addStudentTCModel(students)"
-                                                mat-raised-button>Generate</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            <td class="mb-0">
+                                                <mat-icon
+                                                    (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
+                                                    class="submit-button print-pdf"
+                                                    (click)="addStudentTCModel(students)"
+                                                    mat-raised-button>Generate</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div *ngIf="errorCheck && statusCode ==404 || statusCode ==500"
                                 style="text-align: center;margin-top: 200px;">
                                 <p *ngIf="statusCode ==404">Student Not Found !</p>

@@ -1,10 +1,6 @@
 @import'../dashboard/dashboard.component.css';
 .table{
-    display: inline-block;
     text-align: center;
 }
 @media (min-width: 992px) {
-    td{
-        min-width: 110px;
-    }
 }

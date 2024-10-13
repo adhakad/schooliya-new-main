@@ -23,8 +23,8 @@
                           (click)="addClassSubjectModel()"><mat-icon>add</mat-icon>Create</button>
                       </div>
                       <div class="col-5">
-                        <input type="text" class="form-control" placeholder="Search..."
-                          id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                        <input type="text" class="form-control" placeholder="Search..." id="searchText"
+                          name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                           (keyup)="getClassSubject({page : 1, limit : 0})">
                       </div>
                     </div>
@@ -41,8 +41,8 @@
                     </button>
                   </div>
                   <div class="col-7 mt-3">
-                    <input type="text" class="form-control" placeholder="Search..."
-                      id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                    <input type="text" class="form-control" placeholder="Search..." id="searchText" name="searchText"
+                      #searchText="ngModel" [(ngModel)]="filters.searchText"
                       (keyup)="getClassSubject({page : 1, limit : 0})">
                   </div>
                   <div class="col-5 mt-3">
@@ -57,40 +57,42 @@
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
-              <table class="table table-hover align-middle bg-white">
-                <thead class="bg-light">
-                  <tr class="text-muted">
-                    <th>S.No.</th>
-                    <th>Class</th>
-                    <th>Stream</th>
-                    <th>Subject</th>
-                    <th>Remove</th>
-                  </tr>
-                </thead>
-                <tbody *ngIf="classSubjectInfo && classSubjectInfo.length>0">
-                  <tr *ngFor="let classSubject of classSubjectInfo,let i=index">
-                    <td>
-                      <p class="mb-0">{{number*10+i+1-10}}.</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{classSubject.class | classSuffix}}</p>
-                    </td>
-                    <td>
-                      <p class="fw-normal mb-1">{{classSubject.stream}}</p>
-                    </td>
-                    <td>
-                      <ng-container *ngFor="let subject of classSubject.subject,let i=index;">
-                        <p class="fw-normal mb-1"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i>
-                          {{subject.subject | titlecase}}</p>
-                      </ng-container>
-                    </td>
-                    <td class="mb-0">
-                      <!-- <mat-icon (click)="updateClassSubjectModel(classSubject)">edit</mat-icon> -->
-                      <mat-icon (click)="deleteClassSubjectModel(classSubject._id)">delete</mat-icon>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="table-wrapper">
+                <table class="table table-hover align-middle bg-white">
+                  <thead class="bg-light">
+                    <tr class="text-muted">
+                      <th>S.No.</th>
+                      <th>Class</th>
+                      <th>Stream</th>
+                      <th>Subject</th>
+                      <th>Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="classSubjectInfo && classSubjectInfo.length>0">
+                    <tr *ngFor="let classSubject of classSubjectInfo,let i=index">
+                      <td>
+                        <p class="mb-0">{{number*10+i+1-10}}.</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{classSubject.class | classSuffix}}</p>
+                      </td>
+                      <td>
+                        <p class="fw-normal mb-1">{{classSubject.stream}}</p>
+                      </td>
+                      <td>
+                        <ng-container *ngFor="let subject of classSubject.subject,let i=index;">
+                          <p class="fw-normal mb-1"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i>
+                            {{subject.subject | titlecase}}</p>
+                        </ng-container>
+                      </td>
+                      <td class="mb-0">
+                        <!-- <mat-icon (click)="updateClassSubjectModel(classSubject)">edit</mat-icon> -->
+                        <mat-icon (click)="deleteClassSubjectModel(classSubject._id)">delete</mat-icon>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div class="pagination">
                 <app-pagination [paginationValues]="paginationValues" (onChange)="getClassSubject($event)">
                 </app-pagination>

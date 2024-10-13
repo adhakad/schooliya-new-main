@@ -1,7 +1,1 @@
 @import'../dashboard/dashboard.component.css';
-.table{
-    display: block;
-}
-.table th{
-    min-width: 75px;
-}

@@ -31,11 +31,11 @@
                         <mat-form-field class="custom-select">
                           <mat-label>Teacher Permission</mat-label>
                           <mat-select matInput>
-                              <div>
-                                  <mat-option routerLink="/admin/teacher/permissions">Teacher Permission</mat-option>
-                              </div>
+                            <div>
+                              <mat-option routerLink="/admin/teacher/permissions">Teacher Permission</mat-option>
+                            </div>
                           </mat-select>
-                      </mat-form-field>
+                        </mat-form-field>
                       </div>
                     </div>
                   </div>
@@ -54,15 +54,15 @@
                     <mat-form-field class="custom-select">
                       <mat-label>Teacher Permission</mat-label>
                       <mat-select matInput>
-                          <div>
-                              <mat-option routerLink="/admin/teacher/permissions">Teacher Permission</mat-option>
-                          </div>
+                        <div>
+                          <mat-option routerLink="/admin/teacher/permissions">Teacher Permission</mat-option>
+                        </div>
                       </mat-select>
-                  </mat-form-field>
+                    </mat-form-field>
                   </div>
                   <div class="col-7">
-                    <input type="text" class="form-control" placeholder="Search..." id="searchText"
-                      name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                    <input type="text" class="form-control" placeholder="Search..." id="searchText" name="searchText"
+                      #searchText="ngModel" [(ngModel)]="filters.searchText"
                       (keyup)="getTeacher({page : 1, limit : 0})">
                   </div>
                   <div class="col-5">
@@ -78,49 +78,50 @@
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
-
-              <table class="table table-hover align-middle mb-1 bg-white mt-3">
-                <thead class="bg-light">
-                  <tr class="text-muted">
-                    <th>S.No.</th>
-                    <th>Name</th>
-                    <th>Education/Qualification</th>
-                    <th>User Id</th>
-                    <th>OTP</th>
-                    <th>Status</th>
-                    <th>Remove</th>
-                  </tr>
-                </thead>
-                <tbody *ngIf="teacherInfo && teacherInfo.length>0">
-                  <tr *ngFor="let teacher of teacherInfo,let i=index">
-                    <td>
-                      <p class="mb-0">{{number*10+i+1-10}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{teacher.name}}</p>
-                    </td>
-                    <td>
-                      <p class="fw-normal mb-1">{{teacher.education}}</p>
-                    </td>
-                    <td>
-                      <p class="fw-normal mb-1">{{teacher.teacherUserId}}</p>
-                    </td>
-                    <td>
-                      <p class="fw-normal mb-1">{{teacher.otp}}</p>
-                    </td>
-                    <td>
-                      <a href="javascript:void(0)" class="mb-0 status-active" (click)="changeStatus(teacher._id,0)"
-                        *ngIf="teacher.status == 'Active'">{{teacher.status}}&nbsp;&nbsp;</a>
-                      <a href="javascript:void(0)" class="mb-0 status-inactive" (click)="changeStatus(teacher._id,1)"
-                        *ngIf="teacher.status == 'Inactive'">{{teacher.status}}</a>
-                    </td>
-                    <td class="mb-0">
-                      <!-- <mat-icon (click)="updateTeacherModel(teacher)">edit</mat-icon> -->
-                      <mat-icon (click)="deleteTeacherModel(teacher._id)">delete</mat-icon>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="table-wrapper">
+                <table class="table table-hover align-middle mb-1 bg-white mt-3">
+                  <thead class="bg-light">
+                    <tr class="text-muted">
+                      <th>S.No.</th>
+                      <th>Name</th>
+                      <th>Education/Qualification</th>
+                      <th>User Id</th>
+                      <th>OTP</th>
+                      <th>Status</th>
+                      <th>Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="teacherInfo && teacherInfo.length>0">
+                    <tr *ngFor="let teacher of teacherInfo,let i=index">
+                      <td>
+                        <p class="mb-0">{{number*10+i+1-10}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{teacher.name}}</p>
+                      </td>
+                      <td>
+                        <p class="fw-normal mb-1">{{teacher.education}}</p>
+                      </td>
+                      <td>
+                        <p class="fw-normal mb-1">{{teacher.teacherUserId}}</p>
+                      </td>
+                      <td>
+                        <p class="fw-normal mb-1">{{teacher.otp}}</p>
+                      </td>
+                      <td>
+                        <a href="javascript:void(0)" class="mb-0 status-active" (click)="changeStatus(teacher._id,0)"
+                          *ngIf="teacher.status == 'Active'">{{teacher.status}}&nbsp;&nbsp;</a>
+                        <a href="javascript:void(0)" class="mb-0 status-inactive" (click)="changeStatus(teacher._id,1)"
+                          *ngIf="teacher.status == 'Inactive'">{{teacher.status}}</a>
+                      </td>
+                      <td class="mb-0">
+                        <!-- <mat-icon (click)="updateTeacherModel(teacher)">edit</mat-icon> -->
+                        <mat-icon (click)="deleteTeacherModel(teacher._id)">delete</mat-icon>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div class="pagination">
                 <app-pagination [paginationValues]="paginationValues" (onChange)="getTeacher($event)">
                 </app-pagination>

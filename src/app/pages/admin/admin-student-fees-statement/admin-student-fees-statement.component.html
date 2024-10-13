@@ -60,93 +60,95 @@
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
                             <div class="table-wrapper">
-                            <table class="info-table text-center">
-                                <tr>
-                                    <td class="text-bold">Admission No. :</td>
-                                    <td>{{studentInfo?.admissionNo}}</td>
-                                    <td class="text-bold">Roll Number :</td>
-                                    <td>{{studentInfo?.rollNumber}}</td>
-                                    <td class="text-bold">Class :</td>
-                                    <td>{{clsFeesStructure?.class | classSuffix}} <span *ngIf="clsFeesStructure?.class==11 || clsFeesStructure?.class==12">( {{clsFeesStructure?.stream}} )</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-bold">Student Name :</td>
-                                    <td>{{studentInfo?.name | titlecase}}</td>
-                                    <td class="text-bold">Father Name :</td>
-                                    <td>{{studentInfo?.fatherName | titlecase}}</td>
-                                    <td class="text-bold">Mother Name :</td>
-                                    <td>{{studentInfo?.motherName | titlecase}}</td>
-                                </tr>
-                            </table>
-                            <table class="custom-table">
-                                <tr>
-                                    <td class="text-bold">Fee Concession</td>
-                                    <td>&#8377; {{studentFeesCollection?.feesConcession}}</td>
-                                    <td class="text-bold">Paid Fee</td>
-                                    <td>&#8377; {{studentFeesCollection?.paidFees}}</td>
-                                    <td class="text-bold">Due Fee</td>
-                                    <td>&#8377; {{studentFeesCollection?.dueFees}}</td>
-                                    <td class="text-bold">Total Fee</td>
-                                    <td>&#8377; {{studentFeesCollection?.totalFees}}</td>
-                                </tr>
-                            </table>
-                            <table class="custom-table">
-                                <tr>
-                                    <th>Particulars</th>
-                                    <ng-container *ngFor="let item of clsFeesStructure?.feesType,let i = index">
-                                        <th style="font-weight: normal;" *ngFor="let fee of item | keyvalue">
-                                            {{ fee.key}} Fee</th>
-                                    </ng-container>
-                                </tr>
-                                <tr>
-                                    <th>Fee Amount</th>
-                                    <ng-container *ngFor="let item of clsFeesStructure?.feesType,let i = index">
-                                        <th style="font-weight: normal;" *ngFor="let fee of item | keyvalue">
-                                            &#8377; {{ fee.value}}</th>
-                                    </ng-container>
-                                </tr>
-                            </table>
-                            <table class="custom-table">
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Receipt No.</th>
-                                    <th>Fee Amount</th>
-                                    <th>Payment Date</th>
-                                    <th>Fee Receipt</th>
-                                    <th>Fee Recipient</th>
-                                </tr>
-                                <ng-container *ngIf="processedData && processedData.length > 0">
-                                    <tr *ngFor="let fee of processedData; let i = index">
-                                        <td>
-                                            {{ i + 1 }}
-                                        </td>
-                                        <td>
-                                            <span *ngIf="fee.receiptNo==0">-</span>
-                                            <span *ngIf="fee.receiptNo!==0">{{ fee.receiptNo }}</span>
-                                        </td>
-                                        <td>
-                                            &#8377; {{ fee.paidAmount }}
-                                        </td>
-                                        <td>
-                                            <span *ngIf="fee.paymentDate==0">-</span>
-                                            <span *ngIf="fee.paymentDate!==0">{{ fee.paymentDate }}</span>
-                                        </td>
-                                        <td>
-                                            <span *ngIf="fee.receiptNo==0">-</span>
-                                            <mat-icon *ngIf="fee.receiptNo!==0"
-                                                (click)="feeReceipt(fee.paymentDate)">launch</mat-icon>
-                                        </td>
-                                        <td>
-                                            <span *ngIf="fee.paymentDate==0">-</span>
-                                            <span *ngIf="fee.paymentDate!==0 && fee.createdBy!==0">{{
-                                                fee.createdBy }}</span>
-                                            <span *ngIf="fee.paymentDate!==0 && fee.createdBy==0">Online
-                                                Payment</span>
-                                        </td>
+                                <table class="info-table text-center">
+                                    <tr>
+                                        <td class="text-bold">Admission No. :</td>
+                                        <td>{{studentInfo?.admissionNo}}</td>
+                                        <td class="text-bold">Roll Number :</td>
+                                        <td>{{studentInfo?.rollNumber}}</td>
+                                        <td class="text-bold">Class :</td>
+                                        <td>{{clsFeesStructure?.class | classSuffix}} <span
+                                                *ngIf="clsFeesStructure?.class==11 || clsFeesStructure?.class==12">(
+                                                {{clsFeesStructure?.stream}} )</span></td>
                                     </tr>
-                                </ng-container>
-                            </table>
-                        </div>
+                                    <tr>
+                                        <td class="text-bold">Student Name :</td>
+                                        <td>{{studentInfo?.name | titlecase}}</td>
+                                        <td class="text-bold">Father Name :</td>
+                                        <td>{{studentInfo?.fatherName | titlecase}}</td>
+                                        <td class="text-bold">Mother Name :</td>
+                                        <td>{{studentInfo?.motherName | titlecase}}</td>
+                                    </tr>
+                                </table>
+                                <table class="custom-table">
+                                    <tr>
+                                        <td class="text-bold">Fee Concession</td>
+                                        <td>&#8377; {{studentFeesCollection?.feesConcession}}</td>
+                                        <td class="text-bold">Paid Fee</td>
+                                        <td>&#8377; {{studentFeesCollection?.paidFees}}</td>
+                                        <td class="text-bold">Due Fee</td>
+                                        <td>&#8377; {{studentFeesCollection?.dueFees}}</td>
+                                        <td class="text-bold">Total Fee</td>
+                                        <td>&#8377; {{studentFeesCollection?.totalFees}}</td>
+                                    </tr>
+                                </table>
+                                <table class="custom-table">
+                                    <tr>
+                                        <th>Particulars</th>
+                                        <ng-container *ngFor="let item of clsFeesStructure?.feesType,let i = index">
+                                            <th style="font-weight: normal;" *ngFor="let fee of item | keyvalue">
+                                                {{ fee.key}} Fee</th>
+                                        </ng-container>
+                                    </tr>
+                                    <tr>
+                                        <th>Fee Amount</th>
+                                        <ng-container *ngFor="let item of clsFeesStructure?.feesType,let i = index">
+                                            <th style="font-weight: normal;" *ngFor="let fee of item | keyvalue">
+                                                &#8377; {{ fee.value}}</th>
+                                        </ng-container>
+                                    </tr>
+                                </table>
+                                <table class="custom-table">
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Receipt No.</th>
+                                        <th>Fee Amount</th>
+                                        <th>Payment Date</th>
+                                        <th>Fee Receipt</th>
+                                        <th>Fee Recipient</th>
+                                    </tr>
+                                    <ng-container *ngIf="processedData && processedData.length > 0">
+                                        <tr *ngFor="let fee of processedData; let i = index">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.receiptNo==0">-</span>
+                                                <span *ngIf="fee.receiptNo!==0">{{ fee.receiptNo }}</span>
+                                            </td>
+                                            <td>
+                                                &#8377; {{ fee.paidAmount }}
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.paymentDate==0">-</span>
+                                                <span *ngIf="fee.paymentDate!==0">{{ fee.paymentDate }}</span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.receiptNo==0">-</span>
+                                                <mat-icon *ngIf="fee.receiptNo!==0"
+                                                    (click)="feeReceipt(fee.paymentDate)">launch</mat-icon>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.paymentDate==0">-</span>
+                                                <span *ngIf="fee.paymentDate!==0 && fee.createdBy!==0">{{
+                                                    fee.createdBy }}</span>
+                                                <span *ngIf="fee.paymentDate!==0 && fee.createdBy==0">Online
+                                                    Payment</span>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -292,13 +294,15 @@
                                                             style="text-align: right;border: none;padding-top: 8px;font-size: 12px;">
                                                             TOTAL FEE
                                                         </td>
-                                                        <td class="text-bold" style="border: none;padding-top: 8px;font-size: 15px;">
+                                                        <td class="text-bold"
+                                                            style="border: none;padding-top: 8px;font-size: 15px;">
                                                             &#8377;
                                                             {{studentFeesCollection?.totalFees}}</td>
                                                     </tr>
                                                     <tr class="text-center" style="height: 15px;">
                                                         <td style="border: none;"></td>
-                                                        <td class="text-bold" style="text-align: right;border: none;font-size: 12px;">
+                                                        <td class="text-bold"
+                                                            style="text-align: right;border: none;font-size: 12px;">
                                                             PAID FEE
                                                         </td>
                                                         <td class="text-bold" style="border: none;font-size: 15px;">
@@ -307,7 +311,8 @@
                                                     </tr>
                                                     <tr class="text-center" style="height: 15px;">
                                                         <td style="border: none;"></td>
-                                                        <td class="text-bold" style="text-align: right;border: none;font-size: 12px;">
+                                                        <td class="text-bold"
+                                                            style="text-align: right;border: none;font-size: 12px;">
                                                             DUE FEE
                                                         </td>
                                                         <td class="text-bold" style="border: none;font-size: 15px;">

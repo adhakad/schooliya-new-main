@@ -35,72 +35,75 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                            <table class="table table-hover align-middle bg-white">
-                                <thead class="bg-light">
-                                    <tr class="text-muted">
-                                        <th>No.</th>
-                                        <th>Name</th>
-                                        <th>Roll Number</th>
-                                        <th>Class</th>
-                                        <th>Stream</th>
-                                        <th>Result Entry</th>
-                                        <th>Result</th>
-                                    </tr>
-                                </thead>
+                            <div class="table-wrapper">
+                                <table class="table table-hover align-middle bg-white">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>No.</th>
+                                            <th>Name</th>
+                                            <th>Roll Number</th>
+                                            <th>Class</th>
+                                            <th>Stream</th>
+                                            <th>Result Entry</th>
+                                            <th>Result</th>
+                                        </tr>
+                                    </thead>
 
-                                <tbody *ngIf="mappedResults && mappedResults.length>0">
-                                    <tr *ngFor="let result of mappedResults,let i=index">
-                                        <td>
-                                            <p class="mb-0">{{i+1}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.name | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.rollNumber}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.class | classSuffix}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.stream}}</p>
-                                        </td>
-                                        <td>
-                                            <ng-container *ngFor="let exam of result.examType,let i=index;">
-                                                <ng-container *ngIf="examType.length==1">
-                                                    <button
-                                                        style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='present'">Yearly</button>
-                                                    <button
-                                                        style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor:not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='empty'">Yearly</button>
+                                    <tbody *ngIf="mappedResults && mappedResults.length>0">
+                                        <tr *ngFor="let result of mappedResults,let i=index">
+                                            <td>
+                                                <p class="mb-0">{{i+1}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.name | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.rollNumber}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.class | classSuffix}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.stream}}</p>
+                                            </td>
+                                            <td>
+                                                <ng-container *ngFor="let exam of result.examType,let i=index;">
+                                                    <ng-container *ngIf="examType.length==1">
+                                                        <button
+                                                            style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='present'">Yearly</button>
+                                                        <button
+                                                            style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor:not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='empty'">Yearly</button>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="examType.length==2">
+                                                        <button
+                                                            style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='present'">{{exam
+                                                            | titlecase}}</button>
+                                                        <button
+                                                            style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='empty'">{{exam
+                                                            | titlecase}}</button>
+                                                    </ng-container>
                                                 </ng-container>
-                                                <ng-container *ngIf="examType.length==2">
-                                                    <button
-                                                        style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='present'">{{exam
-                                                        | titlecase}}</button>
-                                                    <button
-                                                        style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='empty'">{{exam
-                                                        | titlecase}}</button>
-                                                </ng-container>
-                                            </ng-container>
-                                        </td>
-                                        <td>
-                                            <button class="submit-button" mat-raised-button
-                                                (click)="addExamResultModel(result.rollNumber)"><mat-icon
-                                                    style="color:#fff;font-size: 20px;">add</mat-icon>Add</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                            <td>
+                                                <button class="submit-button" mat-raised-button
+                                                    (click)="addExamResultModel(result.rollNumber)"><mat-icon
+                                                        style="color:#fff;font-size: 20px;">add</mat-icon>Add</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="modal fade show" [class.show]="showModal">
-                                <div class="modal-dialog modal-lg" role="document" [class.modal-lg]="!deleteMode && !successMsg">
+                                <div class="modal-dialog modal-lg" role="document"
+                                    [class.modal-lg]="!deleteMode && !successMsg">
                                     <div class="modal-content" *ngIf="successMsg">
                                         <div class="modal-header">
                                             <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
@@ -145,7 +148,7 @@
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <mat-form-field appearance="outline">
-                                                                        <mat-label>Exam Type</mat-label>
+                                                                        <mat-label>Exam Name</mat-label>
                                                                         <mat-select #examSelect matInput
                                                                             formControlName="examType">
                                                                             <div *ngFor="let exam of examType">

@@ -15,8 +15,8 @@
                                     <div class="col-12">
                                         <button mat-button class="menu-button">
                                             <span>Marksheet > Template > {{cls | classSuffix}}<span
-                                                *ngIf="cls==11 || cls==12">(
-                                                {{stream}} )</span></span>
+                                                    *ngIf="cls==11 || cls==12">(
+                                                    {{stream}} )</span></span>
                                         </button>
                                     </div>
                                 </div>
@@ -26,14 +26,14 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-12">
-        
-                                            <button mat-button class="menu-button" style="display: block;">
-                                                <span>Marksheet > Template ></span>
-                                            </button>
-                                            <button mat-button class="menu-button">
-                                                <span>{{cls | classSuffix}}<span *ngIf="cls==11 || cls==12">(
-                                                            {{stream}} )</span></span>
-                                            </button>
+
+                                        <button mat-button class="menu-button" style="display: block;">
+                                            <span>Marksheet > Template ></span>
+                                        </button>
+                                        <button mat-button class="menu-button">
+                                            <span>{{cls | classSuffix}}<span *ngIf="cls==11 || cls==12">(
+                                                    {{stream}} )</span></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -50,45 +50,47 @@
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
                             <ng-container *ngIf="!marksheetSelectMode">
-                                <div class="col-12 col-lg-5 mt-5 mb-5">
+                                <div class="col-12 col-lg-12 mt-5 mb-5">
                                     <div class="marksheet-detail-card">
-                                        <table class="table table-hover align-middle mt-2 mb-1 bg-white">
-                                            <thead class="bg-light">
-                                                <tr class="text-muted">
-                                                    <th>S.No.</th>
-                                                    <th>Template Name</th>
-                                                    <th>Class</th>
-                                                    <th>Stream</th>
-                                                    <th>Remove</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody *ngIf="marksheetTemplate">
-                                                <tr>
-                                                    <td>
-                                                        <p class="mb-0">{{1}}</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="mb-0">{{marksheetTemplate.templateName |
-                                                            titlecase}}</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="mb-0">{{marksheetTemplate.class |
-                                                            classSuffix}}</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="mb-0">{{marksheetTemplate.stream}}</p>
-                                                    </td>
-                                                    <td class="mb-0">
-                                                        <mat-icon
-                                                            (click)="deleteMarksheetTemplateModel(marksheetTemplate._id)">delete</mat-icon>
-                                                    </td>
-                                                </tr>
+                                        <div class="table-wrapper">
+                                            <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                                                <thead class="bg-light">
+                                                    <tr class="text-muted">
+                                                        <th>S.No.</th>
+                                                        <th>Template Name</th>
+                                                        <th>Class</th>
+                                                        <th>Stream</th>
+                                                        <th>Remove</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngIf="marksheetTemplate">
+                                                    <tr>
+                                                        <td>
+                                                            <p class="mb-0">{{1}}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="mb-0">{{marksheetTemplate.templateName |
+                                                                titlecase}}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="mb-0">{{marksheetTemplate.class |
+                                                                classSuffix}}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="mb-0">{{marksheetTemplate.stream}}</p>
+                                                        </td>
+                                                        <td class="mb-0">
+                                                            <mat-icon
+                                                                (click)="deleteMarksheetTemplateModel(marksheetTemplate._id)">delete</mat-icon>
+                                                        </td>
+                                                    </tr>
 
-                                            </tbody>
-                                        </table>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-7 mt-5 mb-5">
+                                <div class="col-12 col-lg-8 offset-lg-2 mt-2 mb-5">
                                     <div class="selected-template-card" matRipple>
                                         <img src="../../../../assets/templates/{{marksheetTemplate.templateName}}.jpg"
                                             alt="">
@@ -220,7 +222,8 @@
                                         <div *ngIf="deleteMode">
                                             <div class="modal-body">
                                                 <ng-container>
-                                                    <h3 style="color: #000;font-size: 16px;letter-spacing: normal;margin-left: 20px;">
+                                                    <h3
+                                                        style="color: #000;font-size: 16px;letter-spacing: normal;margin-left: 20px;">
                                                         Note :
                                                         As
                                                         soon as the marksheet template for the {{cls |

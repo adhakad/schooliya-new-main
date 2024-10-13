@@ -110,63 +110,67 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                            <table class="table table-hover align-middle bg-white"
-                                *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
-                                <thead class="bg-light">
-                                    <tr class="text-muted">
-                                        <th>S.No.</th>
-                                        <th>Student</th>
-                                        <th>Admission No.</th>
-                                        <th>Roll Number</th>
-                                        <th>Class</th>
-                                        <th>Stream</th>
-                                        <th>Session</th>
-                                        <th>View</th>
-                                        <th *ngIf="className!=12">Promote</th>
-                                        <th>Fail</th>
-                                    </tr>
-                                </thead>
-                                <tbody *ngIf="studentInfo && studentInfo.length>0">
-                                    <tr *ngFor="let students of studentInfo,let i=index">
-                                        <td>
-                                            <p class="mb-0">{{number*10+i+1-10}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.name | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.admissionNo}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.rollNumber}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.class | classSuffix}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.stream}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{students.session}}</p>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
-                                        </td>
-                                        <td>
-                                            <button
-                                                style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
-                                                class="submit-button" (click)="addStudentClassPromoteModel(students)"
-                                                mat-raised-button>Promote</button>
-                                        </td>
-                                        <td *ngIf="className!=12">
-                                            <button
-                                                style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
-                                                class="submit-button" (click)="addStudentClassFailModel(students)"
-                                                mat-raised-button>Fail</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-wrapper">
+                                <table class="table table-hover align-middle bg-white"
+                                    *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>S.No.</th>
+                                            <th>Student</th>
+                                            <th>Admission No.</th>
+                                            <th>Roll Number</th>
+                                            <th>Class</th>
+                                            <th>Stream</th>
+                                            <th>Session</th>
+                                            <th>View</th>
+                                            <th *ngIf="className!=12">Promote</th>
+                                            <th>Fail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="studentInfo && studentInfo.length>0">
+                                        <tr *ngFor="let students of studentInfo,let i=index">
+                                            <td>
+                                                <p class="mb-0">{{number*10+i+1-10}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.name | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.admissionNo}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.rollNumber}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.class | classSuffix}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.stream}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{students.session}}</p>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon
+                                                    (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
+                                                    class="submit-button"
+                                                    (click)="addStudentClassPromoteModel(students)"
+                                                    mat-raised-button>Promote</button>
+                                            </td>
+                                            <td *ngIf="className!=12">
+                                                <button
+                                                    style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
+                                                    class="submit-button" (click)="addStudentClassFailModel(students)"
+                                                    mat-raised-button>Fail</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div *ngIf="errorCheck && statusCode ==404 || statusCode ==500"
                                 style="text-align: center;margin-top: 200px;">
                                 <p *ngIf="statusCode ==404">Student Not Found !</p>
@@ -222,7 +226,8 @@
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Session</mat-label>
-                                                                <input matInput type="text" formControlName="session" readonly>
+                                                                <input matInput type="text" formControlName="session"
+                                                                    readonly>
                                                                 <mat-error
                                                                     *ngIf="studentClassPromoteForm.get('session')?.hasError('required') && studentClassPromoteForm.get('session')?.touched">
                                                                     Session is required
@@ -351,7 +356,8 @@
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Session</mat-label>
-                                                                <input matInput type="text" formControlName="session" readonly>
+                                                                <input matInput type="text" formControlName="session"
+                                                                    readonly>
                                                                 <mat-error
                                                                     *ngIf="studentClassFailForm.get('session')?.hasError('required') && studentClassFailForm.get('session')?.touched">
                                                                     Session is required
@@ -372,8 +378,8 @@
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Stream</mat-label>
-                                                                <input matInput type="text"
-                                                                    formControlName="stream" readonly>
+                                                                <input matInput type="text" formControlName="stream"
+                                                                    readonly>
                                                                 <mat-error
                                                                     *ngIf="studentClassFailForm.get('stream')?.hasError('required') && studentClassFailForm.get('stream')?.touched">
                                                                     stream is required
@@ -400,9 +406,8 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="submit-button"
-                                                    [disabled]="!studentClassFailForm.valid" mat-raised-button
-                                                    type="submit">Submit</button>
+                                                <button class="submit-button" [disabled]="!studentClassFailForm.valid"
+                                                    mat-raised-button type="submit">Submit</button>
                                             </div>
                                         </form>
                                     </div>

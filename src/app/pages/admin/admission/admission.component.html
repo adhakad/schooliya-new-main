@@ -73,62 +73,64 @@
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
-              <table class="table table-hover align-middle bg-white">
-                <thead class="bg-light">
-                  <tr class="text-muted">
-                    <th>S.No.</th>
-                    <th>Admission No.</th>
-                    <th>Student</th>
-                    <th>Father Name</th>
-                    <th>Mother Name</th>
-                    <th>Class</th>
-                    <th>Stream</th>
-                    <th>Roll Number</th>
-                    <th>Session</th>
-                    <th>Admission By</th>
-                    <th>Admission Letter</th>
-                  </tr>
-                </thead>
-                <tbody *ngIf="studentInfo && studentInfo.length>0">
-                  <tr *ngFor="let students of studentInfo,let i=index">
-                    <td>
-                      <p class="mb-0">{{number*10+i+1-10}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.admissionNo}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.name | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.fatherName | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.motherName | titlecase}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.class | classSuffix}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.stream}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.rollNumber}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.session}}</p>
-                    </td>
-                    <td>
-                      <p class="mb-0">{{students.createdBy}}</p>
-                    </td>
-                    <td>
-                      <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
-                        class="submit-button print-pdf" mat-raised-button (click)="addPrintModal(students)"><mat-icon
-                          style="font-size: 20px;color: #8d6dff;">print</mat-icon> Print</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="table-wrapper">
+                <table class="table table-hover align-middle bg-white">
+                  <thead class="bg-light">
+                    <tr class="text-muted">
+                      <th>S.No.</th>
+                      <th>Admission No.</th>
+                      <th>Student</th>
+                      <th>Father Name</th>
+                      <th>Mother Name</th>
+                      <th>Class</th>
+                      <th>Stream</th>
+                      <th>Roll Number</th>
+                      <th>Session</th>
+                      <th>Admission By</th>
+                      <th>Admission Letter</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="studentInfo && studentInfo.length>0">
+                    <tr *ngFor="let students of studentInfo,let i=index">
+                      <td>
+                        <p class="mb-0">{{number*10+i+1-10}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.admissionNo}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.name | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.fatherName | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.motherName | titlecase}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.class | classSuffix}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.stream}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.rollNumber}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.session}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.createdBy}}</p>
+                      </td>
+                      <td>
+                        <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
+                          class="submit-button print-pdf" mat-raised-button (click)="addPrintModal(students)"><mat-icon
+                            style="font-size: 20px;color: #8d6dff;">print</mat-icon> Print</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div class="pagination">
                 <app-pagination [paginationValues]="paginationValues" (onChange)="getStudentsByAdmission($event)">
                 </app-pagination>
@@ -246,7 +248,7 @@
                                 </mat-error>
                               </mat-form-field>
                             </div>
-                            
+
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Roll Number</mat-label>
@@ -562,11 +564,12 @@
                                 </mat-error>
                               </mat-form-field>
                               <mat-form-field appearance="outline">
-                                <mat-label>Contact (Optional)</mat-label>
+                                <mat-label>Parents Contact (Optional)</mat-label>
                                 <input matInput type="number" formControlName="parentsContact" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('parentsContact')?.hasError('pattern') && studentForm.get('parentsContact')?.touched">
-                                  Please enter a valid Contact (10-digit phone number starting with 6, 7, 8, or 9)
+                                  Please enter a valid parents contact (10-digit phone number starting with 6, 7, 8, or
+                                  9)
                                 </mat-error>
                               </mat-form-field>
                             </div>
@@ -714,7 +717,7 @@
                                   <tr>
                                     <td class="text-bold">Family Annual Income :</td>
                                     <td>{{singleStudentInfo?.familyAnnualIncome}}</td>
-                                    <td class="text-bold">Contact :</td>
+                                    <td class="text-bold">Parents Contact :</td>
                                     <td>{{singleStudentInfo?.parentsContact}}</td>
                                   </tr>
                                   <tr>
