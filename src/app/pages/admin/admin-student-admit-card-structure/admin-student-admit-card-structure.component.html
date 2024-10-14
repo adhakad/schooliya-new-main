@@ -317,7 +317,7 @@
                                 <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Class {{cls | classSuffix}}</h5>
+                                            <h5 class="modal-title">Class - {{admitCardInfo?.class | classSuffix}} <span *ngIf="admitCardInfo?.class==11 || admitCardInfo?.class==12">{{admitCardInfo?.stream}}</span></h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <div class="modal-body">

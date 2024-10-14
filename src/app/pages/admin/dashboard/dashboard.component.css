@@ -20,6 +20,7 @@
     border-radius: 20px;
     margin-bottom: 2.5vh;
   }
+
   .chart-card {
     background-color: #fff;
     padding-left: 2%;
@@ -29,7 +30,7 @@
     border: 1px solid #d5d0e1af;
     box-shadow: none;
     border-radius: 20px;
-    margin-top:10px;
+    margin-top: 10px;
     margin-bottom: 2.5vh;
   }
 
@@ -209,6 +210,8 @@
     font-family: 'Poppins', sans-serif !important;
     margin-right: 0 !important;
     margin-bottom: 3vh;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     border-radius: 6px;
     box-shadow: none !important;
   }
@@ -216,7 +219,6 @@
   .big-container .submit-button {
     height: 44px;
     background: #8C52FF;
-    color: #a3e74b;
     color: #FFF;
     font-family: 'Poppins', sans-serif !important;
     margin-right: 0 !important;
@@ -243,15 +245,20 @@
     cursor: pointer;
     text-decoration: none;
   }
+
   .table-wrapper {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* For smooth scrolling on touch devices */
+    -webkit-overflow-scrolling: touch;
+    /* For smooth scrolling on touch devices */
   }
-  
+
   .table-wrapper .table {
-    width: 100%; /* Ensures the table can expand fully */
-    min-width: auto; /* You can adjust this value based on the content */
+    width: 100%;
+    /* Ensures the table can expand fully */
+    min-width: auto;
+    /* You can adjust this value based on the content */
   }
+
   /* .table {
     height: auto;
     display: block;
@@ -367,9 +374,9 @@
   .desktop-option {
     display: none;
   }
-  
 
-  
+
+
   ::ng-deep .custom-session-select {
     background-color: #fff;
     height: 35px;
@@ -380,42 +387,47 @@
     padding-top: 0 !important;
     margin-right: 0 !important;
     margin-bottom: 0 !important;
-    padding-bottom: 0 !important; /* Adjust this to remove excess space at the bottom */
+    padding-bottom: 0 !important;
+    /* Adjust this to remove excess space at the bottom */
     box-shadow: none;
     border: 1px solid #ced4da;
     border-radius: 5px;
-    color:#434445
-}
+    color: #434445
+  }
 
-::ng-deep .custom-session-select .mat-select-panel {
+  ::ng-deep .custom-session-select .mat-select-panel {
     margin-bottom: 20px !important;
-}
+  }
 
-::ng-deep .custom-session-select .mat-select-panel .mat-option {
+  ::ng-deep .custom-session-select .mat-select-panel .mat-option {
     margin-bottom: 10px !important;
     font-size: 0.85rem;
-}
+  }
 
-::ng-deep .custom-session-select .mat-select-arrow {
+  ::ng-deep .custom-session-select .mat-select-arrow {
     top: 0px;
     position: relative;
-}
+  }
 
-::ng-deep .custom-session-select .mat-form-field-underline {
+  ::ng-deep .custom-session-select .mat-form-field-underline {
     display: none;
-}
+  }
 
-::ng-deep .custom-session-select .mat-form-field-label {
+  ::ng-deep .custom-session-select .mat-form-field-label {
     color: #382066 !important;
     letter-spacing: .5px;
-}
+  }
 
-::ng-deep .custom-session-select .mat-form-field-infix {
-    padding-top: 0 !important;  /* Remove extra space above the selected value */
-    padding-bottom: 0 !important; /* Remove extra space below the selected value */
-    margin-top: -10px !important; /* Ensure the infix is aligned properly */
-    line-height: 35px !important; /* Adjust line-height to center the selected text */
-}
+  ::ng-deep .custom-session-select .mat-form-field-infix {
+    padding-top: 0 !important;
+    /* Remove extra space above the selected value */
+    padding-bottom: 0 !important;
+    /* Remove extra space below the selected value */
+    margin-top: -10px !important;
+    /* Ensure the infix is aligned properly */
+    line-height: 35px !important;
+    /* Adjust line-height to center the selected text */
+  }
 
   @media (min-width: 576px) and (max-width: 767.98px) {}
 
@@ -441,6 +453,7 @@
       padding-left: 4%;
       padding-right: 4.5%;
     }
+
     .listing-card {
       background-color: #fff;
       padding-left: 2%;
@@ -451,6 +464,7 @@
       border-radius: 20px;
       margin-bottom: 2.5vh;
     }
+
     .chart-card {
       background-color: #fff;
       padding-left: 2%;
@@ -460,9 +474,10 @@
       border: 1px solid #d5d0e1af;
       box-shadow: none;
       border-radius: 20px;
-      margin-top:40px;
+      margin-top: 40px;
       margin-bottom: 2.5vh;
     }
+
     #barChart,
     #lineChart,
     #pieChart {
@@ -474,7 +489,8 @@
     }
 
     .big-option-container .submit-button {
-      width: 100% !important;
+      padding-left: 2% !important;
+      padding-right: 2% !important;
       margin-right: 0 !important;
       margin-bottom: 0 !important;
     }

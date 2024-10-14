@@ -36,6 +36,36 @@ export class PaymentComponent implements OnInit {
   numberOfStudent:number=0;
   perStudentIncrementPrice:number = 5;
   studentIncrementRange:number=50;
+  indianStates: string[] = [
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal'
+  ];
   constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.minLength(6)]],
@@ -74,7 +104,6 @@ export class PaymentComponent implements OnInit {
   updateNumber(value: number): void {
     this.numberOfStudent += value;
     this.totalAmount += value*this.perStudentIncrementPrice;
-    console.log(this.totalAmount)
   }
   loadRazorpayScript(): void {
     const script = this.renderer.createElement('script');
@@ -170,7 +199,7 @@ export class PaymentComponent implements OnInit {
           prefill: {
             name: this.adminInfo.name,
             email: this.adminInfo.email,
-            contact: '9340700360',
+            contact: this.adminInfo.mobile,
             method: 'online'
           },
           theme: {
