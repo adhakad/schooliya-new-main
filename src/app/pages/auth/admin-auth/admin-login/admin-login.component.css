@@ -18,11 +18,11 @@
 }
 
 h3 {
-  color: #4e4caacd;
+  color: #382066;
   padding-bottom: 2vh;
   letter-spacing: .6px;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 5px;
   text-align: center;
 }
@@ -34,7 +34,7 @@ h2 {
 }
 
 p {
-  color: #4e4caac1;
+  color: #382066;
   margin-top: 2vh;
   letter-spacing: .25px;
   font-size: 16px;
@@ -42,7 +42,7 @@ p {
 }
 
 a {
-  color: #4e4caac1;
+  color: #382066;
   font-size: 16px;
   font-weight: 500;
   letter-spacing: .25px;

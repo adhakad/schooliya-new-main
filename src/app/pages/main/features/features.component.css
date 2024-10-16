@@ -1,4 +1,4 @@
-/* @import'../home/home.component.css'; */
+@import'../home/home.component.css';
 @import'../terms-conditions/terms-conditions.component.css';
 
 .policy-container {
@@ -12,13 +12,13 @@
    margin-bottom: 2vh !important;
 }
 
-.service-section .service-card-container {
+ .service-section .service-card-container {
    margin-top: 0vh;
 }
 
-.service-card {
+/* .service-card {
    width: 100%;
-   height: 20vh;
+   height: 24vh;
    text-align: left;
    border-radius: 20px;
    padding: 2%;
@@ -41,7 +41,7 @@
    font-size: 16px;
    font-weight: 400;
    margin-top: 1.5vh;
-}
+}  */
 @media (min-width: 576px) and (max-width: 767.98px) {
    .policy-container {
       padding-left: 1% !important;
@@ -59,7 +59,7 @@
       padding-right: 3.5%;
    }
 
-   .service-card {
+   /* .service-card {
       width: 100%;
       height: 50vh;
       text-align: left;
@@ -85,8 +85,8 @@
       font-size: 14px;
       font-weight: 400;
       margin-top: 2vh !important;
-   }
-}
+   } */
+} 
 @media (min-width: 992px) {
    .policy-container {
       padding-left: 1% !important;
@@ -99,13 +99,14 @@
       margin-bottom: 2vh !important;
    }
 
-   .service-section .service-card-container {
+    .service-section .service-card-container {
       padding-right: 3.5%;
    }
 
-   .service-card {
+   /* .service-card {
       width: 100%;
-      height: 20vh;
+      height: auto;
+      max-height: 24vh;
       text-align: left;
       margin-bottom: 5vh;
       border-radius: 20px;
@@ -129,6 +130,6 @@
       font-size: 14px;
       font-weight: 400;
       margin-top: 2vh !important;
-   }
+   }  */
 
 }

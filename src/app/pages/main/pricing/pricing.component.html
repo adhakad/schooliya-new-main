@@ -10,8 +10,9 @@
     <div class="container-fluid policy-container">
         <div class="row">
             <div class="col-12 col-lg-10 offset-lg-1 title">
-                <h3>Plans Designed for Your School's Needs</h3>
-                <p style="text-align: center;">Budget-friendly pricing for comprehensive school management solutions.</p>
+                <h3>Pick Your Plan</h3>
+                <p style="text-align: center;">Budget friendly pricing for comprehensive school management solutions.
+                </p>
             </div>
             <div class="container-fluid" style="padding: 0 !important;">
                 <div class="container-fluid pricing-section">
@@ -26,7 +27,7 @@
                                         </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                             {{plansInfo[0]?.price}}<span style="font-size: medium;font-weight: 500;"> /
-                                                Yearly</span></h4>
+                                                Year</span></h4>
                                         <button class="pricing-button-light" mat-raised-button
                                             routerLink="/admin/payment/{{plansInfo[0]?._id}}">Buy Now</button>
                                         <div class="pricing-amount">
@@ -35,13 +36,17 @@
                                         <mat-divider></mat-divider>
                                         <div class="pricing-feature">
                                             <div class="row module-access">
-                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;(Upto 400)</span></p>
-                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p>
-                                                <p>Staff Uses Access<span>&nbsp;&nbsp;&nbsp;Yes</span></p>
+                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;( Upto
+                                                        {{plansInfo[0]?.studentLimit}} )</span></p>
+                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
+                                                </p>
+                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Upto 3 )</span></p>
                                             </div>
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
-                                                    <p><span>Increase Limit After Purchase ₹5 Per Student</span></p>
+                                                    <p><span>Increase Limit Only
+                                                            ₹{{plansInfo[0]?.perStudentIncrementPrice}} Per Student</span>
+                                                    </p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon>
                                                 </div>
@@ -66,7 +71,7 @@
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
-                                                    <p><span>T C Management</span></p>
+                                                    <p><span>Transfer Certificate Management</span></p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
@@ -88,7 +93,7 @@
                                         </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                             {{plansInfo[1]?.price}}<span style="font-size: medium;font-weight: 500;"> /
-                                                Yearly</span></h4>
+                                                Year</span></h4>
                                         <button class="pricing-button" mat-raised-button
                                             routerLink="/admin/payment/{{plansInfo[1]?._id}}">Buy Now</button>
                                         <div class="pricing-amount">
@@ -97,19 +102,24 @@
                                         <mat-divider></mat-divider>
                                         <div class="pricing-feature">
                                             <div class="row module-access">
-                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;(Upto 800)</span></p>
-                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p>
-                                                <p>Staff Uses Access<span>&nbsp;&nbsp;&nbsp;Yes</span></p>
+                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;( Upto
+                                                        {{plansInfo[1]?.studentLimit}} )</span></p>
+                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
+                                                </p>
+                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Upto 5 )</span></p>
+
                                             </div>
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
-                                                    <p><span>Increase Limit After Purchase ₹5 Per Student</span></p>
+                                                    <p><span>Increase Limit Only
+                                                            ₹{{plansInfo[1]?.perStudentIncrementPrice}} Per Student</span>
+                                                    </p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
                                                     <p><span>Student Management</span></p>
                                                 </div>
-        
+
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
                                                     <p><span>Admission Management</span></p>
@@ -128,7 +138,7 @@
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
-                                                    <p><span>T C Management</span></p>
+                                                    <p><span>Transfer Certificate Management</span></p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
@@ -150,7 +160,7 @@
                                         </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                             {{plansInfo[2]?.price}}<span style="font-size: medium;font-weight: 500;"> /
-                                                Yearly</span></h4>
+                                                Year</span></h4>
                                         <button class="pricing-button-light" mat-raised-button
                                             routerLink="/admin/payment/{{plansInfo[2]?._id}}">Buy Now</button>
                                         <div class="pricing-amount">
@@ -159,13 +169,25 @@
                                         <mat-divider></mat-divider>
                                         <div class="pricing-feature">
                                             <div class="row module-access">
-                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;(Upto 1200)</span></p>
-                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p>
-                                                <p>Staff Uses Access<span>&nbsp;&nbsp;&nbsp;Yes</span></p>
+                                                <p>
+                                                    Student Limit
+                                                    <span
+                                                        matTooltip="This plan happily supports upto {{plansInfo[2]?.studentLimit}} students"
+                                                        matTooltipPosition="below" matTooltipShowDelay="0"
+                                                        style="cursor: pointer;">
+                                                        &nbsp;&nbsp;&nbsp;Unlimited
+                                                    </span>
+                                                </p>
+                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
+                                                </p>
+                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Upto 10 )</span></p>
+
                                             </div>
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
-                                                    <p><span>Increase Limit After Purchase ₹5 Per Student</span></p>
+                                                    <p><span>Increase Limit Only
+                                                            {{plansInfo[2]?.perStudentIncrementPrice}} Per Student</span>
+                                                    </p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
@@ -189,7 +211,7 @@
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
-                                                    <p><span>T C Management</span></p>
+                                                    <p><span>Transfer Certificate Management</span></p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
                                                 <div class="col-10">
