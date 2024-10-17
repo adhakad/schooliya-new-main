@@ -103,17 +103,17 @@
       padding-right: 3.5%;
    }
 
-   /* .service-card {
+   .service-card {
       width: 100%;
-      height: auto;
-      max-height: 24vh;
+      min-height: 25vh !important;
+      height: auto !important;
       text-align: left;
       margin-bottom: 5vh;
       border-radius: 20px;
       padding: 20px;
    }
 
-   .service-card .mat-icon {
+   /*.service-card .mat-icon {
       color: #9231f2;
    }
 

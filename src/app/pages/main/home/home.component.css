@@ -1943,7 +1943,8 @@
 
    .service-card {
       width: 96%;
-      height: 25vh;
+      min-height: 25vh !important;
+      height: auto !important;
       text-align: left;
       margin-bottom: 6vh;
       margin-left: 2.5%;

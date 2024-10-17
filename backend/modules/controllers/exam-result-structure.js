@@ -228,25 +228,27 @@ let DeleteResultStructure = async (req, res, next) => {
     try {
         const id = req.params.id;
         const resultStr = await MarksheetTemplateModel.findOne({ _id: id });
+        
         if (!resultStr) {
             return res.status(200).json('Marksheet template not found.');
         }
+
         const { adminId, class: className, stream, templateName } = resultStr;
-        const deleteResultStructure = await MarksheetTemplateModel.findByIdAndRemove(id);
-        if (deleteResultStructure) {
-            const result = await ExamResultModel.findOne({ adminId: adminId, class: className, stream: stream});
-            if (!result) {
-                return res.status(200).json('Marksheet template not found.');
-            }
-            const deleteResult = await ExamResultModel.deleteMany({ adminId: adminId, class: className, stream: stream,});
-            if (deleteResult) {
-                return res.status(200).json('Marksheet template delete successfully.');
-            }
-        }
+        const deleteOps = await Promise.all([
+            MarksheetTemplateModel.findByIdAndRemove(id),
+            ExamResultModel.deleteMany({ adminId: adminId, class: className, stream: stream })
+        ]);
+
+        const [deleteResultStructure, deleteResult] = deleteOps;
+
+        
+            return res.status(200).json('Marksheet template deleted successfully.');
+        
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');;
+        return res.status(500).json('Internal Server Error!');
     }
-}
+};
+
 
 module.exports = {
     GetSingleClassMarksheetTemplateByStream,
