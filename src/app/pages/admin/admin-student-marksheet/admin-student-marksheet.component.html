@@ -394,6 +394,7 @@
                                         </td>
                                         <td><span class="text-bold">GRADE</span> :
                                           {{result.resultDetail.term1.percentileGrade
+
                                           }}</td>
                                       </tr>
                                     </table>
@@ -456,7 +457,8 @@
                                           }}%
                                         </td>
                                         <td><span class="text-bold">GRADE</span> :
-                                          {{result.resultDetail.term1.GRADE }}</td>
+                                          {{result.resultDetail.term1.percentileGrade
+                                          }}</td>
                                       </tr>
                                     </table>
                                   </table>
@@ -995,7 +997,36 @@
                                     </tr>
                                   </table>
                                   <ng-container
-                                    *ngIf='mappedResults[0].marksheetTemplateStructure.templateName !=="T5" && mappedResults[0].marksheetTemplateStructure.templateName !=="T6"'>
+                                    *ngIf='mappedResults[0].marksheetTemplateStructure.templateName =="T1" || mappedResults[0].marksheetTemplateStructure.templateName =="T2"'>
+                                    <table class="custom-table" style="margin-bottom: 0;width: 100%;">
+                                      <tr style="padding-bottom: 11px;height: 25px;">
+                                        <th colspan="1" scope="colgroup"
+                                          style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;">
+                                          <span>S.NO.</span>
+                                        </th>
+                                        <th colspan="1" scope="colgroup"
+                                          style="height: 25px;font-size: 11px;text-align: left;border-top: transparent;border-left: 1px solid transparent;">
+                                          <span style="margin-left: 10px;">ACTIVTY</span>
+                                        </th>
+                                        <th colspan="1" scope="colgroup"
+                                          style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
+                                          <span>GRADE</span>
+                                        </th>
+                                      </tr>
+                                      <tr *ngFor="let exam of result.resultDetail.term1.coScholastic;let i = index ">
+                                        <td
+                                          style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
+                                          {{i+1}}</td>
+                                        <td
+                                          style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                          {{exam.activity |uppercase}}</td>
+                                        <td style="border-right: 1px solid transparent;">{{exam.grade | uppercase}}
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </ng-container>
+                                  <ng-container
+                                    *ngIf='mappedResults[0].marksheetTemplateStructure.templateName !=="T1" && mappedResults[0].marksheetTemplateStructure.templateName !=="T2"'>
                                     <table class="custom-table" style="margin-bottom: 0;width: 100%;">
                                       <tr style="padding-bottom: 11px;height: 25px;">
                                         <th colspan="1" scope="colgroup"
@@ -1028,39 +1059,6 @@
                                       </tr>
                                     </table>
                                   </ng-container>
-                                  <ng-container
-                                    *ngIf='mappedResults[0].marksheetTemplateStructure.templateName =="T5" || mappedResults[0].marksheetTemplateStructure.templateName =="T6"'>
-                                    <table class="custom-table" style="margin-bottom: 0;width: 100%;">
-                                      <tr style="padding-bottom: 11px;height: 25px;">
-                                        <th colspan="1" scope="colgroup"
-                                          style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;">
-                                          <span>S.NO.</span>
-                                        </th>
-                                        <th colspan="1" scope="colgroup"
-                                          style="height: 25px;font-size: 11px;text-align: left;border-top: transparent;border-left: 1px solid transparent;">
-                                          <span style="margin-left: 10px;">ACTIVTY</span>
-                                        </th>
-                                        <th colspan="1" scope="colgroup"
-                                          style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
-                                          <span>GRADE</span>
-                                        </th>
-                                      </tr>
-                                      <tr *ngFor="let exam of result.resultDetail.term1.coScholastic;let i = index ">
-                                        <td
-                                          style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
-                                          {{i+1}}</td>
-                                        <td
-                                          style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
-                                          {{exam.activity |uppercase}}</td>
-                                        <td style="border-right: 1px solid transparent;">{{exam.grade | uppercase}}
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </ng-container>
-
-
-
-
 
                                   <table class="custom-table" style="margin-top: -2px;margin-bottom: 0;">
                                     <tr
