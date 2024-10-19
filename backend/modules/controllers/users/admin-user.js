@@ -1,4 +1,5 @@
 'use strict';
+const { SMTP_API_KEY, SMTP_HOST,SENDER_EMAIL_ADDRESS } = process.env;
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
@@ -8,15 +9,17 @@ const AdminUserModel = require('../../models/users/admin-user');
 const AdminPlanModel = require('../../models/users/admin-plan');
 const PaymentModel = require('../../models/payment');
 const OTPModel = require('../../models/otp');
+const smtp_host = SMTP_HOST;
+const smtp_api_key = SMTP_API_KEY;
+const sender_email_address = SENDER_EMAIL_ADDRESS;
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
+    host: smtp_host,
     port: 587,
     secure: false,
     auth: {
-        user: `dhakaddeepak9340700360@gmail.com`,
-        pass: 'cbgcwsgpajyhvztj'
+        user: `apikey`,
+        pass: smtp_api_key
     },
 });
 
@@ -175,13 +178,26 @@ let ForgotPassword = async (req, res, next) => {
 
 async function sendEmail(email, token) {
     const mailOptions = {
-        from: { name: 'Schooliya', address: 'dhakaddeepak9340700360@gmail.com' },
+        from: { name: 'Schooliya', address: sender_email_address },
         to: email,
-        subject: 'OTP for Email Verification',
-        html: `<div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-        <p style="color: #666;">You have requested an OTP to verify your Schooliya account. If this was you, please input the code below to continue.</p>
-        <p style="color: #000;margin:10px;letter-spacing:2px;"><strong>${token}</strong></p>
-    </div>`
+        subject: 'Your OTP for Email Verification',
+        html: `<div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
+            <h2 style="color: #8C52FF; text-align: center;">Email Verification</h2>
+            <p style="color: #555; font-size: 16px;">
+                Hello,
+            </p>
+            <p style="color: #555; font-size: 16px;">
+                We received a request to verify your email address for your Schooliya account. Please use the OTP below to complete your verification:
+            </p>
+            <p style="font-size: 22px; color: #000; text-align: center; letter-spacing: 2px; margin: 20px 0;"><strong>${token}</strong></p>
+            <p style="color: #555; font-size: 16px;">
+                If you didn’t request this, please ignore this email.
+            </p>
+            <p style="color: #555; font-size: 16px;">
+                Best regards,<br/>
+                The Schooliya Team
+            </p>
+        </div>`
     };
     try {
         await transporter.sendMail(mailOptions);
