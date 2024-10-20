@@ -182,10 +182,6 @@ async function sendEmail(email, token) {
         to: email,
         subject: 'Your OTP for Email Verification',
         html: `<div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
-            <h2 style="color: #8C52FF; text-align: center;">Email Verification</h2>
-            <p style="color: #555; font-size: 16px;">
-                Hello,
-            </p>
             <p style="color: #555; font-size: 16px;">
                 We received a request to verify your email address for your Schooliya account. Please use the OTP below to complete your verification:
             </p>

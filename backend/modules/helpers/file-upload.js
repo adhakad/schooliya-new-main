@@ -24,12 +24,12 @@ let filename = (req, file, cb) => {
 let schoolLogo = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, `${DIR}/school-logo/`)
+      cb(null, `${DIR}`)
     },
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 250,
   },
   fileFilter:filter
 })

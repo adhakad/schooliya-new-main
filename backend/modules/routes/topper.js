@@ -8,7 +8,7 @@ router.get('/topper-count',countTopper);
 router.get('/',GetAllTopper);
 router.post('/topper-pagination',GetTopperPagination);
 router.get('/:id',GetSingleTopper);
-router.post('/',fileUpload.topperImage.single('image'),CreateTopper);
+// router.post('/',fileUpload.topperImage.single('image'),CreateTopper);
 router.put('/:id',UpdateTopper);
 router.delete('/:id', DeleteTopper);
 

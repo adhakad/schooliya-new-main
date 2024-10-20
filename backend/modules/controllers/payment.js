@@ -1,5 +1,5 @@
 'use strict';
-const { KEY_ID, KEY_SECRET } = process.env;
+const {SMTP_API_KEY, SMTP_HOST,SENDER_EMAIL_ADDRESS, KEY_ID, KEY_SECRET } = process.env;
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const { DateTime } = require('luxon');
@@ -9,6 +9,9 @@ const nodemailer = require('nodemailer');
 const Payment = require('../models/payment');
 const AdminPlan = require('../models/users/admin-plan');
 const tokenService = require('../services/admin-token');
+const smtp_host = SMTP_HOST;
+const smtp_api_key = SMTP_API_KEY;
+const sender_email_address = SENDER_EMAIL_ADDRESS;
 const key_id = KEY_ID;
 const key_secret = KEY_SECRET;
 
@@ -18,14 +21,13 @@ const razorpay = new Razorpay({
 });
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: `dhakaddeepak9340700360@gmail.com`,
-    pass: 'cbgcwsgpajyhvztj'
-  },
+  host: smtp_host,
+    port: 587,
+    secure: false,
+    auth: {
+        user: `apikey`,
+        pass: smtp_api_key
+    },
 });
 
 
@@ -122,7 +124,7 @@ let ValidatePayment = async (req, res) => {
 
 async function sendEmail(email) {
   const mailOptions = {
-    from: { name: 'Schooliya',address:'dhakaddeepak9340700360@gmail.com'},
+    from: { name: 'Schooliya',address:sender_email_address},
     to: email,
     subject: 'Schooliya Account Confirmation: Payment Received',
     html: `<div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">

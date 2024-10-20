@@ -81,7 +81,7 @@ export class SchoolComponent implements OnInit {
 
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
+    this.adminId = "670bbe8f2bce808c524d8904";
     this.getSchool();
     setTimeout(() => {
       this.loader = false;

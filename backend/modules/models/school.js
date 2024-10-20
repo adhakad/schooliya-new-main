@@ -16,7 +16,12 @@ const schoolSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-},
+  },
+  schoolLogoPublicId: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   affiliationNumber: {
     type: String,
     required: true,
@@ -90,8 +95,7 @@ const schoolSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-},
-
+  },
 });
 
 const School = mongoose.model('School', schoolSchema);

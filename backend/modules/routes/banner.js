@@ -8,7 +8,7 @@ router.get('/banner-count',countBanner);
 router.get('/',GetAllBanner)
 router.post('/banner-pagination',GetBannerPagination);
 router.get('/:id',GetSingleBanner);
-router.post('/',fileUpload.bannerImage.single('image'),CreateBanner);
+// router.post('/',fileUpload.bannerImage.single('image'),CreateBanner);
 router.put('/:id',UpdateBanner);
 router.delete('/:id',DeleteBanner);
 

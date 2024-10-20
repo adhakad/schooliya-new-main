@@ -8,7 +8,7 @@ router.get('/testimonial-count',countTestimonial);
 router.get('/',GetAllTestimonial);
 router.post('/testimonial-pagination',GetTestimonialPagination);
 router.get('/:id',GetSingleTestimonial);
-router.post('/',fileUpload.testimonialImage.single('image'),CreateTestimonial);
+// router.post('/',fileUpload.testimonialImage.single('image'),CreateTestimonial);
 router.put('/:id',UpdateTestimonial);
 router.delete('/:id', DeleteTestimonial);
 
