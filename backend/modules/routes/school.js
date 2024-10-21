@@ -6,7 +6,6 @@ const {GetSingleSchoolNameLogo,GetSingleSchool,CreateSchool,UpdateSchool,DeleteS
 
 router.get('/name-logo',GetSingleSchoolNameLogo);
 router.get('/:id',GetSingleSchool);
-// router.post('/',fileUpload.schoolLogo.single('schoolLogo'),CreateSchool);
 router.post('/', (req, res) => {
     fileUpload.schoolLogo.single('schoolLogo')(req, res, (err) => {
       if (err) {

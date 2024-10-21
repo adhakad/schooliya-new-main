@@ -1,5 +1,4 @@
 'use strict';
-const {SMTP_API_KEY, SMTP_HOST,SENDER_EMAIL_ADDRESS, KEY_ID, KEY_SECRET } = process.env;
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const { DateTime } = require('luxon');
@@ -9,6 +8,7 @@ const nodemailer = require('nodemailer');
 const Payment = require('../models/payment');
 const AdminPlan = require('../models/users/admin-plan');
 const tokenService = require('../services/admin-token');
+const {SMTP_API_KEY, SMTP_HOST,SENDER_EMAIL_ADDRESS, KEY_ID, KEY_SECRET } = process.env;
 const smtp_host = SMTP_HOST;
 const smtp_api_key = SMTP_API_KEY;
 const sender_email_address = SENDER_EMAIL_ADDRESS;

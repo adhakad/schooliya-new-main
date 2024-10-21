@@ -74,18 +74,18 @@
                             </mat-form-field>
 
                             <mat-form-field appearance="outline">
-                                <mat-label>Teacher User Id</mat-label>
+                                <mat-label>Id</mat-label>
                                 <input matInput type="number" formControlName="teacherUserId">
                                 <mat-hint
                                     *ngIf="signupForm.get('teacherUserId')?.hasError('required') && signupForm.get('teacherUserId')?.touched"
-                                    class="form-text text-danger">Teacher user id is required.</mat-hint>
+                                    class="form-text text-danger">Id is required.</mat-hint>
                                 <mat-hint *ngIf="signupForm.get('teacherUserId')?.hasError('pattern')"
                                     class="form-text text-danger">
-                                    Teacher user id must be a 6-digit number.
+                                    Id must be a 6-digit number.
                                 </mat-hint>
                                 <mat-hint *ngIf="signupForm.get('teacherUserId')?.hasError('pattern')"
                                     class="form-text text-danger">
-                                    Teacher user id should contain only numbers.
+                                    Id should contain only numbers.
                                 </mat-hint>
                             </mat-form-field>
 

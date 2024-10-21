@@ -85,7 +85,7 @@
                       <th>S.No.</th>
                       <th>Name</th>
                       <th>Education/Qualification</th>
-                      <th>User Id</th>
+                      <th>Id</th>
                       <th>OTP</th>
                       <th>Status</th>
                       <th>Remove</th>
@@ -165,14 +165,14 @@
                         </mat-form-field>
 
                         <mat-form-field appearance="outline">
-                          <mat-label>User Id</mat-label>
+                          <mat-label>Id</mat-label>
                           <input matInput type="number" formControlName="teacherUserId">
                           <mat-error
                             *ngIf="teacherForm.get('teacherUserId')?.hasError('required') && teacherForm.get('teacherUserId')?.touched"
-                            class="form-text text-danger">User id is required.</mat-error>
+                            class="form-text text-danger">Id is required.</mat-error>
                           <mat-error *ngIf="teacherForm.get('teacherUserId')?.hasError('pattern')"
                             class="form-text text-danger">
-                            User id must be a 6-digit & should contain only numbers.
+                            Id must be a 6-digit & should contain only numbers.
                           </mat-error>
                         </mat-form-field>
 

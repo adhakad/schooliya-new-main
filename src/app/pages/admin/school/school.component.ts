@@ -81,7 +81,7 @@ export class SchoolComponent implements OnInit {
 
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = "670bbe8f2bce808c524d8904";
+    this.adminId = getAdmin?.id;
     this.getSchool();
     setTimeout(() => {
       this.loader = false;
@@ -135,6 +135,7 @@ export class SchoolComponent implements OnInit {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
+        console.log(res)
         this.errorCheck = true;
         this.errorMsg = 'School detail already exists!';
       }

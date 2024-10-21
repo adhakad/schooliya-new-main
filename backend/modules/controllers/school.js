@@ -1,8 +1,9 @@
 'use strict';
-const { CLOUDINARY_CLOUD_NAMAE, CLOUDINARY_CLOUD_API_KEY, CLOUDINARY_CLOUD_API_SECRET } = process.env;
-const SchoolModel = require('../models/school');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
+const SchoolModel = require('../models/school');
+const AdminUserModel = require('../models/users/admin-user');
+const { CLOUDINARY_CLOUD_NAMAE, CLOUDINARY_CLOUD_API_KEY, CLOUDINARY_CLOUD_API_SECRET } = process.env;
 const cloudinary_cloud_name = CLOUDINARY_CLOUD_NAMAE;
 const cloudinary_cloud_api_key = CLOUDINARY_CLOUD_API_KEY;
 const cloudinary_cloud_api_secret = CLOUDINARY_CLOUD_API_SECRET
@@ -26,9 +27,18 @@ let GetSingleSchoolNameLogo = async (req, res, next) => {
 
 let GetSingleSchool = async (req, res, next) => {
     try {
-        const singleSchool = await SchoolModel.findOne({ adminId: req.params.id });
+        let id = req.params.id;
+        let adminUser = await AdminUserModel.findOne({ _id: id });
+        if (!adminUser) {
+            return res.status(404).json('Admin user not found');
+        }
+
+        let singleSchool = await SchoolModel.findOne({ adminId: id });
         if (singleSchool) {
-            return res.status(200).json(singleSchool);
+            let schoolData = { ...singleSchool.toObject(), schoolId: adminUser.schoolId };
+            return res.status(200).json(schoolData);
+        } else {
+            return res.status(404).json('School not found');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
