@@ -4,7 +4,7 @@ import { ChunkPipe } from '../chunk.pipe';
 import { ClassSuffixPipe } from '../class-suffix.pipe';
 import { DateToWordsPipe } from '../date-to-words.pipe';
 import { SecureEmailPipe } from '../secure-email.pipe';
-
+import { NumberToWordsPipe } from '../number-to-words.pipe';
 
 
 @NgModule({
@@ -12,7 +12,8 @@ import { SecureEmailPipe } from '../secure-email.pipe';
     ChunkPipe,
     ClassSuffixPipe,
     DateToWordsPipe,
-    SecureEmailPipe
+    SecureEmailPipe,
+    NumberToWordsPipe
   ],
   imports: [
     CommonModule
@@ -21,7 +22,8 @@ import { SecureEmailPipe } from '../secure-email.pipe';
     ChunkPipe,
     ClassSuffixPipe,
     DateToWordsPipe,
-    SecureEmailPipe
+    SecureEmailPipe,
+    NumberToWordsPipe
   ]
 })
 export class SharedPipeModule { }

@@ -169,15 +169,12 @@
                                             <div class="table-container">
                                                 <div class="row mt-5">
                                                     <div class="col-2">
-                                                        <img class="logo"
-                                                        src="{{schoolInfo?.schoolLogo}}"
+                                                        <img class="logo" src="{{schoolInfo?.schoolLogo}}"
                                                             alt="schoolo logo">
                                                     </div>
                                                     <div class="col-10" style="text-align: center;">
                                                         <div class="school-name">
-                                                            <h3 class="text-bold">
-                                                                {{schoolInfo?.schoolName |
-                                                                uppercase}}</h3>
+                                                            <h3 class="text-bold">{{schoolInfo?.schoolName | uppercase}}</h3>
                                                         </div>
                                                         <div class="address" style="text-align: center;">
                                                             <p>Affiliated to {{schoolInfo?.board |
@@ -204,54 +201,58 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 title-lable">
-                                                        <p>Fees Receipt -
+                                                        <p>FEES RECEIPT -
                                                             {{clsFeesStructure?.session}}</p>
-
+                                                    </div>
+                                                    <div class="col-12"
+                                                        style="text-align: right; margin-right: 25px;margin-bottom: 5px;">
+                                                        <p style="font-size: 14px;">Date: {{
+                                                            singleReceiptInstallment[0]?.paymentDate }}</p>
                                                     </div>
                                                 </div>
                                                 <table class="info-table" style="border-top: 1px solid #9e9e9e;">
                                                     <tr>
                                                         <td class="text-bold">RECEIPT NO.</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleReceiptInstallment[0]?.receiptNo}}
+                                                            :&nbsp;&nbsp;{{singleReceiptInstallment[0]?.receiptNo}}
                                                         </td>
                                                         <td class="text-bold">ADMISSION NO.</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.admissionNo}}
+                                                            :&nbsp;&nbsp;{{studentInfo?.admissionNo}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-bold">STUDENT NAME</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.name
+                                                            :&nbsp;&nbsp;{{studentInfo?.name
                                                             | uppercase}}
                                                         </td>
                                                         <td class="text-bold">DATE OF BIRTH</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.dob}}
+                                                            :&nbsp;&nbsp;{{studentInfo?.dob}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-bold">MOTHER NAME</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.motherName
+                                                            :&nbsp;&nbsp;{{studentInfo?.motherName
                                                             | uppercase}}
                                                         </td>
                                                         <td class="text-bold">FATHER NAME</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.fatherName
+                                                            :&nbsp;&nbsp;{{studentInfo?.fatherName
                                                             | uppercase}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-bold">CLASS</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{clsFeesStructure?.class
+                                                            :&nbsp;&nbsp;{{clsFeesStructure?.class
                                                             | classSuffix | uppercase}}
                                                         </td>
                                                         <td class="text-bold">STREAM</td>
                                                         <td colspan="2">
-                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{studentInfo?.stream
+                                                            :&nbsp;&nbsp;{{studentInfo?.stream
                                                             | uppercase}}
                                                         </td>
                                                     </tr>
@@ -261,80 +262,86 @@
                                                         <th class="border" style="border-left: none;">S.
                                                             No.
                                                         </th>
-                                                        <th class="border">Particulars</th>
+                                                        <th class="border"
+                                                            style="text-align: left;padding-left: 100px;">PARTICULARS
+                                                        </th>
                                                         <th class="border" style="border-right: none;">
-                                                            Fee
-                                                            Amount</th>
+                                                            FEE AMOUNT</th>
                                                     </tr>
 
                                                     <tr class="text-center"
-                                                        *ngFor="let item of clsFeesStructure?.feesType,let i = index">
+                                                        *ngFor="let item of clsFeesStructure?.feesType, let i = index">
                                                         <td class="border" style="border-left: none;">
-                                                            {{i+1}}.</td>
-                                                        <td class="border" *ngFor="let fee of item | keyvalue">
-                                                            {{ fee.key}} Fee</td>
-                                                        <td class="border" style="border-right: none;"
+                                                            {{i+1}}.
+                                                        </td>
+                                                        <td class="border" *ngFor="let fee of item | keyvalue"
+                                                            style="text-align: left;padding-left: 100px;">
+                                                            {{ formatKey(fee.key) }} FEE
+                                                        </td>
+                                                        <td class="border" style="border-right: none;font-size: 15px;"
                                                             *ngFor="let fee of item | keyvalue">
-                                                            &#8377; {{ fee.value}}</td>
+                                                            {{ formatCurrency(fee.value) }}
+                                                        </td>
                                                     </tr>
                                                     <tr class="text-center">
                                                         <td class="border" style="border-left: none;">
                                                         </td>
-                                                        <td class="border">
-                                                            Concession Amount</td>
+                                                        <td class="border"
+                                                            style="text-align: left;padding-left: 100px;">
+                                                            CONCESSION AMOUNT</td>
                                                         <td class="border" style="border-right: none;">
-                                                            - &#8377;
-                                                            {{singleReceiptInstallment[0]?.feesConcession}}
+                                                            -
+                                                            {{formatCurrency(singleReceiptInstallment[0]?.feesConcession)}}
                                                         </td>
                                                     </tr>
                                                     <tr class="text-center" style="height: 15px;">
                                                         <td style="border: none;padding-top: 5px;">
                                                         </td>
                                                         <td class="text-bold"
-                                                            style="text-align: right;border: none;padding-top: 8px;font-size: 12px;">
-                                                            TOTAL FEE
+                                                            style="text-align: right;border: none;padding-top: 8px;font-size: 15px;">
+                                                            TOTAL FEE :
                                                         </td>
                                                         <td class="text-bold"
-                                                            style="border: none;padding-top: 8px;font-size: 15px;">
-                                                            &#8377;
-                                                            {{studentFeesCollection?.totalFees}}</td>
+                                                            style="border: none;padding-top: 8px;font-size: 16px;">
+                                                            {{formatCurrency(studentFeesCollection?.totalFees)}}</td>
                                                     </tr>
                                                     <tr class="text-center" style="height: 15px;">
                                                         <td style="border: none;"></td>
                                                         <td class="text-bold"
-                                                            style="text-align: right;border: none;font-size: 12px;">
-                                                            PAID FEE
+                                                            style="text-align: right;border: none;font-size: 15px;">
+                                                            PAID FEE :
                                                         </td>
-                                                        <td class="text-bold" style="border: none;font-size: 15px;">
-                                                            &#8377;
-                                                            {{singleReceiptInstallment[0]?.allPaidAmount}}</td>
+                                                        <td class="text-bold" style="border: none;font-size: 16px;">
+
+                                                            {{formatCurrency(singleReceiptInstallment[0]?.allPaidAmount)}}
+                                                        </td>
                                                     </tr>
                                                     <tr class="text-center" style="height: 15px;">
                                                         <td style="border: none;"></td>
                                                         <td class="text-bold"
-                                                            style="text-align: right;border: none;font-size: 12px;">
-                                                            DUE FEE
+                                                            style="text-align: right;border: none;font-size: 15px;">
+                                                            DUE FEE :
                                                         </td>
-                                                        <td class="text-bold" style="border: none;font-size: 15px;">
-                                                            &#8377;
-                                                            {{studentFeesCollection?.totalFees -
-                                                            singleReceiptInstallment[0]?.allPaidAmount}}</td>
-                                                    </tr>
-                                                    <tr style="height: 15px;">
-                                                        <td style="border: none;"></td>
-                                                        <td style="border: none;padding-bottom: 2px;">
-                                                            <p class="text-center">
-                                                                Fee amount deposited <span class="text-bold">&#8377;
-                                                                    {{
-                                                                    singleReceiptInstallment[0]?.paidAmount }}
-                                                                    /-</span>
-                                                            </p>
-                                                        </td>
-                                                        <td style="border: none;"></td>
+                                                        <td class="text-bold" style="border: none;font-size: 16px;">
+
+                                                            {{formatCurrency(studentFeesCollection?.totalFees -
+                                                            singleReceiptInstallment[0]?.allPaidAmount)}}</td>
                                                     </tr>
                                                 </table>
-                                                <p style="margin-left: 20px;right: 0;">Date : {{
-                                                    singleReceiptInstallment[0]?.paymentDate }}</p>
+                                                <ng-container style="border: none;padding-bottom: 20px;">
+                                                    <p
+                                                        style="display: inline-block;margin-left: 20px;margin-bottom: 0 !important;">
+                                                        <span class="text-bold" style="font-size: 15px;">Authorized
+                                                            Signatory</span>
+                                                    </p>
+                                                    <p style="text-align: center;margin-top: 10px !important;font-size: 12px;">
+                                                        FEE DEPOSITED <span class="text-bold" style="font-size: 14px;">
+                                                            {{formatCurrency(singleReceiptInstallment[0]?.paidAmount)}}
+                                                            /- ({{singleReceiptInstallment[0]?.paidAmount |
+                                                            numberToWords }} Rupees Only)</span>
+                                                    </p>
+                                                </ng-container>
+                                                <p style="margin-left: 20px;right: 0;"></p>
                                             </div>
 
                                         </div>
