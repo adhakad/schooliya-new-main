@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   schoolInfo: any;
   adminId!: any;
   youtubeVideoUrls: string[] = [
-    "https://www.youtube.com/watch?v=93tpjl-0Cw0&t=5s",
+    "https://www.youtube.com/watch?v=5GXg1rt_b_s",
   ];
   thumbnailUrls: SafeUrl[] = [];
   youtubeVideoSafeUrls: SafeResourceUrl[] = [];

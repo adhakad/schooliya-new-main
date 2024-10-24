@@ -1,0 +1,27 @@
+ <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://schooliya.in/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://schooliya.in/pricing</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://schooliya.in/features</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://schooliya.in/about</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://schooliya.in/admin/login</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://schooliya.in/contact</loc>
+    <priority>0.6</priority>
+  </url>
+</urlset>
+
