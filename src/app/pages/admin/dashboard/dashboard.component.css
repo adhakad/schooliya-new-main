@@ -99,6 +99,36 @@
     margin-top: -5px;
   }
 
+
+
+  ::ng-deep .custom-select-print {
+    background-color: #fff;
+    height: 45px;
+    width: 100% !important;
+    letter-spacing: .5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 0px;
+    margin-bottom: 3vh;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
+    border-radius: 5px;
+  }
+  ::ng-deep .custom-select-print .mat-select-arrow {
+    color: #8C52FF;
+  }
+  ::ng-deep .custom-select-print .mat-form-field-underline {
+    display: none;
+  }
+
+  ::ng-deep .custom-select-print .mat-form-field-label {
+    color: #382066 !important;
+    letter-spacing: .5px;
+  }
+
+  .custom-select-print .mat-form-field-infix {
+    margin-top: -5px;
+  }
+
   .form-control {
     width: 100%;
     height: 45px;
@@ -601,6 +631,33 @@
     }
 
     .custom-select .mat-form-field-infix {
+      margin-top: -5px;
+    }
+    ::ng-deep .custom-select-print {
+      background-color: #fff;
+      height: 45px;
+      width: 100% !important;
+      letter-spacing: .5px;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-right: 0 !important;
+      margin-bottom: 0 !important;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
+      border-radius: 5px;
+    }
+    ::ng-deep .custom-select-print .mat-select-arrow {
+      color: #8C52FF;
+    }
+    ::ng-deep .custom-select-print .mat-form-field-underline {
+      display: none;
+    }
+  
+    ::ng-deep .custom-select-print .mat-form-field-label {
+      color: #382066 !important;
+      letter-spacing: .5px;
+    }
+  
+    .custom-select-print .mat-form-field-infix {
       margin-top: -5px;
     }
 

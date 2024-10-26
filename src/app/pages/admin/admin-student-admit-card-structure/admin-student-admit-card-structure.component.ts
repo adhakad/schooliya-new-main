@@ -320,7 +320,6 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
       return { [subject]: formattedDate };
     });
     this.admitcardForm.value.adminId = this.adminId;
-    console.log(this.admitcardForm.value)
     this.admitCardStructureService.addAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
       if (res) {
         this.successDone();

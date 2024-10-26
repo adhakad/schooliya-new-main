@@ -101,13 +101,13 @@ export class TransferCertificateComponent implements OnInit {
     this.page = 0;
     this.className = cls;
     this.cls = cls;
-    if(cls !==11 && cls !==12){
+    if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
       this.studentInfo = [];
       this.getStudents({ page: 1 });
     }
-    if(cls ==11 || cls ==12){
-      if(this.stream=='stream'){
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
         this.stream = '';
       }
       this.studentInfo = [];
@@ -232,7 +232,7 @@ export class TransferCertificateComponent implements OnInit {
 
 
 
-  
+
   closeModal() {
     this.showStudentInfoViewModal = false;
     this.showStudentTCFormModal = false;
@@ -358,15 +358,27 @@ export class TransferCertificateComponent implements OnInit {
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
     this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{religion:'Aninism / Adivasi'},{religion:'Islam'},{ religion: 'Baha I faith ' },{ religion: 'Judaism' },{ religion: 'Zoroastrianism' } ,{ religion: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
     this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
   }
   getTC() {
+    this.errorCheck = false;
+    this.errorMsg = '';
     if (this.tcForm.valid && this.singleStudentInfo) {
       this.singleStudentInfo.isDate = this.isDate;
       this.tcForm.value.adminId = this.adminId;
+      if (this.tcForm.value.totalWorkingDays>365) {
+        this.errorCheck = true;
+        this.errorMsg = 'Total working days cannot be greater than 365!';
+        return
+      }
+      if (this.tcForm.value.totalWorkingDays<this.tcForm.value.totalPresenceDays) {
+        this.errorCheck = true;
+        this.errorMsg = 'Total presence days cannot be greater than total working days!';
+        return
+      }
       if (!this.tcForm.value.anyOtherRemarks) {
         this.tcForm.value.anyOtherRemarks = 'Nil';
       }

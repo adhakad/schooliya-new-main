@@ -339,6 +339,9 @@
                                         <form [formGroup]="tcForm" (ngSubmit)="getTC()"
                                             *ngIf="!readyTC && singleStudentInfo">
                                             <div class="modal-body">
+                                                <div *ngIf="errorCheck">
+                                                    <p class="error-message">{{errorMsg}}</p>
+                                                </div>
                                                 <div class="container">
                                                     <div class="row">
                                                         <ng-container>
