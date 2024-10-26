@@ -96,18 +96,18 @@
                                             <mat-form-field appearance="outline">
                                                 <mat-label>State</mat-label>
                                                 <mat-select type="text" matInput formControlName="state">
-                                                  <div *ngFor="let state of indianStates">
-                                                    <mat-option value="{{state}}">{{state}}</mat-option>
-                                                  </div>
+                                                    <div *ngFor="let state of indianStates">
+                                                        <mat-option value="{{state}}">{{state}}</mat-option>
+                                                    </div>
                                                 </mat-select>
                                                 <mat-error
-                                                  *ngIf="signupForm.get('state')?.hasError('required') && signupForm.get('state')?.touched">
-                                                  State is required
+                                                    *ngIf="signupForm.get('state')?.hasError('required') && signupForm.get('state')?.touched">
+                                                    State is required
                                                 </mat-error>
                                                 <mat-error *ngIf="signupForm.get('state')?.hasError('maxlength')">
-                                                  Maximum 50 characters allowed for State
+                                                    Maximum 50 characters allowed for State
                                                 </mat-error>
-                                              </mat-form-field>
+                                            </mat-form-field>
                                         </div>
                                         <div class="col-12 col-lg-6">
                                             <mat-form-field appearance="outline">
@@ -281,23 +281,26 @@
                                         </div>
                                     </div>
                                     <div class="row" style="padding-top: 15px;">
-                                        <div class="col-6" style="text-align: left;">
-                                            <h3>Student Limit</h3>
-                                        </div>
-                                        <div class="col-6 student-limit" style="text-align: right;">
-                                            <button class="decrement-button"
-                                                [disabled]="numberOfStudent==singlePlanInfo?.studentLimit"
-                                                (click)="updateNumber(-studentIncrementRange)"
-                                                mat-icon-button><mat-icon>remove</mat-icon></button>
-                                            <button class="button" mat-icon-button>{{numberOfStudent}}</button>
-                                            <button class="increment-button"
-                                                (click)="updateNumber(studentIncrementRange)"
-                                                mat-icon-button><mat-icon>add</mat-icon></button>
-                                        </div>
+                                        <ng-container *ngIf="singlePlanInfo?.plans !=='Plus'">
+                                            <div class="col-6" style="text-align: left;">
+                                                <h3>Student Limit</h3>
+                                            </div>
+                                            <div class="col-6 student-limit" style="text-align: right;">
+                                                <button class="decrement-button"
+                                                    [disabled]="numberOfStudent==singlePlanInfo?.studentLimit"
+                                                    (click)="updateNumber(-studentIncrementRange)"
+                                                    mat-icon-button><mat-icon>remove</mat-icon></button>
+                                                <button class="button" mat-icon-button>{{numberOfStudent}}</button>
+                                                <button class="increment-button"
+                                                    (click)="updateNumber(studentIncrementRange)"
+                                                    mat-icon-button><mat-icon>add</mat-icon></button>
+                                            </div>
+                                        </ng-container>
                                         <div class="row">
                                             <div class="col-12"><mat-icon
                                                     style="color: rgb(41, 167, 113);font-size:21px;display: inline;">lock</mat-icon>
-                                                <h3 style="font-size: 15px;display: inline;margin-left: 10px;">Razorpay Secure
+                                                <h3 style="font-size: 15px;display: inline;margin-left: 10px;">Razorpay
+                                                    Secure
                                                 </h3>
                                             </div>
                                         </div>
@@ -406,23 +409,26 @@
                                         </div>
                                     </div>
                                     <div class="row" style="padding-top: 15px;">
-                                        <div class="col-5">
-                                            <h3>Student Limit</h3>
-                                        </div>
-                                        <div class="col-7 student-limit" style="text-align: right;">
-                                            <button class="decrement-button"
-                                                [disabled]="numberOfStudent==singlePlanInfo?.studentLimit"
-                                                (click)="updateNumber(-studentIncrementRange)"
-                                                mat-icon-button><mat-icon>remove</mat-icon></button>
-                                            <button class="button" mat-icon-button>{{numberOfStudent}}</button>
-                                            <button class="increment-button"
-                                                (click)="updateNumber(studentIncrementRange)"
-                                                mat-icon-button><mat-icon>add</mat-icon></button>
-                                        </div>
+                                        <ng-container *ngIf="singlePlanInfo?.plans !=='Plus'">
+                                            <div class="col-5">
+                                                <h3>Student Limit</h3>
+                                            </div>
+                                            <div class="col-7 student-limit" style="text-align: right;">
+                                                <button class="decrement-button"
+                                                    [disabled]="numberOfStudent==singlePlanInfo?.studentLimit"
+                                                    (click)="updateNumber(-studentIncrementRange)"
+                                                    mat-icon-button><mat-icon>remove</mat-icon></button>
+                                                <button class="button" mat-icon-button>{{numberOfStudent}}</button>
+                                                <button class="increment-button"
+                                                    (click)="updateNumber(studentIncrementRange)"
+                                                    mat-icon-button><mat-icon>add</mat-icon></button>
+                                            </div>
+                                        </ng-container>
                                         <div class="row">
                                             <div class="col-12"><mat-icon
                                                     style="color: rgb(41, 167, 113);font-size:21px;display: inline;">lock</mat-icon>
-                                                <h3 style="font-size: 15px;display: inline;margin-left: 10px;">Razorpay Secure
+                                                <h3 style="font-size: 15px;display: inline;margin-left: 10px;">Razorpay
+                                                    Secure
                                                 </h3>
                                             </div>
                                         </div>
