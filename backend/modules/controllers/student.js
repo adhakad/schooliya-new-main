@@ -284,6 +284,7 @@ let CreateStudent = async (req, res, next) => {
                 return res.status(400).json(`Samagra id already exist !`);
             }
             studentData.samagraId = samagraId;
+            studentData.extraField = [{samagraId: samagraId}]
         }
         if (udiseNumber !== null && udiseNumber !== undefined) {
             const checkUdiseNumber = await StudentModel.findOne({ udiseNumber: udiseNumber });
@@ -443,6 +444,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             udiseNumber: student.udiseNumber,
             aadharNumber: student.aadharNumber,
             samagraId: student.samagraId,
+            extraField : [{samagraId: student.samagraId}],
             admissionNo: student.admissionNo,
             admissionType: student.admissionType,
             stream: stream,
@@ -688,7 +690,7 @@ let UpdateStudent = async (req, res, next) => {
         const id = req.params.id;
         let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession } = req.body;
         const studentData = {
-            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession
+            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId,extraField :[{samagraId: samagraId}], admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession
         }
         const updateStudent = await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
         return res.status(200).json('Student update successfully.');

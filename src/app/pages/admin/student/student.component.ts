@@ -602,6 +602,7 @@ export class StudentComponent implements OnInit {
     if (className == 202) {
       className = `UKG`;
     }
+    let samagraId = 'samagraId' //dynamic field add testing
     const header: string[] = [
       'session',
       'medium',
@@ -612,7 +613,7 @@ export class StudentComponent implements OnInit {
       'rollNumber',
       'feesConcession',
       'aadharNumber',
-      'samagraId',
+      samagraId,
       'dob',
       'doa',
       'admissionType',
@@ -634,6 +635,7 @@ export class StudentComponent implements OnInit {
     ];
 
     function orderObjectsByHeaders(studentInfoByClass: any, header: any) {
+      console.log(studentInfoByClass)
       return studentInfoByClass.map((obj: any) => {
         const orderedObj: any = {};
         header.forEach((header: any) => {

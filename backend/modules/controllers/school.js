@@ -147,7 +147,6 @@ let UpdateSchool = async (req, res, next) => {
             return res.status(404).json('School not found.');
         }
     } catch (error) {
-        console.error(error);
         return res.status(500).json('Internal Server Error!');
     }
 };

@@ -22,9 +22,9 @@ router.post('/', (req, res) => {
     fileUpload.schoolLogo.single('schoolLogo')(req, res, (err) => {
       if (err) {
         if (err.code === 'LIMIT_FILE_SIZE') {
-          return res.status(400).json('Upload logo under 50KB size limit');
+          return res.status(400).json('Upload logo under 250KB size limit');
         }
-        return res.status(400).json('Upload logo under 50KB size limit');
+        return res.status(400).json('Upload logo under 250KB size limit');
       }
       // Call the controller function to update the school
       UpdateSchool(req, res);
