@@ -1,5 +1,5 @@
 'use strict';
-const { SMTP_API_KEY, SMTP_HOST,SENDER_EMAIL_ADDRESS } = process.env;
+const { SMTP_API_KEY, SMTP_HOST, SENDER_EMAIL_ADDRESS } = process.env;
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
@@ -195,12 +195,14 @@ async function sendEmail(email, token) {
             </p>
         </div>`
     };
+
     try {
         await transporter.sendMail(mailOptions);
     } catch (error) {
-        res.status(500).json({ errorMsg: 'Error sending email !' });
+        res.status(500).json({ errorMsg: 'Error sending email!' });
     }
 }
+
 
 let VerifyOTP = async (req, res, next) => {
 

@@ -54,10 +54,12 @@ let CreateFeesStructure = async (req, res, next) => {
     if (stream === "stream") {
         stream = "N/A";
     }
+    console.log("a")
     let feesTypeTotal = feesType.reduce((total, obj) => {
         let value = Object.values(obj)[0];
         return total + value;
     }, 0);
+    console.log("b")
     try {
         const checkClassExist = await ClassModel.findOne({ class: className });
         if (!checkClassExist) {
@@ -67,9 +69,11 @@ let CreateFeesStructure = async (req, res, next) => {
         if (checkFeesStructure) {
             return res.status(400).json(`Fee structure already exist for session ${session} !`);
         }
+        console.log("c")
         if (totalFees !== feesTypeTotal) {
             return res.status(400).json(`Total fees is not equal to all fees particulars total !`);
         }
+        console.log("d")
         let feesStructureData = {
             adminId: adminId,
             class: className,
@@ -79,12 +83,16 @@ let CreateFeesStructure = async (req, res, next) => {
             totalFees: totalFees,
             feesType: feesType,
         }
+        console.log("e")
         let feesStructure = await FeesStructureModel.create(feesStructureData);
+        console.log("f")
         if (feesStructure) {
+            console.log("g")
             let admissionFees = feesStructure.admissionFees;
             let checkStudent = await StudentModel.find({ adminId: adminId, session, class: className, stream: stream });
-
+            console.log("h")
             if (checkStudent) {
+                console.log("i")
                 let studentFeesData = [];
                 for (let i = 0; i < checkStudent.length; i++) {
                     let totalFees = feesStructure.totalFees - checkStudent[i].feesConcession;
@@ -94,24 +102,37 @@ let CreateFeesStructure = async (req, res, next) => {
                         session,
                         class: className,
                         stream: stream,
+                        previousSessionFeesStatus: false,
+                        previousSessionClass: 0,
+                        previousSessionStream: "empty",
                         admissionFeesPayable: false,
                         admissionFees: 0,
                         totalFees: totalFees,
                         paidFees: 0,
                         dueFees: totalFees,
+                        AllTotalFees: totalFees,
+                        AllPaidFees: 0,
+                        AllDueFees: totalFees,
                         feesConcession: checkStudent[i].feesConcession,
+                        allFeesConcession: checkStudent[i].feesConcession,
                     };
 
                     if (checkStudent.admissionType === 'New') {
                         feesObject.admissionFeesPayable = true;
                         feesObject.totalFees += admissionFees;
                         feesObject.dueFees += admissionFees;
+                        feesObject.AllTotalFees += admissionFees;
+                        feesObject.AllPaidFees += admissionFees;
+                        feesObject.AllDueFees = feesObject.totalFees - feesObject.paidFees;
                     }
 
                     studentFeesData.push(feesObject);
                 }
+                console.log("j")
                 if (checkStudent && studentFeesData.length > 0) {
+                    console.log("k")
                     const checkStudentFeesData = await FeesCollectionModel.create(studentFeesData);
+                    console.log("l")
                     if (checkStudentFeesData) {
                         return res.status(200).json('Fees structure add successfully.');
                     }

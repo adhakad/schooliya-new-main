@@ -9,7 +9,6 @@ let GetStudentFeesCollectionBySession = async (req, res, next) => {
     let adminId = req.params.adminId;
     let session = req.params.session;
     try {
-    
         const allFees = await FeesCollectionModel.find({ adminId: adminId, session: session });
         let totalFeesSum = 0, paidFeesSum = 0, dueFeesSum = 0;
 
@@ -18,11 +17,6 @@ let GetStudentFeesCollectionBySession = async (req, res, next) => {
             paidFeesSum += allFees[i].paidFees;
             dueFeesSum += allFees[i].dueFees;
         }
-
-
-
-
-
         function findMonthlyPayments(feesData) {
             const monthsMap = {
                 '01': 'January',

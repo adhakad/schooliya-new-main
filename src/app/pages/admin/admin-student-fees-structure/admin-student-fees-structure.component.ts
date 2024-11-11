@@ -59,7 +59,7 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getSchool();
+    // this.getSchool();
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
     this.getAcademicSession();
@@ -67,13 +67,13 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     // this.getFeesStructureByClass();
     this.loader = false;
   }
-  getSchool() {
-    this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
-      if (res) {
-        this.schoolInfo = res;
-      }
-    })
-  }
+  // getSchool() {
+  //   this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
+  //     if (res) {
+  //       this.schoolInfo = res;
+  //     }
+  //   })
+  // }
   getAcademicSession() {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
       if (res) {

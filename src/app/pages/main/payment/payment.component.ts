@@ -190,7 +190,7 @@ export class PaymentComponent implements OnInit {
     this.paymentService.createPayment(paymentData).subscribe(
       (response: any) => {
         const options = {
-          key: 'rzp_live_kkDmtpnXeNedO9',
+          key: 'rzp_test_TBO2GW3Z62TQJ6',
           amount: response.order.amount,
           currency: response.order.currency,
           name: 'Schooliya',
@@ -209,6 +209,7 @@ export class PaymentComponent implements OnInit {
           handler: this.paymentHandler.bind(this),
         };
         Razorpay.open(options);
+        console.log(options)
       },
       (error) => {
         this.errorMsg = 'Payment creation failed. Please try again later.';
@@ -220,7 +221,9 @@ export class PaymentComponent implements OnInit {
     const razorpayPaymentId = response.razorpay_payment_id;
     const razorpayOrderId = response.razorpay_order_id;
     const razorpaySignature = response.razorpay_signature;
-    const paymentData = {
+    console.log("response")
+    console.log(response)
+      const paymentData = {
       payment_id: razorpayPaymentId,
       order_id: razorpayOrderId,
       signature: razorpaySignature,
@@ -232,9 +235,13 @@ export class PaymentComponent implements OnInit {
       studentLimit: this.singlePlanInfo.studentLimit,
 
     }
+    console.log("paymentData")
+    console.log(paymentData)
     this.paymentService.validatePayment(paymentData).subscribe(
       (validationResponse: any) => {
         if (validationResponse) {
+          console.log("validationResponse")
+          console.log(validationResponse)
           this.zone.run(() => {
             this.loader = true;
             this.adminAuthService.deleteAllCookies();

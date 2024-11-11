@@ -29,7 +29,7 @@ let schoolLogo = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 250,
+    fileSize: 1024 * 500,
   },
   fileFilter:filter
 })
