@@ -261,6 +261,9 @@ export class AdminStudentFeesStructureComponent implements OnInit {
         this.successMsg = res;
         this.deleteById = '';
       }
+    }, err => {
+      this.errorCheck = true;
+      this.errorMsg = err.error;
     })
   }
 

@@ -127,10 +127,11 @@
                                         <h5 class="modal-title" *ngIf="deleteMode">Delete Fee Structure</h5>
                                         <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                     </div>
-                                    <div class="modal-body" *ngIf="feesTypeMode && !deleteMode">
-                                        <div *ngIf="errorCheck">
+                                    <div class="modal-body">
+                                        <div *ngIf="errorCheck && deleteMode">
                                             <p class="error-message">{{errorMsg}}</p>
                                         </div>
+                                        <ng-container *ngIf="feesTypeMode && !deleteMode">
                                         <div class="row">
                                             <div class="col-6">
                                                 <mat-form-field appearance="outline">
@@ -191,7 +192,9 @@
                                                 </div>
                                             </div>
                                         </section>
+                                    </ng-container>
                                     </div>
+
                                     <div class="modal-footer" *ngIf="feesTypeMode">
                                         <button class="submit-button" mat-raised-button
                                             [disabled]="!feesForm || totalFees<=0 "
