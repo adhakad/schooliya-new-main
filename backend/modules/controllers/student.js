@@ -320,6 +320,7 @@ let CreateStudent = async (req, res, next) => {
         let studentFeesData = {
             adminId: adminId,
             session: session,
+            currentSession:session,
             previousSessionFeesStatus: false,
             previousSessionClass: 0,
             previousSessionStream: "empty",
@@ -638,6 +639,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
                 class: className,
                 stream: stream,
                 session: studentData[0].session,
+                currentSession:studentData[0].session,
                 previousSessionFeesStatus: false,
                 previousSessionClass: 0,
                 previousSessionStream: "empty",
@@ -751,7 +753,6 @@ let StudentClassPromote = async (req, res, next) => {
                 return res.status(404).json({ errorMsg: `This student previous session fees record not found.` });
             }
             if (checkFeesCollection) {
-
                 let previousSessionTotalFees = checkFeesCollection.totalFees;
                 let previousSessionPaidFees = checkFeesCollection.paidFees;
                 let previousSessionDueFees = checkFeesCollection.dueFees;
@@ -760,6 +761,7 @@ let StudentClassPromote = async (req, res, next) => {
                         adminId: adminId,
                         studentId: studentId,
                         session: session,
+                        currentSession:session,
                         previousSessionFeesStatus: false,
                         previousSessionClass: 0,
                         previousSessionStream: "empty",
@@ -792,6 +794,7 @@ let StudentClassPromote = async (req, res, next) => {
                     adminId: adminId,
                     studentId,
                     session: session,
+                    currentSession:session,
                     previousSessionFeesStatus: true,
                     previousSessionClass: 0,
                     previousSessionStream: "empty",
@@ -811,10 +814,11 @@ let StudentClassPromote = async (req, res, next) => {
                 const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                     {
                         _id: id,
-                        session: previousSession
+                        session: previousSession,
                     },
                     {
                         $set: {
+                            currentSession:session,
                             previousSessionClass: previousSessionClass,
                             previousSessionStream: previousSessionStream,
                             class: className,
@@ -901,7 +905,6 @@ let StudentClassFail = async (req, res, next) => {
                 return res.status(404).json({ errorMsg: `This student previous session fees record not found.` });
             }
             if (checkFeesCollection) {
-
                 let previousSessionTotalFees = checkFeesCollection.totalFees;
                 let previousSessionPaidFees = checkFeesCollection.paidFees;
                 let previousSessionDueFees = checkFeesCollection.dueFees;
@@ -910,6 +913,7 @@ let StudentClassFail = async (req, res, next) => {
                         adminId: adminId,
                         studentId: studentId,
                         session: session,
+                        currentSession:session,
                         previousSessionFeesStatus: false,
                         previousSessionClass: 0,
                         previousSessionStream: "empty",
@@ -942,6 +946,7 @@ let StudentClassFail = async (req, res, next) => {
                     adminId: adminId,
                     studentId,
                     session: session,
+                    currentSession:session,
                     previousSessionFeesStatus: true,
                     previousSessionClass: 0,
                     previousSessionStream: "empty",
@@ -961,10 +966,11 @@ let StudentClassFail = async (req, res, next) => {
                 const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                     {
                         _id: id,
-                        session: previousSession
+                        session: previousSession,
                     },
                     {
                         $set: {
+                            currentSession:session,
                             previousSessionClass: previousSessionClass,
                             previousSessionStream: previousSessionStream,
                             class: className,

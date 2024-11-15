@@ -91,6 +91,7 @@ let CreateFeesStructure = async (req, res, next) => {
                         adminId: adminId,
                         studentId: checkStudent[i]._id,
                         session,
+                        currentSession:session,
                         class: className,
                         stream: stream,
                         previousSessionFeesStatus: false,
@@ -151,7 +152,7 @@ let DeleteFeesStructure = async (req, res, next) => {
             }
         }
         const [deleteFeesRecord, deleteFeesStructure] = await Promise.all([
-            FeesCollectionModel.deleteMany({ adminId: adminId,class:className,stream :stream  }),
+            FeesCollectionModel.deleteMany({ adminId: adminId,currentSession:session,class:className,stream :stream  }),
             FeesStructureModel.findByIdAndRemove(id),
         ]);
         if (deleteFeesRecord.deletedCount > 0 || deleteFeesStructure) {
