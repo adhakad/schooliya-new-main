@@ -1,5 +1,6 @@
 'use strict';
 const fs = require('fs');
+const AdminPlan = require('../models/users/admin-plan');
 const TeacherModel = require('../models/teacher');
 const TeacherUserModel = require('../models/users/teacher-user');
 
@@ -56,6 +57,15 @@ let CreateTeacher = async (req, res, next) => {
     let otp = Math.floor(Math.random() * 899999 + 100000);
     const { adminId, name, teacherUserId, education } = req.body;
     try {
+        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
+        if (!checkAdminPlan) {
+            return res.status(404).json(`Invalid Entry`);
+        }
+        let teacherLimit = checkAdminPlan.teacherLimit;
+        let countTeacher = await TeacherModel.count({ adminId: adminId });
+        if (countTeacher == teacherLimit || countTeacher > teacherLimit) {
+            return res.status(400).json(`You have exceeded the ${countTeacher} teacher limit for your current plan. Please increase the limit or upgrade to a higher plan to continue.`);
+        }
         const checkTeacher = await TeacherModel.findOne({ adminId: adminId, teacherUserId: teacherUserId });
         if (checkTeacher) {
             return res.status(400).json("Teacher user id already exist !")
