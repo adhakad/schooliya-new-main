@@ -54,10 +54,11 @@ let GetSinglePlansByPlans = async (req, res, next) => {
     }
 }
 let CreatePlans = async (req, res, next) => {
-    const { plans, price, studentLimit ,perStudentIncrementPrice,studentIncrementRange} = req.body;
+    const { plans, price,teacherLimit, studentLimit ,perStudentIncrementPrice,studentIncrementRange} = req.body;
     const plansData = {
         plans: plans,
         price: price,
+        teacherLimit: teacherLimit,
         studentLimit: studentLimit,
         perStudentIncrementPrice:perStudentIncrementPrice,
         studentIncrementRange:studentIncrementRange

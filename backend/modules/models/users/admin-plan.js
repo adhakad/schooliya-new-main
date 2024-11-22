@@ -31,6 +31,11 @@ const AdminPlanModel = mongoose.model('admin-plan', {
     type: [Boolean],
     default: []
   },
+  teacherLimit: {
+    type: Number,
+    required: true,
+    trim: true
+  },
   studentLimit: {
     type: Number,
     required: true,
