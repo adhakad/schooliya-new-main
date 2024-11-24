@@ -7,8 +7,8 @@ const OTPModel = mongoose.model('otp', {
         required: true,
         trim: true,
       },
-      secret: {
-        type: String,
+      secureOtp: {
+        type: Number,
         required: true,
         trim: true,
       },

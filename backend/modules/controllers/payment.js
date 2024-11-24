@@ -10,7 +10,7 @@ const AdminPlan = require('../models/users/admin-plan');
 const Invoice = require('../models/invoice');
 const Counter = require('../models/counter');
 const tokenService = require('../services/admin-token');
-const { SMTP_API_KEY, SMTP_HOST, SENDER_EMAIL_ADDRESS, KEY_ID, KEY_SECRET } = process.env;
+const { SMTP_API_KEY, SMTP_HOST, SENDER_EMAIL_ADDRESS, KEY_ID, KEY_SECRET,CLOUDINARY_CLOUD_NAMAE } = process.env;
 const smtp_host = SMTP_HOST;
 const smtp_api_key = SMTP_API_KEY;
 const sender_email_address = SENDER_EMAIL_ADDRESS;
@@ -147,7 +147,7 @@ async function sendEmail(email,invoiceNumber,amount,activePlan,paymentDate) {
         <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px 18px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
           <div style="text-align: left; margin-bottom: 20px;">
             <img 
-              src="https://res.cloudinary.com/dzzrracge/image/upload/v1731663497/logo_muu7zu.png" 
+              src="https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAMAE}/image/upload/v1731663497/logo_muu7zu.png" 
               alt="Schooliya Logo" 
               style="height: 32px; display: inline-block;" 
             />

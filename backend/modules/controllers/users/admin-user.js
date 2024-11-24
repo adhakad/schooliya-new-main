@@ -75,19 +75,20 @@ let RefreshToken = async (req, res, next) => {
 }
 
 let SignupAdmin = async (req, res, next) => {
-    const secret = speakeasy.generateSecret({ length: 20 });
+    function generateSecureOTP() {
+        const otp = crypto.randomInt(100000, 1000000); // Generates a number between 100000 and 999999
+        return otp;
+    }
+    const secureOtp = generateSecureOTP();
+
     const { email, password, name, mobile, city, state, address, pinCode, schoolName, affiliationNumber } = req.body;
     try {
         const existingUser = await AdminUserModel.findOne({ email });
         if (existingUser) {
             if (!existingUser.verified) {
                 await OTPModel.deleteMany({ email });
-                const token = speakeasy.totp({
-                    secret: secret.base32,
-                    encoding: 'base32'
-                });
-                await OTPModel.create({ email, secret: secret.base32 });
-                sendEmail(email, token);
+                await OTPModel.create({ email, secureOtp: secureOtp });
+                sendEmail(email, secureOtp);
                 return res.status(400).json({ verified: false, paymentMode: true, email });
             }
             if (existingUser.verified) {
@@ -131,13 +132,9 @@ let SignupAdmin = async (req, res, next) => {
 
         const [createdUser, createdOTP] = await Promise.all([
             AdminUserModel.create(userData),
-            OTPModel.create({ email, secret: secret.base32 })
+            OTPModel.create({ email, secureOtp: secureOtp })
         ]);
-        const token = speakeasy.totp({
-            secret: createdOTP.secret,
-            encoding: 'base32'
-        });
-        sendEmail(email, token);
+        sendEmail(email, secureOtp);
         return res.status(200).json({ successMsg: 'Admin registered successfully.', email });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
@@ -145,7 +142,11 @@ let SignupAdmin = async (req, res, next) => {
 }
 
 let ForgotPassword = async (req, res, next) => {
-    const secret = speakeasy.generateSecret({ length: 20 });
+    function generateSecureOTP() {
+        const otp = crypto.randomInt(100000, 1000000); // Generates a number between 100000 and 999999
+        return otp;
+    }
+    const secureOtp = generateSecureOTP();
     try {
         const { email } = req.body;
         const admin = await AdminUserModel.findOne({ email: email });
@@ -163,12 +164,9 @@ let ForgotPassword = async (req, res, next) => {
         if (adminPlan.expiryStatus === true) {
             return res.status(400).json({ errorMsg: `Your ${adminPlan.activePlan} plan has expired. Please purchase your plan to continue enjoying Schooliya's services.` });
         }
-        const createdOTP = await OTPModel.create({ email, secret: secret.base32 });
-        const token = speakeasy.totp({
-            secret: createdOTP.secret,
-            encoding: 'base32'
-        });
-        sendEmail(email, token);
+        await OTPModel.deleteMany({ email });
+        const createdOTP = await OTPModel.create({ email, secureOtp: secureOtp });
+        sendEmail(email, secureOtp);
         return res.status(200).json({ successMsg: 'Forgot password otp send successfully.', email: email });
 
     } catch (error) {
@@ -176,7 +174,7 @@ let ForgotPassword = async (req, res, next) => {
     }
 }
 
-async function sendEmail(email, token) {
+async function sendEmail(email, secureOtp) {
     const mailOptions = {
         from: { name: 'Schooliya', address: sender_email_address },
         to: email,
@@ -185,7 +183,7 @@ async function sendEmail(email, token) {
             <p style="color: #555; font-size: 16px;">
                 We received a request to verify your email address for your Schooliya account. Please use the OTP below to complete your verification:
             </p>
-            <p style="font-size: 22px; color: #000; text-align: center; letter-spacing: 2px; margin: 20px 0;"><strong>${token}</strong></p>
+            <p style="font-size: 22px; color: #000; text-align: center; letter-spacing: 2px; margin: 20px 0;"><strong>${secureOtp}</strong></p>
             <p style="color: #555; font-size: 16px;">
                 If you didn’t request this, please ignore this email.
             </p>
@@ -217,22 +215,16 @@ let VerifyOTP = async (req, res, next) => {
         if (!otp) {
             return res.status(404).json({ errorMsg: "Your OTP has expired!" });
         }
-
-        const verified = speakeasy.totp.verify({
-            secret: otp.secret,
-            encoding: 'base32',
-            token: userEnteredOTP,
-            window: 6
-        });
-
-        if (!verified) {
+        if (userEnteredOTP !== otp.secureOtp) {
             return res.status(400).json({ errorMsg: "Invalid OTP" });
 
         }
-        const objectId = user._id;
-        let update = await AdminUserModel.findByIdAndUpdate(objectId, { $set: { verified: true } }, { new: true });
-        if (update) {
-            return res.status(200).json({ successMsg: "Congratulations! Your email has been successfully verified. You can now proceed with your payment.", verified: true, adminInfo: user });
+        if (userEnteredOTP == otp.secureOtp) {
+            const objectId = user._id;
+            let update = await AdminUserModel.findByIdAndUpdate(objectId, { $set: { verified: true } }, { new: true });
+            if (update) {
+                return res.status(200).json({ successMsg: "Congratulations! Your email has been successfully verified. You can now proceed with your payment.", verified: true, adminInfo: user });
+            }
         }
     } catch (err) {
         return res.status(500).json({ errorMsg: "Internal server error" });
