@@ -91,7 +91,19 @@ export class AdminStudentFeesComponent implements OnInit {
     });
   }
 
-
+  formatCurrency(value: any): string {
+    value = parseInt(value);
+    if (typeof value === 'number') {
+      return '₹ ' + value.toLocaleString(undefined); // No minimumFractionDigits
+    }
+    return '₹ 0';
+  }
+  formatKey(key: any): string {
+    if (typeof key === 'string') {
+      return key.toUpperCase();
+    }
+    return '';
+  }
   printStudentData() {
     const printContent = this.getPrintContent();
     this.printPdfService.printContent(printContent);
