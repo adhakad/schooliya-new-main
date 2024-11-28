@@ -150,41 +150,41 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     printHtml += '<style>';
     printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
-    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
-    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
+    printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
 
-    printHtml += '.address{margin-top: -45px;}';
-    printHtml += '.address p{font-size:11px;margin-top: -6px !important;}';
-    printHtml += '.title-lable {text-align: center;margin-top:-6px;}';
-    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
+    printHtml += '.address{margin-top: -40px;}';
+    printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
-    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: -5px;padding-top:10px;padding-bottom:11px;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;height: 18px;text-align:left;padding-left:15px;}';
-    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 30px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
-    printHtml += '.custom-table tr{height: 30px;}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
+    printHtml += '.custom-table th{height: 35px;text-align: center;border:1px solid #454545;line-height:15px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 35px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #252525 !important;font-size:12px;}'
-    printHtml += 'h4 {color: #252525 !important;}'
-    printHtml += '@media print {';
-    printHtml += '  body::before {';
-    printHtml += `    content: "${schoolName}, ${city}";`;
-    printHtml += '    position: fixed;';
-    printHtml += '    top: 35%;';
-    printHtml += '    left:10%;';
-    printHtml += '    font-size: 20px;';
-    printHtml += '    text-transform: uppercase;';
-    printHtml += '    font-weight: bold;';
-    printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    color: rgba(50, 48, 65, 0.108);';
-    printHtml += '    pointer-events: none;';
-    printHtml += '  }';
-    printHtml += '}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}'
+    printHtml += 'h4 {color: #0a0a0a !important;}'
+    // printHtml += '@media print {';
+    // printHtml += '  body::before {';
+    // printHtml += `    content: "${schoolName}, ${city}";`;
+    // printHtml += '    position: fixed;';
+    // printHtml += '    top: 20%;';
+    // printHtml += '    left:10%;';
+    // printHtml += '    font-size: 20px;';
+    // printHtml += '    text-transform: uppercase;';
+    // printHtml += '    font-weight: bold;';
+    // printHtml += '    font-family: Arial, sans-serif;';
+    // printHtml += '    color: rgba(50, 48, 65, 0.108);';
+    // printHtml += '    pointer-events: none;';
+    // printHtml += '  }';
+    // printHtml += '}';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
@@ -207,56 +207,58 @@ export class AdminStudentAdmitCardComponent implements OnInit {
   private getPrintTwoAdmitCardContent(): string {
     let schoolName = this.schoolInfo.schoolName;
     let city = this.schoolInfo.city;
+
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
     printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
     printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
-    printHtml += '.table-container {width: 100%;height: 100%%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
-    printHtml += '.logo { height: 65px;margin-top:5px;margin-left:5px;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
+    printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-110px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
 
-    printHtml += '.address{margin-top: -41px;}';
-    printHtml += '.address p{font-size:10px;margin-top: -9px !important;}';
-    printHtml += '.title-lable {text-align: center;margin-top: -15px;margin-bottom: 0;}';
-    printHtml += '.title-lable p {color: #252525 !important;font-size: 14px;font-weight: bold;letter-spacing: .5px;}';
+    printHtml += '.address{margin-top: -40px;}';
+    printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
-    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: -7px;margin-bottom: 2px;padding-top:8px;padding-bottom:5px;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;height: 16px;text-align:left;padding-left:15px;}';
-    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 25px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
-    printHtml += '.custom-table tr{height: 25px;}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 11px;}';
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
+    printHtml += '.custom-table th{height: 35px;text-align: center;border:1px solid #454545;line-height:15px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 35px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #252525 !important;font-size:12px;}'
-    printHtml += 'h4 {color: #252525 !important;}'
-    printHtml += '.watermark { position: fixed;font-family: Arial, sans-serif; font-size: 20px; font-weight: bold;text-transform: uppercase;color: rgba(50, 48, 65, 0.042); top: 60%; left:10%; pointer-events: none; z-index: 1; }';
-    printHtml += '@media print {';
-    printHtml += '  body::before {';
-    printHtml += `    content: "${schoolName}, ${city}";`;
-    printHtml += '    position: fixed;';
-    printHtml += '    top: 25%;';
-    printHtml += '    left:10%;';
-    printHtml += '    font-size: 20px;';
-    printHtml += '    text-transform: uppercase;';
-    printHtml += '    font-weight: bold;';
-    printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    color: rgba(50, 48, 65, 0.108);';
-    printHtml += '    pointer-events: none;';
-    printHtml += '  }';
-    printHtml += '}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}'
+    printHtml += 'h4 {color: #0a0a0a !important;}'
+    // printHtml += '.watermark { position: fixed;font-family: Arial, sans-serif; font-size: 20px; font-weight: bold;text-transform: uppercase;color: rgba(50, 48, 65, 0.042); top: 60%; left:10%; pointer-events: none; z-index: 1; }';
+    // printHtml += '@media print {';
+    // printHtml += '  body::before {';
+    // printHtml += `    content: "${schoolName}, ${city}";`;
+    // printHtml += '    position: fixed;';
+    // printHtml += '    top: 25%;';
+    // printHtml += '    left:10%;';
+    // printHtml += '    font-size: 20px;';
+    // printHtml += '    text-transform: uppercase;';
+    // printHtml += '    font-weight: bold;';
+    // printHtml += '    font-family: Arial, sans-serif;';
+    // printHtml += '    color: rgba(50, 48, 65, 0.108);';
+    // printHtml += '    pointer-events: none;';
+    // printHtml += '  }';
+    // printHtml += '}';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
+
 
     for (let i = 0; i < this.allAdmitCards.length; i += 2) {
       const student1 = this.allAdmitCards[i];
       const student2 = i + 1 < this.allAdmitCards.length ? this.allAdmitCards[i + 1] : null;
 
-      printHtml += `<div class="watermark">${schoolName}, ${city}</div>`;
+      // printHtml += `<div class="watermark">${schoolName}, ${city}</div>`;
       // Print details for the first student
       printHtml += this.getStudentHtml(student1);
 
