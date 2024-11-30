@@ -858,19 +858,15 @@
                                   <table class="custom-table" style="margin-bottom: 0;">
                                     <tr style="padding-bottom: 10px;height: 25px;">
                                       <th colspan="1" scope="colgroup"
-                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
-                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                        style="height: 48px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
-                                      <th colspan="5" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">TERM 1
+                                      <th colspan="6" scope="colgroup"
+                                        style="height: 48px;font-size: 18px;border-top: rgb(180, 172, 240);">TERM 1
                                       </th>
-                                      <th colspan="5" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">
+                                      <th colspan="6" scope="colgroup"
+                                        style="height: 48px;font-size: 18px;border-top: rgb(180, 172, 240);border:transparent;">
                                         TERM 2
-                                      </th>
-                                      <th colspan="2" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);border:transparent;padding-bottom: 2px;">
-                                        OVERALL<br>T1(50) + T2(50)
                                       </th>
                                     </tr>
                                     <tr>
@@ -884,13 +880,13 @@
                                         BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
+                                        &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
                                       </th>
-                                      <th scope="col">THEORY
+                                      <th scope="col">&nbsp;THEORY&nbsp;
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
+                                        &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
                                         +
                                         mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
                                         +
@@ -905,13 +901,13 @@
                                         BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.noteBookMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
+                                        &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        THEORY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                        &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
+                                        &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
                                         +
                                         mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
                                         +
@@ -921,7 +917,7 @@
                                       </th>
                                       <th scope="col">GRAND TOTAL</th>
                                       <th scope="col" style="border-right: 1px solid transparent; ">
-                                        &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                        &nbsp;GRADE&nbsp;</th>
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                       <td
@@ -951,7 +947,7 @@
                                       </td>
                                     </tr>
                                     <table class="custom-table"
-                                      style="width: 90%;margin-left: 5%;margin-top: 15px;margin-bottom: 15px;">
+                                      style="width: 90%;margin-left: 5%;margin-top: 25px;margin-bottom: 22px;">
                                       <tr>
                                         <td><span class="text-bold">RESULT</span> :
                                           PASS</td>
