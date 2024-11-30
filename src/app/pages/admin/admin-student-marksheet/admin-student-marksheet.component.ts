@@ -291,43 +291,46 @@ export class AdminStudentMarksheetComponent implements OnInit {
     printHtml += '<style>';
     printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
-    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
-    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #707070; box-sizing: border-box;}';
+    printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
 
-    printHtml += '.address{margin-top: -42px;}';
-    printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
-    printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
-    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
+    printHtml += '.address{margin-top: -40px;}';
+    printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
-    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;padding-top:5px;}';
-    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
-    printHtml += '.custom-table tr{height: 30px;}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
+
+    
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
+
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+    printHtml += '.custom-table th{min-height: 48px;text-align: center;border:1px solid #707070;line-height:25px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 48px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #707070;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #252525 !important;font-size:12px;}'
-    printHtml += 'h4 {color: #252525 !important;}'
-    printHtml += '@media print {';
-    printHtml += '  body::after {';
-    printHtml += `    content: "${schoolName}, ${city}";`;
-    printHtml += '    position: fixed;';
-    printHtml += '    top: 50%;';
-    printHtml += '    left: 25%;';
-    printHtml += '    font-size: 30px;';
-    printHtml += '    text-transform: uppercase;';
-    printHtml += '    font-weight: bold;';
-    printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    text-align: center;';
-    printHtml += '    color: rgba(50, 48, 65, 0.2);';
-    printHtml += '    transform:';
-    printHtml += '    pointer-events: none;';
-    printHtml += '  }';
-    printHtml += '}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:19px;}'
+    printHtml += 'h4 {color: #0a0a0a !important;}'
+    // printHtml += '@media print {';
+    // printHtml += '  body::after {';
+    // printHtml += `    content: "${schoolName}, ${city}";`;
+    // printHtml += '    position: fixed;';
+    // printHtml += '    top: 50%;';
+    // printHtml += '    left: 25%;';
+    // printHtml += '    font-size: 30px;';
+    // printHtml += '    text-transform: uppercase;';
+    // printHtml += '    font-weight: bold;';
+    // printHtml += '    font-family: Arial, sans-serif;';
+    // printHtml += '    text-align: center;';
+    // printHtml += '    color: rgba(50, 48, 65, 0.2);';
+    // printHtml += '    transform:';
+    // printHtml += '    pointer-events: none;';
+    // printHtml += '  }';
+    // printHtml += '}';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
@@ -352,7 +355,6 @@ export class AdminStudentMarksheetComponent implements OnInit {
       if (res) {
         this.errorCheck = false;
         this.templateStatusCode = 200;
-        console.log(this.templateStatusCode)
         this.marksheetTemplateStructureInfo = res;
         this.examType = Object.keys(res.marksheetTemplateStructure.examStructure);
       }
