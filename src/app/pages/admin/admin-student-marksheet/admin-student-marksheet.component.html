@@ -343,13 +343,13 @@
 
                                 <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
                                   <table class="custom-table" style="margin-bottom: 0;">
-                                    <tr style="padding-bottom: 10px;height: 25px;">
+                                    <tr style="padding-bottom: 10px;height: 48px;">
                                       <th colspan="1" scope="colgroup"
-                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
-                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                        style="height: 48px;text-align: left !important;padding-left: 15px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
                                       <th colspan="4" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);border-right: 1px solid transparent;">
+                                        style="height: 48px;font-size: 18px;border-top: rgb(180, 172, 240);border-right: 1px solid transparent;">
                                         YEARLY EXAM
                                       </th>
                                     </tr>
@@ -357,7 +357,7 @@
                                       <th scope="col"
                                         style="text-align: left !important;padding-left: 25px;border:none;">
                                       </th>
-                                      <th scope="col">THEORY
+                                      <th scope="col">&nbsp;&nbsp;THEORY&nbsp;&nbsp;
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <!-- <th scope="col">
@@ -368,7 +368,7 @@
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                       <td
-                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
                                       <td>{{ exam.theoryMarks }}</td>
@@ -378,7 +378,7 @@
                                         }}</td>
                                     </tr>
                                     <table class="custom-table"
-                                      style="width: 90%;margin-left: 5%;margin-top: 15px;margin-bottom: 15px;">
+                                      style="width: 90%;margin-left: 5%;margin-top: 25px;margin-bottom: 22px;">
                                       <tr>
                                         <td><span class="text-bold">RESULT</span> :
                                           {{result.resultDetail.term1.resultStatus
@@ -403,13 +403,13 @@
 
                                 <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T2"'>
                                   <table class="custom-table" style="margin-bottom: 0;">
-                                    <tr style="padding-bottom: 10px;height: 25px;">
+                                    <tr style="padding-bottom: 10px;height: 48px;">
                                       <th colspan="1" scope="colgroup"
-                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
-                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                        style="height: 48px;text-align: left !important;padding-left: 15px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
                                       <th colspan="4" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">YEARLY
+                                        style="height: 48px;font-size: 18px;border-top: rgb(180, 172, 240);">YEARLY
                                         EXAM
                                       </th>
                                     </tr>
@@ -418,31 +418,31 @@
                                         style="text-align: left !important;padding-left: 25px;border:none;">
                                       </th>
                                       <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
-                                        PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
+                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
                                       </th>
-                                      <th scope="col">THEORY
+                                      <th scope="col">&nbsp;&nbsp;&nbsp;THEORY&nbsp;&nbsp;&nbsp;
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
                                         +
                                         mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
-                                      <th scope="col">&nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                      <th scope="col">GRADE</th>
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                       <td
-                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
                                       <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.theoryMarks }}</td>
                                       <td>{{ exam.totalMarks }}</td>
-                                      <td style="text-align: left;text-align: center;">{{ exam.grade
+                                      <td style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ exam.grade
                                         }}</td>
                                     </tr>
                                     <table class="custom-table"
-                                      style="width: 90%;margin-left: 5%;margin-top: 15px;margin-bottom: 15px;">
+                                      style="width: 90%;margin-left: 5%;margin-top: 25px;margin-bottom: 22px;">
                                       <tr>
                                         <td><span class="text-bold">RESULT</span> :
                                           {{result.resultDetail.term1.resultStatus
@@ -993,15 +993,15 @@
                                     <table class="custom-table" style="margin-bottom: 0;width: 100%;">
                                       <tr style="padding-bottom: 11px;height: 25px;">
                                         <th colspan="1" scope="colgroup"
-                                          style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;">
+                                          style="height: 48px;font-size: 18px;border-top: transparent;border-left: 1px solid transparent;">
                                           <span>S.NO.</span>
                                         </th>
                                         <th colspan="1" scope="colgroup"
-                                          style="height: 25px;font-size: 11px;text-align: left;border-top: transparent;border-left: 1px solid transparent;">
-                                          <span style="margin-left: 10px;">ACTIVTY</span>
+                                          style="height: 48px;font-size: 18px;text-align: left;border-top: transparent;border-left: 1px solid transparent;">
+                                          <span style="margin-left: 15px;">ACTIVTY</span>
                                         </th>
                                         <th colspan="1" scope="colgroup"
-                                          style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
+                                          style="height: 48px;font-size: 18px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
                                           <span>GRADE</span>
                                         </th>
                                       </tr>
@@ -1010,7 +1010,7 @@
                                           style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
                                           {{i+1}}</td>
                                         <td
-                                          style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                          style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                           {{exam.activity |uppercase}}</td>
                                         <td style="border-right: 1px solid transparent;">{{exam.grade | uppercase}}
                                         </td>
