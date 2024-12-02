@@ -169,8 +169,8 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}'
-    printHtml += 'h4 {color: #0a0a0a !important;}'
+    printHtml += 'p {color: #0a0a0a !important;font-size:20px;}'
+    printHtml += 'h4 {color: #0a0a0a !important;font-size:22px;}'
     // printHtml += '@media print {';
     // printHtml += '  body::before {';
     // printHtml += `    content: "${schoolName}, ${city}";`;
