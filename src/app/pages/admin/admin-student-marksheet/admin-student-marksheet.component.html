@@ -417,11 +417,11 @@
                                       <th scope="col"
                                         style="text-align: left !important;padding-left: 25px;border:none;">
                                       </th>
-                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
-                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
-                                      </th>
                                       <th scope="col">&nbsp;&nbsp;&nbsp;THEORY&nbsp;&nbsp;&nbsp;
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
+                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
@@ -435,8 +435,8 @@
                                         style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
-                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.totalMarks }}</td>
                                       <td style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ exam.grade
                                         }}</td>
@@ -467,7 +467,7 @@
                                   <table class="custom-table" style="margin-bottom: 0;">
                                     <tr style="padding-bottom: 10px;height: 48px;">
                                       <th colspan="1" scope="colgroup"
-                                        style="height: 48px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        style="height: 48px;text-align: left !important;padding-left: 15px;position: absolute;border:none;">
                                         <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
                                       <th colspan="4" scope="colgroup"
@@ -482,11 +482,11 @@
                                       <th scope="col"
                                         style="text-align: left !important;padding-left: 25px;border:none;">
                                       </th>
+                                      <th scope="col">&nbsp;&nbsp;THEORY&nbsp;&nbsp;
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
                                       <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
                                         &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
-                                      </th>
-                                      <th scope="col">&nbsp;THEORY&nbsp;
-                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
@@ -495,10 +495,10 @@
                                       </th>
                                       <th scope="col">&nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
                                       <th scope="col">
-                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
+                                        &nbsp;&nbsp;THEORY&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;TOTAL&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
@@ -510,17 +510,17 @@
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                       <td
-                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
-                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.totalMarks }}</td>
                                       <td style="text-align: left;padding-left: 20px;">{{ exam.grade
                                         }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].practicalMarks > 0 ?
                                         result.resultDetail.term2.marks[i].practicalMarks : '' }}</td>
-                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
                                       <td
                                         style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
@@ -603,7 +603,7 @@
                                   <table class="custom-table" style="margin-bottom: 0;">
                                     <tr style="padding-bottom: 10px;height: 48px;">
                                       <th colspan="1" scope="colgroup"
-                                        style="height: 48px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        style="height: 48px;text-align: left !important;padding-left: 15px;position: absolute;border:none;">
                                         <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
                                       <th colspan="3" scope="colgroup"
@@ -622,11 +622,11 @@
                                       <th scope="col"
                                         style="text-align: left !important;padding-left: 25px;border:none;">
                                       </th>
-                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
-                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
-                                      </th>
                                       <th scope="col">&nbsp;THEORY&nbsp;
                                         <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
+                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;TOTAL&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
@@ -634,10 +634,10 @@
                                         mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
+                                        &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
-                                        &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                        &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;&nbsp;TOTAL&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
@@ -650,15 +650,15 @@
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                       <td
-                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
-                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.totalMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].practicalMarks > 0 ?
                                         result.resultDetail.term2.marks[i].practicalMarks : '' }}</td>
-                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
                                       <td>
                                         {{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].averageMarks
@@ -690,7 +690,7 @@
                                   <table class="custom-table" style="margin-bottom: 0;">
                                     <tr style="padding-bottom: 10px;height: 25px;">
                                       <th colspan="1" scope="colgroup"
-                                        style="height: 48px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        style="height: 48px;text-align: left !important;padding-left: 15px;position: absolute;border:none;">
                                         <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
                                       <th colspan="6" scope="colgroup"
@@ -705,6 +705,9 @@
                                       <th scope="col"
                                         style="text-align: left !important;padding-left: 25px;border:none;">
                                       </th>
+                                      <th scope="col">&nbsp;THEORY&nbsp;
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
                                       <th scope="col" style="padding-top:5px;padding-bottom: 5px;">PER.
                                         TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks}}
                                       </th>
@@ -713,9 +716,6 @@
                                       </th>
                                       <th scope="col">
                                         &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
-                                      </th>
-                                      <th scope="col">&nbsp;THEORY&nbsp;
-                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
@@ -727,6 +727,9 @@
                                         mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">&nbsp;GRADE&nbsp;</th>
+                                      <th scope="col">
+                                        &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      </th>
                                       <th scope="col">PER.
                                         TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}
                                       </th>
@@ -735,9 +738,6 @@
                                       </th>
                                       <th scope="col">
                                         &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
-                                      </th>
-                                      <th scope="col">
-                                        &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
                                       </th>
                                       <th scope="col">
                                         &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
@@ -753,24 +753,24 @@
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                       <td
-                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
+                                        <td>{{ exam.theoryMarks }}</td>
                                       <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
                                       <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
                                       <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}
                                       </td>
-                                      <td>{{ exam.theoryMarks }}</td>
                                       <td>{{ exam.totalMarks }}</td>
                                       <td style="text-align: left;padding-left: 20px;">{{ exam.grade
                                         }}</td>
+                                        <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ?
                                         result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ?
                                         result.resultDetail.term2.marks[i].noteBookMarks : '' }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].subjectEnrichmentMarks > 0 ?
                                         result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
-                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
                                       <td
                                         style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
@@ -1009,7 +1009,7 @@
                                         </th>
                                         <th colspan="1" scope="colgroup"
                                           style="height: 48px;font-size: 19px;text-align: left;border-top: transparent;border-left: 1px solid transparent;">
-                                          <span style="margin-left: 10px;">ACTIVITY</span>
+                                          <span style="margin-left: 15px;">ACTIVITY</span>
                                         </th>
                                         <th colspan="1" scope="colgroup"
                                           style="height: 48px;font-size: 18px;border-top: transparent;border-left: 1px solid transparent;">
@@ -1025,7 +1025,7 @@
                                           style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
                                           {{i+1}}</td>
                                         <td
-                                          style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                          style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                           {{exam.activity |uppercase}}</td>
                                         <td>{{exam.grade | uppercase}}</td>
                                         <td style="border-right: 1px solid transparent;">
