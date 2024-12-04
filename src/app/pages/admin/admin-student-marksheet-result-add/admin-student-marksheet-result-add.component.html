@@ -270,7 +270,44 @@
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-
+                                                                <ng-container *ngIf="halfYearlySubjects.length>0">
+                                                                    <h3>Half Yearly Marks</h3>
+                                                                    <ng-container formGroupName="type">
+                                                                        <ng-container formArrayName="halfYearlyMarks">
+                                                                            <div class="col-4 col-lg-2"
+                                                                                *ngFor="let subjects of halfYearlySubjects; let i = index">
+                                                                                <div [formGroupName]="i">
+                                                                                    <mat-form-field
+                                                                                        appearance="outline">
+                                                                                        <mat-label>{{subjects |
+                                                                                            titlecase}}</mat-label>
+                                                                                        <input matInput type="text"
+                                                                                            [formControlName]="subjects">
+                                                                                    </mat-form-field>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="projectSubjects.length>0">
+                                                                    <h3>Project Marks</h3>
+                                                                    <ng-container formGroupName="type">
+                                                                        <ng-container formArrayName="projectMarks">
+                                                                            <div class="col-4 col-lg-2"
+                                                                                *ngFor="let subjects of projectSubjects; let i = index">
+                                                                                <div [formGroupName]="i">
+                                                                                    <mat-form-field
+                                                                                        appearance="outline">
+                                                                                        <mat-label>{{subjects |
+                                                                                            titlecase}}</mat-label>
+                                                                                        <input matInput type="text"
+                                                                                            [formControlName]="subjects">
+                                                                                    </mat-form-field>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
                                                                 <ng-container *ngIf="coScholastic.length>0">
                                                                     <h3>Co-Scholastic Activity & Element</h3>
                                                                     <ng-container formGroupName="type">

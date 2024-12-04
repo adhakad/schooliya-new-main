@@ -965,6 +965,131 @@
                                   </table>
                                 </ng-container>
 
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T7"'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr style="padding-bottom: 10px;height: 48px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 48px;text-align: left !important;padding-left: 15px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
+                                      </th>
+                                      <th colspan="5" scope="colgroup"
+                                        style="height: 48px;font-size: 18px;border-top: rgb(180, 172, 240);">EDUCATIONAL ASSESSMENT
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                      <th scope="col"
+                                        style="text-align: left !important;padding-left: 25px;border:none;">
+                                      </th>
+                                      <th scope="col">&nbsp;&nbsp;&nbsp;WRITTEN&nbsp;&nbsp;&nbsp;
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
+                                        HALF YEARLY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.halfYearlyMaxMarks}}
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
+                                        &nbsp;PROJECT&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.halfYearlyMaxMarks + mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">GRADE</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td
+                                        style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{ exam.subject |
+                                        uppercase }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.halfYearlyMarks }}</td>
+                                      <td>{{ exam.projectMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ exam.grade
+                                        }}</td>
+                                    </tr>
+                                    <table class="custom-table"
+                                      style="width: 90%;margin-left: 5%;margin-top: 25px;margin-bottom: 22px;">
+                                      <tr>
+                                        <td><span class="text-bold">RESULT</span> :
+                                          {{result.resultDetail.term1.resultStatus
+                                          }}</td>
+                                        <td><span class="text-bold">GRAND TOTAL</span> :
+                                          {{result.resultDetail.term1.grandTotalMarks
+                                          }} /
+                                          {{result.resultDetail.term1.totalMaxMarks }}</td>
+                                        <td><span class="text-bold">PERCENTAGE</span> :
+                                          {{result.resultDetail.term1.percentile
+                                          }}%
+                                        </td>
+                                        <td><span class="text-bold">GRADE</span> :
+                                          {{result.resultDetail.term1.percentileGrade
+                                          }}</td>
+                                      </tr>
+                                    </table>
+                                  </table>
+                                </ng-container>
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T8"'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr style="padding-bottom: 10px;height: 48px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 48px;text-align: left !important;padding-left: 15px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
+                                      </th>
+                                      <th colspan="4" scope="colgroup"
+                                        style="height: 48px;font-size: 18px;border-top: rgb(180, 172, 240);">EDUCATIONAL ASSESSMENT
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                      <th scope="col"
+                                        style="text-align: left !important;padding-left: 25px;border:none;">
+                                      </th>
+                                      <th scope="col">&nbsp;&nbsp;&nbsp;WRITTEN&nbsp;&nbsp;&nbsp;
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
+                                        &nbsp;PROJECT&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">GRADE</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td
+                                        style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{ exam.subject |
+                                        uppercase }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.projectMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ exam.grade
+                                        }}</td>
+                                    </tr>
+                                    <table class="custom-table"
+                                      style="width: 90%;margin-left: 5%;margin-top: 25px;margin-bottom: 22px;">
+                                      <tr>
+                                        <td><span class="text-bold">RESULT</span> :
+                                          {{result.resultDetail.term1.resultStatus
+                                          }}</td>
+                                        <td><span class="text-bold">GRAND TOTAL</span> :
+                                          {{result.resultDetail.term1.grandTotalMarks
+                                          }} /
+                                          {{result.resultDetail.term1.totalMaxMarks }}</td>
+                                        <td><span class="text-bold">PERCENTAGE</span> :
+                                          {{result.resultDetail.term1.percentile
+                                          }}%
+                                        </td>
+                                        <td><span class="text-bold">GRADE</span> :
+                                          {{result.resultDetail.term1.percentileGrade
+                                          }}</td>
+                                      </tr>
+                                    </table>
+                                  </table>
+                                </ng-container>
+
                                 <ng-container *ngIf='mappedResults.length>0'>
                                   <table class="custom-table" style="margin-bottom: 0;">
                                     <tr
