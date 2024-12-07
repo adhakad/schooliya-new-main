@@ -293,13 +293,13 @@ export class AdminStudentMarksheetComponent implements OnInit {
     printHtml += 'div {margin: 0; padding: 0;}';
     printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
     printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #707070; box-sizing: border-box;}';
-    printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
+    printHtml += '.logo { height: 95px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-140px !important; margin-bottom: 0 !important; }';
 
-    printHtml += '.address{margin-top: -40px;}';
+    printHtml += '.address{margin-top: -45px;}';
     printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
-    printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
+    printHtml += '.title-lable {text-align: center;margin-top: 0px;margin-bottom: 0;}';
     printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
 

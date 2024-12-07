@@ -172,7 +172,7 @@
                                                                     </mat-form-field>
                                                                 </div>
                                                                 <ng-container *ngIf="theorySubjects.length>0">
-                                                                    <h3>Theory Marks</h3>
+                                                                    <h3>Theory Marks (Out of {{theoryMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="theoryMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -192,7 +192,7 @@
                                                                 </ng-container>
 
                                                                 <ng-container *ngIf="practicalSubjects.length>0">
-                                                                    <h3>Practical Marks</h3>
+                                                                    <h3>Practical Marks (Out of {{practicalMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="practicalMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -212,7 +212,7 @@
                                                                 </ng-container>
 
                                                                 <ng-container *ngIf="periodicTestSubjects.length>0">
-                                                                    <h3>Perodic Test Marks</h3>
+                                                                    <h3>Perodic Test Marks (Out of {{periodicTestMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="periodicTestMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -231,7 +231,7 @@
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container *ngIf="noteBookSubjects.length>0">
-                                                                    <h3>Note Book Marks</h3>
+                                                                    <h3>Note Book Marks (Out of {{noteBookMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="noteBookMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -251,7 +251,7 @@
                                                                 </ng-container>
                                                                 <ng-container
                                                                     *ngIf="subjectEnrichmentSubjects.length>0">
-                                                                    <h3>Subject Enrichment Marks</h3>
+                                                                    <h3>Subject Enrichment Marks (Out of {{subjectEnrichmentMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container
                                                                             formArrayName="subjectEnrichmentMarks">
@@ -271,7 +271,7 @@
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container *ngIf="halfYearlySubjects.length>0">
-                                                                    <h3>Half Yearly Marks</h3>
+                                                                    <h3>Half Yearly Marks (Out of {{halfYearlyMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="halfYearlyMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -290,7 +290,7 @@
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container *ngIf="projectSubjects.length>0">
-                                                                    <h3>Project Marks</h3>
+                                                                    <h3>Project Marks (Out of {{projectMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="projectMarks">
                                                                             <div class="col-4 col-lg-2"
