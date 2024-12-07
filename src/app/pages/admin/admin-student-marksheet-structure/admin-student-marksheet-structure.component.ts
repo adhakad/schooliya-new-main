@@ -40,7 +40,8 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
       adminId: [''],
       class: [''],
       stream: [''],
-      templateName: ['', Validators.required]
+      templateName: ['', Validators.required],
+      templateUrl: ['', Validators.required]
     });
   }
 
@@ -89,10 +90,11 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
   }
 
 
-  addExamResultModel(template: any) {
+  addExamResultModel(template: any,templateUrl:any) {
     this.showModal = true;
     this.examResultForm.reset();
     this.examResultForm.get('templateName')?.setValue(template);
+    this.examResultForm.get('templateUrl')?.setValue(templateUrl);
     this.selectedTemplate=template;
   }
   openExamResultStructureModal(examResult: any) {

@@ -50,7 +50,7 @@
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
                             <ng-container *ngIf="!marksheetSelectMode">
-                                <div class="col-12 col-lg-12 mt-5 mb-5">
+                                <div class="col-12 col-lg-12 mt-5">
                                     <div class="marksheet-detail-card">
                                         <div class="table-wrapper">
                                             <table class="table table-hover align-middle mt-2 mb-1 bg-white">
@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="col-12 col-lg-8 offset-lg-2 mt-2 mb-5">
                                     <div class="selected-template-card" matRipple>
-                                        <img src="../../../../assets/templates/{{marksheetTemplate.templateName}}.jpg"
+                                        <img src="{{marksheetTemplate.templateUrl}}"
                                             alt="">
                                     </div>
                                 </div>
@@ -101,100 +101,84 @@
                                 <div class="col-12 mt-5">
                                     <div class="owl-carousel template-carousel">
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-1</h6>
-                                            <img src="../../../../assets/templates/T1.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T1</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573664/T1_bqzgw1.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T1')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T1','https://res.cloudinary.com/dzzrracge/image/upload/v1733573664/T1_bqzgw1.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
 
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-2</h6>
-                                            <img src="../../../../assets/templates/T2.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T2</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573792/T2_gqvlzs.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T2')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T2','https://res.cloudinary.com/dzzrracge/image/upload/v1733573792/T2_gqvlzs.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-3</h6>
-                                            <img src="../../../../assets/templates/T3.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T3</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573816/T3_ckic7f.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T3')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T3','https://res.cloudinary.com/dzzrracge/image/upload/v1733573816/T3_ckic7f.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-4</h6>
-                                            <img src="../../../../assets/templates/T4.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T4</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573842/T4_ggp7wb.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T4')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T4','https://res.cloudinary.com/dzzrracge/image/upload/v1733573842/T4_ggp7wb.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-5</h6>
-                                            <img src="../../../../assets/templates/T5.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T5</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573869/T5_jolapq.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T5')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T5','https://res.cloudinary.com/dzzrracge/image/upload/v1733573869/T5_jolapq.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-6</h6>
-                                            <img src="../../../../assets/templates/T6.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T6</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573893/T6_q5f8qh.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T6')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T6','https://res.cloudinary.com/dzzrracge/image/upload/v1733573893/T6_q5f8qh.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-7</h6>
-                                            <img src="../../../../assets/templates/T7.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T7</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573917/T7_bistg7.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T7')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T7','https://res.cloudinary.com/dzzrracge/image/upload/v1733573917/T7_bistg7.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
                                         <div class="template-card" matRipple>
-                                            <h6 style="font-size: 12px;font-weight: bold;">T-8</h6>
-                                            <img src="../../../../assets/templates/T8.jpg" alt="">
+                                            <h6 style="font-size: 12px;font-weight: bold;">Template - T8</h6>
+                                            <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733573944/T8_p1ukhf.jpg" alt="">
                                             <div class="row">
-                                                <div class="col-6"><button class="submit-button"
-                                                        (click)="addExamResultModel('T8')"
+                                                <div class="col-8 offset-2"><button class="submit-button"
+                                                        (click)="addExamResultModel('T8','https://res.cloudinary.com/dzzrracge/image/upload/v1733573944/T8_p1ukhf.jpg')"
                                                         mat-raised-button>&nbsp;&nbsp;&nbsp;Select&nbsp;&nbsp;&nbsp;</button>
                                                 </div>
-                                                <div class="col-6"><button class="submit-button"
-                                                        mat-raised-button>Download</button></div>
                                             </div>
                                         </div>
                                     </div>

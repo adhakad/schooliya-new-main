@@ -61,7 +61,7 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
 
 let CreateExamResultStructure = async (req, res, next) => {
     let className = req.body.class;
-    let { adminId, stream, templateName } = req.body;
+    let { adminId, stream, templateName,templateUrl } = req.body;
     if (stream === "stream") {
         stream = "N/A";
     }
@@ -79,6 +79,7 @@ let CreateExamResultStructure = async (req, res, next) => {
             class: className,
             stream: stream,
             templateName: templateName,
+            templateUrl:templateUrl
         };
         let marksheetTemplate = await MarksheetTemplateModel.create(marksheetTemplateData)
         return res.status(200).json('Marksheet template add successfully.');
