@@ -4,7 +4,7 @@
 .banner {
     position: relative;
     min-height: 26vh;
-    background: url('../../../../assets/background-images/baground-image-2.jpg') no-repeat center center/cover;
+    background: url('https://res.cloudinary.com/dzzrracge/image/upload/v1733649400/baground-image-2_ojurrv.jpg') no-repeat center center/cover;
     padding-top: 11vh;
 }
 
@@ -67,7 +67,7 @@
     .banner {
         position: relative;
         min-height: 85vh;
-        background: url('../../../../assets/background-images/baground-image-2.jpg') no-repeat center center/cover;
+        background: url('https://res.cloudinary.com/dzzrracge/image/upload/v1733649400/baground-image-2_ojurrv.jpg') no-repeat center center/cover;
         padding-top: 45vh;
     }
     
@@ -130,7 +130,7 @@
     .banner {
         position: relative;
         min-height: 60vh;
-        background: url('../../../../assets/background-images/baground-image-2.jpg') no-repeat center center/cover;
+        background: url('https://res.cloudinary.com/dzzrracge/image/upload/v1733649400/baground-image-2_ojurrv.jpg') no-repeat center center/cover;
         padding-top: 23vh;
     }
     
