@@ -884,7 +884,7 @@ let StudentClassFail = async (req, res, next) => {
         // }
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
-            return res.status(404).json({ errorMsg: `Please create the fee structure for next class for session ${session}.` });
+            return res.status(404).json({ errorMsg: `Please create the fee structure for this class for session ${session}.` });
         }
         if (feesConcession > checkFeesStr.totalFees) {
             return res.status(400).json({ errorMsg: `Concession cannot be greater than the total academic session fee. !` });

@@ -182,46 +182,45 @@
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <form [formGroup]="feesForm" (ngSubmit)="feesAddUpdate()">
-                                            <div class="modal-body">
+                                            <div class="modal-body" style="overflow-x: hidden;">
                                                 <div *ngIf="errorCheck">
                                                     <p class="error-message">{{errorMsg}}</p>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="custom-container">
-                                                        <div class="table-container">
+                                                <div class="row" style="padding-left: 30px !important;">
 
-                                                            <table class="info-table text-center">
-                                                                <tr>
-                                                                    <td class="text-bold">Admission No. :</td>
-                                                                    <td>{{singleStudent.admissionNo}}</td>
-                                                                    <td class="text-bold">Class :</td>
-                                                                    <td>{{singleStudent.class | classSuffix}}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="text-bold">Student Name :</td>
-                                                                    <td>{{singleStudent.name |
-                                                                        titlecase}}</td>
-                                                                    <td class="text-bold">Father Name :</td>
-                                                                    <td>{{singleStudent.fatherName}}</td>
-                                                                </tr>
-                                                            </table>
-                                                            <div class="row">
-                                                                <div class="col-6 col-lg-6">
-                                                                    <mat-form-field appearance="outline">
-                                                                        <mat-label>Enter Fee Amount In
-                                                                            &#8377;</mat-label>
-                                                                        <input type="number"
-                                                                            formControlName="feesAmount" matInput>
-                                                                    </mat-form-field>
-                                                                </div>
-                                                                <div class="col-4 offset-2 col-lg-4">
-                                                                    <button class="submit-button" mat-raised-button
-                                                                        style="height: 48px !important;padding-top:5px;padding-bottom:10px !important;"
-                                                                        type="button" (click)="feesAddUpdate()">Collect
-                                                                        Now
-                                                                    </button>
-                                                                </div>
-                                                            </div>
+                                                    <tr class="mt-2">
+                                                        <td class="text-bold">Admission No. </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.admissionNo}}</td>
+                                                    </tr>
+                                                    <tr class="mt-2">
+                                                        <td class="text-bold">Class </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.class | classSuffix}}</td>
+                                                    </tr>
+                                                    <tr class="mt-2">
+                                                        <td class="text-bold">Student Name </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.name |
+                                                            titlecase}}</td>
+                                                    </tr>
+                                                    <tr class="mt-2 mb-4">
+                                                        <td class="text-bold">Father Name </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.fatherName}}</td>
+                                                    </tr>
+
+                                                    <div class="row">
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Enter Fee Amount In
+                                                                    &#8377;</mat-label>
+                                                                <input type="number" formControlName="feesAmount"
+                                                                    matInput class="no-arrow" min="1">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 offset-0 offset-lg-0 col-lg-4">
+                                                            <button class="submit-button" mat-raised-button
+                                                                style="height: 50px !important;padding-top:5px;padding-bottom:10px !important;width: 100% !important;"
+                                                                type="button" (click)="feesAddUpdate()">Collect
+                                                                Now
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -247,14 +246,18 @@
                                                             <div class="table-container">
                                                                 <div class="row mt-5">
                                                                     <div class="col-2">
-                                                                        <img class="logo" src="{{schoolInfo?.schoolLogo}}"
+                                                                        <img class="logo"
+                                                                            src="{{schoolInfo?.schoolLogo}}"
                                                                             alt="schoolo logo">
                                                                     </div>
                                                                     <div class="col-10" style="text-align: center;">
                                                                         <div class="school-name">
-                                                                            <h3 class="text-bold">{{schoolInfo?.schoolName | uppercase}}</h3>
+                                                                            <h3 class="text-bold">
+                                                                                {{schoolInfo?.schoolName | uppercase}}
+                                                                            </h3>
                                                                         </div>
-                                                                        <div class="address" style="text-align: center;">
+                                                                        <div class="address"
+                                                                            style="text-align: center;">
                                                                             <p>Affiliated to {{schoolInfo?.board |
                                                                                 uppercase}}, Affliation No. -
                                                                                 {{schoolInfo?.affiliationNumber}}
@@ -288,7 +291,8 @@
                                                                             receiptInstallment.paymentDate }}</p>
                                                                     </div>
                                                                 </div>
-                                                                <table class="info-table" style="border-top: 1px solid #454545;">
+                                                                <table class="info-table"
+                                                                    style="border-top: 1px solid #454545;">
                                                                     <tr>
                                                                         <td class="text-bold">RECEIPT NO.</td>
                                                                         <td colspan="2">
@@ -337,25 +341,29 @@
                                                                 </table>
                                                                 <table class="custom-table">
                                                                     <tr class="text-center">
-                                                                        <th class="border" style="border-left: none;">S.No.
+                                                                        <th class="border" style="border-left: none;">
+                                                                            S.No.
                                                                         </th>
                                                                         <th class="border"
-                                                                            style="text-align: left;padding-left: 100px;">PARTICULARS
+                                                                            style="text-align: left;padding-left: 100px;">
+                                                                            PARTICULARS
                                                                         </th>
                                                                         <th class="border" style="border-right: none;">
                                                                             FEE AMOUNT</th>
                                                                     </tr>
-                
+
                                                                     <tr class="text-center"
                                                                         *ngFor="let item of clsFeesStructure?.feesType, let i = index">
                                                                         <td class="border" style="border-left: none;">
                                                                             {{i+1}}.
                                                                         </td>
-                                                                        <td class="border" *ngFor="let fee of item | keyvalue"
+                                                                        <td class="border"
+                                                                            *ngFor="let fee of item | keyvalue"
                                                                             style="text-align: left;padding-left: 100px;">
                                                                             {{ formatKey(fee.key) }} FEE
                                                                         </td>
-                                                                        <td class="border" style="border-right: none;font-size: 18px;"
+                                                                        <td class="border"
+                                                                            style="border-right: none;font-size: 18px;"
                                                                             *ngFor="let fee of item | keyvalue">
                                                                             {{ formatCurrency(fee.value) }}
                                                                         </td>
@@ -380,7 +388,8 @@
                                                                         </td>
                                                                         <td class="text-bold"
                                                                             style="border: none;padding-top: 8px;font-size: 20px;">
-                                                                            {{formatCurrency(receiptInstallment.totalFees)}}</td>
+                                                                            {{formatCurrency(receiptInstallment.totalFees)}}
+                                                                        </td>
                                                                     </tr>
                                                                     <tr class="text-center" style="height: 18px;">
                                                                         <td style="border: none;"></td>
@@ -388,8 +397,9 @@
                                                                             style="text-align: right;border: none;font-size: 18px;">
                                                                             PAID FEE :
                                                                         </td>
-                                                                        <td class="text-bold" style="border: none;font-size: 20px;">
-                
+                                                                        <td class="text-bold"
+                                                                            style="border: none;font-size: 20px;">
+
                                                                             {{formatCurrency(receiptInstallment.paidFees)}}
                                                                         </td>
                                                                     </tr>
@@ -399,27 +409,35 @@
                                                                             style="text-align: right;border: none;font-size: 18px;">
                                                                             DUE FEE :
                                                                         </td>
-                                                                        <td class="text-bold" style="border: none;font-size: 20px;">
-                
-                                                                            {{formatCurrency(receiptInstallment.dueFees)}}</td>
+                                                                        <td class="text-bold"
+                                                                            style="border: none;font-size: 20px;">
+
+                                                                            {{formatCurrency(receiptInstallment.dueFees)}}
+                                                                        </td>
                                                                     </tr>
                                                                 </table>
-                                                                <ng-container style="border: none;padding-bottom: 20px;">
+                                                                <ng-container
+                                                                    style="border: none;padding-bottom: 20px;">
                                                                     <p
                                                                         style="display: inline-block;margin-left: 20px;margin-bottom: 0 !important;">
-                                                                        <span class="text-bold" style="font-size: 18px;">Authorized
+                                                                        <span class="text-bold"
+                                                                            style="font-size: 18px;">Authorized
                                                                             Signatory</span>
                                                                     </p>
-                                                                    <p style="text-align: center;margin-top: 10px !important;font-size: 16px;">
-                                                                        FEE DEPOSITED <span class="text-bold" style="font-size: 19px;">
+                                                                    <p
+                                                                        style="text-align: center;margin-top: 10px !important;font-size: 16px;">
+                                                                        FEE DEPOSITED <span class="text-bold"
+                                                                            style="font-size: 19px;">
                                                                             {{formatCurrency(receiptInstallment.feesAmount)}}
                                                                             /- (Rupees {{receiptInstallment.feesAmount |
                                                                             numberToWords }} Only)</span>
                                                                     </p>
                                                                 </ng-container>
-                                                                <p style="margin-bottom:25px;margin-left: 20px;right: 0;"></p>
+                                                                <p
+                                                                    style="margin-bottom:25px;margin-left: 20px;right: 0;">
+                                                                </p>
                                                             </div>
-                
+
                                                         </div>
                                                     </div>
                                                 </ng-container>
