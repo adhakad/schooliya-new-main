@@ -70,6 +70,7 @@ export class StudentComponent implements OnInit {
   isDate: string = '';
   baseURL!: string;
   adminId!: String
+  selectedSession: string = '';
   classMap: any = {
     200: 'Nursery',
     201: 'LKG',
@@ -134,8 +135,15 @@ export class StudentComponent implements OnInit {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
       if (res) {
         this.academicSession = res.academicSession;
+        this.selectedSession = res.academicSession;
       }
     })
+  }
+  filterSession(selectedSession: any) {
+    this.errorCheck = true;
+    this.errorMsg = '';
+    this.selectedSession = selectedSession;
+    // this.getFeesStructureBySession(this.adminId, selectedSession);
   }
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
@@ -559,6 +567,7 @@ export class StudentComponent implements OnInit {
   addBulkStudentRecord() {
     let studentRecordData = {
       bulkStudentRecord: this.bulkStudentRecord,
+      session:this.selectedSession,
       class: this.className,
       stream: this.stream,
       adminId: this.adminId,
@@ -604,13 +613,12 @@ export class StudentComponent implements OnInit {
     }
     let samagraId = 'samagraId' //dynamic field add testing
     const header: string[] = [
-      'session',
-      'medium',
       'admissionNo',
       'name',
       'fatherName',
       'motherName',
       'rollNumber',
+      'medium',
       'feesConcession',
       'aadharNumber',
       samagraId,
@@ -633,31 +641,33 @@ export class StudentComponent implements OnInit {
       'parentsContact',
       'familyAnnualIncome',
     ];
-
-    function orderObjectsByHeaders(studentInfoByClass: any, header: any) {
-      console.log(studentInfoByClass)
-      return studentInfoByClass.map((obj: any) => {
+    function toTitleCase(str: string) {
+      return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
+    }
+    function orderObjectsByHeaders(studentInfoByClass: any, header: any, selectedSession: string) {
+      const filteredData = studentInfoByClass.filter((obj: any) => obj.session === selectedSession);
+      return filteredData.map((obj: any) => {
         const orderedObj: any = {};
         header.forEach((header: any) => {
-          orderedObj[header] = obj[header];
+          let value = obj[header];
+          if (["name", "fatherName", "motherName"].includes(header) && typeof value === "string") {
+            value = toTitleCase(value);
+          }
+          orderedObj[header] = value;
         });
         return orderedObj;
       });
     }
-    const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header);
-    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    let currentYear = (new Date()).getFullYear();
-    let currentMonth = (new Date()).getMonth();
-    let currentMonthText = months[currentMonth];
-    const modifiedHeader = header.map(field => {
-      // Capitalize the first letter and add a space before each capital letter (except the first character)
-      return field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-    });
+    const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
+    const modifiedHeader = header.map(field => 
+      field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
+    );
+    
     let reportData = {
-      title: `${this.schoolInfo?.schoolName} Student Record Class - ${className} , ${currentMonthText} ${currentYear}`,
+      title: `${this.schoolInfo?.schoolName}, Student Record Class - ${className}, ${this.selectedSession}`,
       data: orderedData,
       headers: modifiedHeader,
-      fileName: `Student Record Class - ${className} , ${currentMonthText} ${currentYear} , ${this.schoolInfo?.schoolName}`,
+      fileName: `Student Class - ${className}, ${this.selectedSession}, ${this.schoolInfo?.schoolName}`,
     };
 
     this.ete.exportExcel(reportData);

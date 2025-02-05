@@ -404,6 +404,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
     let bulkStudentRecord = req.body.bulkStudentRecord;
+    let selectedSession = req.body.session;
     let className = req.body.class;
     let stream = req.body.stream;
     let adminId = req.body.adminId;
@@ -436,7 +437,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
     let studentData = [];
     for (const student of bulkStudentRecord) {
         studentData.push({
-            session: student.session,
+            session: selectedSession,
             medium: student.medium,
             adminId: adminId,
             name: student.name,
