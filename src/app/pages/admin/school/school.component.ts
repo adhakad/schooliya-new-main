@@ -135,7 +135,6 @@ export class SchoolComponent implements OnInit {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
-        console.log(res)
         this.errorCheck = true;
         this.errorMsg = 'School detail already exists!';
       }

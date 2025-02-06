@@ -117,8 +117,8 @@
                                     </div>
                                     <div class="modal-content" *ngIf="!successMsg">
                                         <div class="modal-header">
-                                            <h5 class="modal-title mt-2">{{updateMode?'Update': deleteMode ?
-                                                'Delete'
+                                            <h5 class="modal-title mt-2">{{updateMode?'UPDATE': deleteMode ?
+                                                'DELETE'
                                                 :'ADD'}} EXAM RESULT
                                                 - {{cls | classSuffix | uppercase}} <span
                                                     *ngIf="cls==11 || cls ==12">{{stream

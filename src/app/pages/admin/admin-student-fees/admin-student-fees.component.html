@@ -178,7 +178,7 @@
                                     *ngIf="!deleteMode && singleStudent && !receiptMode">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Student Fee Payment</h5>
+                                            <h5 class="modal-title">FEE PAYMENT</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <form [formGroup]="feesForm" (ngSubmit)="feesAddUpdate()">
@@ -201,7 +201,7 @@
                                                         <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.name |
                                                             titlecase}}</td>
                                                     </tr>
-                                                    <tr class="mt-2 mb-4">
+                                                    <tr class="mt-2 mb-5">
                                                         <td class="text-bold">Father Name </td>
                                                         <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.fatherName}}</td>
                                                     </tr>
@@ -215,7 +215,7 @@
                                                                     matInput class="no-arrow" min="1">
                                                             </mat-form-field>
                                                         </div>
-                                                        <div class="col-12 offset-0 offset-lg-0 col-lg-4">
+                                                        <div class="col-12 offset-0 offset-lg-0 col-lg-4 mb-3">
                                                             <button class="submit-button" mat-raised-button
                                                                 style="height: 50px !important;padding-top:5px;padding-bottom:10px !important;width: 100% !important;"
                                                                 type="button" (click)="feesAddUpdate()">Collect
@@ -234,7 +234,7 @@
                                     *ngIf="receiptMode && receiptInstallment && singleStudent && clsFeesStructure">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Student Fee Payment Receipt</h5>
+                                            <h5 class="modal-title">FEE PAYMENT RECEIPT</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <div class="modal-body print-model-body">

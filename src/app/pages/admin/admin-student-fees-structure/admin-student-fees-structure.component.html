@@ -122,9 +122,9 @@
 
                                 <div class="modal-content" *ngIf="!successMsg">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" *ngIf="feesTypeMode || feesMode">Create Fee Structure
+                                        <h5 class="modal-title" *ngIf="feesTypeMode || feesMode">CREATE FEE STRUCTURE
                                         </h5>
-                                        <h5 class="modal-title" *ngIf="deleteMode">Delete Fee Structure</h5>
+                                        <h5 class="modal-title" *ngIf="deleteMode">DELETE FEE STRUCTURE</h5>
                                         <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                     </div>
                                     <div class="modal-body">
@@ -261,7 +261,7 @@
                             <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Fee Structure Class - {{singleFessStructure?.class |
+                                        <h5 class="modal-title">FEE STRUCTURE CLASS - {{singleFessStructure?.class |
                                             classSuffix}} <span
                                                 *ngIf="singleFessStructure?.class==11 || singleFessStructure?.class==12">(
                                                 {{singleFessStructure?.stream}} )</span></h5>

@@ -155,12 +155,12 @@
 
                   <div class="modal-content" *ngIf="!successMsg">
                     <div class="modal-header">
-                      <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete' :'Create New'}} School</h5>
+                      <h5 class="modal-title">{{updateMode?'UPDATE': deleteMode ? 'DELETE' :'CREATE'}} SCHOOL</h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
 
                     <form [formGroup]="schoolForm" (ngSubmit)="schoolAddUpdate()">
-                      <div class="modal-body" *ngIf="!deleteMode">
+                      <div class="modal-body" *ngIf="!deleteMode"> 
 
                         <div *ngIf="errorCheck && !updateMode">
                           <p class="error-message">{{errorMsg}}</p>
