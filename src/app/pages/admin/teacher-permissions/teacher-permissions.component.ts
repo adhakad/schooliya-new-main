@@ -35,10 +35,10 @@ export class TeacherPermissionsComponent implements OnInit {
 
   loader: Boolean = true;
   adminId!: String
-  constructor(private fb: FormBuilder,private adminAuthService: AdminAuthService, private teacherService: TeacherService, private classService: ClassService) {
+  constructor(private fb: FormBuilder, private adminAuthService: AdminAuthService, private teacherService: TeacherService, private classService: ClassService) {
     this.teacherPermissionForm = this.fb.group({
       _id: [''],
-      adminId:this.adminId,
+      adminId: this.adminId,
       type: this.fb.group({
         marksheetPermission: this.fb.array([], [Validators.required]),
         admitCardPermission: this.fb.array([], [Validators.required]),
@@ -75,14 +75,28 @@ export class TeacherPermissionsComponent implements OnInit {
     })
   }
 
-  marksheetPermission(option: any) {
-    const index = this.selectedMarksheetPermissionClass.indexOf(option);
-    if (index > -1) {
-      this.selectedMarksheetPermissionClass.splice(index, 1);
+  // marksheetPermission(option: any) {
+  //   const index = this.selectedMarksheetPermissionClass.indexOf(option);
+  //   if (index > -1) {
+  //     this.selectedMarksheetPermissionClass.splice(index, 1);
+  //   } else {
+  //     this.selectedMarksheetPermissionClass.push(option)
+  //   }
+  // }
+  marksheetPermission(option: number, event: any) {
+    if (event.checked) {
+      if (!this.selectedMarksheetPermissionClass.includes(option)) {
+        this.selectedMarksheetPermissionClass.push(option);
+      }
     } else {
-      this.selectedMarksheetPermissionClass.push(option)
+      this.selectedMarksheetPermissionClass = this.selectedMarksheetPermissionClass.filter(cls => cls !== option);
     }
   }
+
+  isSelected(option: number): boolean {
+    return this.selectedMarksheetPermissionClass.includes(option);
+  }
+
 
   studentPermission(option: any) {
     const index = this.selectedStudentPermissionClass.indexOf(option);
@@ -141,7 +155,7 @@ export class TeacherPermissionsComponent implements OnInit {
         filters: {},
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
-        adminId:this.adminId,
+        adminId: this.adminId,
       };
       this.recordLimit = params.limit;
       if (this.filters.searchText) {
@@ -151,7 +165,7 @@ export class TeacherPermissionsComponent implements OnInit {
       this.teacherService.teacherPaginationList(params).subscribe((res: any) => {
         if (res) {
           this.teacherInfo = res.teacherList;
-          console.log(this.teacherInfo)
+          this.selectedMarksheetPermissionClass = [...res.teacherList[0].marksheetPermission.classes];
           this.number = params.page;
           this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countTeacher });
           return resolve(true);
@@ -160,7 +174,6 @@ export class TeacherPermissionsComponent implements OnInit {
     });
   }
   falseAllValue() {
-    this.selectedMarksheetPermissionClass = [];
     this.selectedStudentPermissionClass = [];
     this.selectedAdmissionPermissionClass = [];
     this.selectedFeeCollectionPermissionClass = [];
