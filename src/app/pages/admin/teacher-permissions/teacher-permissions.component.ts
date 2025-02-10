@@ -151,6 +151,7 @@ export class TeacherPermissionsComponent implements OnInit {
       this.teacherService.teacherPaginationList(params).subscribe((res: any) => {
         if (res) {
           this.teacherInfo = res.teacherList;
+          console.log(this.teacherInfo)
           this.number = params.page;
           this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countTeacher });
           return resolve(true);
