@@ -59,11 +59,6 @@
                       <th>S.No.</th>
                       <th>Name</th>
                       <th>User Id</th>
-                      <th>Marksheet</th>
-                      <th>Admit Card</th>
-                      <th>Student</th>
-                      <th>Admission</th>
-                      <th>Fees</th>
                       <th>Status</th>
                       <th>Set Permissions</th>
                     </tr>
@@ -79,61 +74,6 @@
                       </td>
                       <td>
                         <p class="fw-normal mb-1">{{teacher.teacherUserId}}</p>
-                      </td>
-                      <td>
-                        <ng-container
-                          *ngIf="teacher.marksheetPermission.status==true && teacher.marksheetPermission.classes[0]!==0">
-                          <ng-container *ngFor="let cls of teacher.marksheetPermission.classes ;let i = index;">
-                            <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
-                          </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="teacher.marksheetPermission.status==false">
-                          <p class="fw-normal mb-1">Not Allowed </p>
-                        </ng-container>
-                      </td>
-                      <td>
-                        <ng-container
-                          *ngIf="teacher.admitCardPermission.status==true && teacher.admitCardPermission.classes[0]!==0">
-                          <ng-container *ngFor="let cls of teacher.admitCardPermission.classes;let i = index;">
-                            <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
-                          </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="teacher.admitCardPermission.status==false">
-                          <p class="fw-normal mb-1">Not Allowed </p>
-                        </ng-container>
-                      </td>
-                      <td>
-                        <ng-container
-                          *ngIf="teacher.studentPermission.status==true && teacher.studentPermission.classes[0]!==0">
-                          <ng-container *ngFor="let cls of teacher.studentPermission.classes;let i = index;">
-                            <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
-                          </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="teacher.studentPermission.status==false">
-                          <p class="fw-normal mb-1">Not Allowed </p>
-                        </ng-container>
-                      </td>
-                      <td>
-                        <ng-container
-                          *ngIf="teacher.admissionPermission.status==true && teacher.admissionPermission.classes[0]!==0">
-                          <ng-container *ngFor="let cls of teacher.admissionPermission.classes;let i = index;">
-                            <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
-                          </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="teacher.admissionPermission.status==false">
-                          <p class="fw-normal mb-1">Not Allowed </p>
-                        </ng-container>
-                      </td>
-                      <td>
-                        <ng-container
-                          *ngIf="teacher.feeCollectionPermission.status==true && teacher.feeCollectionPermission.classes[0]!==0">
-                          <ng-container *ngFor="let cls of teacher.feeCollectionPermission.classes;let i = index;">
-                            <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
-                          </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="teacher.feeCollectionPermission.status==false">
-                          <p class="fw-normal mb-1">Not Allowed </p>
-                        </ng-container>
                       </td>
                       <td>
                         <a href="javascript:void(0)" class="mb-0 status-active" (click)="changeStatus(teacher._id,0)"
