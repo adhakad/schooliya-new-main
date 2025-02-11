@@ -75,14 +75,6 @@ export class TeacherPermissionsComponent implements OnInit {
     })
   }
 
-  // marksheetPermission(option: any) {
-  //   const index = this.selectedMarksheetPermissionClass.indexOf(option);
-  //   if (index > -1) {
-  //     this.selectedMarksheetPermissionClass.splice(index, 1);
-  //   } else {
-  //     this.selectedMarksheetPermissionClass.push(option)
-  //   }
-  // }
   marksheetPermission(option: number, event: any) {
     if (event.checked) {
       if (!this.selectedMarksheetPermissionClass.includes(option)) {
@@ -93,60 +85,90 @@ export class TeacherPermissionsComponent implements OnInit {
     }
   }
 
-  isSelected(option: number): boolean {
+  studentPermission(option: number, event: any) {
+    if (event.checked) {
+      if (!this.selectedStudentPermissionClass.includes(option)) {
+        this.selectedStudentPermissionClass.push(option);
+      }
+    } else {
+      this.selectedStudentPermissionClass = this.selectedStudentPermissionClass.filter(cls => cls !== option);
+    }
+  }
+
+  admissionPermission(option: number, event: any) {
+    if (event.checked) {
+      if (!this.selectedAdmissionPermissionClass.includes(option)) {
+        this.selectedAdmissionPermissionClass.push(option);
+      }
+    } else {
+      this.selectedAdmissionPermissionClass = this.selectedAdmissionPermissionClass.filter(cls => cls !== option);
+    }
+  }
+
+  feeCollectionPermission(option: number, event: any) {
+    if (event.checked) {
+      if (!this.selectedFeeCollectionPermissionClass.includes(option)) {
+        this.selectedFeeCollectionPermissionClass.push(option);
+      }
+    } else {
+      this.selectedFeeCollectionPermissionClass = this.selectedFeeCollectionPermissionClass.filter(cls => cls !== option);
+    }
+  }
+
+  admitCardPermission(option: number, event: any) {
+    if (event.checked) {
+      if (!this.selectedAdmitCardPermissionClass.includes(option)) {
+        this.selectedAdmitCardPermissionClass.push(option);
+      }
+    } else {
+      this.selectedAdmitCardPermissionClass = this.selectedAdmitCardPermissionClass.filter(cls => cls !== option);
+    }
+  }
+
+  promoteFailPermission(option: number, event: any) {
+    if (event.checked) {
+      if (!this.selectedPromoteFailPermissionClass.includes(option)) {
+        this.selectedPromoteFailPermissionClass.push(option);
+      }
+    } else {
+      this.selectedPromoteFailPermissionClass = this.selectedPromoteFailPermissionClass.filter(cls => cls !== option);
+    }
+  }
+
+  transferCertificatePermission(option: number, event: any) {
+    if (event.checked) {
+      if (!this.selectedTransferCertificatePermissionClass.includes(option)) {
+        this.selectedTransferCertificatePermissionClass.push(option);
+      }
+    } else {
+      this.selectedTransferCertificatePermissionClass = this.selectedTransferCertificatePermissionClass.filter(cls => cls !== option);
+    }
+  }
+
+  isMarksheetPermissionSelected(option: number): boolean {
     return this.selectedMarksheetPermissionClass.includes(option);
   }
-
-
-  studentPermission(option: any) {
-    const index = this.selectedStudentPermissionClass.indexOf(option);
-    if (index > -1) {
-      this.selectedStudentPermissionClass.splice(index, 1);
-    } else {
-      this.selectedStudentPermissionClass.push(option)
-    }
+  isStudentPermissionSelected(option: number): boolean {
+    return this.selectedStudentPermissionClass.includes(option);
+  }
+  isAdmissionPermissionSelected(option: number): boolean {
+    return this.selectedAdmissionPermissionClass.includes(option);
+  }
+  isFeeCollectionPermissionSelected(option: number): boolean {
+    return this.selectedFeeCollectionPermissionClass.includes(option);
+  }
+  isAdmitCardPermissionSelected(option: number): boolean {
+    return this.selectedAdmitCardPermissionClass.includes(option);
+  }
+  isPromoteFailPermissionSelected(option: number): boolean {
+    return this.selectedPromoteFailPermissionClass.includes(option);
+  }
+  isTransferCertificatePermissionSelected(option: number): boolean {
+    return this.selectedTransferCertificatePermissionClass.includes(option);
   }
 
-  admissionPermission(option: any) {
-    const index = this.selectedAdmissionPermissionClass.indexOf(option);
-    if (index > -1) {
-      this.selectedAdmissionPermissionClass.splice(index, 1);
-    } else {
-      this.selectedAdmissionPermissionClass.push(option)
-    }
-  }
-  feeCollectionPermission(option: any) {
-    const index = this.selectedFeeCollectionPermissionClass.indexOf(option);
-    if (index > -1) {
-      this.selectedFeeCollectionPermissionClass.splice(index, 1);
-    } else {
-      this.selectedFeeCollectionPermissionClass.push(option)
-    }
-  }
-  admitCardPermission(option: any) {
-    const index = this.selectedAdmitCardPermissionClass.indexOf(option);
-    if (index > -1) {
-      this.selectedAdmitCardPermissionClass.splice(index, 1);
-    } else {
-      this.selectedAdmitCardPermissionClass.push(option)
-    }
-  }
-  promoteFailPermission(option: any) {
-    const index = this.selectedPromoteFailPermissionClass.indexOf(option);
-    if (index > -1) {
-      this.selectedPromoteFailPermissionClass.splice(index, 1);
-    } else {
-      this.selectedPromoteFailPermissionClass.push(option)
-    }
-  }
-  transferCertificatePermission(option: any) {
-    const index = this.selectedTransferCertificatePermissionClass.indexOf(option);
-    if (index > -1) {
-      this.selectedTransferCertificatePermissionClass.splice(index, 1);
-    } else {
-      this.selectedTransferCertificatePermissionClass.push(option)
-    }
-  }
+
+  
 
   getTeacher($event: any) {
     this.page = $event.page;
@@ -165,8 +187,14 @@ export class TeacherPermissionsComponent implements OnInit {
       this.teacherService.teacherPaginationList(params).subscribe((res: any) => {
         if (res) {
           this.teacherInfo = res.teacherList;
-          this.selectedMarksheetPermissionClass = [...res.teacherList[0].marksheetPermission.classes];
           this.number = params.page;
+          this.selectedMarksheetPermissionClass = [...res.teacherList[0].marksheetPermission.classes];
+          this.selectedStudentPermissionClass = [...res.teacherList[0].studentPermission.classes];
+          this.selectedAdmissionPermissionClass = [...res.teacherList[0].admissionPermission.classes];
+          this.selectedFeeCollectionPermissionClass = [...res.teacherList[0].feeCollectionPermission.classes];
+          this.selectedAdmitCardPermissionClass = [...res.teacherList[0].admitCardPermission.classes];
+          this.selectedPromoteFailPermissionClass = [...res.teacherList[0].promoteFailPermission.classes];
+          this.selectedTransferCertificatePermissionClass = [...res.teacherList[0].transferCertificatePermission.classes];
           this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countTeacher });
           return resolve(true);
         }
@@ -174,12 +202,6 @@ export class TeacherPermissionsComponent implements OnInit {
     });
   }
   falseAllValue() {
-    this.selectedStudentPermissionClass = [];
-    this.selectedAdmissionPermissionClass = [];
-    this.selectedFeeCollectionPermissionClass = [];
-    this.selectedAdmitCardPermissionClass = [];
-    this.selectedPromoteFailPermissionClass = [];
-    this.selectedTransferCertificatePermissionClass = [];
     const controlOne = <FormArray>this.teacherPermissionForm.get('type.marksheetPermission');
     const controlTwo = <FormArray>this.teacherPermissionForm.get('type.studentPermission');
     const controlThree = <FormArray>this.teacherPermissionForm.get('type.admissionPermission');
@@ -203,6 +225,7 @@ export class TeacherPermissionsComponent implements OnInit {
     this.falseAllValue();
     this.showModal = false;
     this.errorMsg = '';
+    this.getTeacher({ page: this.page });
   }
   addTeacherPermissionModel(teacher: any) {
     this.showModal = true;
