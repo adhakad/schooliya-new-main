@@ -33,25 +33,25 @@ export class SideNavComponent implements OnInit {
     }
     this.teacherService.getTeacherById(params).subscribe((res:any)=> {
       if(res){
-        if(res.admissionPermission?.status==true){
+        if(res.admissionPermission.status==true){
           this.admissionPermission = true;
         }
-        if(res.studentPermission?.status==true){
+        if(res.studentPermission.status==true){
           this.studentPermission = true;
         }
-        if(res.feeCollectionPermission?.status==true){
+        if(res.feeCollectionPermission.status==true){
           this.feeCollectionPermission = true;
         }
-        if(res.admitCardPermission?.status==true){
+        if(res.admitCardPermission.status==true){
           this.admitCardPermission = true;
         }
-        if(res.marksheetPermission?.status==true){
+        if(res.marksheetPermission.status==true){
           this.marksheetPermission = true;
         }
-        if(res.promoteFailPermission?.status==true){
+        if(res.promoteFailPermission.status==true){
           this.promoteFailPermission = true;
         }
-        if(res.transferCertificatePermission?.status==true){
+        if(res.transferCertificatePermission.status==true){
           this.transferCertificatePermission = true;
         }
       }

@@ -6,7 +6,7 @@ const TeacherUserModel = require('../models/users/teacher-user');
 
 let countTeacher = async (req, res, next) => {
     let adminId = req.params.adminId;
-    let countTeacher = await TeacherModel.count({adminId:adminId});
+    let countTeacher = await TeacherModel.count({ adminId: adminId });
     return res.status(200).json({ countTeacher });
 }
 let GetTeacherById = async (req, res, next) => {
@@ -87,94 +87,52 @@ let TeacherPermission = async (req, res, next) => {
     try {
         const adminId = req.params.id;
         const teacherId = req.params.teacherId;
-        let { marksheetPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission,promoteFailPermission,transferCertificatePermission } = req.body.type;
+        let { marksheetPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission, promoteFailPermission, transferCertificatePermission } = req.body.type;
         const checkTeacher = await TeacherModel.findOne({ _id: teacherId, adminId: adminId });
         if (!checkTeacher) {
             return res.status(400).json("Invalid Request !")
         }
-        let marksheetClass = [];
-        let studentClass = [];
-        let admissionClass = [];
-        let admitCardClass = [];
-        let feeCollectionClass = [];
-        let promoteFailClass = [];
-        let transferCertificateClass = [];
-        if (marksheetPermission.length > 0) {
-            for (let i = 0; i < marksheetPermission.length; i++) {
-                let className = parseInt(Object.keys(marksheetPermission[i])[0]);
-                marksheetClass.push(className);
-            }
-        }
-        if (admissionPermission.length > 0) {
-            for (let i = 0; i < admissionPermission.length; i++) {
-                let className = parseInt(Object.keys(admissionPermission[i])[0]);
-                admissionClass.push(className);
-            }
-        }
-        if (studentPermission.length > 0) {
-            for (let i = 0; i < studentPermission.length; i++) {
-                let className = parseInt(Object.keys(studentPermission[i])[0]);
-                studentClass.push(className);
-            }
+
+        function getUniqueClasses(permissionArray) {
+            return [...new Set(permissionArray.map(item => parseInt(Object.keys(item)[0])))];
         }
 
-        if (admitCardPermission) {
-            for (let i = 0; i < admitCardPermission.length; i++) {
-                let className = parseInt(Object.keys(admitCardPermission[i])[0]);
-                admitCardClass.push(className);
-            }
-        }
+        // Process each permission type efficiently
+        let marksheetClass = getUniqueClasses(marksheetPermission);
+        let admissionClass = getUniqueClasses(admissionPermission);
+        let studentClass = getUniqueClasses(studentPermission);
+        let admitCardClass = getUniqueClasses(admitCardPermission);
+        let feeCollectionClass = getUniqueClasses(feeCollectionPermission);
+        let promoteFailClass = getUniqueClasses(promoteFailPermission);
+        let transferCertificateClass = getUniqueClasses(transferCertificatePermission);
 
-        if (feeCollectionPermission) {
-            for (let i = 0; i < feeCollectionPermission.length; i++) {
-                let className = parseInt(Object.keys(feeCollectionPermission[i])[0]);
-                feeCollectionClass.push(className);
-            }
-        }
-        if (promoteFailPermission) {
-            for (let i = 0; i < promoteFailPermission.length; i++) {
-                let className = parseInt(Object.keys(promoteFailPermission[i])[0]);
-                promoteFailClass.push(className);
-            }
-        }
-        if (transferCertificatePermission) {
-            for (let i = 0; i < transferCertificatePermission.length; i++) {
-                let className = parseInt(Object.keys(transferCertificatePermission[i])[0]);
-                transferCertificateClass.push(className);
-            }
-        }
 
-        const teacherData = {
-            marksheetPermission: {
-                status: marksheetClass.length > 0 ? true : false,
-                classes: marksheetClass.length > 0 ? marksheetClass : [0],
-            },
-            admitCardPermission: {
-                status: admitCardClass.length > 0 ? true : false,
-                classes: admitCardClass.length > 0 ? admitCardClass : [0],
-            },
-            studentPermission: {
-                status: studentClass.length > 0 ? true : false,
-                classes: studentClass.length > 0 ? studentClass : [0],
-            },
-            admissionPermission: {
-                status: admissionClass.length > 0 ? true : false,
-                classes: admissionClass.length > 0 ? admissionClass : [0],
-            },
-            feeCollectionPermission: {
-                status: feeCollectionClass.length > 0 ? true : false,
-                classes: feeCollectionClass.length > 0 ? feeCollectionClass : [0],
-            },
-            promoteFailPermission: {
-                status: promoteFailClass.length > 0 ? true : false,
-                classes: promoteFailClass.length > 0 ? promoteFailClass : [0],
-            },
-            transferCertificatePermission: {
-                status: transferCertificateClass.length > 0 ? true : false,
-                classes: transferCertificateClass.length > 0 ? transferCertificateClass : [0],
-            },
+        const teacherData = {};
+        const classPermissions = {
+            marksheet: marksheetClass,
+            admitCard: admitCardClass,
+            student: studentClass,
+            admission: admissionClass,
+            feeCollection: feeCollectionClass,
+            promoteFail: promoteFailClass,
+            transferCertificate: transferCertificateClass
         };
 
+        for (const key in classPermissions) {
+            let classArray = [...new Set(classPermissions[key])]; // Remove duplicates
+
+            // Agar 0 ke alawa koi value ho to 0 remove karo
+            if (classArray.length > 1 && classArray.includes(0)) {
+                classArray = classArray.filter(num => num !== 0);
+            }
+
+            let hasValidClass = classArray.length > 0 && !(classArray.length === 1 && classArray[0] === 0);
+
+            teacherData[`${key}Permission`] = {
+                status: hasValidClass,
+                classes: hasValidClass ? classArray : [0]
+            };
+        }
         const updateTeacher = await TeacherModel.findByIdAndUpdate(teacherId, { $set: teacherData }, { new: true });
         return res.status(200).json('Teacher permissions set successfully.');
     } catch (error) {
