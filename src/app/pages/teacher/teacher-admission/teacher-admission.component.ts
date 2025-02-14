@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { AcademicSessionService } from 'src/app/services/academic-session.service';
 import { StudentService } from 'src/app/services/student.service';
 import { ClassService } from 'src/app/services/class.service';
 import { FeesStructureService } from 'src/app/services/fees-structure.service';
@@ -30,6 +31,8 @@ export class TeacherAdmissionComponent implements OnInit {
   successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
+  academicSession!: string;
+  allSession:any=[];
   classInfo: any[] = [];
   studentInfo: any[] = [];
   recordLimit: number = 10;
@@ -56,9 +59,10 @@ export class TeacherAdmissionComponent implements OnInit {
   createdBy: String = '';
   receiptMode: boolean = false;
   studentFeesCollection: any;
+  baseURL!: string;
   loader: Boolean = true;
   adminId!: String
-  constructor(private adminAuthService: AdminAuthService, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService) {
+  constructor(private adminAuthService: AdminAuthService, private fb: FormBuilder, private activatedRoute: ActivatedRoute,private academicSessionService: AcademicSessionService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService) {
     this.studentForm = this.fb.group({
       _id: [''],
       adminId: [''],
@@ -84,14 +88,14 @@ export class TeacherAdmissionComponent implements OnInit {
       lastSchool: ['', [Validators.maxLength(50)]],
       fatherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       fatherQualification: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      fatherOccupation: ['', Validators.required],
       motherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       motherQualification: ['', Validators.required],
-      parentsOccupation: ['', Validators.required],
+      motherOccupation: ['', Validators.required],
       parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
-      parentsAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      familyAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: [''],
-
     })
   }
 
@@ -102,6 +106,7 @@ export class TeacherAdmissionComponent implements OnInit {
       this.getTeacherById(this.teacherInfo)
     }
     this.getSchool(this.adminId);
+    this.getAcademicSession();
     let load: any = this.getStudentsByAdmission({ page: 1 });
     this.allOptions();
     if (load) {
@@ -109,6 +114,15 @@ export class TeacherAdmissionComponent implements OnInit {
         this.loader = false;
       }, 1000);
     }
+    var currentURL = window.location.href;
+    this.baseURL = new URL(currentURL).origin;
+  }
+  getAcademicSession() {
+    this.academicSessionService.getAcademicSession().subscribe((res: any) => {
+      if (res) {
+        this.academicSession = res.academicSession;
+      }
+    })
   }
   getTeacherById(teacherInfo: any) {
     let params = {
@@ -118,6 +132,7 @@ export class TeacherAdmissionComponent implements OnInit {
     this.teacherService.getTeacherById(params).subscribe((res: any) => {
       if (res) {
         this.classInfo = res.admissionPermission.classes;
+        console.log(this.classInfo)
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
 
@@ -138,44 +153,46 @@ export class TeacherAdmissionComponent implements OnInit {
     printHtml += '<style>';
     printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
-    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
-    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #707070; box-sizing: border-box;}';
+    printHtml += '.logo { height: 95px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-140px !important; margin-bottom: 0 !important; }';
 
-    printHtml += '.address{margin-top: -42px;}';
-    printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
-    printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
-    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
+    printHtml += '.address{margin-top: -45px;}';
+    printHtml += '.address p{color: #0a0a0a !important;font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: 0px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
-    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;padding-top:5px;}';
-    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
-    printHtml += '.custom-table tr{height: 30px;}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
 
-    printHtml += '.tc-codes-table {width: 100%;color: #252525 !important;display: inline-table;margin-top: 2vh;}';
-    printHtml += '.tc-codes-table tr{height: 2vh;border:none;}';
-    printHtml += '.tc-codes-table td {width:50%;border:none;font-size: 12px;}';
-    printHtml += '.tc-codes-table td p{margin-left: 20px;margin-right: 20px;}';
+    
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
+    
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+    printHtml += '.custom-table th{min-height: 48px;text-align: center;border:1px solid #707070;line-height:25px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 48px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #707070;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
-    printHtml += 'p {color: #2e2d6a !important;font-size:12px;}'
-    printHtml += 'h4 {color: #2e2d6a !important;}'
-    printHtml += '@media print {';
-    printHtml += '  body::before {';
-    printHtml += `    content: "${schoolName}, ${city}";`;
-    printHtml += '    position: fixed;';
-    printHtml += '    top: 45%;';
-    printHtml += '    left:10%;';
-    printHtml += '    font-size: 20px;';
-    printHtml += '    font-weight: bold;';
-    printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    color: rgba(0, 0, 0, 0.08);';
-    printHtml += '    pointer-events: none;';
-    printHtml += '  }';
-    printHtml += '}';
+    printHtml += '.text-left { text-align: left;}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:19px;}'
+    printHtml += 'h4 {color: #0a0a0a !important;}'
+    // printHtml += '@media print {';
+    // printHtml += '  body::after {';
+    // printHtml += `    content: "${schoolName}, ${city}";`;
+    // printHtml += '    position: fixed;';
+    // printHtml += '    top: 50%;';
+    // printHtml += '    left: 25%;';
+    // printHtml += '    font-size: 30px;';
+    // printHtml += '    text-transform: uppercase;';
+    // printHtml += '    font-weight: bold;';
+    // printHtml += '    font-family: Arial, sans-serif;';
+    // printHtml += '    text-align: center;';
+    // printHtml += '    color: rgba(50, 48, 65, 0.2);';
+    // printHtml += '    transform:';
+    // printHtml += '    pointer-events: none;';
+    // printHtml += '  }';
+    // printHtml += '}';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
@@ -187,6 +204,7 @@ export class TeacherAdmissionComponent implements OnInit {
     return printHtml;
   }
 
+
   getSchool(adminId: any) {
     this.schoolService.getSchool(adminId).subscribe((res: any) => {
       if (res) {
@@ -195,8 +213,12 @@ export class TeacherAdmissionComponent implements OnInit {
     })
   }
   addPrintModal(student: any) {
+    let params = {
+      adminId : this.adminId,
+      studentId:student._id,
+    }
     this.showAdmissionPrintModal = true;
-    this.feesService.singleStudentFeesCollectionById(student._id).subscribe((res: any) => {
+    this.feesService.singleStudentFeesCollectionById(params).subscribe((res: any) => {
       if (res) {
         this.singleStudentInfo = student;
         this.singleStudentInfo.admissionFees = res.studentFeesCollection.admissionFees;
@@ -273,10 +295,8 @@ export class TeacherAdmissionComponent implements OnInit {
     this.deleteMode = false;
     this.updateMode = false;
     this.studentForm.reset();
-    const admissionNo = Math.floor(Math.random() * 89999999 + 10000000);
-    this.studentForm.get('admissionNo')?.setValue(admissionNo);
-    const rollNumber = Math.floor(Math.random() * 89999999 + 10000000);
-    this.studentForm.get('rollNumber')?.setValue(rollNumber);
+    this.studentForm.get('session')?.setValue(this.academicSession);
+
   }
   updateStudentModel(student: any) {
     this.showModal = true;
@@ -291,6 +311,7 @@ export class TeacherAdmissionComponent implements OnInit {
     this.deleteById = id;
   }
 
+  
   successDone() {
     setTimeout(() => {
       this.closeModal();
@@ -343,8 +364,8 @@ export class TeacherAdmissionComponent implements OnInit {
 
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
+    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{religion:'Aninism / Adivasi'},{religion:'Islam'},{ religion: 'Baha I faith ' },{ religion: 'Judaism' },{ religion: 'Zoroastrianism' } ,{ religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
     this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]

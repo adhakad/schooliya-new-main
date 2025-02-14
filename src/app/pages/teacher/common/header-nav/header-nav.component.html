@@ -31,51 +31,51 @@
     </button>
     <button *ngIf="admissionPermission" mat-menu-item class="menu-button" routerLink="/teacher/admission" routerLinkActive="active-link">
       <mat-icon>dialpad</mat-icon>
-      <span>Admissions</span>
+      <span>Admission</span>
     </button>
     <button *ngIf="!admissionPermission" mat-menu-item class="menu-button">
       <mat-icon>lock</mat-icon>
-      <span>Admissions</span>
+      <span>Admission</span>
     </button>
     <button *ngIf="studentPermission" mat-menu-item class="menu-button" routerLink="/teacher/student" routerLinkActive="active-link">
       <mat-icon>person_add</mat-icon>
-      <span>Students</span>
+      <span>Student</span>
     </button>
     <button *ngIf="!studentPermission" mat-menu-item class="menu-button">
       <mat-icon>lock</mat-icon>
-      <span>Students</span>
+      <span>Student</span>
     </button>
     <button *ngIf="feeCollectionPermission" mat-menu-item class="menu-button" routerLink="/teacher/fees" routerLinkActive="active-link">
       <mat-icon>currency_rupee</mat-icon>
-      <span>Fee Managements</span>
+      <span>Fees</span>
     </button>
     <button *ngIf="!feeCollectionPermission" mat-menu-item class="menu-button">
       <mat-icon>lock</mat-icon>
-      <span>Fee Managements</span>
+      <span>Fees</span>
     </button>
     <button *ngIf="admitCardPermission" mat-menu-item class="menu-button" routerLink="/teacher/admit-card" routerLinkActive="active-link">
       <mat-icon>assignment</mat-icon>
-      <span>Admit Cards</span>
+      <span>Admit Card</span>
     </button>
     <button *ngIf="!admitCardPermission" mat-menu-item class="menu-button">
       <mat-icon>lock</mat-icon>
-      <span>Admit Cards</span>
+      <span>Admit Card</span>
     </button>
     <button *ngIf="marksheetPermission" mat-menu-item class="menu-button" routerLink="/teacher/marksheet" routerLinkActive="active-link">
       <mat-icon>content_paste_search</mat-icon>
-      <span>Marksheets</span>
+      <span>Marksheet</span>
     </button>
     <button *ngIf="!marksheetPermission" mat-menu-item class="menu-button">
       <mat-icon>lock</mat-icon>
-      <span>Marksheets</span>
+      <span>Marksheet</span>
     </button>
     <button *ngIf="promoteFailPermission" mat-menu-item class="menu-button" routerLink="/teacher/promote-fail" routerLinkActive="active-link">
       <mat-icon>person_add</mat-icon>
-      <span>Promote/Fail</span>
+      <span>Class Promote</span>
     </button>
     <button *ngIf="!promoteFailPermission" mat-menu-item class="menu-button">
       <mat-icon>lock</mat-icon>
-      <span>Promote/Fail</span>
+      <span>Class Promote</span>
     </button>
     <button *ngIf="transferCertificatePermission" mat-menu-item class="menu-button" routerLink="/teacher/transfer-certificate" routerLinkActive="active-link">
       <mat-icon>workspace_premium</mat-icon>

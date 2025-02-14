@@ -21,41 +21,40 @@ export class SideNavComponent implements OnInit {
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
-    if(this.teacherInfo){
-      this.getTeacherById(this.teacherInfo)
+    if (this.teacherInfo) {
+      const storedPermissions = this.teacherAuthService.getPermissions();
+      
+      if (storedPermissions) {
+        this.setPermissions(storedPermissions);
+      } else {
+        this.getTeacherById(this.teacherInfo);
+      }
     }
   }
 
-  getTeacherById(teacherInfo:any){
+  getTeacherById(teacherInfo: any) {
     let params = {
-      adminId:teacherInfo.adminId,
-      teacherUserId:teacherInfo.id,
-    }
-    this.teacherService.getTeacherById(params).subscribe((res:any)=> {
-      if(res){
-        if(res.admissionPermission.status==true){
-          this.admissionPermission = true;
-        }
-        if(res.studentPermission.status==true){
-          this.studentPermission = true;
-        }
-        if(res.feeCollectionPermission.status==true){
-          this.feeCollectionPermission = true;
-        }
-        if(res.admitCardPermission.status==true){
-          this.admitCardPermission = true;
-        }
-        if(res.marksheetPermission.status==true){
-          this.marksheetPermission = true;
-        }
-        if(res.promoteFailPermission.status==true){
-          this.promoteFailPermission = true;
-        }
-        if(res.transferCertificatePermission.status==true){
-          this.transferCertificatePermission = true;
-        }
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
+    };
+  
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
+        console.log(res)
+        this.teacherAuthService.setPermissions(res); // Store permissions in service
+        this.setPermissions(res);
       }
-    })
+    });
+  }
+  
+  setPermissions(res: any) {
+    this.admissionPermission = res.admissionPermission?.status || false;
+    this.studentPermission = res.studentPermission?.status || false;
+    this.feeCollectionPermission = res.feeCollectionPermission?.status || false;
+    this.admitCardPermission = res.admitCardPermission?.status || false;
+    this.marksheetPermission = res.marksheetPermission?.status || false;
+    this.promoteFailPermission = res.promoteFailPermission?.status || false;
+    this.transferCertificatePermission = res.transferCertificatePermission?.status || false;
   }
 
 }

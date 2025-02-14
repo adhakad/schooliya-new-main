@@ -16,11 +16,18 @@ export class TeacherAuthService {
   private token: string | null = '';
   private tokenTimer: any;
   payload: any;
+  private permissions: any = null;
   private authStatusListener = new Subject<boolean>();
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
 
+  setPermissions(permissions: any) {
+    this.permissions = permissions;
+  }
 
+  getPermissions() {
+    return this.permissions;
+  }
   getToken() {
     return this.token;
   }
@@ -189,4 +196,5 @@ export class TeacherAuthService {
     this.cookieService.delete("teacherRefreshToken");
     this.cookieService.delete("_vN");
   }
+  
 }
