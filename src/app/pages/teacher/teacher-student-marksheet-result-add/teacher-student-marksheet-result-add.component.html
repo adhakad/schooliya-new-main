@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <button mat-button class="menu-button">
-                                            <span>Marksheet | Result Add</span>
+                                            <span>Marksheet > Result Add</span>
                                         </button>
                                     </div>
                                 </div>
@@ -24,7 +24,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <button mat-button class="menu-button">
-                                            <span>Marksheet | Result Add</span>
+                                            <span>Marksheet > Result Add</span>
                                         </button>
                                     </div>
                                 </div>
@@ -35,72 +35,75 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                            <table class="table table-hover align-middle bg-white">
-                                <thead class="bg-light">
-                                    <tr class="text-muted">
-                                        <th>No.</th>
-                                        <th>Name</th>
-                                        <th>Roll Number</th>
-                                        <th>Class</th>
-                                        <th>Stream</th>
-                                        <th>Result Entry</th>
-                                        <th>Result</th>
-                                    </tr>
-                                </thead>
+                            <div class="table-wrapper">
+                                <table class="table table-hover align-middle bg-white">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>No.</th>
+                                            <th>Name</th>
+                                            <th>Roll Number</th>
+                                            <th>Class</th>
+                                            <th>Stream</th>
+                                            <th>Result Entry</th>
+                                            <th>Result</th>
+                                        </tr>
+                                    </thead>
 
-                                <tbody *ngIf="mappedResults && mappedResults.length>0">
-                                    <tr *ngFor="let result of mappedResults,let i=index">
-                                        <td>
-                                            <p class="mb-0">{{i+1}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.name | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.rollNumber}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.class | classSuffix}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{result.stream}}</p>
-                                        </td>
-                                        <td>
-                                            <ng-container *ngFor="let exam of result.examType,let i=index;">
-                                                <ng-container *ngIf="examType.length==1">
-                                                    <button
-                                                        style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='present'">Yearly</button>
-                                                    <button
-                                                        style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor:not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='empty'">Yearly</button>
+                                    <tbody *ngIf="mappedResults && mappedResults.length>0">
+                                        <tr *ngFor="let result of mappedResults,let i=index">
+                                            <td>
+                                                <p class="mb-0">{{i+1}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.name | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.rollNumber}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.class | classSuffix}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{result.stream}}</p>
+                                            </td>
+                                            <td>
+                                                <ng-container *ngFor="let exam of result.examType,let i=index;">
+                                                    <ng-container *ngIf="examType.length==1">
+                                                        <button
+                                                            style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='present'">Yearly</button>
+                                                        <button
+                                                            style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor:not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='empty'">Yearly</button>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="examType.length==2">
+                                                        <button
+                                                            style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='present'">{{exam
+                                                            | titlecase}}</button>
+                                                        <button
+                                                            style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
+                                                            class="submit-button" mat-raised-button
+                                                            *ngIf="result.examTypeResultExist[i]=='empty'">{{exam
+                                                            | titlecase}}</button>
+                                                    </ng-container>
                                                 </ng-container>
-                                                <ng-container *ngIf="examType.length==2">
-                                                    <button
-                                                        style="background-color: #339f5e;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='present'">{{exam
-                                                        | titlecase}}</button>
-                                                    <button
-                                                        style="background-color: #339f5e8b;height: 38px;margin: 5px;padding:0 !important;cursor: not-allowed;"
-                                                        class="submit-button" mat-raised-button
-                                                        *ngIf="result.examTypeResultExist[i]=='empty'">{{exam
-                                                        | titlecase}}</button>
-                                                </ng-container>
-                                            </ng-container>
-                                        </td>
-                                        <td>
-                                            <button class="submit-button" mat-raised-button
-                                                (click)="addExamResultModel(result.rollNumber)"><mat-icon
-                                                    style="color:#fff;font-size: 20px;">add</mat-icon>Add</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                            <td>
+                                                <button class="submit-button" mat-raised-button
+                                                    (click)="addExamResultModel(result.rollNumber)"><mat-icon
+                                                        style="color:#fff;font-size: 20px;">add</mat-icon>Add</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="modal fade show" [class.show]="showModal">
-                                <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-dialog modal-lg" role="document"
+                                    [class.modal-lg]="!deleteMode && !successMsg">
                                     <div class="modal-content" *ngIf="successMsg">
                                         <div class="modal-header">
                                             <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
@@ -114,8 +117,8 @@
                                     </div>
                                     <div class="modal-content" *ngIf="!successMsg">
                                         <div class="modal-header">
-                                            <h5 class="modal-title mt-2">{{updateMode?'Update': deleteMode ?
-                                                'Delete'
+                                            <h5 class="modal-title mt-2">{{updateMode?'UPDATE': deleteMode ?
+                                                'DELETE'
                                                 :'ADD'}} EXAM RESULT
                                                 - {{cls | classSuffix | uppercase}} <span
                                                     *ngIf="cls==11 || cls ==12">{{stream
@@ -145,7 +148,7 @@
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <mat-form-field appearance="outline">
-                                                                        <mat-label>Exam Type</mat-label>
+                                                                        <mat-label>Exam Name</mat-label>
                                                                         <mat-select #examSelect matInput
                                                                             formControlName="examType">
                                                                             <div *ngFor="let exam of examType">
@@ -169,7 +172,7 @@
                                                                     </mat-form-field>
                                                                 </div>
                                                                 <ng-container *ngIf="theorySubjects.length>0">
-                                                                    <h3>Theory Marks</h3>
+                                                                    <h3>Theory Marks (out of {{theoryMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="theoryMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -189,7 +192,8 @@
                                                                 </ng-container>
 
                                                                 <ng-container *ngIf="practicalSubjects.length>0">
-                                                                    <h3>Practical Marks</h3>
+                                                                    <h3>Practical Marks (out of {{practicalMaxMarks}})
+                                                                    </h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="practicalMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -209,7 +213,8 @@
                                                                 </ng-container>
 
                                                                 <ng-container *ngIf="periodicTestSubjects.length>0">
-                                                                    <h3>Perodic Test Marks</h3>
+                                                                    <h3>Perodic Test Marks (out of
+                                                                        {{periodicTestMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="periodicTestMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -228,7 +233,8 @@
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container *ngIf="noteBookSubjects.length>0">
-                                                                    <h3>Note Book Marks</h3>
+                                                                    <h3>Note Book Marks (out of {{noteBookMaxMarks}})
+                                                                    </h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="noteBookMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -248,7 +254,8 @@
                                                                 </ng-container>
                                                                 <ng-container
                                                                     *ngIf="subjectEnrichmentSubjects.length>0">
-                                                                    <h3>Subject Enrichment Marks</h3>
+                                                                    <h3>Subject Enrichment Marks (out of
+                                                                        {{subjectEnrichmentMaxMarks}})</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container
                                                                             formArrayName="subjectEnrichmentMarks">
@@ -267,7 +274,45 @@
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-
+                                                                <ng-container *ngIf="halfYearlySubjects.length>0">
+                                                                    <h3>Half Yearly Marks (out of
+                                                                        {{halfYearlyMaxMarks}})</h3>
+                                                                    <ng-container formGroupName="type">
+                                                                        <ng-container formArrayName="halfYearlyMarks">
+                                                                            <div class="col-4 col-lg-2"
+                                                                                *ngFor="let subjects of halfYearlySubjects; let i = index">
+                                                                                <div [formGroupName]="i">
+                                                                                    <mat-form-field
+                                                                                        appearance="outline">
+                                                                                        <mat-label>{{subjects |
+                                                                                            titlecase}}</mat-label>
+                                                                                        <input matInput type="text"
+                                                                                            [formControlName]="subjects">
+                                                                                    </mat-form-field>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="projectSubjects.length>0">
+                                                                    <h3>Project Marks (out of {{projectMaxMarks}})</h3>
+                                                                    <ng-container formGroupName="type">
+                                                                        <ng-container formArrayName="projectMarks">
+                                                                            <div class="col-4 col-lg-2"
+                                                                                *ngFor="let subjects of projectSubjects; let i = index">
+                                                                                <div [formGroupName]="i">
+                                                                                    <mat-form-field
+                                                                                        appearance="outline">
+                                                                                        <mat-label>{{subjects |
+                                                                                            titlecase}}</mat-label>
+                                                                                        <input matInput type="text"
+                                                                                            [formControlName]="subjects">
+                                                                                    </mat-form-field>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
                                                                 <ng-container *ngIf="coScholastic.length>0">
                                                                     <h3>Co-Scholastic Activity & Element</h3>
                                                                     <ng-container formGroupName="type">

@@ -27,10 +27,9 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   errorMsg: String = '';
   errorCheck: Boolean = false;
   marksheetTemplate: any;
-  marksheetSelectMode:boolean = true;
-  selectedTemplate:string = '';
+  marksheetSelectMode: boolean = true;
+  selectedTemplate: string = '';
   examResultInfo: any;
-  teacherInfo:any;
   processedTheoryData: any[] = [];
   processedPracticalData: any[] = [];
   cls: any;
@@ -39,12 +38,14 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   loader: Boolean = true;
   isChecked!: Boolean;
   adminId: string = '';
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
+  teacherInfo: any;
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
       class: [''],
       stream: [''],
-      templateName: ['', Validators.required]
+      templateName: ['', Validators.required],
+      templateUrl: ['', Validators.required]
     });
   }
 
@@ -93,10 +94,11 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   }
 
 
-  addExamResultModel(template: any) {
+  addExamResultModel(template: any,templateUrl:any) {
     this.showModal = true;
     this.examResultForm.reset();
     this.examResultForm.get('templateName')?.setValue(template);
+    this.examResultForm.get('templateUrl')?.setValue(templateUrl);
     this.selectedTemplate=template;
   }
   openExamResultStructureModal(examResult: any) {

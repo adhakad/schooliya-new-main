@@ -49,13 +49,13 @@ export class TeacherStudentMarksheetComponent implements OnInit {
   existRollnumber: number[] = [];
   bulkResult: any[] = [];
   selectedExam: any = '';
-  teacherInfo: any;
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   examType: any[] = [];
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   loader: Boolean = false;
   adminId!: string;
+  teacherInfo: any;
   constructor(public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService) {
   }
 
@@ -84,9 +84,28 @@ export class TeacherStudentMarksheetComponent implements OnInit {
   }
 
   chooseClass(cls: any) {
-    this.stream = '';
     this.cls = cls;
-    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
+      }
+      this.getSingleClassResultStrucByStream(params);
+      this.getStudentExamResultByClass(params);
+    }
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
+      }
+      this.getSingleClassResultStrucByStream(params);
+      this.getStudentExamResultByClass(params);
     }
   }
   filterStream(stream: any) {
@@ -174,7 +193,7 @@ export class TeacherStudentMarksheetComponent implements OnInit {
           }, {});
           return examResults.map((result: any) => {
             const student = studentInfoMap[result.studentId];
-            if (marksheetTemplateStructure.templateName == 'T1' || marksheetTemplateStructure.templateName == 'T2' || marksheetTemplateStructure.templateName == 'T3' || marksheetTemplateStructure.templateName == 'T4') {
+            if (marksheetTemplateStructure.templateName == 'T3' || marksheetTemplateStructure.templateName == 'T4' || marksheetTemplateStructure.templateName == 'T5' || marksheetTemplateStructure.templateName == 'T6') {
               let overallMarksAndGrades = this.calculateAverageMarksAndGrades(result.resultDetail.term1.marks, result.resultDetail.term2.marks, result.resultDetail.term1.totalMaxMarks, result.resultDetail.term1.totalMaxMarks, marksheetTemplateStructure.examStructure.term1.gradeMinMarks, marksheetTemplateStructure.examStructure.term1.gradeMaxMarks);
               result.resultDetail.overallMarksAndGrades = overallMarksAndGrades;
             }
@@ -202,6 +221,7 @@ export class TeacherStudentMarksheetComponent implements OnInit {
         };
         let mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
         this.mappedResults = mappedResults.sort((a: any, b: any) => a.name.localeCompare(b.name));
+        console.log(mappedResults[0].resultDetail.term1)
         this.statusCode = 200;
       }
     }, err => {
@@ -280,41 +300,46 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     printHtml += '<style>';
     printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
-    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
-    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #707070; box-sizing: border-box;}';
+    printHtml += '.logo { height: 95px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-140px !important; margin-bottom: 0 !important; }';
 
-    printHtml += '.address{margin-top: -42px;}';
-    printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
-    printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
-    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
+    printHtml += '.address{margin-top: -45px;}';
+    printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: 0px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
-    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;padding-top:5px;}';
-    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
-    printHtml += '.custom-table tr{height: 30px;}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
+
+    
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
+
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+    printHtml += '.custom-table th{min-height: 48px;text-align: center;border:1px solid #707070;line-height:25px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 48px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #707070;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #252525 !important;font-size:12px;}'
-    printHtml += 'h4 {color: #252525 !important;}'
-    printHtml += '@media print {';
-    printHtml += '  body::before {';
-    printHtml += `    content: "${schoolName}, ${city}";`;
-    printHtml += '    position: fixed;';
-    printHtml += '    top: 40%;';
-    printHtml += '    left:10%;';
-    printHtml += '    font-size: 20px;';
-    printHtml += '    text-transform: uppercase;';
-    printHtml += '    font-weight: bold;';
-    printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    color: rgba(0, 0, 0, 0.08);';
-    printHtml += '    pointer-events: none;';
-    printHtml += '  }';
-    printHtml += '}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:19px;}'
+    printHtml += 'h4 {color: #0a0a0a !important;}'
+    // printHtml += '@media print {';
+    // printHtml += '  body::after {';
+    // printHtml += `    content: "${schoolName}, ${city}";`;
+    // printHtml += '    position: fixed;';
+    // printHtml += '    top: 50%;';
+    // printHtml += '    left: 25%;';
+    // printHtml += '    font-size: 30px;';
+    // printHtml += '    text-transform: uppercase;';
+    // printHtml += '    font-weight: bold;';
+    // printHtml += '    font-family: Arial, sans-serif;';
+    // printHtml += '    text-align: center;';
+    // printHtml += '    color: rgba(50, 48, 65, 0.2);';
+    // printHtml += '    transform:';
+    // printHtml += '    pointer-events: none;';
+    // printHtml += '  }';
+    // printHtml += '}';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
@@ -339,7 +364,6 @@ export class TeacherStudentMarksheetComponent implements OnInit {
       if (res) {
         this.errorCheck = false;
         this.templateStatusCode = 200;
-        console.log(this.templateStatusCode)
         this.marksheetTemplateStructureInfo = res;
         this.examType = Object.keys(res.marksheetTemplateStructure.examStructure);
       }

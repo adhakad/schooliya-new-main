@@ -46,16 +46,16 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
   periodicTestSubjects: any[] = [];
   noteBookSubjects: any[] = [];
   subjectEnrichmentSubjects: any[] = [];
+  projectSubjects: any[] = [];
+  halfYearlySubjects: any[] = [];
   coScholastic: any[] = [];
   theoryMaxMarks: any;
   practicalMaxMarks: any;
   periodicTestMaxMarks: any;
   noteBookMaxMarks: any;
   subjectEnrichmentMaxMarks: any;
-
-
-
-  teacherInfo:any;
+  projectMaxMarks: any;
+  halfYearlyMaxMarks: any;
   fileChoose: boolean = false;
   existRollnumber: number[] = [];
   bulkResult: any[] = [];
@@ -69,6 +69,7 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
   loader: Boolean = false;
   createdBy: String = '';
   adminId!: string;
+  teacherInfo:any;
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService, private studentService: StudentService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
@@ -84,6 +85,8 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         periodicTestMarks: this.fb.array([]),
         noteBookMarks: this.fb.array([]),
         subjectEnrichmentMarks: this.fb.array([]),
+        projectMarks: this.fb.array([]),
+        halfYearlyMarks: this.fb.array([]),
         coScholastic: this.fb.array([]),
       }),
     });
@@ -149,12 +152,16 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
     const controlFour = <FormArray>this.examResultForm.get('type.noteBookMarks');
     const controlFive = <FormArray>this.examResultForm.get('type.subjectEnrichmentMarks');
     const controlSix = <FormArray>this.examResultForm.get('type.coScholastic');
+    const controlSeven = <FormArray>this.examResultForm.get('type.projectMarks');
+    const controlEight = <FormArray>this.examResultForm.get('type.halfYearlyMarks');
     controlOne.clear();
     controlTwo.clear();
     controlThree.clear();
     controlFour.clear();
     controlFive.clear();
     controlSix.clear();
+    controlSeven.clear();
+    controlEight.clear();
   }
   falseAllValue() {
     this.falseFormValue();
@@ -162,6 +169,8 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
     this.periodicTestSubjects = [];
     this.noteBookSubjects = [];
     this.subjectEnrichmentSubjects = [];
+    this.projectSubjects = [];
+    this.halfYearlySubjects = [];
     this.theorySubjects = [];
     this.coScholastic = [];
   }
@@ -254,10 +263,8 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         };
 
         this.mappedResults = mapExamResultsToStudents(this.studentInfo);
-        
       }
     }, err => {
-      
     })
     setTimeout(() => {
       this.loader = false;
@@ -265,7 +272,7 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
   }
 
   selectExam(selectedExam: string) {
-    if (this.theorySubjects || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects) {
+    if (this.theorySubjects || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects || this.projectSubjects || this.halfYearlySubjects) {
       this.falseAllValue();
     }
     this.selectedExam = selectedExam;
@@ -275,6 +282,8 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
     this.periodicTestSubjects = [];
     this.noteBookSubjects = [];
     this.subjectEnrichmentSubjects = [];
+    this.projectSubjects = [];
+    this.halfYearlySubjects = [];
     this.coScholastic = [];
 
     if (examFilteredData.theoryMaxMarks) {
@@ -303,7 +312,7 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         return periodicTestSubject;
       })
       if (this.periodicTestSubjects) {
-        this.practicalMaxMarks = examFilteredData.practicalMaxMarks;
+        this.periodicTestMaxMarks = examFilteredData.periodicTestMaxMarks;
         this.patchPeriodicTest();
       }
     }
@@ -329,6 +338,26 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         this.patchSubjectEnrichment();
       }
     }
+    if (examFilteredData.projectMaxMarks) {
+      this.projectSubjects = subjects.map((item: any) => {
+        const projectSubject = Object.values(item)[0];
+        return projectSubject;
+      })
+      if (this.projectSubjects) {
+        this.projectMaxMarks = examFilteredData.projectMaxMarks;
+        this.patchProject();
+      }
+    }
+    if (examFilteredData.halfYearlyMaxMarks) {
+      this.halfYearlySubjects = subjects.map((item: any) => {
+        const halfYearlySubject = Object.values(item)[0];
+        return halfYearlySubject;
+      })
+      if (this.halfYearlySubjects) {
+        this.halfYearlyMaxMarks = examFilteredData.halfYearlyMaxMarks;
+        this.patchHalfYearly();
+      }
+    }
     if (examFilteredData.coScholastic) {
       this.coScholastic = examFilteredData.coScholastic;
       if (this.coScholastic) {
@@ -342,6 +371,8 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
       noteBookMaxMarks: this.noteBookSubjects.map((subject: any) => ({ [subject]: examFilteredData.noteBookMaxMarks })),
       periodicTestMaxMarks: this.periodicTestSubjects.map((subject: any) => ({ [subject]: examFilteredData.periodicTestMaxMarks })),
       subjectEnrichmentMaxMarks: this.subjectEnrichmentSubjects.map((subject: any) => ({ [subject]: examFilteredData.subjectEnrichmentMaxMarks })),
+      projectMaxMarks: this.projectSubjects.map((subject: any) => ({ [subject]: examFilteredData.projectMaxMarks })),
+      halfYearlyMaxMarks: this.halfYearlySubjects.map((subject: any) => ({ [subject]: examFilteredData.halfYearlyMaxMarks })),
       theoryMaxMarks: this.theorySubjects.map((subject: any) => ({ [subject]: examFilteredData.theoryMaxMarks })),
       theoryPassMarks: this.theorySubjects.map((subject: any) => ({ [subject]: examFilteredData.theoryPassMarks })),
       gradeMaxMarks: examFilteredData.gradeMaxMarks,
@@ -395,6 +426,18 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
       controlOne.push(this.patchSubjectEnrichmentValues(x))
     })
   }
+  patchProject() {
+    const controlOne = <FormArray>this.examResultForm.get('type.projectMarks');
+    this.projectSubjects.forEach((x: any) => {
+      controlOne.push(this.patchProjectValues(x))
+    })
+  }
+  patchHalfYearly() {
+    const controlOne = <FormArray>this.examResultForm.get('type.halfYearlyMarks');
+    this.halfYearlySubjects.forEach((x: any) => {
+      controlOne.push(this.patchHalfYearlyValues(x))
+    })
+  }
   patchCoScholastic() {
     const controlOne = <FormArray>this.examResultForm.get('type.coScholastic');
     this.coScholastic.forEach((x: any) => {
@@ -429,6 +472,16 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
       [subjectEnrichmentMarks]: ['', [Validators.required, Validators.max(this.subjectEnrichmentMaxMarks), Validators.pattern('^[0-9]+$')]],
     })
   }
+  patchProjectValues(projectMarks: any) {
+    return this.fb.group({
+      [projectMarks]: ['', [Validators.required, Validators.max(this.projectMaxMarks), Validators.pattern('^[0-9]+$')]],
+    })
+  }
+  patchHalfYearlyValues(halfYearlyMarks: any) {
+    return this.fb.group({
+      [halfYearlyMarks]: ['', [Validators.required, Validators.max(this.halfYearlyMaxMarks), Validators.pattern('^[0-9]+$')]],
+    })
+  }
   patchCoScholasticValues(coScholastic: any) {
     return this.fb.group({
       [coScholastic]: ['', [Validators.required]],
@@ -458,9 +511,11 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
     const totalPeriodicTestMaxMarks = this.resultStructureInfo.periodicTestMaxMarks ? calculateMaxMarks(this.resultStructureInfo.periodicTestMaxMarks) : 0;
     const totalNoteBookMaxMarks = this.resultStructureInfo.noteBookMaxMarks ? calculateMaxMarks(this.resultStructureInfo.noteBookMaxMarks) : 0;
     const totalSubjectEnrichmentMaxMarks = this.resultStructureInfo.subjectEnrichmentMaxMarks ? calculateMaxMarks(this.resultStructureInfo.subjectEnrichmentMaxMarks) : 0;
+    const totalProjectMaxMarks = this.resultStructureInfo.projectMaxMarks ? calculateMaxMarks(this.resultStructureInfo.projectMaxMarks) : 0;
+    const totalHalfYearlyMaxMarks = this.resultStructureInfo.halfYearlyMaxMarks ? calculateMaxMarks(this.resultStructureInfo.halfYearlyMaxMarks) : 0;
 
-    const totalMaxMarks = totalTheoryMaxMarks + totalPracticalMaxMarks + totalPeriodicTestMaxMarks + totalNoteBookMaxMarks + totalSubjectEnrichmentMaxMarks;
-    const calculateGrades = (subjectMarks: any[], isPractical: boolean, isPeriodicTest: boolean, isNoteBook: boolean, isSubjectEnrichment: boolean) => {
+    const totalMaxMarks = totalTheoryMaxMarks + totalPracticalMaxMarks + totalPeriodicTestMaxMarks + totalNoteBookMaxMarks + totalSubjectEnrichmentMaxMarks + totalProjectMaxMarks + totalHalfYearlyMaxMarks;
+    const calculateGrades = (subjectMarks: any[], isPractical: boolean, isPeriodicTest: boolean, isNoteBook: boolean, isSubjectEnrichment: boolean,isProject: boolean,isHalfYearly:boolean) => {
       return subjectMarks.map((subjectMark) => {
         const subjectName = Object.keys(subjectMark)[0];
 
@@ -474,10 +529,13 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         const noteBookMarks = noteBookMarkObject ? parseFloat(noteBookMarkObject[subjectName]) : 0;
         const subjectEnrichmentMarkObject = isSubjectEnrichment ? examResult.subjectEnrichmentMarks.find((subjectEnrichmentMark: any) => subjectEnrichmentMark && subjectEnrichmentMark.hasOwnProperty(subjectName)) : null;
         const subjectEnrichmentMarks = subjectEnrichmentMarkObject ? parseFloat(subjectEnrichmentMarkObject[subjectName]) : 0;
+        const projectMarkObject = isProject ? examResult.projectMarks.find((projectMark: any) => projectMark && projectMark.hasOwnProperty(subjectName)) : null;
+        const projectMarks = projectMarkObject ? parseFloat(projectMarkObject[subjectName]) : 0;
+        const halfYearlyMarkObject = isHalfYearly ? examResult.halfYearlyMarks.find((halfYearlyMark: any) => halfYearlyMark && halfYearlyMark.hasOwnProperty(subjectName)) : null;
+        const halfYearlyMarks = halfYearlyMarkObject ? parseFloat(halfYearlyMarkObject[subjectName]) : 0;
 
 
-
-        const totalMarks = theoryMarks + practicalMarks + periodicTestMarks + noteBookMarks + subjectEnrichmentMarks;
+        const totalMarks = theoryMarks + practicalMarks + periodicTestMarks + noteBookMarks + subjectEnrichmentMarks + projectMarks + halfYearlyMarks;
 
         const theoryMaxMarksObject = this.resultStructureInfo.theoryMaxMarks.find((theoryMaxMarks: any) => theoryMaxMarks && theoryMaxMarks.hasOwnProperty(subjectName));
         const theoryMaxMarks = theoryMaxMarksObject ? parseFloat(theoryMaxMarksObject[subjectName]) : 0;
@@ -493,10 +551,12 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
         const noteBookMaxMarks = noteBookMaxMarksObject ? parseFloat(noteBookMaxMarksObject[subjectName]) : 0;
         const subjectEnrichmentMaxMarksObject = isSubjectEnrichment && this.resultStructureInfo.subjectEnrichmentMaxMarks ? this.resultStructureInfo.subjectEnrichmentMaxMarks.find((subjectEnrichmentMaxMark: any) => subjectEnrichmentMaxMark && subjectEnrichmentMaxMark.hasOwnProperty(subjectName)) : null;
         const subjectEnrichmentMaxMarks = subjectEnrichmentMaxMarksObject ? parseFloat(subjectEnrichmentMaxMarksObject[subjectName]) : 0;
+        const projectMaxMarksObject = isProject && this.resultStructureInfo.projectMaxMarks ? this.resultStructureInfo.projectMaxMarks.find((projectMaxMark: any) => projectMaxMark && projectMaxMark.hasOwnProperty(subjectName)) : null;
+        const projectMaxMarks = projectMaxMarksObject ? parseFloat(projectMaxMarksObject[subjectName]) : 0;
+        const halfYearlyMaxMarksObject = isHalfYearly && this.resultStructureInfo.halfYearlyMaxMarks ? this.resultStructureInfo.halfYearlyMaxMarks.find((halfYearlyMaxMark: any) => halfYearlyMaxMark && halfYearlyMaxMark.hasOwnProperty(subjectName)) : null;
+        const halfYearlyMaxMarks = halfYearlyMaxMarksObject ? parseFloat(halfYearlyMaxMarksObject[subjectName]) : 0;
 
-
-
-        const totalMaxMarks = theoryMaxMarks + practicalMaxMarks + periodicTestMaxMarks + noteBookMaxMarks + subjectEnrichmentMaxMarks;
+        const totalMaxMarks = theoryMaxMarks + practicalMaxMarks + periodicTestMaxMarks + noteBookMaxMarks + subjectEnrichmentMaxMarks + projectMaxMarks + halfYearlyMaxMarks;
         const totalGettingMarksPercentile = ((totalMarks / totalMaxMarks) * 100).toFixed(0);
         const gradeMaxMarks = this.resultStructureInfo.gradeMaxMarks;
         const gradeMinMarks = this.resultStructureInfo.gradeMinMarks;
@@ -512,12 +572,14 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
           periodicTestMarks: periodicTestMarks,
           noteBookMarks: noteBookMarks,
           subjectEnrichmentMarks: subjectEnrichmentMarks,
+          projectMarks:projectMarks,
+          halfYearlyMarks:halfYearlyMarks,
           totalMarks: totalMarks,
           grade: grade,
         };
       });
     };
-    let marks = calculateGrades(examResult.theoryMarks, !!examResult.practicalMarks, !!examResult.periodicTestMarks, !!examResult.noteBookMarks, !!examResult.subjectEnrichmentMarks);
+    let marks = calculateGrades(examResult.theoryMarks, !!examResult.practicalMarks, !!examResult.periodicTestMarks, !!examResult.noteBookMarks, !!examResult.subjectEnrichmentMarks,!!examResult.projectMarks, !!examResult.halfYearlyMarks);
     const grandTotalMarks = marks.reduce((total: number, item: any) => total + item.totalMarks, 0);
     const percentile = parseFloat(((grandTotalMarks / totalMaxMarks) * 100).toFixed(2));
     const basePercentile = parseFloat(percentile.toFixed(0));
