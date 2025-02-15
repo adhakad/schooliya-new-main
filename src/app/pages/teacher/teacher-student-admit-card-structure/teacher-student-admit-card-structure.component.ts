@@ -32,11 +32,10 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
   teacherInfo: any;
   stream: string = '';
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
-
   examTime: any[] = ["8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM"];
   loader: Boolean = true;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService,private classService: ClassService, private classSubjectService: ClassSubjectService, private admitCardStructureService: AdmitCardStructureService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private admitCardStructureService: AdmitCardStructureService) {
     this.admitcardForm = this.fb.group({
       adminId: [''],
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
@@ -94,6 +93,8 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
   chooseStream(stream: any) {
     this.stream = '';
     this.stream = stream;
+    console.log(stream)
+    console.log(stream)
     if (this.cls && this.stream) {
       let params = {
         cls: this.cls,
@@ -103,7 +104,9 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
       this.getSingleClassSubjectByStream(params);
     }
   }
-
+  preventManualInput(event: KeyboardEvent) {
+    event.preventDefault();  // यह मैन्युअल एंट्री को रोकेगा
+  }
   falseFormValue() {
     const controlOne = <FormArray>this.admitcardForm.get('type.examDate');
     const controlTwo = <FormArray>this.admitcardForm.get('type.startTime');
@@ -350,6 +353,7 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
         (response: any) => {
         },
         error => {
+          console.log(error)
         }
       );
   }

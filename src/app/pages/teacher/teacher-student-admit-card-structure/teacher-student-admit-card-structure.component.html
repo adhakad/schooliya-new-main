@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Admit Card | Structure</span>
+                                            <span>Admit Card > Structure</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
@@ -32,7 +32,7 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Admit Card | Structure</span>
+                                            <span>Admit Card > Structure</span>
                                         </button>
                                     </div>
                                     <div class="col-5 offset-4"><button class="submit-button"
@@ -50,7 +50,7 @@
                                 <thead class="bg-light">
                                     <tr class="text-muted">
                                         <th>S.No.</th>
-                                        <th>Exam</th>
+                                        <th>Exam Name</th>
                                         <th>Class</th>
                                         <th>Stream</th>
                                         <th>Admit Card Structure</th>
@@ -84,9 +84,8 @@
 
                                 </tbody>
                             </table>
-                            <div *ngIf="examAdmitCard" style="text-align: center;margin-top: 200px;">
-                                <p>Note : Delete this admit card structure to generate the new admit card for another
-                                    exam.</p>
+                            <div *ngIf="examAdmitCard.length>0" style="text-align: center;margin-top: 200px;">
+                                <p>Note : Remove the existing admit card to generate a new one.</p>
                             </div>
 
                             <div class="modal fade show" [class.show]="showModal">
@@ -106,9 +105,8 @@
 
                                     <div class="modal-content" *ngIf="!successMsg">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete'
-                                                :'Create'}} Admit Card Structure {{cls | classSuffix}} <span
-                                                    *ngIf="cls==12 || cls==11">{{stream}}</span></h5>
+                                            <h5 class="modal-title">{{updateMode?'UPDATE': deleteMode ? 'DELETE'
+                                                :'CREATE'}} ADMIT CARD STRUCTURE</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
 
@@ -125,9 +123,9 @@
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Class</mat-label>
                                                                 <mat-select matInput formControlName="class">
-                                                                    <div *ngFor="let classInfo of classInfo">
-                                                                        <mat-option value="{{classInfo}}"
-                                                                            (click)="chooseClass(classInfo)">{{classInfo
+                                                                    <div *ngFor="let class of classInfo">
+                                                                        <mat-option value="{{class}}"
+                                                                            (click)="chooseClass(class)">{{class
                                                                             |
                                                                             classSuffix}}</mat-option>
                                                                     </div>
@@ -138,7 +136,8 @@
                                                                 </mat-error>
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('class')?.hasError('pattern') && admitcardForm.get('class')?.touched">
-                                                                    Please enter a valid class (numeric characters only)
+                                                                    Please enter a valid class (numeric
+                                                                    characters only)
                                                                 </mat-error>
                                                             </mat-form-field>
                                                         </div>
@@ -166,18 +165,19 @@
                                                                 </mat-error>
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('stream')?.hasError('pattern') && admitcardForm.get('stream')?.touched">
-                                                                    Please enter a valid Stream (only letters are
+                                                                    Please enter a valid Stream (only letters
+                                                                    are
                                                                     allowed)
                                                                 </mat-error>
                                                             </mat-form-field>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
-                                                                <mat-label>Exam Type</mat-label>
+                                                                <mat-label>Exam Name</mat-label>
                                                                 <input type="text" matInput formControlName="examType">
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('examType')?.hasError('required') && admitcardForm.get('examType')?.touched">
-                                                                    Address is required
+                                                                    Exam name is required
                                                                 </mat-error>
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('examType')?.hasError('minlength') && admitcardForm.get('examType')?.touched">
@@ -185,7 +185,8 @@
                                                                 </mat-error>
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('examType')?.hasError('maxlength') && admitcardForm.get('examType')?.touched">
-                                                                    Maximum length exceeded (maximum 20 characters
+                                                                    Maximum length exceeded (maximum 20
+                                                                    characters
                                                                     allowed)
                                                                 </mat-error>
                                                             </mat-form-field>
@@ -202,7 +203,8 @@
                                                                         <div
                                                                             *ngFor="let subjects of classSubject; let i = index">
                                                                             <a mat-raised-button class="pt-2 pb-2 mb-4"
-                                                                                style="background-color: transparent;box-shadow: none;">{{subjects.subject}}</a>
+                                                                                style="background-color: transparent;box-shadow: none;">{{subjects.subject
+                                                                                | titlecase}}</a>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-3">
@@ -217,7 +219,8 @@
                                                                                             <mat-label>Exam
                                                                                                 Date</mat-label>
                                                                                             <input type="date" matInput
-                                                                                                [formControlName]="subjects.subject">
+                                                                                                [formControlName]="subjects.subject"
+                                                                                                (keydown)="preventManualInput($event)">
                                                                                         </mat-form-field>
                                                                                     </div>
                                                                                 </div>
@@ -240,7 +243,9 @@
                                                                                                 <div
                                                                                                     *ngFor="let subject of examTime">
                                                                                                     <mat-option
-                                                                                                        value="{{subject}}">{{subject}}</mat-option>
+                                                                                                        value="{{subject}}">{{subject
+                                                                                                        |
+                                                                                                        titlecase}}</mat-option>
                                                                                                 </div>
                                                                                             </mat-select>
                                                                                         </mat-form-field>
@@ -280,9 +285,12 @@
                                                     </div>
                                                 </div>
                                                 <ng-container *ngIf="classSubject.length>0">
-                                                    <h3 style="font-size: 16px;letter-spacing: normal;">Note : As
+                                                    <h3
+                                                        style="font-size: 16px;letter-spacing: normal;margin-left: 20px;">
+                                                        Note : As
                                                         soon
-                                                        as the admit card structure for the {{cls | classSuffix}}
+                                                        as the admit card structure for the {{cls |
+                                                        classSuffix}}
                                                         class <span *ngIf="cls==12 || cls==11">{{stream}}</span>
                                                         is
                                                         created, the admit cards for all the students will be
@@ -296,12 +304,15 @@
                                             <div *ngIf="deleteMode">
                                                 <div class="modal-body">
                                                     <ng-container>
-                                                        <h3 style="font-size: 16px;letter-spacing: normal;">Note :
+                                                        <h3
+                                                            style="font-size: 16px;letter-spacing: normal;margin-left: 20px;">
+                                                            Note :
                                                             As
                                                             soon as the admit card structure for the {{cls |
                                                             classSuffix}} class <span
                                                                 *ngIf="cls==12 || cls==11">{{stream}}</span> is
-                                                            deleted, the admit cards for all the students will be
+                                                            deleted, the admit cards for all the students will
+                                                            be
                                                             automatically deleted.</h3>
                                                     </ng-container>
                                                 </div>
@@ -318,7 +329,7 @@
                                 <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Class {{cls | classSuffix}}</h5>
+                                            <h5 class="modal-title">ADMIT CARD STRUCTURE</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <div class="modal-body">
@@ -327,7 +338,8 @@
                                                     <div class="table-container">
                                                         <ng-container>
                                                             <h3>{{admitCardInfo?.examType | titlecase}} Admit
-                                                                Card
+                                                                Card Class - {{admitCardInfo?.class |
+                                                                classSuffix}}
                                                                 <span *ngIf="cls==11 || cls==12">-
                                                                     {{admitCardInfo?.stream}}</span>
                                                             </h3>
@@ -374,3 +386,9 @@
             </div>
         </div>
     </div>
+    <!-- <div class="spinner-container" *ngIf="loader">
+        <div class="spinner-overlay" *ngIf="loader">
+            <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
+                strokeWidth="3"></mat-progress-spinner>
+        </div>
+    </div> -->
