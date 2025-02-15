@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { MatRadioChange } from '@angular/material/radio';
 import { FeesStructureService } from 'src/app/services/fees-structure.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { SchoolService } from 'src/app/services/school.service';
+import { AcademicSessionService } from 'src/app/services/academic-session.service';
 import { ClassService } from 'src/app/services/class.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -14,6 +16,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
   styleUrls: ['./teacher-student-fees-structure.component.css']
 })
 export class TeacherStudentFeesStructureComponent implements OnInit {
+
   disabled = true;
   cls: number = 0;
   feesForm: FormGroup;
@@ -37,16 +40,21 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
   feePerticulars: any[] = ['Registration', 'Tution', 'Books', 'Uniform', 'Examination', 'Sports', 'Library', 'Transport'];
   classInfo: any[] = [];
   stream: string = '';
+  notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
-
-  teacherInfo: any;
   schoolInfo: any;
+  loader: Boolean = true;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
+  academicSession: string = '';
+  allSession: any = [];
+  selectedSession: string = '';
+  teacherInfo: any;
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private academicSessionService: AcademicSessionService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
-      class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      stream: ['', Validators.required],
+      session: [''],
+      class: [''],
+      stream: [''],
       admissionFees: ['', Validators.required],
       type: this.fb.group({
         feesType: this.fb.array([], [Validators.required]),
@@ -57,11 +65,23 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
+    this.getAcademicSession();
     if (this.teacherInfo) {
       this.getTeacherById(this.teacherInfo)
     }
-    this.getFeesStructureByClass();
-    this.getSchool();
+  }
+  getAcademicSession() {
+    this.academicSessionService.getAcademicSession().subscribe((res: any) => {
+      if (res) {
+        this.selectedSession = res.academicSession;
+        this.allSession = res.allSession;
+        this.getFeesStructureBySession(this.adminId, this.selectedSession);
+      }
+    })
+  }
+  onChange(event: MatRadioChange) {
+    this.selectedSession = event.value;
+    this.getFeesStructureBySession(this.adminId, event.value);
   }
   getTeacherById(teacherInfo: any) {
     let params = {
@@ -75,50 +95,43 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
 
     })
   }
-  getSchool() {
-    this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
-      if (res) {
-        this.schoolInfo = res;
-      }
-    })
-  }
-  getClass() {
-    this.classService.getClassList().subscribe((res: any) => {
-      if (res) {
-        this.classInfo = res;
-      }
-    })
-  }
-
-
-  chooseClass(cls: any) {
-    this.errorCheck = false;
+  filterSession(selectedSession: any) {
+    this.errorCheck = true;
     this.errorMsg = '';
-    this.cls = 0;
+    this.selectedSession = selectedSession;
+    this.getFeesStructureBySession(this.adminId, selectedSession);
+  }
+  chooseClass(cls: any) {
+    this.errorCheck = true;
+    this.errorMsg = '';
     this.cls = cls;
-    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      this.feesForm.get('class')?.setValue(cls);
       this.feesForm.get('stream')?.setValue("N/A");
-      this.stream = '';
-      this.stream = 'stream';
+    }
+    if (cls == 11 || cls == 12) {
+      this.feesForm.get('class')?.setValue(cls);
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
     }
   }
-  chooseStream(stream: any) {
-    this.stream = '';
+  filterStream(stream: any) {
+    this.errorCheck = true;
+    this.errorMsg = '';
     this.stream = stream;
+    if (stream && this.cls) {
+      this.feesForm.get('stream')?.setValue(stream);
+    }
   }
 
-
-
-
-
-
-
-
-  getFeesStructureByClass() {
+  getFeesStructureBySession(adminId: string, session: string) {
     let params = {
-      adminId: this.adminId,
+      adminId: adminId,
+      session: session
     }
-    this.feesStructureService.feesStructureByClass(params).subscribe((res: any) => {
+    this.feesStructureService.feesStructureBySession(params).subscribe((res: any) => {
       if (res) {
         this.errorMsg = '';
         this.clsFeesStructure = res;
@@ -138,6 +151,21 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
     this.showFeesStructureModal = true;
   }
   selectFeesStructure() {
+    if (this.selectedSession == '') {
+      this.errorCheck = true;
+      this.errorMsg = 'Session is required';
+      return;
+    }
+    if (this.cls == 0) {
+      this.errorCheck = true;
+      this.errorMsg = 'Class is required';
+      return;
+    }
+    if (this.stream == '') {
+      this.errorCheck = true;
+      this.errorMsg = 'Stream is required';
+      return;
+    }
     this.feesTypeMode = false;
     this.feesMode = true;
     this.patch();
@@ -170,11 +198,10 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
   }
 
   successDone() {
+    this.getFeesStructureBySession(this.adminId, this.selectedSession);
     setTimeout(() => {
       this.closeModal();
       this.successMsg = '';
-      this.getFeesStructureByClass();
-  
     }, 1000)
   }
 
@@ -203,9 +230,9 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
 
   feesStructureAddUpdate() {
     this.feesForm.value.adminId = this.adminId;
+    this.feesForm.value.session = this.selectedSession;
     this.feesForm.value.totalFees = this.totalFees;
     let feesTypeObj = this.feesForm.value.type.feesType;
-
     let containsFeesTypeNull = feesTypeObj.some((item: any) => Object.values(item).includes(null));
     if (containsFeesTypeNull) {
       this.errorCheck = true;
@@ -228,10 +255,13 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
     this.feesStructureService.deleteFeesStructure(id).subscribe((res: any) => {
       if (res) {
         this.successDone();
-        this.getFeesStructureByClass();
+        this.getFeesStructureBySession(this.adminId, this.selectedSession);
         this.successMsg = res;
         this.deleteById = '';
       }
+    }, err => {
+      this.errorCheck = true;
+      this.errorMsg = err.error;
     })
   }
 
