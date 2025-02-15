@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
 import { IssuedTransferCertificateService } from 'src/app/services/issued-transfer-certificate.service';
+
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 
@@ -24,6 +25,8 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
   studentClassPromoteForm: FormGroup;
   showClassPromoteModal: boolean = false;
+  studentClassFailForm: FormGroup;
+  showClassFailModal: boolean = false;
   showStudentInfoViewModal: boolean = false;
   showStudentTCModal: boolean = false;
   updateMode: boolean = false;
@@ -42,7 +45,6 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
   selectedValue: number = 0;
-
   sessions: any;
   categorys: any;
   religions: any;
@@ -50,7 +52,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   occupations: any;
   mediums: any;
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   cls: number = 0;
   className: any;
@@ -58,7 +60,9 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   schoolInfo: any;
   bulkStudentRecord: any;
   fileChoose: boolean = false;
+  loader: Boolean = true;
   promotedClass: any;
+  failClass: any;
   singleStudentInfo: any
   singleStudentTCInfo: any
   classSubject: any[] = [];
@@ -66,9 +70,9 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   isDate: string = '';
   readyTC: Boolean = false;
   baseURL!: string;
+  adminId!: String
   teacherInfo:any;
   createdBy: String = '';
-  adminId!: String
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentClassPromoteForm = this.fb.group({
       _id: ['', Validators.required],
@@ -78,7 +82,19 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
       class: [''],
       stream: [''],
       rollNumber: ['', Validators.required],
-      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      createdBy: ['']
+    })
+
+    this.studentClassFailForm = this.fb.group({
+      _id: ['', Validators.required],
+      session: ['', Validators.required],
+      admissionNo: ['', Validators.required],
+      adminId: [''],
+      class: [''],
+      stream: ['',Validators.required],
+      rollNumber: ['', Validators.required],
+      feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: ['']
     })
 
@@ -121,8 +137,18 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
     this.page = 0;
     this.className = cls;
     this.cls = cls;
-    this.stream = '';
-    this.studentInfo = [];
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
   }
   filterStream(stream: any) {
     this.stream = stream;
@@ -144,6 +170,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   }
   closeModal() {
     this.showClassPromoteModal = false;
+    this.showClassFailModal = false;
     this.showStudentInfoViewModal = false;
     this.showStudentTCModal = false;
     this.updateMode = false;
@@ -153,19 +180,46 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
     this.successMsg = '';
     this.classSubject = [];
     this.promotedClass;
+    this.failClass;
     this.singleStudentInfo;
     this.singleStudentTCInfo;
     this.studentClassPromoteForm.reset();
   }
-  
-  
+
+
   addStudentClassPromoteModel(student: any) {
     this.showClassPromoteModal = true;
     this.singleStudentInfo = student;
+    let sessionYears = student.session.split("-"); 
+    let startYear = parseInt(sessionYears[0]);
+    let endYear = parseInt(sessionYears[1]);
+    let newStartYear = startYear + 1;
+    let newEndYear = endYear + 1;
+    let newSession = newStartYear + "-" + newEndYear;
     this.studentClassPromoteForm.patchValue(student);
+    this.studentClassPromoteForm.get('session')?.setValue(newSession);
     this.studentClassPromoteForm.get('stream')?.setValue(this.stream);
-    this.studentClassPromoteForm.get('discountAmountInFees')?.setValue(null);
+    this.studentClassPromoteForm.get('feesConcession')?.setValue(null);
   }
+
+
+  addStudentClassFailModel(student: any) {
+    this.showClassFailModal = true;
+    this.singleStudentInfo = student;
+    let sessionYears = student.session.split("-"); 
+    let startYear = parseInt(sessionYears[0]);
+    let endYear = parseInt(sessionYears[1]);
+    let newStartYear = startYear + 1;
+    let newEndYear = endYear + 1;
+    let newSession = newStartYear + "-" + newEndYear;
+    this.studentClassFailForm.patchValue(student);
+    this.studentClassFailForm.get('session')?.setValue(newSession);
+    this.studentClassFailForm.get('stream')?.setValue(student.stream);
+    this.studentClassFailForm.get('feesConcession')?.setValue(null);
+  }
+
+
+
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
@@ -193,6 +247,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
     this.deleteMode = true;
     this.deleteById = id;
   }
+
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
@@ -272,22 +327,11 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
     });
   }
 
-  
-
-  
-  allOptions() {
-    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
-    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
-    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
-  }
-
   studentClassPromote() {
     if (this.studentClassPromoteForm.valid) {
       this.studentClassPromoteForm.value.adminId = this.adminId;
-      this.studentClassPromoteForm.value.class = this.createdBy
+      this.studentClassPromoteForm.value.class = parseInt(this.className);
+      this.studentClassPromoteForm.value.createdBy = this.createdBy;
       this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
         if (res) {
           setTimeout(() => {
@@ -307,29 +351,39 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
       })
     }
   }
-  
 
 
-  // studentClassPromote() {
-  //   if (this.studentClassPromoteForm.valid) {
-  //     this.studentClassPromoteForm.value.class = parseInt(this.className);
-  //     this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
-  //       if (res) {
-  //         setTimeout(() => {
-  //           this.successDone();
-  //         }, 2000)
-  //         this.promotedClass;
-  //         this.promotedClass = res.className;
-  //         this.successMsg = res.successMsg;
-  //       }
-  //     }, err => {
-  //       this.errorCheck = true;
-  //       this.promotedClass;
-  //       if (err.error.className) {
-  //         this.promotedClass = parseInt(err.error.className);
-  //       }
-  //       this.errorMsg = err.error.errorMsg;
-  //     })
-  //   }
-  // }
+  studentClassFail() {
+    if (this.studentClassFailForm.valid) {
+      this.studentClassFailForm.value.adminId = this.adminId;
+      this.studentClassFailForm.value.class = parseInt(this.className);
+      this.studentClassFailForm.value.createdBy = this.createdBy;
+      this.studentService.studentClassFail(this.studentClassFailForm.value).subscribe((res: any) => {
+        if (res) {
+          setTimeout(() => {
+            this.successDone();
+          }, 1000)
+          this.failClass;
+          this.failClass = res.className;
+          this.successMsg = res.successMsg;
+        }
+      }, err => {
+        this.errorCheck = true;
+        this.failClass;
+        if (err.error.className) {
+          this.failClass = parseInt(err.error.className);
+        }
+        this.errorMsg = err.error.errorMsg;
+      })
+    }
+  }
+
+  allOptions() {
+    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
+    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
+    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
+    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
+    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
+  }
 }
