@@ -13,40 +13,46 @@
                                 <div class="row">
                                     <div class="col-3">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Payment List</span>
+                                            <span>Fees</span>
                                         </button>
                                     </div>
                                     <div class="col-9" style="text-align: right;">
                                         <div class="row">
-                                            <div class="col-2 offset-7">
-                                                <mat-form-field class="custom-select">
-                                                    <mat-label *ngIf="!cls">Class</mat-label>
-                                                    <mat-select type="number" matInput>
-                                                        <div *ngFor="let classInfo of classInfo">
-                                                            <mat-option value="{{classInfo}}"
-                                                                (click)="chooseClass(classInfo)">{{classInfo
-                                                                | classSuffix}}</mat-option>
-                                                        </div>
-                                                    </mat-select>
-                                                </mat-form-field>
+                                            <div class="col-7">
                                             </div>
+                                            <ng-container *ngIf="cls!=11 && cls!=12">
+                                                <div class="col-2">
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="cls==11 || cls==12">
+                                                <div class="col-2">
+                                                    <mat-form-field class="custom-select">
+                                                        <mat-label
+                                                            *ngIf="stream =='' || stream=='stream'">Stream</mat-label>
+                                                        <mat-select [(ngModel)]="stream"
+                                                            (selectionChange)="filterStream($event.value)" type="text"
+                                                            matInput>
+                                                            <mat-option *ngFor="let subject of streamMainSubject"
+                                                                [value]="subject">{{subject}}</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+
+                                                </div>
+                                            </ng-container>
                                             <div class="col-2">
-                                                <mat-form-field class="custom-select">
-                                                    <mat-label *ngIf="!stream">Stream</mat-label>
-                                                    <mat-select type="text" matInput>
-                                                        <ng-container *ngIf="cls==12 || cls==11">
-                                                            <div *ngFor="let subject of streamMainSubject">
-                                                                <mat-option (click)="filterStream(subject)"
-                                                                    value="{{subject}}">{{subject}}</mat-option>
-                                                            </div>
-                                                        </ng-container>
-                                                        <ng-container
-                                                            *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                            <mat-option value="{{notApplicable}}"
-                                                                (click)="filterStream(notApplicable)">N/A</mat-option>
-                                                        </ng-container>
-                                                    </mat-select>
-                                                </mat-form-field>
+                                                <ng-container>
+                                                    <mat-form-field class="custom-select">
+                                                        <mat-label *ngIf="cls==0">Class</mat-label>
+                                                        <mat-select [(ngModel)]="cls"
+                                                            (selectionChange)="chooseClass($event.value)" type="number"
+                                                            matInput>
+                                                            <mat-option *ngFor="let cls of classInfo"
+                                                                [value]="cls">{{cls | classSuffix}}</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+
+                                                </ng-container>
+
                                             </div>
                                             <div class="col-1">
                                                 <button class="btn setting-button" [matMenuTriggerFor]="settings">
@@ -64,7 +70,7 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <button mat-button class="menu-button">
-                                            <span>Fee Payment List</span>
+                                            <span>Fees</span>
                                         </button>
                                     </div>
                                     <div class="col-3">
@@ -72,37 +78,29 @@
                                             <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
                                         </button>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <mat-form-field class="custom-select">
-                                            <mat-label *ngIf="!cls">Class</mat-label>
-                                            <mat-select type="number" matInput>
-                                                <div *ngFor="let classInfo of classInfo">
-                                                    <mat-option value="{{classInfo}}"
-                                                        (click)="chooseClass(classInfo)">{{classInfo
-                                                        |
-                                                        classSuffix}}</mat-option>
-                                                </div>
+                                            <mat-label *ngIf="cls==0">Class</mat-label>
+                                            <mat-select [(ngModel)]="cls" (selectionChange)="chooseClass($event.value)"
+                                                type="number" matInput>
+                                                <mat-option *ngFor="let cls of classInfo" [value]="cls">{{cls |
+                                                    classSuffix}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-6">
-                                        <mat-form-field class="custom-select">
-                                            <mat-label *ngIf="!stream">Stream</mat-label>
-                                            <mat-select type="text" matInput>
-                                                <ng-container *ngIf="cls==12 || cls==11">
-                                                    <div *ngFor="let subject of streamMainSubject">
-                                                        <mat-option (click)="filterStream(subject)"
-                                                            value="{{subject}}">{{subject}}</mat-option>
-                                                    </div>
-                                                </ng-container>
-                                                <ng-container
-                                                    *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                                    <mat-option value="{{notApplicable}}"
-                                                        (click)="filterStream(notApplicable)">N/A</mat-option>
-                                                </ng-container>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
+                                    <ng-container *ngIf="cls==11 || cls==12">
+                                        <div class="col-12">
+                                            <mat-form-field class="custom-select">
+                                                <mat-label *ngIf="stream =='' || stream=='stream'">Stream</mat-label>
+                                                <mat-select [(ngModel)]="stream"
+                                                    (selectionChange)="filterStream($event.value)" type="text" matInput>
+                                                    <mat-option *ngFor="let subject of streamMainSubject"
+                                                        [value]="subject">{{subject}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+
+                                        </div>
+                                    </ng-container>
                                 </div>
                             </div>
                         </div>
@@ -117,147 +115,117 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                            <table class="table table-hover align-middle bg-white">
-                                <thead class="bg-light">
-                                    <tr class="text-muted">
-                                        <th>No.</th>
-                                        <th>Fee Payment</th>
-                                        <th>Student Name</th>
-                                        <th>Admission No.</th>
-                                        <th>Paid Fee</th>
-                                        <th>Due Fee</th>
-                                        <th>Total Fee</th>
-                                        <th>Fee Statement</th>
-                                        <th>Session</th>
-                                    </tr>
-                                </thead>
-                                <tbody *ngFor="let student of studentList,let i=index">
-                                    <tr>
-                                        <td>
-                                            <p class="mb-0">{{i+1}}</p>
-                                        </td>
-                                        <td>
-                                            <button *ngIf="student.paidFees !== student.totalFees" class="submit-button"
-                                                mat-raised-button (click)="studentFeesPay(student)">Pay
-                                                Offline</button>
-                                            <button *ngIf="student.paidFees === student.totalFees" class="submit-button"
-                                                mat-raised-button [disabled]="student.paidFees === student.totalFees"
-                                                style="background-color: transparent;color:#252525;">Fee
-                                                Paid</button>
+                            <div class="table-wrapper">
+                                <table class="table table-hover align-middle bg-white">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>No.</th>
+                                            <th>Fee Collect</th>
+                                            <th>Student Name</th>
+                                            <th>Admission No.</th>
+                                            <th>Fee Concession</th>
+                                            <th>Paid Fee</th>
+                                            <th>Due Fee</th>
+                                            <th>Total Fee</th>
+                                            <th>Fee Statement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let student of studentList,let i=index">
+                                        <tr>
+                                            <td>
+                                                <p class="mb-0">{{i+1}}</p>
+                                            </td>
+                                            <td>
+                                                <button *ngIf="student.AllPaidFees !== student.AllTotalFees"
+                                                    class="submit-button" mat-raised-button
+                                                    (click)="studentFeesPay(student)">Collect</button>
+                                                <button *ngIf="student.AllPaidFees == student.AllTotalFees"
+                                                    class="submit-button" mat-raised-button
+                                                    [disabled]="student.AllPaidFees == student.AllTotalFees"
+                                                    style="background-color: transparent;color:#252525;">Fee
+                                                    Paid</button>
 
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{student.name | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{student.admissionNo}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0"> &#8377; {{student.paidFees}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0"> &#8377; {{student.dueFees}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0"> &#8377; {{student.totalFees}}</p>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon routerLink="/teacher/fees/statement/{{student.studentId}}"
-                                                style="cursor: pointer;">launch</mat-icon>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{student.session}}</p>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{student.name | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{student.admissionNo}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0"> &#8377; {{student.allFeesConcession}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0"> &#8377; {{student.AllPaidFees}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0"> &#8377; {{student.AllDueFees}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0"> &#8377; {{student.AllTotalFees}}</p>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon routerLink="/teacher/fees/statement/{{student._id}}"
+                                                    style="cursor: pointer;">launch</mat-icon>
+                                            </td>
+                                        </tr>
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="modal fade show" [class.show]="showModal">
                                 <div class="modal-dialog modal-dialog-scrollable" role="document"
                                     *ngIf="!deleteMode && singleStudent && !receiptMode">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Student Fee Payment</h5>
+                                            <h5 class="modal-title">FEE PAYMENT</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <form [formGroup]="feesForm" (ngSubmit)="feesAddUpdate()">
-                                            <div class="modal-body">
+                                            <div class="modal-body" style="overflow-x: hidden;">
                                                 <div *ngIf="errorCheck">
                                                     <p class="error-message">{{errorMsg}}</p>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="custom-container">
-                                                        <div class="table-container">
+                                                <div class="row" style="padding-left: 30px !important;">
 
-                                                            <table class="info-table text-center">
-                                                                <tr>
-                                                                    <td class="text-bold">Admission No. :</td>
-                                                                    <td>{{singleStudent.admissionNo}}</td>
-                                                                    <td class="text-bold">Class :</td>
-                                                                    <td>{{singleStudent.class | classSuffix}}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="text-bold">Student Name :</td>
-                                                                    <td>{{singleStudent.name |
-                                                                        titlecase}}</td>
-                                                                    <td class="text-bold">Father Name :</td>
-                                                                    <td>{{singleStudent.fatherName}}</td>
-                                                                </tr>
-                                                            </table>
-                                                            <table class="custom-table">
-                                                                <tr>
-                                                                    <td class="text-bold">Paid Fee</td>
-                                                                    <td>&#8377; {{singleStudent.paidFees}}</td>
-                                                                    <td class="text-bold">Due Fee</td>
-                                                                    <td>&#8377; {{singleStudent.dueFees}}</td>
-                                                                    <td class="text-bold">Total Fee</td>
-                                                                    <td>&#8377; {{singleStudent.totalFees}}</td>
-                                                                </tr>
-                                                            </table>
-                                                            <table class="custom-table">
-                                                                <tr
-                                                                    *ngFor="let installmentGroup of singleStudent.installment | chunk: 3; let i = index">
-                                                                    <ng-container>
-                                                                        <ng-container
-                                                                            *ngFor="let installmentObject of installmentGroup; let j = index">
-                                                                            <ng-container
-                                                                                *ngFor="let entry of installmentObject | keyvalue">
-                                                                                <td class="text-bold">
-                                                                                    {{ entry.key }}
-                                                                                </td>
-                                                                                <td style="font-weight: 400">
-                                                                                    &#8377; {{ entry.value }}
-                                                                                </td>
-                                                                            </ng-container>
-                                                                        </ng-container>
-                                                                    </ng-container>
-                                                                </tr>
-                                                            </table>
-                                                            <div class="row">
-                                                                <div class="col-6 col-lg-6">
-                                                                    <mat-form-field appearance="outline">
-                                                                        <mat-label>Enter Fee Amount In
-                                                                            &#8377;</mat-label>
-                                                                        <input matInput type="number"
-                                                                            formControlName="feesAmount">
-                                                                    </mat-form-field>
-                                                                </div>
-                                                                <div class="col-4 offset-2 col-lg-4">
-                                                                    <button class="submit-button" mat-raised-button
-                                                                        style="height: 48px !important;padding-top:5px;padding-bottom:10px !important;"
-                                                                        type="button" (click)="feesAddUpdate()">Pay
-                                                                        Now
-                                                                    </button>
-                                                                </div>
-                                                            </div>
+                                                    <tr class="mt-2">
+                                                        <td class="text-bold">Admission No. </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.admissionNo}}</td>
+                                                    </tr>
+                                                    <tr class="mt-2">
+                                                        <td class="text-bold">Class </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.class |
+                                                            classSuffix}}</td>
+                                                    </tr>
+                                                    <tr class="mt-2">
+                                                        <td class="text-bold">Student Name </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.name |
+                                                            titlecase}}</td>
+                                                    </tr>
+                                                    <tr class="mt-2 mb-5">
+                                                        <td class="text-bold">Father Name </td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.fatherName}}</td>
+                                                    </tr>
+
+                                                    <div class="row">
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Enter Fee Amount In
+                                                                    &#8377;</mat-label>
+                                                                <input type="number" formControlName="feesAmount"
+                                                                    matInput class="no-arrow" min="1">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 offset-0 offset-lg-0 col-lg-4 mb-3">
+                                                            <button class="submit-button" mat-raised-button
+                                                                style="height: 50px !important;padding-top:5px;padding-bottom:10px !important;width: 100% !important;"
+                                                                type="button" (click)="feesAddUpdate()">Collect
+                                                                Now
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="modal-footer">
-                                                    
-
-                                                </div> -->
                                         </form>
                                     </div>
                                 </div>
@@ -267,7 +235,7 @@
                                     *ngIf="receiptMode && receiptInstallment && singleStudent && clsFeesStructure">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Student Fee Payment Receipt</h5>
+                                            <h5 class="modal-title">FEE PAYMENT RECEIPT</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>
                                         <div class="modal-body print-model-body">
@@ -280,14 +248,14 @@
                                                                 <div class="row mt-5">
                                                                     <div class="col-2">
                                                                         <img class="logo"
-                                                                            src="{{baseUrl}}/public/school-logo/{{schoolInfo.schoolLogo}}"
-                                                                            alt="">
+                                                                            src="{{schoolInfo?.schoolLogo}}"
+                                                                            alt="schoolo logo">
                                                                     </div>
                                                                     <div class="col-10" style="text-align: center;">
                                                                         <div class="school-name">
                                                                             <h3 class="text-bold">
-                                                                                {{schoolInfo?.schoolName |
-                                                                                uppercase}}</h3>
+                                                                                {{schoolInfo?.schoolName | uppercase}}
+                                                                            </h3>
                                                                         </div>
                                                                         <div class="address"
                                                                             style="text-align: center;">
@@ -315,140 +283,160 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-12 title-lable">
-                                                                        <p>Fees Receipt -
-                                                                            {{singleStudent.session}}</p>
-
+                                                                        <p>FEES RECEIPT -
+                                                                            {{receiptSession}}</p>
+                                                                    </div>
+                                                                    <div class="col-12"
+                                                                        style="text-align: right; margin-right: 25px;margin-bottom: 5px;">
+                                                                        <p style="font-size: 18px;">Date: {{
+                                                                            receiptInstallment.paymentDate }}</p>
                                                                     </div>
                                                                 </div>
                                                                 <table class="info-table"
-                                                                    style="border-top: 1px solid #9e9e9e;">
+                                                                    style="border-top: 1px solid #454545;">
                                                                     <tr>
                                                                         <td class="text-bold">RECEIPT NO.</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{receiptInstallment.receiptNo}}
+                                                                            :&nbsp;&nbsp;{{receiptInstallment.receiptNo}}
                                                                         </td>
                                                                         <td class="text-bold">ADMISSION NO.</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudent.admissionNo}}
+                                                                            :&nbsp;&nbsp;{{singleStudent.admissionNo}}
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="text-bold">STUDENT NAME</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudent.name
+                                                                            :&nbsp;&nbsp;{{singleStudent.name
                                                                             | uppercase}}
                                                                         </td>
                                                                         <td class="text-bold">DATE OF BIRTH</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudent.dob}}
+                                                                            :&nbsp;&nbsp;{{singleStudent.dob}}
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="text-bold">MOTHER NAME</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudent?.motherName
+                                                                            :&nbsp;&nbsp;{{singleStudent.motherName
                                                                             | uppercase}}
                                                                         </td>
                                                                         <td class="text-bold">FATHER NAME</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudent?.fatherName
+                                                                            :&nbsp;&nbsp;{{singleStudent.fatherName
                                                                             | uppercase}}
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="text-bold">CLASS</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudent.class
+                                                                            :&nbsp;&nbsp;{{singleStudent.class
                                                                             | classSuffix | uppercase}}
                                                                         </td>
                                                                         <td class="text-bold">STREAM</td>
                                                                         <td colspan="2">
-                                                                            :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudent.stream
+                                                                            :&nbsp;&nbsp;{{singleStudent.stream
                                                                             | uppercase}}
                                                                         </td>
                                                                     </tr>
                                                                 </table>
                                                                 <table class="custom-table">
                                                                     <tr class="text-center">
-                                                                        <th class="border" style="border-left: none;">S.
-                                                                            No.
+                                                                        <th class="border" style="border-left: none;">
+                                                                            S.No.
                                                                         </th>
-                                                                        <th class="border">Particulars</th>
+                                                                        <th class="border"
+                                                                            style="text-align: left;padding-left: 100px;">
+                                                                            PARTICULARS
+                                                                        </th>
                                                                         <th class="border" style="border-right: none;">
-                                                                            Fee
-                                                                            Amount</th>
+                                                                            FEE AMOUNT</th>
                                                                     </tr>
 
                                                                     <tr class="text-center"
-                                                                        *ngFor="let item of clsFeesStructure.feesType,let i = index">
+                                                                        *ngFor="let item of clsFeesStructure?.feesType, let i = index">
                                                                         <td class="border" style="border-left: none;">
-                                                                            {{i+1}}.</td>
+                                                                            {{i+1}}.
+                                                                        </td>
                                                                         <td class="border"
+                                                                            *ngFor="let fee of item | keyvalue"
+                                                                            style="text-align: left;padding-left: 100px;">
+                                                                            {{ formatKey(fee.key) }} FEE
+                                                                        </td>
+                                                                        <td class="border"
+                                                                            style="border-right: none;font-size: 18px;"
                                                                             *ngFor="let fee of item | keyvalue">
-                                                                            {{ fee.key}} Fee</td>
-                                                                        <td class="border" style="border-right: none;"
-                                                                            *ngFor="let fee of item | keyvalue">
-                                                                            &#8377; {{ fee.value}}</td>
+                                                                            {{ formatCurrency(fee.value) }}
+                                                                        </td>
                                                                     </tr>
                                                                     <tr class="text-center">
                                                                         <td class="border" style="border-left: none;">
                                                                         </td>
-                                                                        <td class="border">
-                                                                            Discount Amount</td>
+                                                                        <td class="border"
+                                                                            style="text-align: left;padding-left: 100px;">
+                                                                            CONCESSION AMOUNT</td>
                                                                         <td class="border" style="border-right: none;">
-                                                                            - &#8377;
-                                                                            {{receiptInstallment.discountAmountInFees}}
+                                                                            -
+                                                                            {{formatCurrency(receiptInstallment.feesConcession)}}
                                                                         </td>
                                                                     </tr>
-                                                                    <tr class="text-center" style="height: 15px;">
+                                                                    <tr class="text-center" style="height: 18px;">
                                                                         <td style="border: none;padding-top: 5px;">
                                                                         </td>
                                                                         <td class="text-bold"
-                                                                            style="text-align: right;border: none;padding-top: 8px;">
-                                                                            Total Fee
+                                                                            style="text-align: right;border: none;padding-top: 8px;font-size: 18px;">
+                                                                            TOTAL FEE :
                                                                         </td>
                                                                         <td class="text-bold"
-                                                                            style="border: none;padding-top: 5px;">
-                                                                            &#8377;
-                                                                            {{receiptInstallment.totalFees}}</td>
+                                                                            style="border: none;padding-top: 8px;font-size: 20px;">
+                                                                            {{formatCurrency(receiptInstallment.totalFees)}}
+                                                                        </td>
                                                                     </tr>
-                                                                    <tr class="text-center" style="height: 15px;">
+                                                                    <tr class="text-center" style="height: 18px;">
                                                                         <td style="border: none;"></td>
                                                                         <td class="text-bold"
-                                                                            style="text-align: right;border: none;">
-                                                                            Paid Fee
+                                                                            style="text-align: right;border: none;font-size: 18px;">
+                                                                            PAID FEE :
                                                                         </td>
-                                                                        <td class="text-bold" style="border: none;">
-                                                                            &#8377;
-                                                                            {{receiptInstallment.paidFees}}</td>
+                                                                        <td class="text-bold"
+                                                                            style="border: none;font-size: 20px;">
+
+                                                                            {{formatCurrency(receiptInstallment.paidFees)}}
+                                                                        </td>
                                                                     </tr>
-                                                                    <tr class="text-center" style="height: 15px;">
+                                                                    <tr class="text-center" style="height: 18px;">
                                                                         <td style="border: none;"></td>
                                                                         <td class="text-bold"
-                                                                            style="text-align: right;border: none;">
-                                                                            Due Fee
+                                                                            style="text-align: right;border: none;font-size: 18px;">
+                                                                            DUE FEE :
                                                                         </td>
-                                                                        <td class="text-bold" style="border: none;">
-                                                                            &#8377;
-                                                                            {{receiptInstallment.dueFees}}</td>
-                                                                    </tr>
-                                                                    <tr style="height: 15px;">
-                                                                        <td style="border: none;"></td>
-                                                                        <td style="border: none;padding-bottom: 2px;">
-                                                                            <p class="text-center"><span
-                                                                                    class="text-bold">
-                                                                                    {{receiptInstallment.feesInstallment}}</span>
-                                                                                Fee amount deposited <span
-                                                                                    class="text-bold">&#8377;
-                                                                                    {{receiptInstallment.feesAmount}}
-                                                                                    /-</span>
-                                                                            </p>
+                                                                        <td class="text-bold"
+                                                                            style="border: none;font-size: 20px;">
+
+                                                                            {{formatCurrency(receiptInstallment.dueFees)}}
                                                                         </td>
-                                                                        <td style="border: none;"></td>
                                                                     </tr>
                                                                 </table>
-                                                                <p style="margin-left: 20px;right: 0;">Date : {{
-                                                                    receiptInstallment.paymentDate }}</p>
+                                                                <ng-container
+                                                                    style="border: none;padding-bottom: 20px;">
+                                                                    <p
+                                                                        style="display: inline-block;margin-left: 20px;margin-bottom: 0 !important;">
+                                                                        <span class="text-bold"
+                                                                            style="font-size: 18px;">Authorized
+                                                                            Signatory</span>
+                                                                    </p>
+                                                                    <p
+                                                                        style="text-align: center;margin-top: 10px !important;font-size: 16px;">
+                                                                        FEE DEPOSITED <span class="text-bold"
+                                                                            style="font-size: 19px;">
+                                                                            {{formatCurrency(receiptInstallment.feesAmount)}}
+                                                                            /- (Rupees {{receiptInstallment.feesAmount |
+                                                                            numberToWords }} Only)</span>
+                                                                    </p>
+                                                                </ng-container>
+                                                                <p
+                                                                    style="margin-bottom:25px;margin-left: 20px;right: 0;">
+                                                                </p>
                                                             </div>
 
                                                         </div>
@@ -456,6 +444,7 @@
                                                 </ng-container>
                                             </ng-container>
                                         </div>
+
                                         <div class="modal-footer">
                                             <button class="submit-button" mat-raised-button
                                                 (click)="printStudentData()">Print</button>
@@ -470,9 +459,3 @@
         </div>
     </div>
 </div>
-<!-- <div class="spinner-container" *ngIf="loader">
-            <div class="spinner-overlay" *ngIf="loader">
-                <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
-                    strokeWidth="3"></mat-progress-spinner>
-            </div>
-        </div> -->
