@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { read, utils, writeFile } from 'xlsx';
 import * as ExcelJS from 'exceljs';
 import { Subject } from 'rxjs';
+import { AcademicSessionService } from 'src/app/services/academic-session.service';
 import { StudentService } from 'src/app/services/student.service';
 import { ClassService } from 'src/app/services/class.service';
 import { MatRadioChange } from '@angular/material/radio';
@@ -35,6 +36,9 @@ export class TeacherStudentComponent implements OnInit {
   errorMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
+
+
+  academicSession!: string;
   classInfo: any[] = [];
   studentInfo: any[] = [];
   studentInfoByClass: any[] = [];
@@ -52,7 +56,7 @@ export class TeacherStudentComponent implements OnInit {
   occupations: any;
   mediums: any;
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   cls: number = 0;
   className: any;
@@ -71,14 +75,21 @@ export class TeacherStudentComponent implements OnInit {
   teacherInfo:any;
   createdBy: String = '';
   adminId!: String
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService,private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  selectedSession: string = '';
+  classMap: any = {
+    200: 'Nursery',
+    201: 'LKG',
+    202: 'UKG',
+    // अन्य क्लासेज़ भी यहाँ मैप करें
+  };
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService,private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
       session: ['', Validators.required],
       medium: ['', Validators.required],
       adminId: [''],
       admissionNo: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      admissionType: ['', Validators.required],
+      admissionType: [''],
       class: [''],
       admissionClass: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       stream: [''],
@@ -99,12 +110,13 @@ export class TeacherStudentComponent implements OnInit {
       lastSchool: ['', [Validators.maxLength(50)]],
       fatherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       fatherQualification: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      fatherOccupation: ['', Validators.required],
       motherName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       motherQualification: ['', Validators.required],
-      parentsOccupation: ['', Validators.required],
+      motherOccupation: ['', Validators.required],
       parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
-      parentsAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      discountAmountInFees: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      familyAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: [''],
     })
 
@@ -116,6 +128,7 @@ export class TeacherStudentComponent implements OnInit {
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
+    this.getAcademicSession();
     if (this.teacherInfo) {
       this.getTeacherById(this.teacherInfo)
     }
@@ -124,6 +137,20 @@ export class TeacherStudentComponent implements OnInit {
     this.allOptions();
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
+  }
+  getAcademicSession() {
+    this.academicSessionService.getAcademicSession().subscribe((res: any) => {
+      if (res) {
+        this.academicSession = res.academicSession;
+        this.selectedSession = res.academicSession;
+      }
+    })
+  }
+  filterSession(selectedSession: any) {
+    this.errorCheck = true;
+    this.errorMsg = '';
+    this.selectedSession = selectedSession;
+    // this.getFeesStructureBySession(this.adminId, selectedSession);
   }
   getTeacherById(teacherInfo: any) {
     let params = {
@@ -149,8 +176,18 @@ export class TeacherStudentComponent implements OnInit {
     this.page = 0;
     this.className = cls;
     this.cls = cls;
-    this.stream = '';
-    this.studentInfo = [];
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
   }
   filterStream(stream: any) {
     this.stream = stream;
@@ -161,22 +198,6 @@ export class TeacherStudentComponent implements OnInit {
         stream: stream,
       }
       this.getStudents({ page: 1 });
-    }
-  }
-  chooseStream(event: any) {
-    this.stream = event.value;
-  }
-  chooseAdmissionType(event: any) {
-    if (event) {
-      if (event.value == 'New') {
-        this.admissionType = event.value;
-        const admissionNo = Math.floor(Math.random() * 89999999 + 10000000);
-        this.studentForm.get('admissionNo')?.setValue(admissionNo);
-      }
-      if (event.value == 'Old') {
-        this.admissionType = event.value;
-        this.studentForm.get('admissionNo')?.setValue(null);
-      }
     }
   }
 
@@ -214,6 +235,7 @@ export class TeacherStudentComponent implements OnInit {
     this.updateMode = false;
     this.studentForm.reset();
     this.classStreamFormValueSet();
+    this.studentForm.get('session')?.setValue(this.academicSession);
   }
   classStreamFormValueSet() {
     let cls = '';
@@ -264,7 +286,58 @@ export class TeacherStudentComponent implements OnInit {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = true;
-    this.studentForm.patchValue(student);
+    const dobArray = student.dob.split('-'); // Assuming format is 'dd-mm-yyyy'
+    const doaArray = student.doa.split('-'); // Assuming format is 'dd-mm-yyyy'
+
+    const dobISO = new Date(`${dobArray[2]}-${dobArray[1]}-${dobArray[0]}`); // 'yyyy-mm-dd'
+    const doaISO = new Date(`${doaArray[2]}-${doaArray[1]}-${doaArray[0]}`); // 'yyyy-mm-dd'
+
+    // Patch the form with the student data
+    this.studentForm.patchValue({
+      _id: student._id,
+      session: student.session,
+      medium: student.medium,
+      adminId: student.adminId,
+      admissionNo: student.admissionNo,
+      admissionType: student.admissionType,
+      class: student.class,
+      admissionClass: student.admissionClass,
+      stream: student.stream,
+      rollNumber: student.rollNumber,
+      name: student.name,
+      dob: dobISO, // Set Date of Birth
+      doa: doaISO, // Set Date of Admission
+      aadharNumber: student.aadharNumber,
+      samagraId: student.samagraId,
+      udiseNumber: student.udiseNumber,
+      bankAccountNo: student.bankAccountNo,
+      bankIfscCode: student.bankIfscCode,
+      gender: student.gender,
+      category: student.category,
+      religion: student.religion,
+      nationality: student.nationality,
+      address: student.address,
+      lastSchool: student.lastSchool,
+      fatherName: student.fatherName,
+      fatherQualification: student.fatherQualification,
+      fatherOccupation: student.fatherOccupation,
+      motherName: student.motherName,
+      motherQualification: student.motherQualification,
+      motherOccupation: student.motherOccupation,
+      parentsContact: student.parentsContact,
+      familyAnnualIncome: student.familyAnnualIncome,
+      feesConcession: student.feesConcession,
+      createdBy: student.createdBy
+    });
+    const classValue = student.class;
+    if (classValue && this.classMap[classValue]) {
+      this.studentForm.patchValue({
+        class: this.classMap[classValue] // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
+      });
+    }
+    if (this.updateMode) {
+      this.studentForm.get('feesConcession')?.disable();  // Disable in edit mode
+    }
   }
   deleteStudentModel(id: String) {
     this.showModal = true;
@@ -348,17 +421,45 @@ export class TeacherStudentComponent implements OnInit {
       }, err => {
         this.errorCheck = true;
         this.statusCode = err.status;
-        console.log(err.status)
       });
     });
   }
+
+
 
   studentAddUpdate() {
     if (this.studentForm.valid) {
       this.studentForm.value.adminId = this.adminId;
       this.studentForm.value.class = this.className;
+
       if (this.updateMode) {
-        this.studentService.updateStudent(this.studentForm.value).subscribe((res: any) => {
+
+        const classText = this.studentForm.get('class')?.value;
+
+        // टेक्स्ट को ओरिजिनल वैल्यू (जैसे 200, 201, 202) में कन्वर्ट करें
+        const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
+
+        // अगर वैल्यू मिली, तो उसे फॉर्म में अपडेट करें ताकि सही वैल्यू डेटाबेस में जाए
+        if (classValue) {
+          this.studentForm.patchValue({
+            class: classValue
+          });
+        }
+        const dob = new Date(this.studentForm.get('dob')?.value);
+        const formattedDob = `${dob.getDate()}-${dob.getMonth() + 1}-${dob.getFullYear()}`;
+
+        const doa = new Date(this.studentForm.get('doa')?.value);
+        const formattedDoa = `${doa.getDate()}-${doa.getMonth() + 1}-${doa.getFullYear()}`;
+
+        // Prepare the final form data
+        const formData = {
+          ...this.studentForm.value,
+          dob: formattedDob, // Convert back to 'dd-mm-yyyy'
+          doa: formattedDoa  // Convert back to 'dd-mm-yyyy'
+        };
+
+
+        this.studentService.updateStudent(formData).subscribe((res: any) => {
           if (res) {
             this.successDone();
             this.successMsg = res;
@@ -382,6 +483,7 @@ export class TeacherStudentComponent implements OnInit {
       }
     }
   }
+  
   changeStatus(id: any, statusValue: any) {
     if (id) {
       let params = {
@@ -416,177 +518,183 @@ export class TeacherStudentComponent implements OnInit {
   }
 
   parseExcel(arrayBuffer: any): void {
-    const workbook = new ExcelJS.Workbook();
-    workbook.xlsx.load(arrayBuffer).then((workbook) => {
-      const worksheet = workbook.getWorksheet(1);
-      const data: any = [];
-      worksheet!.eachRow({ includeEmpty: false }, (row: any, rowNumber) => {
-        // Assuming the first row contains headers
-        if (rowNumber === 1) {
-          const headers = row.values.map(String);
-          data.push(headers);
-        } else {
-          const rowData = row.values.map(String);
-          data.push(rowData);
-        }
-      });
-      const lastIndex = data.length - 1;
-      const indexesToDelete = [0, lastIndex];
-      // IndexesToDelete ke hisab se elements ko delete karna
-      indexesToDelete.sort((a, b) => b - a); // Sort indexesToDelete in descending order
-      indexesToDelete.forEach((index) => {
-        data.splice(index, 1);
-      });
-      const fields = data[0];
-      // Data ke baki ke rows
-      const dataRows = data.slice(1);
-      // Data ko objects mein map karna
-      const mappedData = dataRows.map((row: any) => {
-        const obj: any = {};
-        fields.forEach((field: any, index: any) => {
-          obj[field] = row[index];
-        });
-        return obj;
-      });
-
-      function transformKeys(dataArray: any) {
-        return dataArray.map((obj: any) => {
-          const newObj: any = {};
-          for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              const newKey = key.replace(/\s+/g, ''); // Remove spaces
-              newObj[newKey.charAt(0).toLowerCase() + newKey.slice(1)] = obj[key];
-            }
+      const workbook = new ExcelJS.Workbook();
+      workbook.xlsx.load(arrayBuffer).then((workbook) => {
+        const worksheet = workbook.getWorksheet(1);
+        const data: any = [];
+        worksheet!.eachRow({ includeEmpty: false }, (row: any, rowNumber) => {
+          // Assuming the first row contains headers
+          if (rowNumber === 1) {
+            const headers = row.values.map(String);
+            data.push(headers);
+          } else {
+            const rowData = row.values.map(String);
+            data.push(rowData);
           }
-          return newObj;
         });
-      }
-      // Transform the keys of the array
-      const transformedDataArray = transformKeys(mappedData);
-      if (transformedDataArray.length > 100) {
-        this.fileChoose = false;
-        this.errorCheck = true;
-        this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 100';
-      }
-      if (transformedDataArray.length <= 100) {
-        this.bulkStudentRecord = transformedDataArray;
-        this.fileChoose = true;
-        this.errorCheck = false;
-        this.errorMsg = '';
-      }
-    });
-  }
-  addBulkStudentRecord() {
-    let studentRecordData = {
-      bulkStudentRecord: this.bulkStudentRecord,
-      class: this.className,
-      stream: this.stream,
-      adminId: this.adminId,
-      createdBy:this.createdBy,
-
-    }
-    if (studentRecordData) {
-      this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
-        if (res) {
-          this.successDone();
-          this.successMsg = res;
+        const lastIndex = data.length - 1;
+        const indexesToDelete = [0, lastIndex];
+        // IndexesToDelete ke hisab se elements ko delete karna
+        indexesToDelete.sort((a, b) => b - a); // Sort indexesToDelete in descending order
+        indexesToDelete.forEach((index) => {
+          data.splice(index, 1);
+        });
+        const fields = data[0];
+        // Data ke baki ke rows
+        const dataRows = data.slice(1);
+        // Data ko objects mein map karna
+        const mappedData = dataRows.map((row: any) => {
+          const obj: any = {};
+          fields.forEach((field: any, index: any) => {
+            obj[field] = row[index];
+          });
+          return obj;
+        });
+  
+        function transformKeys(dataArray: any) {
+          return dataArray.map((obj: any) => {
+            const newObj: any = {};
+            for (const key in obj) {
+              if (obj.hasOwnProperty(key)) {
+                const newKey = key.replace(/\s+/g, ''); // Remove spaces
+                newObj[newKey.charAt(0).toLowerCase() + newKey.slice(1)] = obj[key];
+              }
+            }
+            return newObj;
+          });
         }
-      }, err => {
-        this.errorCheck = true;
-        this.errorMsg = err.error;
-      })
-    }
-  }
-
-
-  async exportToExcel() {
-    let className = this.className;
-    if (className == 1) {
-      className = `${this.className}st`;
-    }
-    if (className == 2) {
-      className = `${this.className}nd`;
-    }
-    if (className == 3) {
-      className = `${this.className}rd`;
-    }
-    if (className >= 4 && className <= 12) {
-      className = `${this.className}th`;
-    }
-    if (className == 200) {
-      className = `Nursery`;
-    }
-    if (className == 201) {
-      className = `LKG`;
-    }
-    if (className == 202) {
-      className = `UKG`;
-    }
-    const header: string[] = [
-      'session',
-      'medium',
-      'admissionNo',
-      'name',
-      'fatherName',
-      'motherName',
-      'rollNumber',
-      'discountAmountInFees',
-      'aadharNumber',
-      'samagraId',
-      'dob',
-      'doa',
-      'admissionType',
-      'admissionClass',
-      'gender',
-      'category',
-      'religion',
-      'nationality',
-      'address',
-      'udiseNumber',
-      'bankAccountNo',
-      'bankIfscCode',
-      'fatherQualification',
-      'motherQualification',
-      'parentsOccupation',
-      'parentsContact',
-      'parentsAnnualIncome',
-    ];
-
-    function orderObjectsByHeaders(studentInfoByClass: any, header: any) {
-      return studentInfoByClass.map((obj: any) => {
-        const orderedObj: any = {};
-        header.forEach((header: any) => {
-          orderedObj[header] = obj[header];
-        });
-        return orderedObj;
+        // Transform the keys of the array
+        const transformedDataArray = transformKeys(mappedData);
+        if (transformedDataArray.length > 100) {
+          this.fileChoose = false;
+          this.errorCheck = true;
+          this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 100';
+        }
+        if (transformedDataArray.length <= 100) {
+          this.bulkStudentRecord = transformedDataArray;
+          this.fileChoose = true;
+          this.errorCheck = false;
+          this.errorMsg = '';
+        }
       });
     }
-    const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header);
-    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    let currentYear = (new Date()).getFullYear();
-    let currentMonth = (new Date()).getMonth();
-    let currentMonthText = months[currentMonth];
-    const modifiedHeader = header.map(field => {
-      // Capitalize the first letter and add a space before each capital letter (except the first character)
-      return field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-    });
-    let reportData = {
-      title: `${this.schoolInfo?.schoolName} Student Record Class - ${className} , ${currentMonthText} ${currentYear}`,
-      data: orderedData,
-      headers: modifiedHeader,
-      fileName: `Student Record Class - ${className} , ${currentMonthText} ${currentYear} , ${this.schoolInfo?.schoolName}`,
-    };
+  
+    addBulkStudentRecord() {
+      let studentRecordData = {
+        bulkStudentRecord: this.bulkStudentRecord,
+        session:this.selectedSession,
+        class: this.className,
+        stream: this.stream,
+        adminId: this.adminId,
+        createdBy: this.createdBy,
+  
+      }
+      if (studentRecordData) {
+        this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
+          if (res) {
+            this.successDone();
+            this.successMsg = res;
+          }
+        }, err => {
+          this.errorCheck = true;
+          this.errorMsg = err.error;
+        })
+      }
+    }
 
-    this.ete.exportExcel(reportData);
-    this.successDone();
-  }
 
-  allOptions() {
-    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
-    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
-    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
-  }
+    async exportToExcel() {
+      let className = this.className;
+      if (className == 1) {
+        className = `${this.className}st`;
+      }
+      if (className == 2) {
+        className = `${this.className}nd`;
+      }
+      if (className == 3) {
+        className = `${this.className}rd`;
+      }
+      if (className >= 4 && className <= 12) {
+        className = `${this.className}th`;
+      }
+      if (className == 200) {
+        className = `Nursery`;
+      }
+      if (className == 201) {
+        className = `LKG`;
+      }
+      if (className == 202) {
+        className = `UKG`;
+      }
+      let samagraId = 'samagraId' //dynamic field add testing
+      const header: string[] = [
+        'admissionNo',
+        'name',
+        'fatherName',
+        'motherName',
+        'rollNumber',
+        'medium',
+        'feesConcession',
+        'aadharNumber',
+        samagraId,
+        'dob',
+        'doa',
+        'admissionType',
+        'admissionClass',
+        'gender',
+        'category',
+        'religion',
+        'nationality',
+        'address',
+        'udiseNumber',
+        'bankAccountNo',
+        'bankIfscCode',
+        'fatherQualification',
+        'motherQualification',
+        'fatherOccupation',
+        'motherOccupation',
+        'parentsContact',
+        'familyAnnualIncome',
+      ];
+      function toTitleCase(str: string) {
+        return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
+      }
+      function orderObjectsByHeaders(studentInfoByClass: any, header: any, selectedSession: string) {
+        const filteredData = studentInfoByClass.filter((obj: any) => obj.session === selectedSession);
+        return filteredData.map((obj: any) => {
+          const orderedObj: any = {};
+          header.forEach((header: any) => {
+            let value = obj[header];
+            if (["name", "fatherName", "motherName"].includes(header) && typeof value === "string") {
+              value = toTitleCase(value);
+            }
+            orderedObj[header] = value;
+          });
+          return orderedObj;
+        });
+      }
+      const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
+      const modifiedHeader = header.map(field => 
+        field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
+      );
+      
+      let reportData = {
+        title: `${this.schoolInfo?.schoolName}, Student Record Class - ${className}, ${this.selectedSession}`,
+        data: orderedData,
+        headers: modifiedHeader,
+        fileName: `Student Class - ${className}, ${this.selectedSession}, ${this.schoolInfo?.schoolName}`,
+      };
+  
+      this.ete.exportExcel(reportData);
+      this.successDone();
+    }
+  
+    allOptions() {
+      this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
+      this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
+      this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{religion:'Aninism / Adivasi'},{religion:'Islam'},{ religion: 'Baha I faith ' },{ religion: 'Judaism' },{ religion: 'Zoroastrianism' } ,{ religion: 'Other' }]
+      this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
+      this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
+      this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
+    }
 }

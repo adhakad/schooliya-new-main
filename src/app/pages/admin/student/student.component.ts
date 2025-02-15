@@ -408,7 +408,6 @@ export class StudentComponent implements OnInit {
       }, err => {
         this.errorCheck = true;
         this.statusCode = err.status;
-        console.log(err.status)
       });
     });
   }
