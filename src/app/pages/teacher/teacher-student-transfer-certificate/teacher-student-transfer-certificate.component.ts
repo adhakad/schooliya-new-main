@@ -55,7 +55,7 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   occupations: any;
   mediums: any;
   stream: string = '';
-  notApplicable: String = "stream";
+  notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   cls: number = 0;
   className: any;
@@ -71,9 +71,9 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   serialNo!: number;
   isDate: string = '';
   readyTC: Boolean = false;
+  adminId!: String
   teacherInfo:any;
   createdBy: String = '';
-  adminId!: String
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.tcForm = this.fb.group({
       adminId: [''],
@@ -119,8 +119,18 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     this.page = 0;
     this.className = cls;
     this.cls = cls;
-    this.stream = '';
-    this.studentInfo = [];
+    if (cls !== 11 && cls !== 12) {
+      this.stream = this.notApplicable;
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
+    if (cls == 11 || cls == 12) {
+      if (this.stream == 'stream') {
+        this.stream = '';
+      }
+      this.studentInfo = [];
+      this.getStudents({ page: 1 });
+    }
   }
   filterStream(stream: any) {
     this.stream = stream;
@@ -142,18 +152,18 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
 
   printStudentData(singleStudentInfo: any) {
 
-    // singleStudentInfo.serialNo = this.serialNo;
-    // this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
-    //   if (res == 'IssueTransferCertificate') {
+    singleStudentInfo.serialNo = this.serialNo;
+    this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
+      if (res == 'IssueTransferCertificate') {
         const printContent = this.getPrintOneAdmitCardContent();
         this.printPdfService.printContent(printContent);
         this.closeModal();
-    //     this.getStudents({ page: this.page });
-    //   }
-    // }, err => {
-    //   this.errorCheck = true;
-    //   this.errorMsg = err.error;
-    // })
+        this.getStudents({ page: this.page });
+      }
+    }, err => {
+      this.errorCheck = true;
+      this.errorMsg = err.error;
+    })
   }
 
 
@@ -166,27 +176,25 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     printHtml += '<style>';
     printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
-    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
-    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #707070; box-sizing: border-box;}';
+    printHtml += '.logo { height: 95px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-140px !important; margin-bottom: 0 !important; }';
 
-    printHtml += '.address{margin-top: -42px;}';
-    printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
-    printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
-    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
-
-    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;padding-top:5px;}';
-    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
-    printHtml += '.custom-table tr{height: 30px;}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
-
+    printHtml += '.address{margin-top: -45px;}';
+    printHtml += '.address p{color: #0a0a0a !important;font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: 0px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';    
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+    printHtml += '.custom-table th{min-height: 48px;text-align: center;border:1px solid #707070;line-height:25px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 48px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #707070;font-size: 18px;}';
     printHtml += '.tc-codes-table {width: 100%;color: #252525 !important;display: inline-table;margin-top: 2vh;}';
     printHtml += '.tc-codes-table tr{height: 2vh;border:none;}';
-    printHtml += '.tc-codes-table td {width:50%;border:none;font-size: 12px;}';
+    printHtml += '.tc-codes-table td {width:50%;border:none;font-size: 18px !important;}';
     printHtml += '.tc-codes-table td p{margin-left: 20px;margin-right: 20px;}';
 
     printHtml += '.student-info-table {width: 100%;color: #252525 !important;display: inline-table;margin-top:3vh}';
@@ -194,27 +202,29 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     printHtml += '.student-info-table .td-left {width:45%;border:none;font-size: 12px;}';
     printHtml += '.student-info-table .td-right {width:55%;border:none;font-size: 12px;}';
     printHtml += '.student-info-table td p{margin-left: 20px;}';
-    printHtml += '.sign-table {position: absolute;left: 0;bottom: 0;z-index: 2;}';
+    printHtml += '.sign-table {position: relative;margin-top:120px;margin-bottom:120px;left: 0;bottom: 0;z-index: 2;}';
 
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
     printHtml += '.text-right { text-align: right;}';
-    printHtml += 'p {color: #252525 !important;font-size:12px;}'
+    printHtml += 'p {color: #252525 !important;font-size:18px;}'
     printHtml += 'h4 {color: #252525 !important;}'
-    printHtml += '@media print {';
-    printHtml += '  body::before {';
-    printHtml += `    content: "${schoolName}, ${city}";`;
-    printHtml += '    position: fixed;';
-    printHtml += '    top: 40%;';
-    printHtml += '    left:10%;';
-    printHtml += '    font-size: 20px;';
-    printHtml += '    text-transform: uppercase;';
-    printHtml += '    font-weight: bold;';
-    printHtml += '    font-family: Arial, sans-serif;';
-    printHtml += '    color: rgba(0, 0, 0, 0.08);';
-    printHtml += '    pointer-events: none;';
-    printHtml += '  }';
-    printHtml += '}';
+    // printHtml += '@media print {';
+    // printHtml += '  body::after {';
+    // printHtml += `    content: "${schoolName}, ${city}";`;
+    // printHtml += '    position: fixed;';
+    // printHtml += '    top: 50%;';
+    // printHtml += '    left: 25%;';
+    // printHtml += '    font-size: 30px;';
+    // printHtml += '    text-transform: uppercase;';
+    // printHtml += '    font-weight: bold;';
+    // printHtml += '    font-family: Arial, sans-serif;';
+    // printHtml += '    text-align: center;';
+    // printHtml += '    color: rgba(50, 48, 65, 0.2);';
+    // printHtml += '    transform:';
+    // printHtml += '    pointer-events: none;';
+    // printHtml += '  }';
+    // printHtml += '}';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
@@ -227,20 +237,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     return printHtml;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   closeModal() {
     this.showStudentInfoViewModal = false;
     this.showStudentTCFormModal = false;
@@ -276,6 +272,13 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
       adminId: this.adminId,
     }
     this.getSingleClassSubjectByStream(params);
+  }
+  getClass() {
+    this.classService.getClassList().subscribe((res: any) => {
+      if (res) {
+        this.classInfo = res;
+      }
+    })
   }
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
@@ -359,15 +362,27 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
     this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
     this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
   }
   getTC() {
+    this.errorCheck = false;
+    this.errorMsg = '';
     if (this.tcForm.valid && this.singleStudentInfo) {
       this.singleStudentInfo.isDate = this.isDate;
       this.tcForm.value.adminId = this.adminId;
+      if (this.tcForm.value.totalWorkingDays>365) {
+        this.errorCheck = true;
+        this.errorMsg = 'Total working days cannot be greater than 365!';
+        return
+      }
+      if (this.tcForm.value.totalWorkingDays<this.tcForm.value.totalPresenceDays) {
+        this.errorCheck = true;
+        this.errorMsg = 'Total presence days cannot be greater than total working days!';
+        return
+      }
       if (!this.tcForm.value.anyOtherRemarks) {
         this.tcForm.value.anyOtherRemarks = 'Nil';
       }

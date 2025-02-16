@@ -73,11 +73,11 @@ export class TransferCertificateComponent implements OnInit {
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.tcForm = this.fb.group({
       adminId: [''],
-      lastExamStatus: ['pass', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      reasonForLeaving: ['higher study', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      totalWorkingDays: ['345', [Validators.required, Validators.pattern(/^\d+$/)]],
-      totalPresenceDays: ['234', [Validators.required, Validators.pattern(/^\d+$/)]],
-      generalConduct: ['good', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      lastExamStatus: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      reasonForLeaving: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      totalWorkingDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      totalPresenceDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      generalConduct: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       anyOtherRemarks: ['',],
     })
   }
