@@ -84,26 +84,14 @@
 
                                 </tbody>
                             </table>
-                            <div *ngIf="examAdmitCard.length>0" style="text-align: center;margin-top: 200px;">
+                            <div *ngIf="examAdmitCard && examAdmitCard.length>0" style="text-align: center;margin-top: 200px;">
                                 <p>Note : Remove the existing admit card to generate a new one.</p>
                             </div>
 
                             <div class="modal fade show" [class.show]="showModal">
                                 <div class="modal-dialog modal-dialog-scrollable"
-                                    [class.modal-lg]="!deleteMode && !successMsg">
-                                    <div class="modal-content" *ngIf="successMsg">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="success-message">{{successMsg}}</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <mat-icon></mat-icon>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal-content" *ngIf="!successMsg">
+                                    [class.modal-lg]="!deleteMode">
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">{{updateMode?'UPDATE': deleteMode ? 'DELETE'
                                                 :'CREATE'}} ADMIT CARD STRUCTURE</h5>

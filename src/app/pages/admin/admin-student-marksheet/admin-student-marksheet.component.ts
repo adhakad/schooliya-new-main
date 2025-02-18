@@ -11,6 +11,8 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { ClassService } from 'src/app/services/class.service';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-admin-student-marksheet',
   templateUrl: './admin-student-marksheet.component.html',
@@ -22,7 +24,6 @@ export class AdminStudentMarksheetComponent implements OnInit {
   showBulkResultPrintModal: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   statusCode: Number = 0;
   templateStatusCode: Number = 0;
@@ -52,7 +53,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   loader: Boolean = false;
   adminId!: string;
-  constructor(public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService) {
+  constructor(public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService) {
   }
 
 
@@ -141,20 +142,20 @@ export class AdminStudentMarksheetComponent implements OnInit {
     this.showBulkResultPrintModal = false;
   }
 
-  successDone() {
-    setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      if (this.stream && this.cls) {
-        let params = {
-          adminId: this.adminId,
-          cls: this.cls,
-          stream: this.stream,
-        }
-        this.getSingleClassResultStrucByStream(params);
-        this.getStudentExamResultByClass(params);
+  successDone(msg: any) {
+    this.closeModal();
+    if (this.stream && this.cls) {
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
       }
-    }, 1000)
+      this.getSingleClassResultStrucByStream(params);
+      this.getStudentExamResultByClass(params);
+    }
+    setTimeout(() => {
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   bulkPrint() {
@@ -303,7 +304,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
     printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
 
-    
+
     printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
 
@@ -368,8 +369,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
   marksheetResultDelete(id: String) {
     this.examResultService.deleteMarksheetResult(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     })

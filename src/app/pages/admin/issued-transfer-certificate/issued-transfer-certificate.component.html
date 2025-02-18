@@ -211,18 +211,7 @@
 
               <div class="modal fade show" [class.show]="showModal">
                 <div class="modal-dialog modal-dialog-top" role="document">
-                  <div class="modal-content" *ngIf="successMsg && !errorCheck">
-                    <div class="modal-header">
-                      <h5 class="modal-title" style="color: transparent;">Class</h5>
-                    </div>
-                    <div class="modal-body">
-                      <p class="success-message">{{successMsg}}</p>
-                    </div>
-                    <div class="modal-footer">
-                      <mat-icon></mat-icon>
-                    </div>
-                  </div>
-                  <div class="modal-content" *ngIf="!successMsg && errorCheck">
+                  <div class="modal-content" *ngIf="errorCheck">
                     <div class="modal-header">
                       <h5 class="modal-title">DELETE ISSUED TRANSFER CERTIFICATE</h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
@@ -234,7 +223,7 @@
                       <mat-icon></mat-icon>
                     </div>
                   </div>
-                  <div class="modal-content" *ngIf="!successMsg && !errorCheck">
+                  <div class="modal-content" *ngIf="!errorCheck">
                     <div class="modal-header">
                       <h5 class="modal-title">DELETE ISSUED TRANSFER CERTIFICATE</h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>

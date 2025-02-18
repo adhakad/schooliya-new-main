@@ -8,6 +8,7 @@ import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { IssuedTransferCertificateService } from 'src/app/services/issued-transfer-certificate.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-issued-transfer-certificate',
@@ -17,10 +18,9 @@ import { IssuedTransferCertificateService } from 'src/app/services/issued-transf
 export class IssuedTransferCertificateComponent implements OnInit {
   @ViewChild('receipt') receipt!: ElementRef;
   showModal: boolean = false;
-  showStudentInfoViewModal:boolean = false;
+  showStudentInfoViewModal: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   classInfo: any[] = [];
@@ -31,12 +31,12 @@ export class IssuedTransferCertificateComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
 
-  singleStudentInfo:any;
+  singleStudentInfo: any;
   cls: number = 0;
   schoolInfo: any;
   loader: Boolean = true;
-  adminId!:any;
-  constructor( private schoolService: SchoolService,private adminAuthService:AdminAuthService, private printPdfService: PrintPdfService,private issuedTransferCertificate: IssuedTransferCertificateService) { }
+  adminId!: any;
+  constructor(private schoolService: SchoolService, private toastr: ToastrService, private adminAuthService: AdminAuthService, private printPdfService: PrintPdfService, private issuedTransferCertificate: IssuedTransferCertificateService) { }
 
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
@@ -62,7 +62,7 @@ export class IssuedTransferCertificateComponent implements OnInit {
     this.deleteMode = false;
     this.errorCheck = false;
     this.errorMsg = '';
-    this.singleStudentInfo=false;
+    this.singleStudentInfo = false;
   }
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
@@ -73,21 +73,20 @@ export class IssuedTransferCertificateComponent implements OnInit {
     this.deleteMode = true;
     this.deleteById = id;
   }
-  successDone() {
+  successDone(msg: any) {
+    this.closeModal();
+    this.getIssuedTransferCertificate({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getIssuedTransferCertificate({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
-  transferCertificateDelete(id:any){
+  transferCertificateDelete(id: any) {
     this.issuedTransferCertificate.deleteIssuedTransferCertificate(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
-    },err=>{
+    }, err => {
       this.errorCheck = true;
       this.errorMsg = err.error;
     })
@@ -99,7 +98,7 @@ export class IssuedTransferCertificateComponent implements OnInit {
         filters: {},
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
-        adminId:this.adminId
+        adminId: this.adminId
       };
       this.recordLimit = params.limit;
       if (this.filters.searchText) {

@@ -10,6 +10,7 @@ import { StudentService } from 'src/app/services/student.service';
 import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { ClassService } from 'src/app/services/class.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-student-marksheet-result-add',
@@ -22,7 +23,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   marksheetTemplateStructureInfo: any;
@@ -70,7 +70,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   coScholasticGrades: any[] = ['A', 'B', 'C'];
   loader: Boolean = false;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService, private studentService: StudentService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
       rollNumber: [''],
@@ -177,20 +177,20 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     }
   }
 
-  successDone() {
-    setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      if (this.stream && this.cls) {
-        let params = {
-          adminId: this.adminId,
-          cls: this.cls,
-          stream: this.stream,
-        }
-        this.getStudentExamResultByClassStream(params);
-        this.getSingleClassResultStrucByStream(params);
+  successDone(msg: any) {
+    this.closeModal();
+    if (this.stream && this.cls) {
+      let params = {
+        adminId: this.adminId,
+        cls: this.cls,
+        stream: this.stream,
       }
-    }, 1000)
+      this.getStudentExamResultByClassStream(params);
+      this.getSingleClassResultStrucByStream(params);
+    }
+    setTimeout(() => {
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
 
@@ -219,7 +219,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
             let exams: any = {};
 
 
-            let resultDetail = res.examResultInfo ==0? this.examResultInfo.find(info => info._id === student._id)?.resultDetail || {}:this.examResultInfo.find(info => info.studentId === student._id)?.resultDetail || {};
+            let resultDetail = res.examResultInfo == 0 ? this.examResultInfo.find(info => info._id === student._id)?.resultDetail || {} : this.examResultInfo.find(info => info.studentId === student._id)?.resultDetail || {};
 
 
             examType.forEach((exam: any) => {
@@ -498,7 +498,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     const totalHalfYearlyMaxMarks = this.resultStructureInfo.halfYearlyMaxMarks ? calculateMaxMarks(this.resultStructureInfo.halfYearlyMaxMarks) : 0;
 
     const totalMaxMarks = totalTheoryMaxMarks + totalPracticalMaxMarks + totalPeriodicTestMaxMarks + totalNoteBookMaxMarks + totalSubjectEnrichmentMaxMarks + totalProjectMaxMarks + totalHalfYearlyMaxMarks;
-    const calculateGrades = (subjectMarks: any[], isPractical: boolean, isPeriodicTest: boolean, isNoteBook: boolean, isSubjectEnrichment: boolean,isProject: boolean,isHalfYearly:boolean) => {
+    const calculateGrades = (subjectMarks: any[], isPractical: boolean, isPeriodicTest: boolean, isNoteBook: boolean, isSubjectEnrichment: boolean, isProject: boolean, isHalfYearly: boolean) => {
       return subjectMarks.map((subjectMark) => {
         const subjectName = Object.keys(subjectMark)[0];
 
@@ -555,14 +555,14 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
           periodicTestMarks: periodicTestMarks,
           noteBookMarks: noteBookMarks,
           subjectEnrichmentMarks: subjectEnrichmentMarks,
-          projectMarks:projectMarks,
-          halfYearlyMarks:halfYearlyMarks,
+          projectMarks: projectMarks,
+          halfYearlyMarks: halfYearlyMarks,
           totalMarks: totalMarks,
           grade: grade,
         };
       });
     };
-    let marks = calculateGrades(examResult.theoryMarks, !!examResult.practicalMarks, !!examResult.periodicTestMarks, !!examResult.noteBookMarks, !!examResult.subjectEnrichmentMarks,!!examResult.projectMarks, !!examResult.halfYearlyMarks);
+    let marks = calculateGrades(examResult.theoryMarks, !!examResult.practicalMarks, !!examResult.periodicTestMarks, !!examResult.noteBookMarks, !!examResult.subjectEnrichmentMarks, !!examResult.projectMarks, !!examResult.halfYearlyMarks);
     const grandTotalMarks = marks.reduce((total: number, item: any) => total + item.totalMarks, 0);
     const percentile = parseFloat(((grandTotalMarks / totalMaxMarks) * 100).toFixed(2));
     const basePercentile = parseFloat(percentile.toFixed(0));
@@ -611,8 +611,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       if (this.updateMode) {
         this.examResultService.updateExamResult(this.examResultForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -628,8 +627,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         this.examResultForm.value.class = this.cls;
         this.examResultService.addExamResult(this.examResultForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;

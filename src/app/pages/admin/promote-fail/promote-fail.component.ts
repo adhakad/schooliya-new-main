@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
 import { IssuedTransferCertificateService } from 'src/app/services/issued-transfer-certificate.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -22,8 +23,8 @@ export class PromoteFailComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
   studentClassPromoteForm: FormGroup;
   showClassPromoteModal: boolean = false;
-  
-  
+
+
   studentClassFailForm: FormGroup;
   showClassFailModal: boolean = false;
 
@@ -33,7 +34,6 @@ export class PromoteFailComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
@@ -73,7 +73,7 @@ export class PromoteFailComponent implements OnInit {
   readyTC: Boolean = false;
   baseURL!: string;
   adminId!: String
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentClassPromoteForm = this.fb.group({
       _id: ['', Validators.required],
       session: ['', Validators.required],
@@ -92,7 +92,7 @@ export class PromoteFailComponent implements OnInit {
       admissionNo: ['', Validators.required],
       adminId: [''],
       class: [''],
-      stream: ['',Validators.required],
+      stream: ['', Validators.required],
       rollNumber: ['', Validators.required],
       feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: ['']
@@ -162,7 +162,6 @@ export class PromoteFailComponent implements OnInit {
     this.deleteMode = false;
     this.errorCheck = false;
     this.errorMsg = '';
-    this.successMsg = '';
     this.classSubject = [];
     this.promotedClass;
     this.failClass;
@@ -175,7 +174,7 @@ export class PromoteFailComponent implements OnInit {
   addStudentClassPromoteModel(student: any) {
     this.showClassPromoteModal = true;
     this.singleStudentInfo = student;
-    let sessionYears = student.session.split("-"); 
+    let sessionYears = student.session.split("-");
     let startYear = parseInt(sessionYears[0]);
     let endYear = parseInt(sessionYears[1]);
     let newStartYear = startYear + 1;
@@ -191,7 +190,7 @@ export class PromoteFailComponent implements OnInit {
   addStudentClassFailModel(student: any) {
     this.showClassFailModal = true;
     this.singleStudentInfo = student;
-    let sessionYears = student.session.split("-"); 
+    let sessionYears = student.session.split("-");
     let startYear = parseInt(sessionYears[0]);
     let endYear = parseInt(sessionYears[1]);
     let newStartYear = startYear + 1;
@@ -250,12 +249,12 @@ export class PromoteFailComponent implements OnInit {
       }
     })
   }
-  successDone() {
+  successDone(msg:any) {
+    this.closeModal();
+    this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getStudents({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   getStudentByClass(cls: any) {
@@ -325,12 +324,9 @@ export class PromoteFailComponent implements OnInit {
       this.studentClassPromoteForm.value.createdBy = 'Admin';
       this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
         if (res) {
-          setTimeout(() => {
-            this.successDone();
-          }, 1000)
           this.promotedClass;
           this.promotedClass = res.className;
-          this.successMsg = res.successMsg;
+          this.successDone(res.successMsg);
         }
       }, err => {
         this.errorCheck = true;
@@ -351,12 +347,9 @@ export class PromoteFailComponent implements OnInit {
       this.studentClassFailForm.value.createdBy = 'Admin';
       this.studentService.studentClassFail(this.studentClassFailForm.value).subscribe((res: any) => {
         if (res) {
-          setTimeout(() => {
-            this.successDone();
-          }, 1000)
           this.failClass;
           this.failClass = res.className;
-          this.successMsg = res.successMsg;
+          this.successDone(res.successMsg);
         }
       }, err => {
         this.errorCheck = true;

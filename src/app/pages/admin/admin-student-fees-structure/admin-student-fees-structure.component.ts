@@ -7,6 +7,7 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { AcademicSessionService } from 'src/app/services/academic-session.service';
 import { ClassService } from 'src/app/services/class.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-student-fees-structure',
@@ -22,7 +23,6 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   deleteMode: boolean = false;
   updateMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
 
@@ -45,7 +45,7 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   academicSession: string = '';
   allSession: any = [];
   selectedSession: string = '';
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private academicSessionService: AcademicSessionService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
       session: [''],
@@ -199,12 +199,12 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     this.deleteById = id;
   }
 
-  successDone() {
+  successDone(msg:any) {
     this.getFeesStructureBySession(this.adminId, this.selectedSession);
+    this.closeModal();
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
 
@@ -243,8 +243,7 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     if (!containsFeesTypeNull) {
       this.feesStructureService.addFeesStructure(this.feesForm.value).subscribe((res: any) => {
         if (res) {
-          this.successDone();
-          this.successMsg = res;
+          this.successDone(res);
         }
       }, err => {
         this.errorCheck = true;
@@ -256,9 +255,8 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   feesStructureDelete(id: String) {
     this.feesStructureService.deleteFeesStructure(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
         this.getFeesStructureBySession(this.adminId, this.selectedSession);
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     }, err => {

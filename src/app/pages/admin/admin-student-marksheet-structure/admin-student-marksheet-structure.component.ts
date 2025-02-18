@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
 import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-student-marksheet-structure',
@@ -20,12 +21,11 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   marksheetTemplate: any;
-  marksheetSelectMode:boolean = true;
-  selectedTemplate:string = '';
+  marksheetSelectMode: boolean = true;
+  selectedTemplate: string = '';
   examResultInfo: any;
   processedTheoryData: any[] = [];
   processedPracticalData: any[] = [];
@@ -35,7 +35,7 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
   loader: Boolean = true;
   isChecked!: Boolean;
   adminId: string = '';
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
       class: [''],
@@ -90,12 +90,12 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
   }
 
 
-  addExamResultModel(template: any,templateUrl:any) {
+  addExamResultModel(template: any, templateUrl: any) {
     this.showModal = true;
     this.examResultForm.reset();
     this.examResultForm.get('templateName')?.setValue(template);
     this.examResultForm.get('templateUrl')?.setValue(templateUrl);
-    this.selectedTemplate=template;
+    this.selectedTemplate = template;
   }
   openExamResultStructureModal(examResult: any) {
     this.examResultInfo = examResult;
@@ -118,18 +118,17 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
     this.errorMsg = '';
     this.deleteMode = false;
     this.deleteById = '';
-    this.successMsg = '';
     this.examResultInfo;
     this.processedTheoryData = [];
     this.processedPracticalData = [];
     this.examResultForm.reset();
   }
-  successDone() {
+  successDone(msg: any) {
+    this.closeModal();
+    this.getSingleClassMarksheetTemplateByStream(this.cls)
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getSingleClassMarksheetTemplateByStream(this.cls)
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
   getSingleClassMarksheetTemplateByStream(cls: any) {
     let params = {
@@ -140,7 +139,7 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
     this.examResultStructureService.getSingleClassMarksheetTemplateByStream(params).subscribe((res: any) => {
       if (res) {
         this.marksheetTemplate = res;
-        this.marksheetSelectMode=false;
+        this.marksheetSelectMode = false;
       }
     }, err => {
     })
@@ -152,8 +151,7 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
     this.examResultForm.value.stream = this.stream;
     this.examResultStructureService.addExamResultStructure(this.examResultForm.value).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
       }
     }, err => {
       this.errorCheck = true;
@@ -166,9 +164,8 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
   marksheetTemplateDelete(id: String) {
     this.examResultStructureService.deleteResultStructure(id).subscribe((res: any) => {
       if (res) {
-        this.marksheetSelectMode=true;
-        this.successDone();
-        this.successMsg = res;
+        this.marksheetSelectMode = true;
+        this.successDone(res);
         this.deleteById = '';
       }
     })
