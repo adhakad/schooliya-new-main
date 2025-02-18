@@ -20,6 +20,7 @@ import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { AdminSharedModule } from './pages/admin/admin-shared/admin-shared.module';
 import { TeacherSharedModule } from './pages/teacher/teacher-shared/teacher-shared.module';
 import { MainSharedModule } from './pages/main/main-shared/main-shared.module';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,12 @@ import { MainSharedModule } from './pages/main/main-shared/main-shared.module';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      // preventDuplicates: true,
+      progressBar: true
+    }),
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,

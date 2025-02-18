@@ -10,7 +10,6 @@ import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { SharedPipeModule } from 'src/app/pipes/shared-pipe/shared-pipe.module';
-// import { NgxEchartsModule } from 'ngx-echarts';
 
 
 
@@ -30,8 +29,7 @@ import { SharedPipeModule } from 'src/app/pipes/shared-pipe/shared-pipe.module';
     MatMomentDatetimeModule,
     MatDatetimepickerModule,
     NgxMatFileInputModule,
-    // NgxEchartsModule,
-    SharedPipeModule
+    SharedPipeModule,
   ]
 })
 export class AdminSharedModule { }

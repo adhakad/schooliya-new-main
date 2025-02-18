@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 // import { Subject } from 'src/app/modal/subject.model';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { SubjectService } from 'src/app/services/subject.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-subject',
@@ -27,7 +28,7 @@ export class SubjectComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   loader:Boolean=true;
   adminId!:string;
-  constructor(private fb: FormBuilder,private adminAuthService:AdminAuthService, private subjectService: SubjectService) {
+  constructor(private fb: FormBuilder,private toastr: ToastrService,private adminAuthService:AdminAuthService, private subjectService: SubjectService) {
     this.subjectForm = this.fb.group({
       _id: [''],
       adminId:[''],
@@ -102,6 +103,7 @@ export class SubjectComponent implements OnInit {
     }, 1000)
   }
   subjectAddUpdate() {
+    this.showModal = false;
     if (this.subjectForm.valid) {
       this.subjectForm.value.adminId = this.adminId;
       if (this.updateMode) {
@@ -109,6 +111,8 @@ export class SubjectComponent implements OnInit {
           if (res) {
             this.successDone();
             this.successMsg = res;
+            let a = res;
+            this.toastr.success(a, 'Success');
           }
         }, err => {
           this.errorCheck = true;
@@ -117,6 +121,7 @@ export class SubjectComponent implements OnInit {
       } else {
         this.subjectService.addSubject(this.subjectForm.value).subscribe((res: any) => {
           if (res) {
+            this.toastr.success('Student Add Successfully!', 'Success');
             this.successDone();
             this.successMsg = res;
           }

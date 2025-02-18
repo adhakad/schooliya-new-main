@@ -39,6 +39,7 @@
     "jspdf": "^2.5.1",
     "ngx-cookie-service": "^14.0.0",
     "ngx-pagination": "^6.0.3",
+    "ngx-toastr": "^14.2.0",
     "number-to-words": "^1.2.4",
     "owl.carousel": "^2.3.4",
     "pdf-lib": "^1.17.1",
