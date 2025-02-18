@@ -218,19 +218,8 @@
               </div>
 
               <div class="modal fade show" [class.show]="showModal">
-                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode && !successMsg">
-                  <div class="modal-content" *ngIf="successMsg">
-                    <div class="modal-header">
-                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                    </div>
-                    <div class="modal-body">
-                      <p class="success-message">{{successMsg}}</p>
-                    </div>
-                    <div class="modal-footer">
-                      <mat-icon></mat-icon>
-                    </div>
-                  </div>
-                  <div class="modal-content" *ngIf="!successMsg">
+                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode">
+                  <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">{{updateMode?'UPDATE': deleteMode ? 'DELETE' :'CREATE'}} STUDENT
                       </h5>
@@ -665,18 +654,7 @@
 
               <div class="modal fade show" [class.show]="showBulkImportModal">
                 <div class="modal-dialog modal-dialog-top" role="document">
-                  <div class="modal-content" *ngIf="successMsg">
-                    <div class="modal-header">
-                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                    </div>
-                    <div class="modal-body">
-                      <p class="success-message">{{successMsg}}</p>
-                    </div>
-                    <div class="modal-footer">
-                      <mat-icon></mat-icon>
-                    </div>
-                  </div>
-                  <div class="modal-content" *ngIf="!successMsg">
+                  <div class="modal-content">
                     <div class="modal-header">
                       <h6 class="modal-title">IMPORT EXCEL FILE
                       </h6>
@@ -716,18 +694,7 @@
               </div>
               <div class="modal fade show" [class.show]="showBulkExportModal">
                 <div class="modal-dialog modal-dialog-top" role="document">
-                  <div class="modal-content" *ngIf="successMsg">
-                    <div class="modal-header">
-                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                    </div>
-                    <div class="modal-body">
-                      <p class="success-message">{{successMsg}}</p>
-                    </div>
-                    <div class="modal-footer">
-                      <mat-icon></mat-icon>
-                    </div>
-                  </div>
-                  <div class="modal-content" *ngIf="!successMsg">
+                  <div class="modal-content">
                     <div class="modal-header">
                       <h6 class="modal-title">EXPORT EXCEL FILE
                       </h6>

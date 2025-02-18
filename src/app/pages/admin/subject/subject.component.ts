@@ -26,12 +26,12 @@ export class SubjectComponent implements OnInit {
   filters: any = {};
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
-  loader:Boolean=true;
-  adminId!:string;
-  constructor(private fb: FormBuilder,private toastr: ToastrService,private adminAuthService:AdminAuthService, private subjectService: SubjectService) {
+  loader: Boolean = true;
+  adminId!: string;
+  constructor(private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private subjectService: SubjectService) {
     this.subjectForm = this.fb.group({
       _id: [''],
-      adminId:[''],
+      adminId: [''],
       subject: ['', Validators.required],
     })
   }
@@ -39,27 +39,27 @@ export class SubjectComponent implements OnInit {
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
-    let load:any=this.getSubject({page:1});
-    if(load){
-      setTimeout(()=>{
+    let load: any = this.getSubject({ page: 1 });
+    if (load) {
+      setTimeout(() => {
         this.loader = false;
-      },1000);
+      }, 1000);
     }
   }
 
-  getSubject($event:any) {
+  getSubject($event: any) {
     return new Promise((resolve, reject) => {
-      let params:any = {
+      let params: any = {
         filters: {},
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
-        adminId:this.adminId,
+        adminId: this.adminId,
       };
       this.recordLimit = params.limit;
-      if(this.filters.searchText) {
+      if (this.filters.searchText) {
         params["filters"]["searchText"] = this.filters.searchText.trim();
       }
-      
+
       this.subjectService.subjectPaginationList(params).subscribe((res: any) => {
         if (res) {
           this.subjectInfo = res.subjectList;
@@ -95,24 +95,21 @@ export class SubjectComponent implements OnInit {
     this.deleteById = id;
   }
 
-  successDone() {
+  successDone(res: any) {
+    this.closeModal();
+    this.successMsg = '';
+    this.getSubject({ page: 1 });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getSubject({page:1});
-    }, 1000)
+      this.toastr.success(res, 'Success');
+    }, 500)
   }
   subjectAddUpdate() {
-    this.showModal = false;
     if (this.subjectForm.valid) {
       this.subjectForm.value.adminId = this.adminId;
       if (this.updateMode) {
         this.subjectService.updateSubject(this.subjectForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
-            let a = res;
-            this.toastr.success(a, 'Success');
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -121,9 +118,7 @@ export class SubjectComponent implements OnInit {
       } else {
         this.subjectService.addSubject(this.subjectForm.value).subscribe((res: any) => {
           if (res) {
-            this.toastr.success('Student Add Successfully!', 'Success');
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -136,8 +131,7 @@ export class SubjectComponent implements OnInit {
   subjectDelete(id: String) {
     this.subjectService.deleteSubject(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     })

@@ -163,7 +163,7 @@ let ChangeStatus = async (req, res, next) => {
             status: status
         }
         const updateStatus = await TeacherModel.findByIdAndUpdate(id, { $set: teacherData }, { new: true });
-        return res.status(200).json('Teacher update successfully.');
+        return res.status(200).json(`Teacher ${status} successfully.`);
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
     }

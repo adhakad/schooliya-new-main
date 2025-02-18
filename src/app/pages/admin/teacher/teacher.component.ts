@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { Teacher } from 'src/app/modal/teacher.model';
 import { ClassService } from 'src/app/services/class.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-teacher',
@@ -15,7 +16,7 @@ export class TeacherComponent implements OnInit {
   teacherForm: FormGroup;
   teacherPermissionForm: FormGroup;
   showModal: boolean = false;
-  showTeacherPermissionModal:boolean = false;
+  showTeacherPermissionModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
@@ -41,7 +42,7 @@ export class TeacherComponent implements OnInit {
 
   loader: Boolean = true;
   adminId!: String
-  constructor(private fb: FormBuilder, private adminAuthService: AdminAuthService, private teacherService: TeacherService,private classService: ClassService) {
+  constructor(private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private teacherService: TeacherService, private classService: ClassService) {
     this.teacherForm = this.fb.group({
       _id: [''],
       adminId: [''],
@@ -212,24 +213,24 @@ export class TeacherComponent implements OnInit {
   }
 
   falseAllValue() {
-      const controlOne = <FormArray>this.teacherPermissionForm.get('type.marksheetPermission');
-      const controlTwo = <FormArray>this.teacherPermissionForm.get('type.studentPermission');
-      const controlThree = <FormArray>this.teacherPermissionForm.get('type.admissionPermission');
-      const controlFour = <FormArray>this.teacherPermissionForm.get('type.admitCardPermission');
-      const controlFive = <FormArray>this.teacherPermissionForm.get('type.feeCollectionPermission');
-      const controlSix = <FormArray>this.teacherPermissionForm.get('type.promoteFailPermission');
-      const controlSeven = <FormArray>this.teacherPermissionForm.get('type.transferCertificatePermission');
-      controlOne.clear();
-      controlTwo.clear();
-      controlThree.clear();
-      controlFour.clear();
-      controlFive.clear();
-      controlSix.clear();
-      controlSeven.clear();
-      this.teacherObjId = '';
-      this.teacherPermissionForm.reset();
-  
-    }
+    const controlOne = <FormArray>this.teacherPermissionForm.get('type.marksheetPermission');
+    const controlTwo = <FormArray>this.teacherPermissionForm.get('type.studentPermission');
+    const controlThree = <FormArray>this.teacherPermissionForm.get('type.admissionPermission');
+    const controlFour = <FormArray>this.teacherPermissionForm.get('type.admitCardPermission');
+    const controlFive = <FormArray>this.teacherPermissionForm.get('type.feeCollectionPermission');
+    const controlSix = <FormArray>this.teacherPermissionForm.get('type.promoteFailPermission');
+    const controlSeven = <FormArray>this.teacherPermissionForm.get('type.transferCertificatePermission');
+    controlOne.clear();
+    controlTwo.clear();
+    controlThree.clear();
+    controlFour.clear();
+    controlFive.clear();
+    controlSix.clear();
+    controlSeven.clear();
+    this.teacherObjId = '';
+    this.teacherPermissionForm.reset();
+
+  }
   closeModal() {
     this.falseAllValue();
     this.showModal = false;
@@ -266,12 +267,13 @@ export class TeacherComponent implements OnInit {
     this.deleteById = id;
   }
 
-  successDone() {
+  successDone(msg: any) {
+    this.closeModal();
+    this.successMsg = '';
+    this.getTeacher({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getTeacher({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   patch() {
@@ -354,8 +356,7 @@ export class TeacherComponent implements OnInit {
       if (this.updateMode) {
         this.teacherService.updateTeacher(this.teacherForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -364,8 +365,7 @@ export class TeacherComponent implements OnInit {
       } else {
         this.teacherService.addTeacher(this.teacherForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -381,8 +381,7 @@ export class TeacherComponent implements OnInit {
     this.teacherPermissionForm.value.adminId = this.adminId;
     this.teacherService.addTeacherPermission(this.teacherPermissionForm.value).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
       }
     }, err => {
       this.errorCheck = true;
@@ -398,7 +397,7 @@ export class TeacherComponent implements OnInit {
       }
       this.teacherService.changeStatus(params).subscribe((res: any) => {
         if (res) {
-          this.getTeacher({ page: this.page });
+          this.successDone(res);
         }
       })
     }
@@ -407,8 +406,7 @@ export class TeacherComponent implements OnInit {
   teacherDelete(id: String) {
     this.teacherService.deleteTeacher(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     })

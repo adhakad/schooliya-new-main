@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-student',
@@ -77,7 +78,7 @@ export class StudentComponent implements OnInit {
     202: 'UKG',
     // अन्य क्लासेज़ भी यहाँ मैप करें
   };
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
       session: ['', Validators.required],
@@ -345,12 +346,13 @@ export class StudentComponent implements OnInit {
       }
     })
   }
-  successDone() {
+  successDone(msg:any) {
+    this.closeModal();
+    this.successMsg = '';
+    this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getStudents({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   getStudentByClass(cls: any) {
@@ -449,8 +451,7 @@ export class StudentComponent implements OnInit {
 
         this.studentService.updateStudent(formData).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -461,8 +462,7 @@ export class StudentComponent implements OnInit {
         this.studentForm.value.createdBy = 'Admin';
         this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -487,8 +487,7 @@ export class StudentComponent implements OnInit {
   studentDelete(id: String) {
     this.studentService.deleteStudent(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     })
@@ -568,7 +567,7 @@ export class StudentComponent implements OnInit {
   addBulkStudentRecord() {
     let studentRecordData = {
       bulkStudentRecord: this.bulkStudentRecord,
-      session:this.selectedSession,
+      session: this.selectedSession,
       class: this.className,
       stream: this.stream,
       adminId: this.adminId,
@@ -578,8 +577,7 @@ export class StudentComponent implements OnInit {
     if (studentRecordData) {
       this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
         if (res) {
-          this.successDone();
-          this.successMsg = res;
+          this.successDone(res);
         }
       }, err => {
         this.errorCheck = true;
@@ -660,10 +658,10 @@ export class StudentComponent implements OnInit {
       });
     }
     const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
-    const modifiedHeader = header.map(field => 
+    const modifiedHeader = header.map(field =>
       field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
     );
-    
+
     let reportData = {
       title: `${this.schoolInfo?.schoolName}, Student Record Class - ${className}, ${this.selectedSession}`,
       data: orderedData,
@@ -672,13 +670,13 @@ export class StudentComponent implements OnInit {
     };
 
     this.ete.exportExcel(reportData);
-    this.successDone();
+    this.successDone("Student Data Exported Successfully");
   }
 
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
     this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{religion:'Aninism / Adivasi'},{religion:'Islam'},{ religion: 'Baha I faith ' },{ religion: 'Judaism' },{ religion: 'Zoroastrianism' } ,{ religion: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
     this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]

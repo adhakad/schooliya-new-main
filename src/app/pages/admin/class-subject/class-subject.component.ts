@@ -8,6 +8,7 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassService } from 'src/app/services/class.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-class-subject',
@@ -35,11 +36,11 @@ export class ClassSubjectComponent implements OnInit {
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
   loader: Boolean = true;
-  adminId!:string;
-  constructor(private fb: FormBuilder,private adminAuthService:AdminAuthService, private classService: ClassService, private subjectService: SubjectService, private classSubjectService: ClassSubjectService) {
+  adminId!: string;
+  constructor(private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private subjectService: SubjectService, private classSubjectService: ClassSubjectService) {
     this.classSubjectForm = this.fb.group({
       _id: [''],
-      adminId:[''],
+      adminId: [''],
       class: ['', Validators.required],
       subject: [''],
       stream: ['', Validators.required],
@@ -85,12 +86,13 @@ export class ClassSubjectComponent implements OnInit {
     this.deleteById = id;
   }
 
-  successDone() {
+  successDone(msg:any) {
+    this.closeModal();
+    this.successMsg = '';
+    this.getClassSubject({ page: 1 });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getClassSubject({ page: 1 });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   subjectGroup(option: any) {
@@ -104,7 +106,7 @@ export class ClassSubjectComponent implements OnInit {
 
   chooseClass(cls: any) {
     this.cls = cls;
-    if(cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202){
+    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
       this.classSubjectForm.get('stream')?.setValue("N/A");
     }
   }
@@ -130,7 +132,7 @@ export class ClassSubjectComponent implements OnInit {
         filters: {},
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
-        adminId:this.adminId,
+        adminId: this.adminId,
       };
       this.recordLimit = params.limit;
       if (this.filters.searchText) {
@@ -154,8 +156,7 @@ export class ClassSubjectComponent implements OnInit {
       if (this.updateMode) {
         this.classSubjectService.updateClassSubject(this.classSubjectForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -165,8 +166,7 @@ export class ClassSubjectComponent implements OnInit {
         this.classSubjectForm.value.subject = this.selectedSubjectGroup;
         this.classSubjectService.addClassSubject(this.classSubjectForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -179,8 +179,7 @@ export class ClassSubjectComponent implements OnInit {
   classSubjectDelete(id: String) {
     this.classSubjectService.deleteClassSubject(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     })

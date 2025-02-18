@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SchoolService } from 'src/app/services/school.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-school',
@@ -16,7 +17,6 @@ export class SchoolComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   schoolInfo: any;
@@ -54,7 +54,7 @@ export class SchoolComponent implements OnInit {
     'West Bengal'
   ];
   constructor(
-    private fb: FormBuilder,
+    private fb: FormBuilder, private toastr: ToastrService,
     private schoolService: SchoolService,
     private adminAuthService: AdminAuthService
   ) {
@@ -93,7 +93,6 @@ export class SchoolComponent implements OnInit {
     this.updateMode = false;
     this.deleteMode = false;
     this.errorMsg = '';
-    this.successMsg = '';
     this.schoolForm.reset();
     this.logoPreview = null;  // Reset logo preview
   }
@@ -123,12 +122,13 @@ export class SchoolComponent implements OnInit {
     this.deleteById = id;
   }
 
-  successDone() {
+  successDone(msg: any) {
+
+    this.getSchool();
+    this.closeModal();
     setTimeout(() => {
-      this.getSchool();
-      this.closeModal();
-      this.successMsg = '';
-    }, 1500);
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   getSchool() {
@@ -165,8 +165,7 @@ export class SchoolComponent implements OnInit {
         this.schoolService.updateSchool(this.schoolForm.value).subscribe(
           (res: any) => {
             if (res) {
-              this.successDone();
-              this.successMsg = 'School updated successfully';
+              this.successDone('School updated successfully');
             }
           },
           (err) => {
@@ -178,8 +177,7 @@ export class SchoolComponent implements OnInit {
         this.schoolService.addSchool(this.schoolForm.value).subscribe(
           (res: any) => {
             if (res) {
-              this.successDone();
-              this.successMsg = 'School added successfully';
+              this.successDone('School added successfully');
             }
           },
           (err) => {
@@ -195,9 +193,8 @@ export class SchoolComponent implements OnInit {
   schoolDelete(id: String) {
     this.schoolService.deleteSchool(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
+        this.successDone('School deleted successfully');
         this.schoolInfo = '';
-        this.successMsg = 'School deleted successfully';
         this.deleteById = '';
       }
     });
