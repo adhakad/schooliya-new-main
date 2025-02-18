@@ -312,11 +312,13 @@ export class StudentComponent implements OnInit {
     const classValue = student.class;
     if (classValue && this.classMap[classValue]) {
       this.studentForm.patchValue({
-        class: this.classMap[classValue] // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
+        class: this.classMap[classValue], // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
+
       });
     }
     if (this.updateMode) {
-      this.studentForm.get('feesConcession')?.disable();  // Disable in edit mode
+      this.studentForm.get('feesConcession')?.disable();
+      this.studentForm.get('session')?.disable();  // Disable in edit mode
     }
   }
   deleteStudentModel(id: String) {

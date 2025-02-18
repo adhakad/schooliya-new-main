@@ -318,8 +318,7 @@
                                 <mat-label>First Enrolled Class </mat-label>
                                 <mat-select matInput formControlName="admissionClass">
                                   <div *ngFor="let classInfo of classInfo">
-                                    <mat-option value="{{classInfo.class}}">{{classInfo.class |
-                                      classSuffix}}</mat-option>
+                                    <mat-option value="{{classInfo.class}}">{{classInfo.class  | classSuffix}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error

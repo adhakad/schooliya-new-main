@@ -336,7 +336,8 @@ export class TeacherStudentComponent implements OnInit {
       });
     }
     if (this.updateMode) {
-      this.studentForm.get('feesConcession')?.disable();  // Disable in edit mode
+      this.studentForm.get('feesConcession')?.disable();
+      this.studentForm.get('session')?.disable();  // Disable in edit mode
     }
   }
   deleteStudentModel(id: String) {
