@@ -7,6 +7,7 @@ import { AdmitCardStructureService } from 'src/app/services/admit-card-structure
 import { ClassService } from 'src/app/services/class.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-teacher-student-admit-card-structure',
@@ -14,14 +15,13 @@ import { TeacherService } from 'src/app/services/teacher.service';
   styleUrls: ['./teacher-student-admit-card-structure.component.css']
 })
 export class TeacherStudentAdmitCardStructureComponent implements OnInit {
-  cls: number=0;
+  cls: number = 0;
   admitcardForm: FormGroup;
   showModal: boolean = false;
   showAdmitCardStructureModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   classSubject: any[] = [];
@@ -35,7 +35,7 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
   examTime: any[] = ["8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM"];
   loader: Boolean = true;
   adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private admitCardStructureService: AdmitCardStructureService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private admitCardStructureService: AdmitCardStructureService) {
     this.admitcardForm = this.fb.group({
       adminId: [''],
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
@@ -278,12 +278,12 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
     this.falseAllValue();
     this.admitcardForm.reset();
   }
-  successDone() {
+  successDone(msg: any) {
+    this.closeModal();
+    this.getAdmitCardStructureByClass();
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getAdmitCardStructureByClass();
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   patch() {
@@ -332,8 +332,7 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
     this.admitcardForm.value.adminId = this.adminId;
     this.admitCardStructureService.addAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
       }
     }, err => {
       this.errorCheck = true;
@@ -361,8 +360,7 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
   admitCardStructureDelete(id: String) {
     this.admitCardStructureService.deleteAdmitCardStructure(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     })

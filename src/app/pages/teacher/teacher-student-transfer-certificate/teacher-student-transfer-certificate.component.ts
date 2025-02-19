@@ -17,6 +17,7 @@ import { IssuedTransferCertificateService } from 'src/app/services/issued-transf
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -34,7 +35,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
@@ -72,9 +72,9 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   isDate: string = '';
   readyTC: Boolean = false;
   adminId!: String
-  teacherInfo:any;
+  teacherInfo: any;
   createdBy: String = '';
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private printPdfService: PrintPdfService,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private printPdfService: PrintPdfService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.tcForm = this.fb.group({
       adminId: [''],
       lastExamStatus: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
@@ -185,7 +185,7 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     printHtml += '.address{margin-top: -45px;}';
     printHtml += '.address p{color: #0a0a0a !important;font-size:18px;margin-top: -15px !important;}';
     printHtml += '.title-lable {text-align: center;margin-top: 0px;margin-bottom: 0;}';
-    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';    
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
     printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
     printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
@@ -247,7 +247,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     this.errorCheck = false;
     this.readyTC = false;
     this.errorMsg = '';
-    this.successMsg = '';
     this.classSubject = [];
     this.promotedClass;
     this.singleStudentInfo;
@@ -290,12 +289,12 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
       }
     })
   }
-  successDone() {
+  successDone(msg:any) {
+    this.closeModal();
+    this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getStudents({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   getStudentByClass(cls: any) {
@@ -373,12 +372,12 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     if (this.tcForm.valid && this.singleStudentInfo) {
       this.singleStudentInfo.isDate = this.isDate;
       this.tcForm.value.adminId = this.adminId;
-      if (this.tcForm.value.totalWorkingDays>365) {
+      if (this.tcForm.value.totalWorkingDays > 365) {
         this.errorCheck = true;
         this.errorMsg = 'Total working days cannot be greater than 365!';
         return
       }
-      if (this.tcForm.value.totalWorkingDays<this.tcForm.value.totalPresenceDays) {
+      if (this.tcForm.value.totalWorkingDays < this.tcForm.value.totalPresenceDays) {
         this.errorCheck = true;
         this.errorMsg = 'Total presence days cannot be greater than total working days!';
         return

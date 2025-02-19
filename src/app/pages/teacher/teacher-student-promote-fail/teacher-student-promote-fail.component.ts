@@ -14,6 +14,7 @@ import { IssuedTransferCertificateService } from 'src/app/services/issued-transf
 
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -32,7 +33,6 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
@@ -71,9 +71,9 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   readyTC: Boolean = false;
   baseURL!: string;
   adminId!: String
-  teacherInfo:any;
+  teacherInfo: any;
   createdBy: String = '';
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute,private teacherAuthService: TeacherAuthService,private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentClassPromoteForm = this.fb.group({
       _id: ['', Validators.required],
       session: ['', Validators.required],
@@ -92,7 +92,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
       admissionNo: ['', Validators.required],
       adminId: [''],
       class: [''],
-      stream: ['',Validators.required],
+      stream: ['', Validators.required],
       rollNumber: ['', Validators.required],
       feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: ['']
@@ -111,7 +111,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
-  
+
   getTeacherById(teacherInfo: any) {
     let params = {
       adminId: teacherInfo.adminId,
@@ -177,7 +177,6 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
     this.deleteMode = false;
     this.errorCheck = false;
     this.errorMsg = '';
-    this.successMsg = '';
     this.classSubject = [];
     this.promotedClass;
     this.failClass;
@@ -190,7 +189,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   addStudentClassPromoteModel(student: any) {
     this.showClassPromoteModal = true;
     this.singleStudentInfo = student;
-    let sessionYears = student.session.split("-"); 
+    let sessionYears = student.session.split("-");
     let startYear = parseInt(sessionYears[0]);
     let endYear = parseInt(sessionYears[1]);
     let newStartYear = startYear + 1;
@@ -206,7 +205,7 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
   addStudentClassFailModel(student: any) {
     this.showClassFailModal = true;
     this.singleStudentInfo = student;
-    let sessionYears = student.session.split("-"); 
+    let sessionYears = student.session.split("-");
     let startYear = parseInt(sessionYears[0]);
     let endYear = parseInt(sessionYears[1]);
     let newStartYear = startYear + 1;
@@ -258,12 +257,12 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
       }
     })
   }
-  successDone() {
+  successDone(msg: any) {
+    this.closeModal();
+    this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getStudents({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   getStudentByClass(cls: any) {
@@ -334,12 +333,9 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
       this.studentClassPromoteForm.value.createdBy = this.createdBy;
       this.studentService.studentClassPromote(this.studentClassPromoteForm.value).subscribe((res: any) => {
         if (res) {
-          setTimeout(() => {
-            this.successDone();
-          }, 1000)
           this.promotedClass;
           this.promotedClass = res.className;
-          this.successMsg = res.successMsg;
+          this.successDone(res.successMsg);
         }
       }, err => {
         this.errorCheck = true;
@@ -360,12 +356,9 @@ export class TeacherStudentPromoteFailComponent implements OnInit {
       this.studentClassFailForm.value.createdBy = this.createdBy;
       this.studentService.studentClassFail(this.studentClassFailForm.value).subscribe((res: any) => {
         if (res) {
-          setTimeout(() => {
-            this.successDone();
-          }, 1000)
           this.failClass;
           this.failClass = res.className;
-          this.successMsg = res.successMsg;
+          this.successDone(res.successMsg);
         }
       }, err => {
         this.errorCheck = true;

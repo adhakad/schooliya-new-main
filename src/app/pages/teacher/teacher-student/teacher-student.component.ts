@@ -16,6 +16,8 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-teacher-student',
   templateUrl: './teacher-student.component.html',
@@ -32,7 +34,6 @@ export class TeacherStudentComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
@@ -72,7 +73,7 @@ export class TeacherStudentComponent implements OnInit {
   serialNo!: number;
   isDate: string = '';
   baseURL!: string;
-  teacherInfo:any;
+  teacherInfo: any;
   createdBy: String = '';
   adminId!: String
   selectedSession: string = '';
@@ -82,7 +83,7 @@ export class TeacherStudentComponent implements OnInit {
     202: 'UKG',
     // अन्य क्लासेज़ भी यहाँ मैप करें
   };
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService,private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
       session: ['', Validators.required],
@@ -220,7 +221,6 @@ export class TeacherStudentComponent implements OnInit {
     this.fileChoose = false;
     this.errorCheck = false;
     this.errorMsg = '';
-    this.successMsg = '';
     this.classSubject = [];
     this.promotedClass;
     this.singleStudentInfo;
@@ -277,7 +277,7 @@ export class TeacherStudentComponent implements OnInit {
     this.errorCheck = false;
     this.getStudentByClass(this.className);
   }
-  
+
   addStudentInfoViewModel(student: any) {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
@@ -357,12 +357,12 @@ export class TeacherStudentComponent implements OnInit {
       }
     })
   }
-  successDone() {
+  successDone(msg: any) {
+    this.closeModal();
+    this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getStudents({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   getStudentByClass(cls: any) {
@@ -462,8 +462,7 @@ export class TeacherStudentComponent implements OnInit {
 
         this.studentService.updateStudent(formData).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -474,8 +473,7 @@ export class TeacherStudentComponent implements OnInit {
         this.studentForm.value.createdBy = this.createdBy;
         this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
           if (res) {
-            this.successDone();
-            this.successMsg = res;
+            this.successDone(res);
           }
         }, err => {
           this.errorCheck = true;
@@ -484,7 +482,7 @@ export class TeacherStudentComponent implements OnInit {
       }
     }
   }
-  
+
   changeStatus(id: any, statusValue: any) {
     if (id) {
       let params = {
@@ -501,8 +499,7 @@ export class TeacherStudentComponent implements OnInit {
   studentDelete(id: String) {
     this.studentService.deleteStudent(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
         this.deleteById = '';
       }
     })
@@ -519,183 +516,182 @@ export class TeacherStudentComponent implements OnInit {
   }
 
   parseExcel(arrayBuffer: any): void {
-      const workbook = new ExcelJS.Workbook();
-      workbook.xlsx.load(arrayBuffer).then((workbook) => {
-        const worksheet = workbook.getWorksheet(1);
-        const data: any = [];
-        worksheet!.eachRow({ includeEmpty: false }, (row: any, rowNumber) => {
-          // Assuming the first row contains headers
-          if (rowNumber === 1) {
-            const headers = row.values.map(String);
-            data.push(headers);
-          } else {
-            const rowData = row.values.map(String);
-            data.push(rowData);
-          }
-        });
-        const lastIndex = data.length - 1;
-        const indexesToDelete = [0, lastIndex];
-        // IndexesToDelete ke hisab se elements ko delete karna
-        indexesToDelete.sort((a, b) => b - a); // Sort indexesToDelete in descending order
-        indexesToDelete.forEach((index) => {
-          data.splice(index, 1);
-        });
-        const fields = data[0];
-        // Data ke baki ke rows
-        const dataRows = data.slice(1);
-        // Data ko objects mein map karna
-        const mappedData = dataRows.map((row: any) => {
-          const obj: any = {};
-          fields.forEach((field: any, index: any) => {
-            obj[field] = row[index];
-          });
-          return obj;
-        });
-  
-        function transformKeys(dataArray: any) {
-          return dataArray.map((obj: any) => {
-            const newObj: any = {};
-            for (const key in obj) {
-              if (obj.hasOwnProperty(key)) {
-                const newKey = key.replace(/\s+/g, ''); // Remove spaces
-                newObj[newKey.charAt(0).toLowerCase() + newKey.slice(1)] = obj[key];
-              }
-            }
-            return newObj;
-          });
-        }
-        // Transform the keys of the array
-        const transformedDataArray = transformKeys(mappedData);
-        if (transformedDataArray.length > 100) {
-          this.fileChoose = false;
-          this.errorCheck = true;
-          this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 100';
-        }
-        if (transformedDataArray.length <= 100) {
-          this.bulkStudentRecord = transformedDataArray;
-          this.fileChoose = true;
-          this.errorCheck = false;
-          this.errorMsg = '';
+    const workbook = new ExcelJS.Workbook();
+    workbook.xlsx.load(arrayBuffer).then((workbook) => {
+      const worksheet = workbook.getWorksheet(1);
+      const data: any = [];
+      worksheet!.eachRow({ includeEmpty: false }, (row: any, rowNumber) => {
+        // Assuming the first row contains headers
+        if (rowNumber === 1) {
+          const headers = row.values.map(String);
+          data.push(headers);
+        } else {
+          const rowData = row.values.map(String);
+          data.push(rowData);
         }
       });
-    }
-  
-    addBulkStudentRecord() {
-      let studentRecordData = {
-        bulkStudentRecord: this.bulkStudentRecord,
-        session:this.selectedSession,
-        class: this.className,
-        stream: this.stream,
-        adminId: this.adminId,
-        createdBy: this.createdBy,
-  
-      }
-      if (studentRecordData) {
-        this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
-          if (res) {
-            this.successDone();
-            this.successMsg = res;
-          }
-        }, err => {
-          this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
-      }
-    }
+      const lastIndex = data.length - 1;
+      const indexesToDelete = [0, lastIndex];
+      // IndexesToDelete ke hisab se elements ko delete karna
+      indexesToDelete.sort((a, b) => b - a); // Sort indexesToDelete in descending order
+      indexesToDelete.forEach((index) => {
+        data.splice(index, 1);
+      });
+      const fields = data[0];
+      // Data ke baki ke rows
+      const dataRows = data.slice(1);
+      // Data ko objects mein map karna
+      const mappedData = dataRows.map((row: any) => {
+        const obj: any = {};
+        fields.forEach((field: any, index: any) => {
+          obj[field] = row[index];
+        });
+        return obj;
+      });
 
-
-    async exportToExcel() {
-      let className = this.className;
-      if (className == 1) {
-        className = `${this.className}st`;
-      }
-      if (className == 2) {
-        className = `${this.className}nd`;
-      }
-      if (className == 3) {
-        className = `${this.className}rd`;
-      }
-      if (className >= 4 && className <= 12) {
-        className = `${this.className}th`;
-      }
-      if (className == 200) {
-        className = `Nursery`;
-      }
-      if (className == 201) {
-        className = `LKG`;
-      }
-      if (className == 202) {
-        className = `UKG`;
-      }
-      let samagraId = 'samagraId' //dynamic field add testing
-      const header: string[] = [
-        'admissionNo',
-        'name',
-        'fatherName',
-        'motherName',
-        'rollNumber',
-        'medium',
-        'feesConcession',
-        'aadharNumber',
-        samagraId,
-        'dob',
-        'doa',
-        'admissionType',
-        'admissionClass',
-        'gender',
-        'category',
-        'religion',
-        'nationality',
-        'address',
-        'udiseNumber',
-        'bankAccountNo',
-        'bankIfscCode',
-        'fatherQualification',
-        'motherQualification',
-        'fatherOccupation',
-        'motherOccupation',
-        'parentsContact',
-        'familyAnnualIncome',
-      ];
-      function toTitleCase(str: string) {
-        return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
-      }
-      function orderObjectsByHeaders(studentInfoByClass: any, header: any, selectedSession: string) {
-        const filteredData = studentInfoByClass.filter((obj: any) => obj.session === selectedSession);
-        return filteredData.map((obj: any) => {
-          const orderedObj: any = {};
-          header.forEach((header: any) => {
-            let value = obj[header];
-            if (["name", "fatherName", "motherName"].includes(header) && typeof value === "string") {
-              value = toTitleCase(value);
+      function transformKeys(dataArray: any) {
+        return dataArray.map((obj: any) => {
+          const newObj: any = {};
+          for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+              const newKey = key.replace(/\s+/g, ''); // Remove spaces
+              newObj[newKey.charAt(0).toLowerCase() + newKey.slice(1)] = obj[key];
             }
-            orderedObj[header] = value;
-          });
-          return orderedObj;
+          }
+          return newObj;
         });
       }
-      const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
-      const modifiedHeader = header.map(field => 
-        field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
-      );
-      
-      let reportData = {
-        title: `${this.schoolInfo?.schoolName}, Student Record Class - ${className}, ${this.selectedSession}`,
-        data: orderedData,
-        headers: modifiedHeader,
-        fileName: `Student Class - ${className}, ${this.selectedSession}, ${this.schoolInfo?.schoolName}`,
-      };
-  
-      this.ete.exportExcel(reportData);
-      this.successDone();
+      // Transform the keys of the array
+      const transformedDataArray = transformKeys(mappedData);
+      if (transformedDataArray.length > 100) {
+        this.fileChoose = false;
+        this.errorCheck = true;
+        this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 100';
+      }
+      if (transformedDataArray.length <= 100) {
+        this.bulkStudentRecord = transformedDataArray;
+        this.fileChoose = true;
+        this.errorCheck = false;
+        this.errorMsg = '';
+      }
+    });
+  }
+
+  addBulkStudentRecord() {
+    let studentRecordData = {
+      bulkStudentRecord: this.bulkStudentRecord,
+      session: this.selectedSession,
+      class: this.className,
+      stream: this.stream,
+      adminId: this.adminId,
+      createdBy: this.createdBy,
+
     }
-  
-    allOptions() {
-      this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-      this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
-      this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{religion:'Aninism / Adivasi'},{religion:'Islam'},{ religion: 'Baha I faith ' },{ religion: 'Judaism' },{ religion: 'Zoroastrianism' } ,{ religion: 'Other' }]
-      this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
-      this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-      this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
+    if (studentRecordData) {
+      this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
+        if (res) {
+          this.successDone(res);
+        }
+      }, err => {
+        this.errorCheck = true;
+        this.errorMsg = err.error;
+      })
     }
+  }
+
+
+  async exportToExcel() {
+    let className = this.className;
+    if (className == 1) {
+      className = `${this.className}st`;
+    }
+    if (className == 2) {
+      className = `${this.className}nd`;
+    }
+    if (className == 3) {
+      className = `${this.className}rd`;
+    }
+    if (className >= 4 && className <= 12) {
+      className = `${this.className}th`;
+    }
+    if (className == 200) {
+      className = `Nursery`;
+    }
+    if (className == 201) {
+      className = `LKG`;
+    }
+    if (className == 202) {
+      className = `UKG`;
+    }
+    let samagraId = 'samagraId' //dynamic field add testing
+    const header: string[] = [
+      'admissionNo',
+      'name',
+      'fatherName',
+      'motherName',
+      'rollNumber',
+      'medium',
+      'feesConcession',
+      'aadharNumber',
+      samagraId,
+      'dob',
+      'doa',
+      'admissionType',
+      'admissionClass',
+      'gender',
+      'category',
+      'religion',
+      'nationality',
+      'address',
+      'udiseNumber',
+      'bankAccountNo',
+      'bankIfscCode',
+      'fatherQualification',
+      'motherQualification',
+      'fatherOccupation',
+      'motherOccupation',
+      'parentsContact',
+      'familyAnnualIncome',
+    ];
+    function toTitleCase(str: string) {
+      return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
+    }
+    function orderObjectsByHeaders(studentInfoByClass: any, header: any, selectedSession: string) {
+      const filteredData = studentInfoByClass.filter((obj: any) => obj.session === selectedSession);
+      return filteredData.map((obj: any) => {
+        const orderedObj: any = {};
+        header.forEach((header: any) => {
+          let value = obj[header];
+          if (["name", "fatherName", "motherName"].includes(header) && typeof value === "string") {
+            value = toTitleCase(value);
+          }
+          orderedObj[header] = value;
+        });
+        return orderedObj;
+      });
+    }
+    const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
+    const modifiedHeader = header.map(field =>
+      field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
+    );
+
+    let reportData = {
+      title: `${this.schoolInfo?.schoolName}, Student Record Class - ${className}, ${this.selectedSession}`,
+      data: orderedData,
+      headers: modifiedHeader,
+      fileName: `Student Class - ${className}, ${this.selectedSession}, ${this.schoolInfo?.schoolName}`,
+    };
+
+    this.ete.exportExcel(reportData);
+    this.successDone("Student Data Exported Successfully");
+  }
+
+  allOptions() {
+    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
+    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
+    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
+    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
+    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
+  }
 }

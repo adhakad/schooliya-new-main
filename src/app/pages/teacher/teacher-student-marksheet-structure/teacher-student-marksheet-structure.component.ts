@@ -8,6 +8,7 @@ import { ClassSubjectService } from 'src/app/services/class-subject.service';
 import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -23,7 +24,6 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   marksheetTemplate: any;
@@ -39,7 +39,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   isChecked!: Boolean;
   adminId: string = '';
   teacherInfo: any;
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
       class: [''],
@@ -94,12 +94,12 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   }
 
 
-  addExamResultModel(template: any,templateUrl:any) {
+  addExamResultModel(template: any, templateUrl: any) {
     this.showModal = true;
     this.examResultForm.reset();
     this.examResultForm.get('templateName')?.setValue(template);
     this.examResultForm.get('templateUrl')?.setValue(templateUrl);
-    this.selectedTemplate=template;
+    this.selectedTemplate = template;
   }
   openExamResultStructureModal(examResult: any) {
     this.examResultInfo = examResult;
@@ -122,18 +122,17 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.errorMsg = '';
     this.deleteMode = false;
     this.deleteById = '';
-    this.successMsg = '';
     this.examResultInfo;
     this.processedTheoryData = [];
     this.processedPracticalData = [];
     this.examResultForm.reset();
   }
-  successDone() {
+  successDone(msg: any) {
+    this.closeModal();
+    this.getSingleClassMarksheetTemplateByStream(this.cls)
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getSingleClassMarksheetTemplateByStream(this.cls)
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
   getSingleClassMarksheetTemplateByStream(cls: any) {
     let params = {
@@ -144,7 +143,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.examResultStructureService.getSingleClassMarksheetTemplateByStream(params).subscribe((res: any) => {
       if (res) {
         this.marksheetTemplate = res;
-        this.marksheetSelectMode=false;
+        this.marksheetSelectMode = false;
       }
     }, err => {
     })
@@ -156,8 +155,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.examResultForm.value.stream = this.stream;
     this.examResultStructureService.addExamResultStructure(this.examResultForm.value).subscribe((res: any) => {
       if (res) {
-        this.successDone();
-        this.successMsg = res;
+        this.successDone(res);
       }
     }, err => {
       this.errorCheck = true;
@@ -170,9 +168,8 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   marksheetTemplateDelete(id: String) {
     this.examResultStructureService.deleteResultStructure(id).subscribe((res: any) => {
       if (res) {
-        this.marksheetSelectMode=true;
-        this.successDone();
-        this.successMsg = res;
+        this.marksheetSelectMode = true;
+        this.successDone(res);
         this.deleteById = '';
       }
     })

@@ -102,20 +102,8 @@
                                 </table>
                             </div>
                             <div class="modal fade show" [class.show]="showModal">
-                                <div class="modal-dialog modal-lg" role="document"
-                                    [class.modal-lg]="!deleteMode && !successMsg">
-                                    <div class="modal-content" *ngIf="successMsg">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="success-message">{{successMsg}}</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <mat-icon></mat-icon>
-                                        </div>
-                                    </div>
-                                    <div class="modal-content" *ngIf="!successMsg">
+                                <div class="modal-dialog modal-lg" role="document" [class.modal-lg]="!deleteMode">
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title mt-2">{{updateMode?'UPDATE': deleteMode ?
                                                 'DELETE'

@@ -9,6 +9,7 @@ import { AcademicSessionService } from 'src/app/services/academic-session.servic
 import { ClassService } from 'src/app/services/class.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-teacher-student-fees-structure',
@@ -25,7 +26,6 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
   deleteMode: boolean = false;
   updateMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
 
@@ -49,7 +49,7 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
   allSession: any = [];
   selectedSession: string = '';
   teacherInfo: any;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private academicSessionService: AcademicSessionService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
       session: [''],
@@ -197,12 +197,12 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
     this.deleteById = id;
   }
 
-  successDone() {
+  successDone(msg: any) {
     this.getFeesStructureBySession(this.adminId, this.selectedSession);
+    this.closeModal();
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
 
@@ -241,8 +241,7 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
     if (!containsFeesTypeNull) {
       this.feesStructureService.addFeesStructure(this.feesForm.value).subscribe((res: any) => {
         if (res) {
-          this.successDone();
-          this.successMsg = res;
+          this.successDone(res);
         }
       }, err => {
         this.errorCheck = true;
@@ -254,9 +253,8 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
   feesStructureDelete(id: String) {
     this.feesStructureService.deleteFeesStructure(id).subscribe((res: any) => {
       if (res) {
-        this.successDone();
+        this.successDone(res);
         this.getFeesStructureBySession(this.adminId, this.selectedSession);
-        this.successMsg = res;
         this.deleteById = '';
       }
     }, err => {

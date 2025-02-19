@@ -13,6 +13,7 @@ import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { ClassService } from 'src/app/services/class.service';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -30,7 +31,6 @@ export class TeacherStudentFeesComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   feesInfo: any[] = [1, 2, 3, 4, 5];
@@ -66,7 +66,7 @@ export class TeacherStudentFeesComponent implements OnInit {
   baseURL!: string;
   adminId!: string;
   receiptSession:any;
-  constructor(private fb: FormBuilder, private router:Router, public activatedRoute: ActivatedRoute, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
+  constructor(private fb: FormBuilder, private router:Router, public activatedRoute: ActivatedRoute,private toastr: ToastrService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
       session: [''],
@@ -192,7 +192,6 @@ export class TeacherStudentFeesComponent implements OnInit {
     this.showPrintModal = false;
     this.showBulkFeesModal = false;
     this.updateMode = false;
-    this.successMsg = '';
     this.errorMsg = '';
     this.payNow = false;
     this.paybleInstallment = [];
@@ -316,11 +315,13 @@ export class TeacherStudentFeesComponent implements OnInit {
             this.receiptInstallment = res;
             if (res.admissionFeesPayable == true) {
               this.clsFeesStructure.feesType = [{ Admission: res.admissionFees }, ...this.clsFeesStructure.feesType];
+              this.toastr.success('Fee Amount Collected Successfully', 'Success');
               this.showModal = false;
               this.showPrintModal = true;
             }
             if (res.admissionFeesPayable == false) {
               this.clsFeesStructure = this.clsFeesStructure;
+              this.toastr.success('Fee Amount Collected Successfully', 'Success');
               this.showModal = false;
               this.showPrintModal = true;
             }

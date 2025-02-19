@@ -13,6 +13,7 @@ import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-teacher-admission',
@@ -28,11 +29,10 @@ export class TeacherAdmissionComponent implements OnInit {
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
-  successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
   academicSession!: string;
-  allSession:any=[];
+  allSession: any = [];
   classInfo: any[] = [];
   studentInfo: any[] = [];
   recordLimit: number = 10;
@@ -62,7 +62,7 @@ export class TeacherAdmissionComponent implements OnInit {
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
-  constructor(private adminAuthService: AdminAuthService, private fb: FormBuilder, private activatedRoute: ActivatedRoute,private academicSessionService: AcademicSessionService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService) {
+  constructor(private adminAuthService: AdminAuthService, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService) {
     this.studentForm = this.fb.group({
       _id: [''],
       adminId: [''],
@@ -165,10 +165,10 @@ export class TeacherAdmissionComponent implements OnInit {
     printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
 
-    
+
     printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
-    
+
     printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
     printHtml += '.custom-table th{min-height: 48px;text-align: center;border:1px solid #707070;line-height:25px;font-size: 18px;}';
     printHtml += '.custom-table tr{height: 48px;}';
@@ -214,8 +214,8 @@ export class TeacherAdmissionComponent implements OnInit {
   }
   addPrintModal(student: any) {
     let params = {
-      adminId : this.adminId,
-      studentId:student._id,
+      adminId: this.adminId,
+      studentId: student._id,
     }
     this.showAdmissionPrintModal = true;
     this.feesService.singleStudentFeesCollectionById(params).subscribe((res: any) => {
@@ -282,7 +282,6 @@ export class TeacherAdmissionComponent implements OnInit {
     this.showAdmissionPrintModal = false;
     this.updateMode = false;
     this.deleteMode = false;
-    this.successMsg = '';
     this.errorMsg = '';
     this.stream = '';
     this.cls = 0;
@@ -311,13 +310,13 @@ export class TeacherAdmissionComponent implements OnInit {
     this.deleteById = id;
   }
 
-  
-  successDone() {
+
+  successDone(msg: any) {
+    this.closeModal();
+    this.getStudentsByAdmission({ page: this.page });
     setTimeout(() => {
-      this.closeModal();
-      this.successMsg = '';
-      this.getStudentsByAdmission({ page: this.page });
-    }, 1000)
+      this.toastr.success(msg, 'Success');
+    }, 500)
   }
 
   getStudentsByAdmission($event: any) {
@@ -352,8 +351,7 @@ export class TeacherAdmissionComponent implements OnInit {
       this.studentForm.value.createdBy = this.createdBy;
       this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
         if (res) {
-          this.successDone();
-          this.successMsg = res;
+          this.successDone(res);
         }
       }, err => {
         this.errorCheck = true;
@@ -365,7 +363,7 @@ export class TeacherAdmissionComponent implements OnInit {
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
     this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' },{religion:'Aninism / Adivasi'},{religion:'Islam'},{ religion: 'Baha I faith ' },{ religion: 'Judaism' },{ religion: 'Zoroastrianism' } ,{ religion: 'Other' }]
+    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
     this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
     this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
     this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]

@@ -73,8 +73,7 @@
                                             <mat-label *ngIf="!cls">Class</mat-label>
                                             <mat-select type="number" matInput>
                                                 <div *ngFor="let class of classInfo">
-                                                    <mat-option value="{{class}}"
-                                                        (click)="chooseClass(class)">{{class
+                                                    <mat-option value="{{class}}" (click)="chooseClass(class)">{{class
                                                         |
                                                         classSuffix}}</mat-option>
                                                 </div>
@@ -181,23 +180,8 @@
                                 </app-pagination>
                             </div>
                             <div class="modal fade show" [class.show]="showClassPromoteModal">
-                                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!successMsg">
-                                    <div class="modal-content" *ngIf="successMsg">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="success-message" *ngIf="promotedClass">{{successMsg}}
-                                                {{promotedClass |
-                                                classSuffix}}
-                                            </p>
-                                            <p class="success-message" *ngIf="!promotedClass">{{successMsg}}</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <mat-icon></mat-icon>
-                                        </div>
-                                    </div>
-                                    <div class="modal-content" *ngIf="!successMsg">
+                                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="">
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">STUDENT CLASS PROMOTE</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
@@ -311,23 +295,8 @@
 
 
                             <div class="modal fade show" [class.show]="showClassFailModal">
-                                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!successMsg">
-                                    <div class="modal-content" *ngIf="successMsg">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="success-message" *ngIf="failClass">{{successMsg}}
-                                                {{failClass |
-                                                classSuffix}}
-                                            </p>
-                                            <p class="success-message" *ngIf="!failClass">{{successMsg}}</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <mat-icon></mat-icon>
-                                        </div>
-                                    </div>
-                                    <div class="modal-content" *ngIf="!successMsg">
+                                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="">
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">STUDENT CLASS FAIL</h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
