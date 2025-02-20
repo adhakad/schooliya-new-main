@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { read, utils, writeFile } from 'xlsx';
 import * as ExcelJS from 'exceljs';
@@ -37,7 +38,6 @@ export class TransferCertificateComponent implements OnInit {
   errorMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
-  classInfo: any[] = [];
   studentInfo: any[] = [];
   studentInfoByClass: any[] = [];
   recordLimit: number = 10;
@@ -57,7 +57,7 @@ export class TransferCertificateComponent implements OnInit {
   notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   cls: number = 0;
-  className: any;
+  classInfo: any[] = [];
   admissionType: string = '';
   schoolInfo: any;
   bulkStudentRecord: any;
@@ -71,7 +71,7 @@ export class TransferCertificateComponent implements OnInit {
   isDate: string = '';
   readyTC: Boolean = false;
   adminId!: String
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private router: Router, private toastr: ToastrService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.tcForm = this.fb.group({
       adminId: [''],
       lastExamStatus: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
@@ -90,6 +90,17 @@ export class TransferCertificateComponent implements OnInit {
     this.getSchool();
     this.getClass();
     this.allOptions();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.cls = +params['cls'] || 0;
+      this.stream = params['stream'] || '';
+      if (this.cls) {
+        this.getStudents({ page: 1 });
+      } else {
+        this.cls = 0;
+        this.stream = '';
+        this.studentInfo = [];
+      }
+    });
   }
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
@@ -98,13 +109,12 @@ export class TransferCertificateComponent implements OnInit {
       }
     })
   }
-  chooseClass(cls: any) {
-    this.page = 0;
-    this.className = cls;
+  chooseClass(cls: number) {
     this.cls = cls;
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
       this.studentInfo = [];
+      this.updateRouteParams();
       this.getStudents({ page: 1 });
     }
     if (cls == 11 || cls == 12) {
@@ -112,23 +122,26 @@ export class TransferCertificateComponent implements OnInit {
         this.stream = '';
       }
       this.studentInfo = [];
+      this.updateRouteParams();
       this.getStudents({ page: 1 });
     }
   }
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: stream,
-      }
+      this.studentInfo = [];
+      this.updateRouteParams();
       this.getStudents({ page: 1 });
     }
   }
-  chooseStream(event: any) {
-    this.stream = event.value;
+  updateRouteParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
+      queryParamsHandling: 'merge' // Keep other query params
+    });
   }
+
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
   }
@@ -272,7 +285,7 @@ export class TransferCertificateComponent implements OnInit {
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
       if (res) {
-        this.classInfo = res;
+        this.classInfo = res.map((item: any) => item.class);
       }
     })
   }
@@ -286,7 +299,7 @@ export class TransferCertificateComponent implements OnInit {
       }
     })
   }
-  successDone(msg:any) {
+  successDone(msg: any) {
     this.closeModal();
     this.getStudents({ page: this.page });
     setTimeout(() => {
@@ -329,7 +342,7 @@ export class TransferCertificateComponent implements OnInit {
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
         adminId: this.adminId,
-        class: this.className,
+        class: this.cls,
         stream: this.stream,
       };
       this.recordLimit = params.limit;
