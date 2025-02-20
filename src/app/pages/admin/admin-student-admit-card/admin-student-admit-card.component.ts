@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatRadioChange } from '@angular/material/radio';
 import { AdmitCardStructureService } from 'src/app/services/admit-card-structure.service';
 import { AdmitCardService } from 'src/app/services/admit-card.service';
@@ -17,7 +18,7 @@ import { environment } from 'src/environments/environment';
 export class AdminStudentAdmitCardComponent implements OnInit {
   public baseUrl = environment.API_URL;
   allAdmitCards: any[] = [];
-  cls: any;
+  cls: number = 0;
   classInfo: any[] = [];
   admitCardInfo: any;
   studentInfo: any;
@@ -31,13 +32,13 @@ export class AdminStudentAdmitCardComponent implements OnInit {
   processedData: any[] = [];
   schoolInfo: any;
   baseURL!: string;
+  examType: any[] = [];
   stream: string = '';
   notApplicable: string = "stream";
-  examType: any[] = [];
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   selectedValue: number = 0;
   adminId!: string;
-  constructor(public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private admitCardService: AdmitCardService, private printPdfService: PrintPdfService, private admitCardStructureService: AdmitCardStructureService) {
+  constructor(public activatedRoute: ActivatedRoute, private router: Router, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private admitCardService: AdmitCardService, private printPdfService: PrintPdfService, private admitCardStructureService: AdmitCardStructureService) {
 
   }
 
@@ -46,6 +47,18 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     this.adminId = getAdmin?.id;
     this.getSchool();
     this.getClass();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.cls = +params['cls'] || 0;
+      this.stream = params['stream'] || '';
+      if (this.cls) {
+        this.getAdmitCardStructureByClass();
+        this.getStudentAdmitCardByClass();
+      } else {
+        this.cls = 0;
+        this.stream = '';
+        this.processedData = [];
+      }
+    });
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
     setTimeout(() => {
@@ -55,52 +68,48 @@ export class AdminStudentAdmitCardComponent implements OnInit {
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
       if (res) {
-        this.classInfo = res;
+        this.classInfo = res.map((item: any) => item.class);
       }
     })
   }
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
   }
-  chooseClass(cls: any) {
+  chooseClass(cls: number) {
     this.cls = cls;
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: this.stream,
-      }
-      this.getAdmitCardStructureByClass(params);
-      this.getStudentAdmitCardByClass(params);
+      this.processedData = [];
+      this.updateRouteParams();
+      this.getAdmitCardStructureByClass();
+      this.getStudentAdmitCardByClass();
     }
     if (cls == 11 || cls == 12) {
       if (this.stream == 'stream') {
         this.stream = '';
       }
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: this.stream,
-      }
-      this.getAdmitCardStructureByClass(params);
-      this.getStudentAdmitCardByClass(params);
+      this.processedData = [];
+      this.updateRouteParams();
+      this.getAdmitCardStructureByClass();
+      this.getStudentAdmitCardByClass();
     }
   }
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: stream,
-      }
-      this.getAdmitCardStructureByClass(params);
-      this.getStudentAdmitCardByClass(params);
+      this.processedData = [];
+      this.updateRouteParams();
+      this.getAdmitCardStructureByClass();
+      this.getStudentAdmitCardByClass();
     }
   }
-
-
+  updateRouteParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
+      queryParamsHandling: 'merge' // Keep other query params
+    });
+  }
   closeModal() {
     this.showModal = false;
     this.processedData = [];
@@ -112,7 +121,12 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     this.showModal = true;
   }
 
-  getAdmitCardStructureByClass(params: any) {
+  getAdmitCardStructureByClass() {
+    let params = {
+      cls: this.cls,
+      adminId: this.adminId,
+      stream: this.stream
+    }
     this.admitCardStructureService.admitCardStructureByClassStream(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
@@ -297,7 +311,12 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     }
   }
 
-  getStudentAdmitCardByClass(params: any) {
+  getStudentAdmitCardByClass() {
+    let params = {
+      cls: this.cls,
+      adminId: this.adminId,
+      stream: this.stream
+    }
     this.admitCardService.getAllStudentAdmitCardByClass(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
@@ -341,17 +360,17 @@ export class AdminStudentAdmitCardComponent implements OnInit {
     })
   }
 
-  changeStatus(id: any, statusValue: any) {
-    if (id) {
-      let params = {
-        id: id,
-        statusValue: statusValue,
-      }
-      this.admitCardService.changeStatus(params).subscribe((res: any) => {
-        if (res) {
-          this.getStudentAdmitCardByClass(this.cls);
-        }
-      })
-    }
-  }
+  // changeStatus(id: any, statusValue: any) {
+  //   if (id) {
+  //     let params = {
+  //       id: id,
+  //       statusValue: statusValue,
+  //     }
+  //     this.admitCardService.changeStatus(params).subscribe((res: any) => {
+  //       if (res) {
+  //         this.getStudentAdmitCardByClass(this.cls);
+  //       }
+  //     })
+  //   }
+  // }
 }

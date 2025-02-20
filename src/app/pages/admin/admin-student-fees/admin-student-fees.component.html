@@ -36,7 +36,6 @@
                                                                 [value]="subject">{{subject}}</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
-
                                                 </div>
                                             </ng-container>
                                             <div class="col-2">
@@ -50,9 +49,7 @@
                                                                 [value]="cls">{{cls | classSuffix}}</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
-
                                                 </ng-container>
-
                                             </div>
                                             <div class="col-1">
                                                 <button class="btn setting-button" [matMenuTriggerFor]="settings">
@@ -194,7 +191,8 @@
                                                     </tr>
                                                     <tr class="mt-2">
                                                         <td class="text-bold">Class </td>
-                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.class | classSuffix}}</td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.class |
+                                                            classSuffix}}</td>
                                                     </tr>
                                                     <tr class="mt-2">
                                                         <td class="text-bold">Student Name </td>

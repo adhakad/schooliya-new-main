@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment/payment.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { PlansService } from 'src/app/services/plans.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-payment',
@@ -66,7 +67,7 @@ export class PaymentComponent implements OnInit {
     'Uttarakhand',
     'West Bengal'
   ];
-  constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute,private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
@@ -190,7 +191,7 @@ export class PaymentComponent implements OnInit {
     this.paymentService.createPayment(paymentData).subscribe(
       (response: any) => {
         const options = {
-          key: 'rzp_test_TBO2GW3Z62TQJ6',
+          key: 'rzp_test_5pxCVjGZq8W9HJ',
           amount: response.order.amount,
           currency: response.order.currency,
           name: 'Schooliya',
@@ -255,6 +256,7 @@ export class PaymentComponent implements OnInit {
             this.adminAuthService.storeAccessToken(accessToken);
             this.adminAuthService.storeRefreshToken(refreshToken);
             this.router.navigate(["/admin/dashboard"], { replaceUrl: true });
+            this.toastr.success('Congratulations! Your plan is now active.', 'Success');
           });
         }
       },

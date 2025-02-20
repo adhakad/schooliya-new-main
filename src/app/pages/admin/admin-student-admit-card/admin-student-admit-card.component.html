@@ -43,29 +43,25 @@
                       <ng-container *ngIf="cls==11 || cls==12">
                         <div class="col-2">
                           <mat-form-field class="custom-select">
-                            <mat-label *ngIf="stream ==''">Stream</mat-label>
-                            <mat-select type="text" matInput>
-                              <ng-container *ngIf="cls==12 || cls==11">
-                                <div *ngFor="let subject of streamMainSubject">
-                                  <mat-option (click)="filterStream(subject)"
-                                    value="{{subject}}">{{subject}}</mat-option>
-                                </div>
-                              </ng-container>
+                            <mat-label *ngIf="stream =='' || stream=='stream'">Stream</mat-label>
+                            <mat-select [(ngModel)]="stream" (selectionChange)="filterStream($event.value)" type="text"
+                              matInput>
+                              <mat-option *ngFor="let subject of streamMainSubject"
+                                [value]="subject">{{subject}}</mat-option>
                             </mat-select>
                           </mat-form-field>
                         </div>
                       </ng-container>
                       <div class="col-2">
-                        <mat-form-field class="custom-select">
-                          <mat-label *ngIf="!cls">Class</mat-label>
-                          <mat-select type="number" matInput>
-                            <div *ngFor="let classInfo of classInfo">
-                              <mat-option value="{{classInfo.class}}"
-                                (click)="chooseClass(classInfo.class)">{{classInfo.class
-                                | classSuffix}}</mat-option>
-                            </div>
-                          </mat-select>
-                        </mat-form-field>
+                        <ng-container>
+                          <mat-form-field class="custom-select">
+                            <mat-label *ngIf="cls==0">Class</mat-label>
+                            <mat-select [(ngModel)]="cls" (selectionChange)="chooseClass($event.value)" type="number"
+                              matInput>
+                              <mat-option *ngFor="let cls of classInfo" [value]="cls">{{cls | classSuffix}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </ng-container>
                       </div>
                       <div class="col-1">
                         <button class="btn setting-button" [matMenuTriggerFor]="settings">
@@ -92,27 +88,22 @@
                   </div>
                   <div class="col-12">
                     <mat-form-field class="custom-select">
-                      <mat-label *ngIf="!cls">Class</mat-label>
-                      <mat-select type="number" matInput>
-                        <div *ngFor="let classInfo of classInfo">
-                          <mat-option value="{{classInfo.class}}"
-                            (click)="chooseClass(classInfo.class)">{{classInfo.class
-                            |
-                            classSuffix}}</mat-option>
-                        </div>
+                      <mat-label *ngIf="cls==0">Class</mat-label>
+                      <mat-select [(ngModel)]="cls" (selectionChange)="chooseClass($event.value)" type="number"
+                        matInput>
+                        <mat-option *ngFor="let cls of classInfo" [value]="cls">{{cls |
+                          classSuffix}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
                   <ng-container *ngIf="cls==11 || cls==12">
                     <div class="col-12">
                       <mat-form-field class="custom-select">
-                        <mat-label *ngIf="stream ==''">Stream</mat-label>
-                        <mat-select type="text" matInput>
-                          <ng-container *ngIf="cls==12 || cls==11">
-                            <div *ngFor="let subject of streamMainSubject">
-                              <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
-                            </div>
-                          </ng-container>
+                        <mat-label *ngIf="stream =='' || stream=='stream'">Stream</mat-label>
+                        <mat-select [(ngModel)]="stream" (selectionChange)="filterStream($event.value)" type="text"
+                          matInput>
+                          <mat-option *ngFor="let subject of streamMainSubject"
+                            [value]="subject">{{subject}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
@@ -192,7 +183,7 @@
                   </ng-container>
                 </table>
               </div>
-              
+
               <div *ngIf="!cls || !stream" style="text-align: center;margin-top: 200px;">
                 <p>Please Choose Class & Stream !</p>
               </div>
@@ -220,8 +211,7 @@
                               <div class="table-container">
                                 <div class="row mt-5">
                                   <div class="col-2">
-                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}"
-                                      alt="school logo">
+                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}" alt="school logo">
                                   </div>
                                   <div class="col-10" style="text-align: center;">
                                     <div class="school-name">
@@ -244,8 +234,7 @@
                                     <p>{{student?.examType | uppercase}} ADMIT CARD {{student?.session}}</p>
                                   </div>
                                 </div>
-                                <table class="info-table"
-                                  style="border-top: 1px solid #454545;">
+                                <table class="info-table" style="border-top: 1px solid #454545;">
                                   <tr>
                                     <td class="text-bold">STUDENT NAME</td>
                                     <td colspan="2">:&nbsp;&nbsp;&nbsp;{{student?.name | uppercase}}</td>
@@ -309,7 +298,8 @@
                                       Signature</td>
                                   </tr>
                                 </table>
-                                <div style="padding-top:40px;padding-left: 20px;padding-right: 20px;padding-bottom:50px">
+                                <div
+                                  style="padding-top:40px;padding-left: 20px;padding-right: 20px;padding-bottom:50px">
                                   <h4 class="text-bold">Disclaimer:</h4>
                                   <p>This is your online admit card, issued in accordance with our institution's
                                     policies.
@@ -362,8 +352,7 @@
                               <div class="table-container">
                                 <div class="row mt-5">
                                   <div class="col-2">
-                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}"
-                                      alt="school logo">
+                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}" alt="school logo">
                                   </div>
                                   <div class="col-10" style="text-align: center;">
                                     <div class="school-name">

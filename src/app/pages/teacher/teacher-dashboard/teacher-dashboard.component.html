@@ -5,100 +5,45 @@
       <app-side-nav></app-side-nav>
     </div>
     <div class="col-12 col-lg-10">
-      <div class="row">
-        <div class="col-12 main-container">
+      <div class="row mt-4">
+        <div class="chart-main-container">
           <div class="row">
-            <div class="col-3">
-              <button mat-button class="menu-button">
-                <!-- <mat-icon>assistant_navigation</mat-icon> -->
-                <span>Dashboard</span>
-              </button>
+            <div class="col-12 col-lg-3">
+              <div class="listing-card"
+                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#23a8a1e3,#99eaf3e4);cursor: pointer;">
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top: 8%;">Students
+                </h3>
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">{{studentCountInfo}}</h3>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="main-container">
-          <div class="col-12 col-lg-12 big-container">
-            <div class="main-card">
-               <!-- <div class="row">
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/students/student']">
-                        <h3 class="category-title">Students - {{studentCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/teacher']">
-                        <h3 class="category-title">Teachers - {{teacherCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/class']">
-                        <h3 class="category-title">Classes - {{classCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/subject']">
-                        <h3 class="category-title">Subjects - {{subjectCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/class-subject']">
-                        <h3 class="category-title">Class With Subjects - {{classSubjectCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/topper']">
-                        <h3 class="category-title">Toppers - {{topperCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/testimonial']">
-                        <h3 class="category-title">Testimonials - {{testimonialCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/banner']">
-                        <h3 class="category-title">Banners - {{bannerCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 pt-2 pb-4">
-                    <div class="row">
-                      <div class="col-10 offset-1 category-card" [routerLink]="['/admin/ads']">
-                        <h3 class="category-title">Ads - {{adsCountInfo}}</h3>
-                      </div>
-                    </div>
-                  </div> -->
-
-
-
-
-
-                     
-
-
+            <div class="col-12 col-lg-3">
+              <div class="listing-card"
+                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#7f4ae8d7,#aaa6ffe0);cursor: pointer;">
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top: 8%;">Teachers
+                </h3>
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">{{teacherCountInfo}}</h3>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+              <div class="listing-card"
+                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#b0b527e1,#e5f092de);cursor: pointer;">
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top:8%;">
+                  Marksheets</h3>
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">{{markshhetCountInfo}}</h3>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+              <div class="listing-card"
+                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#c77f2ddf,#f3bd99e1);cursor: pointer;">
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top:8%;"> Transfer
+                  Certificates</h3>
+                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">
+                  {{transferCertificateCountInfo}}</h3>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="spinner-container" *ngIf="loader">
-    <div class="spinner-overlay" *ngIf="loader">
-      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
-    </div>
-  </div>
+</div>
