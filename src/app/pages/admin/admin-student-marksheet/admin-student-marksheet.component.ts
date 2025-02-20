@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { read, utils, writeFile } from 'xlsx';
@@ -40,7 +41,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
-  cls: any;
+  cls: number = 0;
   classInfo: any[] = [];
   classSubjectList: any;
   fileChoose: boolean = false;
@@ -53,7 +54,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   loader: Boolean = false;
   adminId!: string;
-  constructor(public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService) {
+  constructor(public activatedRoute: ActivatedRoute, private router: Router, private toastr: ToastrService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService) {
   }
 
 
@@ -64,53 +65,57 @@ export class AdminStudentMarksheetComponent implements OnInit {
     this.adminId = getAdmin?.id;
     this.getSchool();
     this.getClass();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.cls = +params['cls'] || 0;
+      this.stream = params['stream'] || '';
+      if (this.cls) {
+        this.getSingleClassResultStrucByStream();
+        this.getStudentExamResultByClass();
+      } else {
+        this.cls = 0;
+        this.stream = '';
+      }
+    });
   }
 
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
       if (res) {
-        this.classInfo = res;
+        this.classInfo = res.map((item: any) => item.class);
       }
     })
   }
-
-
-  chooseClass(cls: any) {
+  chooseClass(cls: number) {
     this.cls = cls;
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: this.stream,
-      }
-      this.getSingleClassResultStrucByStream(params);
-      this.getStudentExamResultByClass(params);
+      this.updateRouteParams();
+      this.getSingleClassResultStrucByStream();
+      this.getStudentExamResultByClass();
     }
     if (cls == 11 || cls == 12) {
       if (this.stream == 'stream') {
         this.stream = '';
       }
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: this.stream,
-      }
-      this.getSingleClassResultStrucByStream(params);
-      this.getStudentExamResultByClass(params);
+      this.updateRouteParams();
+      this.getSingleClassResultStrucByStream();
+      this.getStudentExamResultByClass();
     }
   }
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: stream,
-      }
-      this.getSingleClassResultStrucByStream(params);
-      this.getStudentExamResultByClass(params);
+      this.updateRouteParams();
+      this.getSingleClassResultStrucByStream();
+      this.getStudentExamResultByClass();
     }
+  }
+  updateRouteParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
+      queryParamsHandling: 'merge' // Keep other query params
+    });
   }
 
   getSchool() {
@@ -144,15 +149,8 @@ export class AdminStudentMarksheetComponent implements OnInit {
 
   successDone(msg: any) {
     this.closeModal();
-    if (this.stream && this.cls) {
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: this.stream,
-      }
-      this.getSingleClassResultStrucByStream(params);
-      this.getStudentExamResultByClass(params);
-    }
+    this.getSingleClassResultStrucByStream();
+    this.getStudentExamResultByClass();
     setTimeout(() => {
       this.toastr.success(msg, 'Success');
     }, 500)
@@ -162,13 +160,13 @@ export class AdminStudentMarksheetComponent implements OnInit {
     this.showBulkResultPrintModal = true;
   }
 
-  getStudentExamResultByClass(params: any) {
-    let param = {
-      class: params.cls,
-      stream: params.stream,
+  getStudentExamResultByClass() {
+    let params = {
+      class: this.cls,
       adminId: this.adminId,
+      stream: this.stream
     }
-    this.examResultService.getAllStudentExamResultByClass(param).subscribe((res: any) => {
+    this.examResultService.getAllStudentExamResultByClass(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
         // this.statusCode = 200;
@@ -351,7 +349,12 @@ export class AdminStudentMarksheetComponent implements OnInit {
     return printHtml;
   }
 
-  getSingleClassResultStrucByStream(params: any) {
+  getSingleClassResultStrucByStream() {
+    let params = {
+      cls: this.cls,
+      adminId: this.adminId,
+      stream: this.stream
+    }
     this.examResultStructureService.getSingleClassResultStrucByStream(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
