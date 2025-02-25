@@ -1,5 +1,5 @@
 <mat-toolbar class="header">
-  <div class="col-2 col-lg-1" class="logo">
+  <div class="col-2 col-lg-1" class="logo" style="margin-left: 0px;">
     <img src="../../../assets/logo.png" alt="">
   </div>
   <div class="hamburger col-2 col-lg-0">
@@ -15,12 +15,18 @@
         (click)="hamburgerMenu(nav)">close</mat-icon>
     </button>
   </div>
-  <div class="main-menu col-lg-6" style="text-align: right;padding-right: 25px;">
-    <button mat-button *ngIf="isAdminAuthenticated" (click)="onLogout('admin')">
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
+  <div class="main-menu col-lg-5" style="text-align: right;margin-right: -250px;">
+    <button class="submit-button" mat-raised-button *ngIf="isAdminAuthenticated" (click)="onLogout('admin')">
+      <!-- <mat-icon>logout</mat-icon> -->
+      <span>UPGRADE PLAN</span>
     </button>
   </div>
+  <div class="main-menu col-lg-1" style="text-align: right;margin-right: -150px;">
+    <div style="background: radial-gradient(circle, #fff, #d0cdff);border-radius: 50%;width: 48px;height: 48px;padding: 4px;">
+      <img src="../../../../../assets/svrqerhhmpx7aysmgye3.png" style="position: relative;width: 100%;">
+    </div>
+  </div>
+  
 </mat-toolbar>
 <div [ngClass]="{'top-hamburger-menu' : false==nav}">
   <mat-toolbar class="hamburger-menu">
