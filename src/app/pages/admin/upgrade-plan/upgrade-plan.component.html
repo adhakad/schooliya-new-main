@@ -1,19 +1,19 @@
-<app-header></app-header>
+<app-header-navbar></app-header-navbar>
 <div class="page">
     <div class="banner">
         <div class="container-fluid">
             <div class="col-12 col-sm-6 offset-sm-3 col-lg-6 offset-lg-3">
-                <h2>Pricing</h2>
+                <h2>Upgrade Plan</h2>
             </div>
         </div>
     </div>
     <div class="container-fluid policy-container">
         <div class="row">
-            <div class="col-12 col-lg-10 offset-lg-1 title">
-                <h3>Pick Your Plan</h3>
-                <p style="text-align: center;">Budget friendly pricing for comprehensive school management solutions.
+            <!-- <div class="col-12 col-lg-10 offset-lg-1 title">
+                <h3>Upgrade Your Plan</h3>
+                <p style="text-align: center;">Upgrade your plan to add more students with powerful features.
                 </p>
-            </div>
+            </div> -->
             <div class="container-fluid" style="padding: 0 !important;">
                 <div class="container-fluid pricing-section">
                     <div class="row">
@@ -25,11 +25,15 @@
                                             <h2>{{plansInfo[0]?.plans}}</h2>
                                             <p>Everything You Need to Launch Your School Management</p>
                                         </div>
-                                        <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
-                                            {{plansInfo[0]?.price}}<span style="font-size: medium;font-weight: 500;"> /
-                                                Year</span></h4>
-                                        <button class="pricing-button-light" mat-raised-button
-                                            routerLink="/payment/{{plansInfo[0]?._id}}">Buy Now</button>
+                                        <h4><span
+                                                style="font-size:22px;font-weight: 500;">N/A</span></h4>
+                                        <button *ngIf="adminPlanInfo?.activePlan =='Basic'" class="pricing-button-light"
+                                            mat-raised-button
+                                            style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #8c52ff94;">Currently
+                                            Active</button>
+                                        <button
+                                            *ngIf="adminPlanInfo?.activePlan =='Standard' || adminPlanInfo?.activePlan =='Pro'"
+                                            class="pricing-button-light" mat-raised-button>Currently Active</button>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[0]?.price}}/year when you renew</p>
                                         </div>
@@ -45,7 +49,8 @@
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
                                                     <p><span>Increase Limit Only
-                                                            ₹{{plansInfo[0]?.perStudentIncrementPrice}} Per Student</span>
+                                                            ₹{{plansInfo[0]?.perStudentIncrementPrice}} Per
+                                                            Student</span>
                                                     </p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon>
@@ -86,16 +91,16 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4 pricing-card-container">
-                                    <div class="pricing-card border">
+                                    <div class="pricing-card">
                                         <div class="pricing-title">
                                             <h2>{{plansInfo[1]?.plans}}</h2>
                                             <p>Level-up with more listing and enhanced features</p>
                                         </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
-                                            {{plansInfo[1]?.price}}<span style="font-size: medium;font-weight: 500;"> /
-                                                Year</span></h4>
-                                        <button class="pricing-button" mat-raised-button
-                                            routerLink="/payment/{{plansInfo[1]?._id}}">Buy Now</button>
+                                            {{plansInfo[1]?.upgradePrice}}<span
+                                                style="font-size: medium;font-weight: 500;">&nbsp;Only</span></h4>
+                                        <button class="pricing-button-light" mat-raised-button
+                                            routerLink="/payment/{{plansInfo[1]?._id}}">Upgrade Plan</button>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[1]?.price}}/year when you renew</p>
                                         </div>
@@ -112,7 +117,8 @@
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
                                                     <p><span>Increase Limit Only
-                                                            ₹{{plansInfo[1]?.perStudentIncrementPrice}} Per Student</span>
+                                                            ₹{{plansInfo[1]?.perStudentIncrementPrice}} Per
+                                                            Student</span>
                                                     </p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
@@ -159,10 +165,10 @@
                                             <p>Enjoy Your Extensive Features and Higher Listing Limits</p>
                                         </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
-                                            {{plansInfo[2]?.price}}<span style="font-size: medium;font-weight: 500;"> /
-                                                Year</span></h4>
+                                            {{plansInfo[2]?.upgradePrice}}<span
+                                                style="font-size: medium;font-weight: 500;">&nbsp;Only</span></h4>
                                         <button class="pricing-button-light" mat-raised-button
-                                            routerLink="/payment/{{plansInfo[2]?._id}}">Buy Now</button>
+                                            routerLink="/payment/{{plansInfo[2]?._id}}">Upgrade Plan</button>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[2]?.price}}/year when you renew</p>
                                         </div>
@@ -223,5 +229,4 @@
             </div>
         </div>
     </div>
-    <app-footer></app-footer>
 </div>

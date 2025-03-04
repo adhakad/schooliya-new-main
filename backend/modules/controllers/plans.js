@@ -54,14 +54,20 @@ let GetSinglePlansByPlans = async (req, res, next) => {
     }
 }
 let CreatePlans = async (req, res, next) => {
-    const { plans, price,teacherLimit, studentLimit ,perStudentIncrementPrice,studentIncrementRange} = req.body;
+    let upgradePrice = 0;
+    const singlePlans = await PlansModel.findOne({}).sort({ _id: -1 });
+    const { plans, price, teacherLimit, studentLimit, perStudentIncrementPrice, studentIncrementRange } = req.body;
+    if (plans == "Standard" || plans == "Pro") {
+        upgradePrice = price - singlePlans.price;
+    }
     const plansData = {
         plans: plans,
         price: price,
+        upgradePrice: upgradePrice,
         teacherLimit: teacherLimit,
         studentLimit: studentLimit,
-        perStudentIncrementPrice:perStudentIncrementPrice,
-        studentIncrementRange:studentIncrementRange
+        perStudentIncrementPrice: perStudentIncrementPrice,
+        studentIncrementRange: studentIncrementRange
 
     }
     try {

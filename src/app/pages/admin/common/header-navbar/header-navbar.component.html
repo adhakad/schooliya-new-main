@@ -16,16 +16,26 @@
     </button>
   </div>
   <div class="main-menu col-lg-5" style="text-align: right;margin-right: -250px;">
-    <button class="submit-button" mat-raised-button *ngIf="isAdminAuthenticated" (click)="onLogout('admin')">
+    <button class="submit-button" mat-raised-button [routerLink]="['/admin/upgrade-plan']">
       <!-- <mat-icon>logout</mat-icon> -->
       <span>UPGRADE PLAN</span>
     </button>
   </div>
   <div class="main-menu col-lg-1" style="text-align: right;margin-right: -150px;">
-    <div style="background: radial-gradient(circle, #fff, #d0cdff);border-radius: 50%;width: 48px;height: 48px;padding: 4px;">
+    <div style="background: radial-gradient(circle, #fff, #d0cdff);border-radius: 50%;width: 52px;height: 52px;padding: 4px;cursor: pointer;border:1px solid #d5d0e1;" [matMenuTriggerFor]="ourSystemMenu">
       <img src="../../../../../assets/svrqerhhmpx7aysmgye3.png" style="position: relative;width: 100%;">
     </div>
   </div>
+  <mat-menu #ourSystemMenu="matMenu">
+    <button mat-menu-item [routerLink]="['/admin/school/detail']">
+      <mat-icon>account_balance</mat-icon>
+      <span>School Profile</span>
+    </button>
+    <button mat-menu-item *ngIf="isAdminAuthenticated" (click)="onLogout('admin')">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
   
 </mat-toolbar>
 <div [ngClass]="{'top-hamburger-menu' : false==nav}">
@@ -36,7 +46,7 @@
       <span>Dashboard</span>
     </button>
     <button mat-menu-item class="menu-button" [routerLink]="['/admin/school/detail']" routerLinkActive="active-link">
-      <mat-icon>apartment</mat-icon>
+      <mat-icon>account_balance</mat-icon>
       <span>School Profile</span>
     </button>
     <button mat-menu-item class="menu-button" [routerLink]="['/admin/admission']" routerLinkActive="active-link">
