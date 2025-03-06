@@ -15,4 +15,7 @@ export class PaymentService {
   validatePayment(paymentData: any) {
     return this.http.post(`${this.url}/validate`, paymentData);
   }
+  validateUpgradePayment(paymentData: any) {
+    return this.http.post(`${this.url}/validate-upgrade-plan`, paymentData);
+  }
 }

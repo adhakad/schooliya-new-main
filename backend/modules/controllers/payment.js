@@ -10,7 +10,7 @@ const AdminPlan = require('../models/users/admin-plan');
 const Invoice = require('../models/invoice');
 const Counter = require('../models/counter');
 const tokenService = require('../services/admin-token');
-const { SMTP_API_KEY, SMTP_HOST, SENDER_EMAIL_ADDRESS, KEY_ID, KEY_SECRET,CLOUDINARY_CLOUD_NAMAE } = process.env;
+const { SMTP_API_KEY, SMTP_HOST, SENDER_EMAIL_ADDRESS, KEY_ID, KEY_SECRET, CLOUDINARY_CLOUD_NAMAE } = process.env;
 const smtp_host = SMTP_HOST;
 const smtp_api_key = SMTP_API_KEY;
 const sender_email_address = SENDER_EMAIL_ADDRESS;
@@ -56,7 +56,7 @@ let CreatePayment = async (req, res) => {
 };
 
 let ValidatePayment = async (req, res) => {
-  const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit,teacherLimit } = req.body;
+  const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit, teacherLimit } = req.body;
   const adminInfo = { id, email, activePlan, amount, currency };
   let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
   const secretKey = 'JRHMapIAVSkH49pYgMjDiER1';
@@ -125,8 +125,8 @@ let ValidatePayment = async (req, res) => {
     if (!updatedAdminPlan) {
       return res.status(400).json({ errorMsg: 'Failed to create or update admin plan!' });
     }
-
-    sendEmail(email,invoiceNumber,amount,activePlan,paymentDate);
+    const transactionType = 'New Subscription';
+    sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, transactionType);
     const payload = { id, email };
     const accessToken = await tokenService.getAccessToken(payload);
     const refreshToken = await tokenService.getRefreshToken(payload);
@@ -137,7 +137,75 @@ let ValidatePayment = async (req, res) => {
   }
 };
 
-async function sendEmail(email,invoiceNumber,amount,activePlan,paymentDate) {
+
+let ValidateUpgradePlanPayment = async (req, res) => {
+  const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit, teacherLimit } = req.body;
+  const adminInfo = { id, email, activePlan, amount, currency };
+  console.log(adminInfo)
+  let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
+  const secretKey = 'JRHMapIAVSkH49pYgMjDiER1';
+  const body = `${orderId}|${paymentId}`;
+
+  try {
+    const expectedSignature = crypto.createHmac("sha256", secretKey).update(body).digest("hex");
+    if (expectedSignature !== signature) {
+      return res.status(400).json({ errorMsg: 'Invailid signature!' });
+    }
+
+    const newPayment = await Payment.create(paymentInfo);
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const paymentDate = `${day}/${month}/${year}`
+    const datePrefix = `SCH${year}${month}${day}`;
+    const counter = await Counter.findOneAndUpdate(
+      { year },
+      { $inc: { count: 1 } },
+      { new: true, upsert: true }
+    );
+    const invoiceNumber = `${datePrefix}${counter.count}`;
+    paymentInfo.invoiceNumber = invoiceNumber;
+    const newInvoice = await Invoice.create(paymentInfo);
+
+    // const existingAdminPlan = await AdminPlan.findOne({ adminId: id });
+    // const existingAmount = existingAdminPlan.amount;
+    // const newAmount = existingAmount + amount;
+    const updatedAdminPlan = await AdminPlan.findOneAndUpdate(
+      { adminId: id },
+      {
+        $set: {
+          paymentId,
+          orderId,
+          email,
+          activePlan,
+          amount,
+          currency,
+          studentLimit,
+          teacherLimit,
+          paymentStatus: true,
+          updatedAt:Date.now(),
+        }
+      },
+      { upsert: true, new: true }
+    );
+
+    if (!updatedAdminPlan) {
+      return res.status(400).json({ errorMsg: 'Failed to create or update admin plan!' });
+    }
+    const transactionType = 'Upgrade';
+    sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, transactionType);
+    const payload = { id, email };
+    const accessToken = await tokenService.getAccessToken(payload);
+    const refreshToken = await tokenService.getRefreshToken(payload);
+
+    return res.status(200).json({ success: true, accessToken, refreshToken, adminInfo, successMsg: 'Payment successfully Received.' });
+  } catch (error) {
+    return res.status(500).json({ errorMsg: 'Error validating payment!' });
+  }
+};
+
+async function sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, transactionType) {
   const mailOptions = {
     from: { name: 'Schooliya', address: sender_email_address },
     to: email,
@@ -178,6 +246,10 @@ async function sendEmail(email,invoiceNumber,amount,activePlan,paymentDate) {
                 <td style="padding: 10px 0; border-bottom: 1px solid #ddd;">Plan Type:</td>
                 <td style="padding: 10px 0; border-bottom: 1px solid #ddd; text-align: right;">${activePlan}</td>
               </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #ddd;">Transaction Type:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #ddd; text-align: right;">${transactionType}</td>
+              </tr>
             </table>
           </div>
 
@@ -202,5 +274,6 @@ async function sendEmail(email,invoiceNumber,amount,activePlan,paymentDate) {
 
 module.exports = {
   CreatePayment,
-  ValidatePayment
+  ValidatePayment,
+  ValidateUpgradePlanPayment
 }

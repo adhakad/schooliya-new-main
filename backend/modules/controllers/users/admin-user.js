@@ -251,6 +251,16 @@ let ResetPassword = async (req, res, next) => {
         return res.status(500).json({ errorMsg: 'Internal Server Error !' });
     }
 }
+let GetSingleAdminUser = async (req, res, next) => {
+    try {
+        const singleAdminPlan = await AdminPlanModel.findOne({ adminId: req.params.adminId });
+        const objectId = singleAdminPlan.adminId;
+        const singleAdminUser = await AdminUserModel.findOne({ _id: objectId });
+        return res.status(200).json(singleAdminUser);
+    } catch (error) {
+        return res.status(500).json('Internal Server Error !');
+    }
+}
 let GetSingleAdminPlan = async (req, res, next) => {
     try {
         const singleAdminPlan = await AdminPlanModel.findOne({ adminId: req.params.adminId });
@@ -267,5 +277,6 @@ module.exports = {
     ForgotPassword,
     ResetPassword,
     VerifyOTP,
-    GetSingleAdminPlan
+    GetSingleAdminPlan,
+    GetSingleAdminUser
 }

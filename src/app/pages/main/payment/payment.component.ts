@@ -238,8 +238,6 @@ export class PaymentComponent implements OnInit {
     this.paymentService.validatePayment(paymentData).subscribe(
       (validationResponse: any) => {
         if (validationResponse) {
-          console.log("validationResponse")
-          console.log(validationResponse)
           this.zone.run(() => {
             this.loader = true;
             this.adminAuthService.deleteAllCookies();

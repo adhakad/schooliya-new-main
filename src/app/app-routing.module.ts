@@ -39,6 +39,7 @@ const routes: Routes = [
   { path: 'admin/subject', loadChildren: () => import('src/app/pages/admin/subject/subject.module').then((module) => module.SubjectModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/class-subject', loadChildren: () => import('src/app/pages/admin/class-subject/class-subject.module').then((module) => module.ClassSubjectModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/upgrade-plan', loadChildren: () => import('src/app/pages/admin/upgrade-plan/upgrade-plan.module').then((module) => module.UpgradePlanModule), canActivate: [AdminAuthGuard] },
+  { path: 'admin/upgrade-plan/payment/:id', loadChildren: () => import('src/app/pages/admin/upgrade-plan-payment/upgrade-plan-payment.module').then((module) => module.UpgradePlanPaymentModule), canActivate: [AdminAuthGuard] },
 
   
   { path: 'admin/plans', loadChildren: () => import('src/app/pages/admin/plans/plans.module').then((module) => module.PlansModule), canActivate: [AdminAuthGuard] },

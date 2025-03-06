@@ -25,15 +25,16 @@
                                             <h2>{{plansInfo[0]?.plans}}</h2>
                                             <p>Everything You Need to Launch Your School Management</p>
                                         </div>
-                                        <h4><span
-                                                style="font-size:22px;font-weight: 500;">N/A</span></h4>
+                                        <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                         <button *ngIf="adminPlanInfo?.activePlan =='Basic'" class="pricing-button-light"
                                             mat-raised-button
-                                            style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #8c52ff94;">Currently
+                                            style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #3cbd5bf1;">Currently
                                             Active</button>
                                         <button
                                             *ngIf="adminPlanInfo?.activePlan =='Standard' || adminPlanInfo?.activePlan =='Pro'"
-                                            class="pricing-button-light" mat-raised-button>Currently Active</button>
+                                            class="pricing-button-light" mat-raised-button
+                                            style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #392066d4;">Not
+                                            Available</button>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[0]?.price}}/year when you renew</p>
                                         </div>
@@ -96,11 +97,26 @@
                                             <h2>{{plansInfo[1]?.plans}}</h2>
                                             <p>Level-up with more listing and enhanced features</p>
                                         </div>
-                                        <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
-                                            {{plansInfo[1]?.upgradePrice}}<span
-                                                style="font-size: medium;font-weight: 500;">&nbsp;Only</span></h4>
-                                        <button class="pricing-button-light" mat-raised-button
-                                            routerLink="/payment/{{plansInfo[1]?._id}}">Upgrade Plan</button>
+                                        <ng-container *ngIf="adminPlanInfo?.activePlan=='Basic'">
+                                            <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
+                                                {{plansInfo[1]?.upgradePrice}}<span
+                                                    style="font-size: medium;font-weight: 500;">&nbsp;Only</span></h4>
+                                            <button class="pricing-button-light" mat-raised-button
+                                                routerLink="/admin/upgrade-plan/payment/{{plansInfo[1]?._id}}">Upgrade
+                                                Plan</button>
+                                        </ng-container>
+                                        <ng-container *ngIf="adminPlanInfo?.activePlan=='Standard'">
+                                            <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
+                                            <button class="pricing-button-light" mat-raised-button
+                                                style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #3cbd5bf1;">Currently
+                                                Active</button>
+                                        </ng-container>
+                                        <ng-container *ngIf="adminPlanInfo?.activePlan=='Pro'">
+                                            <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
+                                            <button class="pricing-button-light" mat-raised-button
+                                                style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #392066d4;">Not
+                                                Available</button>
+                                        </ng-container>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[1]?.price}}/year when you renew</p>
                                         </div>
@@ -164,11 +180,21 @@
                                             <h2>{{plansInfo[2]?.plans}}</h2>
                                             <p>Enjoy Your Extensive Features and Higher Listing Limits</p>
                                         </div>
-                                        <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
-                                            {{plansInfo[2]?.upgradePrice}}<span
-                                                style="font-size: medium;font-weight: 500;">&nbsp;Only</span></h4>
-                                        <button class="pricing-button-light" mat-raised-button
-                                            routerLink="/payment/{{plansInfo[2]?._id}}">Upgrade Plan</button>
+                                        <ng-container
+                                            *ngIf="adminPlanInfo?.activePlan=='Basic' || adminPlanInfo?.activePlan=='Standard'">
+                                            <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
+                                                {{plansInfo[2]?.upgradePrice}}<span
+                                                    style="font-size: medium;font-weight: 500;">&nbsp;Only</span></h4>
+                                            <button class="pricing-button-light" mat-raised-button
+                                                routerLink="/admin/upgrade-plan/payment/{{plansInfo[2]?._id}}">Upgrade
+                                                Plan</button>
+                                        </ng-container>
+                                        <ng-container *ngIf="adminPlanInfo?.activePlan=='Pro'">
+                                            <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
+                                            <button class="pricing-button-light" mat-raised-button
+                                                style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #3cbd5bf1;;">Currently
+                                                Active</button>
+                                        </ng-container>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[2]?.price}}/year when you renew</p>
                                         </div>
