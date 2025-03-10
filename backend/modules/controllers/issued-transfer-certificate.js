@@ -7,7 +7,7 @@ const IssuedTransferCertificateModel = require('../models/issued-transfer-certif
 
 let countIssuedTransferCertificate = async (req, res, next) => {
     let adminId = req.params.adminId;
-    let countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({adminId:adminId});
+    let countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({ adminId: adminId });
     return res.status(200).json({ countIssuedTransferCertificate });
 }
 
@@ -21,17 +21,17 @@ let GetIssuedTransferCertificatePagination = async (req, res, next) => {
     try {
         let limit = (req.body.limit) ? parseInt(req.body.limit) : 10;
         let page = req.body.page || 1;
-        const issuedTransferCertificateList = await IssuedTransferCertificateModel.find({adminId:adminId}).find(searchObj).sort({ _id: -1 })
+        const issuedTransferCertificateList = await IssuedTransferCertificateModel.find({ adminId: adminId }).find(searchObj).sort({ _id: -1 })
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
-            const countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({adminId:adminId});
+        const countIssuedTransferCertificate = await IssuedTransferCertificateModel.count({ adminId: adminId });
         let issuedTransferCertificateData = { countIssuedTransferCertificate: 0 };
         issuedTransferCertificateData.issuedTransferCertificateList = issuedTransferCertificateList;
         issuedTransferCertificateData.countIssuedTransferCertificate = countIssuedTransferCertificate;
         return res.json(issuedTransferCertificateData);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -58,16 +58,16 @@ let CreateIssuedTransferCertificate = async (req, res, next) => {
             if (deleteAdmitCard || deleteExamResult || deleteFeesCollection) {
                 let createIssuedTransferCertificate = await IssuedTransferCertificateModel.create(studentData);
                 if (createIssuedTransferCertificate) {
-                    return res.status(200).json('IssueTransferCertificate');
+                    return res.status(200).json({ IssueTransferCertificate: 'IssueTransferCertificate', successMsg: `Transfer Certificate has been successfully created, and the student's data is now available on the Issued Transfer Certificate page.` });
                 }
             }
             let createIssuedTransferCertificate = await IssuedTransferCertificateModel.create(studentData);
             if (createIssuedTransferCertificate) {
-                return res.status(200).json('IssueTransferCertificate');
+                return res.status(200).json({ IssueTransferCertificate: 'IssueTransferCertificate', successMsg: `Transfer Certificate has been successfully created, and the student's data is now available on the Issued Transfer Certificate page.` });
             }
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -77,13 +77,13 @@ let DeleteIssuedTransferCertificate = async (req, res, next) => {
         const lastIssuedTC = await IssuedTransferCertificateModel.findOne({}).sort({ _id: -1 });
         const objectId = lastIssuedTC._id;
         if (id == objectId) {
-            return res.status(400).json('The most recently issued transfer certificate cannot be deleted to maintain accurate records !');
+            return res.status(400).json('The most recently issued transfer certificate cannot be deleted to maintain accurate records!');
         }
 
         const issuedTransferCertificate = await IssuedTransferCertificateModel.findByIdAndRemove(id);
         return res.status(200).json('Issued transfer certificate detail delete successfully.');
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 

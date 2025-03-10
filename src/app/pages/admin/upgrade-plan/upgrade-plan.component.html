@@ -28,12 +28,11 @@
                                         <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                         <button *ngIf="adminPlanInfo?.activePlan =='Basic'" class="pricing-button-light"
                                             mat-raised-button
-                                            style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #3cbd5bf1;">Currently
-                                            Active</button>
+                                            style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon> Currently Active</button>
                                         <button
                                             *ngIf="adminPlanInfo?.activePlan =='Standard' || adminPlanInfo?.activePlan =='Pro'"
                                             class="pricing-button-light" mat-raised-button
-                                            style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #392066d4;">Not
+                                            style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #392066dc;">Not
                                             Available</button>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[0]?.price}}/year when you renew</p>
@@ -108,13 +107,12 @@
                                         <ng-container *ngIf="adminPlanInfo?.activePlan=='Standard'">
                                             <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                             <button class="pricing-button-light" mat-raised-button
-                                                style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #3cbd5bf1;">Currently
-                                                Active</button>
+                                                style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon> Currently Active</button>
                                         </ng-container>
                                         <ng-container *ngIf="adminPlanInfo?.activePlan=='Pro'">
                                             <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                             <button class="pricing-button-light" mat-raised-button
-                                                style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #392066d4;">Not
+                                                style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #392066dc;">Not
                                                 Available</button>
                                         </ng-container>
                                         <div class="pricing-amount">
@@ -192,8 +190,7 @@
                                         <ng-container *ngIf="adminPlanInfo?.activePlan=='Pro'">
                                             <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                             <button class="pricing-button-light" mat-raised-button
-                                                style="background-color:#d9d9da;border: 2px solid #d5d4d6;color: #3cbd5bf1;;">Currently
-                                                Active</button>
+                                                style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon> Currently Active</button>
                                         </ng-container>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[2]?.price}}/year when you renew</p>

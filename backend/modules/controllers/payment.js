@@ -51,7 +51,7 @@ let CreatePayment = async (req, res) => {
     await payment.save();
     res.status(200).json({ order });
   } catch (error) {
-    res.status(500).json({ errorMsg: 'Payment creation failed !' });
+    res.status(500).json({ errorMsg: 'Payment creation failed!' });
   }
 };
 
@@ -64,7 +64,7 @@ let ValidatePayment = async (req, res) => {
 
   try {
     const expectedSignature = crypto.createHmac("sha256", secretKey).update(body).digest("hex");
-    if (expectedSignature !== signature) {
+    if (expectedSignature!== signature) {
       return res.status(400).json({ errorMsg: 'Invailid signature!' });
     }
 
@@ -141,14 +141,13 @@ let ValidatePayment = async (req, res) => {
 let ValidateUpgradePlanPayment = async (req, res) => {
   const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit, teacherLimit } = req.body;
   const adminInfo = { id, email, activePlan, amount, currency };
-  console.log(adminInfo)
   let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
   const secretKey = 'JRHMapIAVSkH49pYgMjDiER1';
   const body = `${orderId}|${paymentId}`;
 
   try {
     const expectedSignature = crypto.createHmac("sha256", secretKey).update(body).digest("hex");
-    if (expectedSignature !== signature) {
+    if (expectedSignature!== signature) {
       return res.status(400).json({ errorMsg: 'Invailid signature!' });
     }
 
@@ -206,6 +205,11 @@ let ValidateUpgradePlanPayment = async (req, res) => {
 };
 
 async function sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, transactionType) {
+  const messages = {
+    "New Subscription": "Thank you for subscribing to Schooliya. Your account is now active.",
+    "Upgrade": "Your plan has been upgraded. Enjoy the new features!",
+    "Renewal": "Your subscription has been renewed. You can continue using Schooliya without interruption."
+  };
   const mailOptions = {
     from: { name: 'Schooliya', address: sender_email_address },
     to: email,
@@ -222,10 +226,8 @@ async function sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, 
           </div>
           <hr style="border: 0; height: 1px; background: #ddd; margin: 20px 0;">
           
-          <p style="color: #555; font-size: 14px;">Hello,</p>
-          <p style="color: #555; font-size: 14px; line-height: 1.6;">
-            We are excited to confirm that we have received your payment. Your Schooliya account is now active and ready to use. Below is a summary of your transaction.
-          </p>
+          <p style="color: #555; font-size: 14px;">Hello Dear,</p>
+          <p style="color: #555; font-size: 14px; line-height: 1.6;">${messages[transactionType] || "Your payment has been received successfully."}</p>
 
           <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #e3e5e8;">
             <h3 style="color: #333; margin: 0; font-size: 18px;">Invoice Summary</h3>

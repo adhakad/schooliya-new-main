@@ -14,11 +14,11 @@ let GetSingleClassFeesStructureByStream = async (req, res, next) => {
     try {
         const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
         if (!singleFeesStr) {
-            return res.status(404).json('Fee Structure not found !')
+            return res.status(404).json('Fee Structure not found!')
         }
         return res.status(200).json(singleFeesStr);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 let GetSingleClassFeesStructure = async (req, res, next) => {
@@ -26,11 +26,11 @@ let GetSingleClassFeesStructure = async (req, res, next) => {
     try {
         const singleFeesStr = await FeesStructureModel.find({ adminId: adminId });
         if (!singleFeesStr) {
-            return res.status(404).json('Fee Structure not found !')
+            return res.status(404).json('Fee Structure not found!')
         }
         return res.status(200).json(singleFeesStr);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 let GetSingleSessionFeesStructure = async (req, res, next) => {
@@ -39,11 +39,11 @@ let GetSingleSessionFeesStructure = async (req, res, next) => {
     try {
         const singleFeesStr = await FeesStructureModel.find({ adminId: adminId, session: session });
         if (!singleFeesStr) {
-            return res.status(404).json('Fee Structure not found !')
+            return res.status(404).json('Fee Structure not found!')
         }
         return res.status(200).json(singleFeesStr);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -61,14 +61,14 @@ let CreateFeesStructure = async (req, res, next) => {
     try {
         const checkClassExist = await ClassModel.findOne({ class: className });
         if (!checkClassExist) {
-            return res.status(404).json('Invalid Class !');
+            return res.status(404).json('Invalid class!');
         }
         const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (checkFeesStructure) {
-            return res.status(400).json(`Fee structure already exist for session ${session} !`);
+            return res.status(400).json(`Fee structure already exist for session ${session}!`);
         }
-        if (totalFees !== feesTypeTotal) {
-            return res.status(400).json(`Total fees is not equal to all fees particulars total !`);
+        if (totalFees!== feesTypeTotal) {
+            return res.status(400).json(`Total fees is not equal to all fees particulars total!`);
         }
         let feesStructureData = {
             adminId: adminId,
@@ -123,14 +123,14 @@ let CreateFeesStructure = async (req, res, next) => {
                 if (checkStudent && studentFeesData.length > 0) {
                     const checkStudentFeesData = await FeesCollectionModel.create(studentFeesData);
                     if (checkStudentFeesData) {
-                        return res.status(200).json('Fees structure add successfully.');
+                        return res.status(200).json('Fees structure created successfully.');
                     }
                 }
             }
-            return res.status(200).json('Fees structure add successfully.');
+            return res.status(200).json('Fees structure created successfully.');
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -146,7 +146,7 @@ let DeleteFeesStructure = async (req, res, next) => {
         const className = feesStructure.class;
         const stream = feesStructure.stream;
         const previousSessionFeesStructure = await FeesCollectionModel.findOne({ adminId: adminId,session:session,previousSessionClass:className,previousSessionStream :stream  })
-        if(previousSessionFeesStructure !==null){
+        if(previousSessionFeesStructure!==null){
             if(previousSessionFeesStructure.dueFees>0){
                 return res.status(400).json(`The fee structure for academic session ${session} cannot be deleted for this class, as there are pending dues for this session!`);
             }
@@ -158,7 +158,7 @@ let DeleteFeesStructure = async (req, res, next) => {
         if (deleteFeesRecord.deletedCount > 0 || deleteFeesStructure) {
             return res.status(200).json('Fees structure deleted successfully.');
         } else {
-            return res.status(500).json('Failed to delete Fees structure.');
+            return res.status(500).json('Failed to deleted Fees structure.');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

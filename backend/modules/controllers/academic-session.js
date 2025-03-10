@@ -6,7 +6,7 @@ let GetAcademicSession = async (req, res, next) => {
         const singleAcademicSession = await AcademicSessionModel.findOne({});
         return res.status(200).json(singleAcademicSession);
     }catch(error){
-        return res.status(500).json( 'Internal Server Error !' );
+        return res.status(500).json( 'Internal Server Error!' );
     }
 }
 

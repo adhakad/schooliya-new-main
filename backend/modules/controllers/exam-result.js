@@ -20,12 +20,12 @@ let GetSingleStudentExamResult = async (req, res, next) => {
 
         let admin = await AdminUsersModel.findOne({ schoolId: schoolId });
         if (!admin) {
-            return res.status(404).json({ errorMsg: 'Invalid Request!' });
+            return res.status(404).json({ errorMsg: 'Invalid request!' });
         }
         let adminId = admin._id;
         let student = await StudentModel.findOne({ adminId: adminId, admissionNo: admissionNo, class: className, rollNumber: rollNumber }, 'adminId session admissionNo name rollNumber class fatherName motherName stream');
         if (!student) {
-            return res.status(404).json({ errorMsg: 'Student not found !' });
+            return res.status(404).json({ errorMsg: 'Student not found!' });
         }
         let studentId = student._id;
         let stream = student.stream;
@@ -34,12 +34,12 @@ let GetSingleStudentExamResult = async (req, res, next) => {
         }
         let examResult = await ExamResultModel.findOne({ adminId: adminId, studentId: studentId })
         if (!examResult) {
-            return res.status(404).json({ errorMsg: 'Exam result not found !' });
+            return res.status(404).json({ errorMsg: 'Exam result not found!' });
         }
         let examType = examResult.examType;
         let resultPublishStatus = examResultStructure.resultPublishStatus;
         if (resultPublishStatus == false) {
-            return res.status(404).json({ errorMsg: 'Your exam result will be declared soon !' });
+            return res.status(404).json({ errorMsg: 'Your exam result will be declared soon!' });
         }
         return res.status(200).json({ examResult: examResult, studentInfo: student });
     } catch (error) {
@@ -51,7 +51,7 @@ let GetSingleStudentExamResultById = async (req, res, next) => {
     try {
         let student = await StudentModel.findOne({ _id: studentId }, 'session admissionNo name rollNumber class fatherName motherName stream');
         if (!student) {
-            return res.status(404).json({ errorMsg: 'Student not found !' });
+            return res.status(404).json({ errorMsg: 'Student not found!' });
         }
         let stream = student.stream;
         let className = student.class;
@@ -61,16 +61,16 @@ let GetSingleStudentExamResultById = async (req, res, next) => {
         }
         let examResult = await ExamResultModel.findOne({ adminId: adminId, studentId: studentId });
         if (!examResult) {
-            return res.status(404).json({ errorMsg: 'Exam result not found !' });
+            return res.status(404).json({ errorMsg: 'Exam result not found!' });
         }
         let examType = examResult.examType;
         let resultPublishStatus = examResultStructure.resultPublishStatus;
         if (resultPublishStatus == false) {
-            return res.status(404).json({ errorMsg: 'Your exam result will be declared soon !' });
+            return res.status(404).json({ errorMsg: 'Your exam result will be declared soon!' });
         }
         return res.status(200).json({ examResultStructure: examResultStructure, examResult: examResult, studentInfo: student });
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
 let GetAllStudentResultByClassStream = async (req, res, next) => {
@@ -86,7 +86,7 @@ let GetAllStudentResultByClassStream = async (req, res, next) => {
     try {
         const student = await StudentModel.find({ adminId: adminId, class: className, stream: stream },'adminId session admissionNo name dob rollNumber class fatherName motherName stream').sort({name:1});
         if (student.length <= 0) {
-            return res.status(404).json({ statusCode: 404, errorMsg: 'Not Found !' });
+            return res.status(404).json({ statusCode: 404, errorMsg: 'Not Found!' });
         }
 
         let examResult = await ExamResultModel.find({ adminId: adminId, class: className, stream: stream });
@@ -98,7 +98,7 @@ let GetAllStudentResultByClassStream = async (req, res, next) => {
             if (stream === "N/A") {
                 streamMsg = ``;
             }
-            return res.status(404).json({ statusCode: 404, errorMsg: `Not Found !` });
+            return res.status(404).json({ statusCode: 404, errorMsg: `Not Found!` });
         }
         let templateName = marksheetTemplate.templateName;
         let marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
@@ -106,11 +106,11 @@ let GetAllStudentResultByClassStream = async (req, res, next) => {
             if (stream === "N/A") {
                 streamMsg = ``;
             }
-            return res.status(404).json({ errorMsg: `Not Found !` });
+            return res.status(404).json({ errorMsg: `Not Found!` });
         }
         return res.status(200).json({ studentInfo: student, examResultInfo: examResult, marksheetTemplateStructure: marksheetTemplateStructure, isDate: isDate });
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
 
@@ -127,7 +127,7 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
     try {
         const student = await StudentModel.find({ adminId: adminId, class: className, stream: stream }, 'adminId session admissionNo name dob rollNumber class fatherName motherName stream');
         if (student.length <= 0) {
-            return res.status(404).json({ errorMsg: 'This class any student not found !' });
+            return res.status(404).json({ errorMsg: 'This class any student not found!' });
         }
 
 
@@ -136,11 +136,11 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
             if (stream === "N/A") {
                 streamMsg = ``;
             }
-            return res.status(404).json({ errorMsg: `This class ${streamMsg} marksheet template not found !` });
+            return res.status(404).json({ errorMsg: `This class ${streamMsg} marksheet template not found!` });
         }
         const examResult = await ExamResultModel.find({ adminId: adminId, class: className, stream });
         if (examResult.length <= 0) {
-            return res.status(404).json({ errorMsg: 'This class exam result not found !' });
+            return res.status(404).json({ errorMsg: 'This class exam result not found!' });
         }
         let templateName = marksheetTemplate.templateName;
         let marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
@@ -148,11 +148,11 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
             if (stream === "N/A") {
                 streamMsg = ``;
             }
-            return res.status(404).json({ errorMsg: `This class ${streamMsg} marksheet template not found !` });
+            return res.status(404).json({ errorMsg: `This class ${streamMsg} marksheet template not found!` });
         }
         return res.status(200).json({ examResultInfo: examResult, studentInfo: student, marksheetTemplateStructure: marksheetTemplateStructure, isDate: isDate });
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
 
@@ -195,7 +195,7 @@ let CreateExamResult = async (req, res, next) => {
     try {
         const student = await StudentModel.findOne({ adminId: adminId, rollNumber: rollNumber, class: className, stream: stream });
         if (!student) {
-            return res.status(404).json(`Roll number ${rollNumber} is invailid !`);
+            return res.status(404).json(`Roll number ${rollNumber} is invailid!`);
         }
         let studentId = student._id;
         const resultExist = await ExamResultModel.findOne({ adminId: adminId, studentId: studentId, class: className });
@@ -203,17 +203,17 @@ let CreateExamResult = async (req, res, next) => {
             const id = resultExist._id;
             let examTypeExist = Object.keys(resultExist.resultDetail);
             if (examTypeExist.length > 2) {
-                return res.status(400).json(`Invalid Entry !`);
+                return res.status(400).json(`Invalid entry!`);
             }
             if (examTypeExist[0] !== examType) {
                 const updatedExamResult = await ExamResultModel.findByIdAndUpdate(id, { $set: { [`resultDetail.${examType}`]: { ...resultDetail, createdBy: createdBy, } } }, { new: true });
-                return res.status(200).json('Student exam result add successfully.');
+                return res.status(200).json('Student exam result created successfully.');
             }
             if (examTypeExist[1] !== examType) {
                 const updatedExamResult = await ExamResultModel.findByIdAndUpdate(id, { $set: { [`resultDetail.${examType}`]: { ...resultDetail, createdBy: createdBy, } } }, { new: true });
-                return res.status(200).json('Student exam result add successfully.');
+                return res.status(200).json('Student exam result created successfully.');
             }
-            return res.status(400).json(`Roll number ${rollNumber} ${examType} result already exist !`);
+            return res.status(400).json(`Roll number ${rollNumber} ${examType} result already exist!`);
         }
         let examResultData = {
             adminId: adminId,
@@ -228,9 +228,9 @@ let CreateExamResult = async (req, res, next) => {
             }
         }
         let createExamResult = await ExamResultModel.create(examResultData);
-        return res.status(200).json('Student exam result add successfully.');
+        return res.status(200).json('Student exam result created successfully.');
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -324,11 +324,11 @@ let DeleteMarksheetResult = async (req, res, next) => {
         const id = req.params.id;
         const result = await ExamResultModel.findOne({ _id: id });
         if (!result) {
-            return res.status(200).json('Marksheet result not found.');
+            return res.status(404).json('Marksheet result not found!');
         }
         const deleteResult = await ExamResultModel.findByIdAndRemove(id);
         if (deleteResult) {
-            return res.status(200).json('Marksheet result delete successfully.');
+            return res.status(200).json('Marksheet result deleted successfully.');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error !');;

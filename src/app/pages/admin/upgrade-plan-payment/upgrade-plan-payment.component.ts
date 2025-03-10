@@ -86,7 +86,6 @@ export class UpgradePlanPaymentComponent implements OnInit {
   getSingleAdminUser(adminId: any) {
     this.adminUserService.getSingleAdminUser(adminId).subscribe((res: any) => {
       if (res) {
-        console.log(res)
         this.adminInfo = res;
       }
     })
@@ -131,7 +130,6 @@ export class UpgradePlanPaymentComponent implements OnInit {
     const razorpayPaymentId = response.razorpay_payment_id;
     const razorpayOrderId = response.razorpay_order_id;
     const razorpaySignature = response.razorpay_signature;
-    console.log(this.adminInfo)
     const paymentData = {
       payment_id: razorpayPaymentId,
       order_id: razorpayOrderId,
@@ -150,21 +148,10 @@ export class UpgradePlanPaymentComponent implements OnInit {
       (validationResponse: any) => {
         if (validationResponse) {
           this.zone.run(() => {
-            this.loader = true;
-            this.adminAuthService.deleteAllCookies();
-            this.step = 2;
             this.paymentCompleted = true;
-            this.getOTP = false;
-            this.varifyOTP = false;
-            this.verified = false;
             this.errorMsg = '';
             this.successMsg = validationResponse.successMsg;
-            this.adminAuthService.deleteAllCookies();
-            const accessToken = validationResponse.accessToken;
-            const refreshToken = validationResponse.refreshToken;
-            this.adminAuthService.storeAccessToken(accessToken);
-            this.adminAuthService.storeRefreshToken(refreshToken);
-            this.router.navigate(["/admin/dashboard"], { replaceUrl: true });
+            this.router.navigate(["/admin/upgrade-plan"], { replaceUrl: true });
             this.toastr.success('Congratulations! Your plan has been upgraded.', 'Success');
           });
         }

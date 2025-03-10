@@ -21,7 +21,7 @@ let GetSingleSchoolNameLogo = async (req, res, next) => {
             return res.status(200).json(singleSchool);
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -30,7 +30,7 @@ let GetSingleSchool = async (req, res, next) => {
         let id = req.params.id;
         let adminUser = await AdminUserModel.findOne({ _id: id });
         if (!adminUser) {
-            return res.status(404).json('Admin user not found');
+            return res.status(404).json('Admin user not found!');
         }
 
         let singleSchool = await SchoolModel.findOne({ adminId: id });
@@ -38,10 +38,10 @@ let GetSingleSchool = async (req, res, next) => {
             let schoolData = { ...singleSchool.toObject(), schoolId: adminUser.schoolId };
             return res.status(200).json(schoolData);
         } else {
-            return res.status(404).json('School not found');
+            return res.status(404).json('School not found!');
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -122,14 +122,14 @@ let UpdateSchool = async (req, res, next) => {
             phoneOne,
             email
         };
-        if (phoneSecond && phoneSecond !== 'null' && phoneSecond.trim() !== '') {
+        if (phoneSecond && phoneSecond!== 'null' && phoneSecond.trim()!== '') {
             schoolData.phoneSecond = phoneSecond;
         } else {
             schoolData.phoneSecond = null;
         }
         const singleSchool = await SchoolModel.findById(id);
         if (!singleSchool) {
-            return res.status(404).json('School not found.');
+            return res.status(404).json('School not found!');
         }
         if (req.file && req.file.path) {
             if (singleSchool.schoolLogoPublicId) {
@@ -144,7 +144,7 @@ let UpdateSchool = async (req, res, next) => {
         if (updateSchool) {
             return res.status(200).json('School updated successfully.');
         } else {
-            return res.status(404).json('School not found.');
+            return res.status(404).json('School not found!');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

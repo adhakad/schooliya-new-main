@@ -80,7 +80,7 @@ let GetStudentFeesCollectionBySession = async (req, res, next) => {
 
         return res.status(200).json({monthlyPaymentFees:monthlyPaymentFees, totalFeesSum: totalFeesSum, paidFeesSum: paidFeesSum, dueFeesSum: dueFeesSum });
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -98,7 +98,7 @@ let GetSingleStudentFeesCollectionByStudentId = async (req, res, next) => {
             const allFeesSession = await FeesCollectionModel.find({ adminId: adminId, studentId: studentId }, 'adminId session previousSessionClass previousSessionStream');
             const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
             if (!singleFeesStr) {
-                return res.status(404).json('Fee Structure not found !');
+                return res.status(404).json('Fee Structure not found!');
             }
             return res.status(200).json({ allFeesSession: allFeesSession, studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
         }
@@ -109,12 +109,12 @@ let GetSingleStudentFeesCollectionByStudentId = async (req, res, next) => {
             const allFeesSession = await FeesCollectionModel.find({ adminId: adminId, studentId: studentId }, 'adminId session previousSessionClass previousSessionStream');
             const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
             if (!singleFeesStr) {
-                return res.status(404).json('Fee Structure not found !');
+                return res.status(404).json('Fee Structure not found!');
             }
             return res.status(200).json({ allFeesSession: allFeesSession, studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -124,7 +124,7 @@ let GetSingleStudentFeesCollectionById = async (req, res, next) => {
     try {
         const student = await StudentModel.findOne({ _id: studentId, adminId: adminId }, '_id adminId session admissionNo name rollNumber class stream fatherName motherName dob');
         if (!student) {
-            return res.status(404).json('Student not found !');
+            return res.status(404).json('Student not found!');
         }
         let session = student.session;
         const studentFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, session: session });
@@ -133,11 +133,11 @@ let GetSingleStudentFeesCollectionById = async (req, res, next) => {
         const allFeesSession = await FeesCollectionModel.find({ adminId: adminId, studentId: studentId }, 'adminId studentId session');
         const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!singleFeesStr) {
-            return res.status(404).json('Fee Structure not found !');
+            return res.status(404).json('Fee Structure not found!');
         }
         return res.status(200).json({ allFeesSession: allFeesSession, studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -148,7 +148,7 @@ let GetPayableSingleStudentFeesCollectionById = async (req, res, next) => {
     try {
         const student = await StudentModel.findOne({ _id: studentId }, '_id adminId session admissionNo name rollNumber class stream fatherName motherName dob');
         if (!student) {
-            return res.status(404).json('Student not found !')
+            return res.status(404).json('Student not found!')
         }
         let adminId = student.adminId;
         const studentPeviousFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, previousSessionFeesStatus: true });
@@ -158,7 +158,7 @@ let GetPayableSingleStudentFeesCollectionById = async (req, res, next) => {
             let stream = studentPeviousFeesCollection.stream;
             const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
             if (!singleFeesStr) {
-                return res.status(404).json(`Fees structure not found !`);
+                return res.status(404).json(`Fees structure not found!`);
             }
             return res.status(200).json({ studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentPeviousFeesCollection });
         }
@@ -169,12 +169,12 @@ let GetPayableSingleStudentFeesCollectionById = async (req, res, next) => {
             let stream = studentFeesCollection.stream;
             const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
             if (!singleFeesStr) {
-                return res.status(404).json(`Fees structure not found !`);
+                return res.status(404).json(`Fees structure not found!`);
             }
             return res.status(200).json({ studentInfo: student, singleFeesStr: singleFeesStr, studentFeesCollection: studentFeesCollection });
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -188,15 +188,15 @@ let GetAllStudentFeesCollectionByClass = async (req, res, next) => {
     try {
         const student = await StudentModel.find({ adminId: adminId, class: className, stream: stream }, '_id session admissionNo name rollNumber class stream fatherName motherName dob');
         if (!student) {
-            return res.status(404).json('Student not found !')
+            return res.status(404).json('Student not found!')
         }
         const studentFeesCollection = await FeesCollectionModel.find({ adminId: adminId, class: className, stream: stream, previousSessionClass: 0, previousSessionStream: 'empty' });
         if (!studentFeesCollection) {
-            return res.status(404).json('Student fees collection not found !')
+            return res.status(404).json('Student fees collection not found!')
         }
         return res.status(200).json({ studentFeesCollection: studentFeesCollection, studentInfo: student });
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -212,16 +212,16 @@ let CreateFeesCollection = async (req, res, next) => {
     try {
         const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStructure) {
-            return res.status(404).json(`Fees structure not found !`);
+            return res.status(404).json(`Fees structure not found!`);
         }
         const checkFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, session: session, studentId: studentId, class: className, stream: stream });
         if (!checkFeesCollection) {
-            return res.status(404).json(`Fees record not found !`);
+            return res.status(404).json(`Fees record not found!`);
         }
 
         if (checkFeesCollection.previousSessionFeesStatus == false) {
             if (feesAmount > checkFeesCollection.dueFees) {
-                return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session} !`);
+                return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session}!`);
             }
             const totalFees = checkFeesCollection.totalFees;
             const paidFees = checkFeesCollection.paidFees + feesAmount
@@ -275,7 +275,7 @@ let CreateFeesCollection = async (req, res, next) => {
         if (checkFeesCollection.previousSessionFeesStatus == true) {
             const checkPreviousFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, studentId: studentId, previousSessionFeesStatus: false });
             if (!checkPreviousFeesCollection) {
-                return res.status(404).json(`Fees record not found !`);
+                return res.status(404).json(`Fees record not found!`);
             }
             const previousSession = checkPreviousFeesCollection.session;
             const totalFees = checkPreviousFeesCollection.totalFees;
@@ -346,7 +346,7 @@ let CreateFeesCollection = async (req, res, next) => {
             }
             if (checkPreviousFeesCollection.dueFees == 0 && checkPreviousFeesCollection.AllPaidFees == 0) {
                 if (feesAmount > checkFeesCollection.dueFees) {
-                    return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session} !`);
+                    return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkFeesCollection.dueFees} of session ${session}!`);
                 }
                 const totalFees = checkFeesCollection.totalFees;
                 const paidFees = checkFeesCollection.paidFees + feesAmount
@@ -396,7 +396,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             }
             if (feesAmount > checkPreviousFeesCollection.dueFees) {
-                return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkPreviousFeesCollection.dueFees} of session ${session} !`);
+                return res.status(400).json(`Paying fees amount is greater then due fees amount rupees ${checkPreviousFeesCollection.dueFees} of session ${session}!`);
             }
             const updatedDocument = await FeesCollectionModel.findOneAndUpdate(
                 {
@@ -443,7 +443,7 @@ let CreateFeesCollection = async (req, res, next) => {
 
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 

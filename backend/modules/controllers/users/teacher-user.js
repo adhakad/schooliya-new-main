@@ -10,25 +10,25 @@ let SignupTeacher = async (req, res, next) => {
     try {
         const checkAdminUser = await AdminUserModel.findOne({ schoolId: schoolId }); 
         if (!checkAdminUser) {
-            return res.status(404).json("Invailid register !")
+            return res.status(404).json("Invailid register!")
         }
         let adminId = checkAdminUser._id;
         const checkUser = await TeacherUserModel.findOne({adminId: adminId, email: email });
         if (checkUser) {
-            return res.status(400).json("Username already register !");
+            return res.status(400).json("Username already register!");
         }
         const teacher = await TeacherModel.findOne({adminId: adminId,teacherUserId: teacherUserId });
         if (!teacher) {
-            return res.status(404).json("Teacher not exist in this school !")
+            return res.status(404).json("Teacher does not exist in this school!")
         }
         const teacherId = teacher._id;
         const checkTeacherId = await TeacherUserModel.findOne({adminId: adminId,teacherId: teacherId });
         if (checkTeacherId) {
-            return res.status(400).json("Teacher user id is invalid !")
+            return res.status(400).json("Teacher user id is invalid!")
         }
         const checkOtp = await teacher.otp;
         if (otp !== checkOtp) {
-            return res.status(400).json("Your otp is invalid !");
+            return res.status(400).json("Your OTP is invalid!");
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         let teacherData = {
@@ -42,7 +42,7 @@ let SignupTeacher = async (req, res, next) => {
             return res.status(200).json('Teacher register successfully.');
         }
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -50,21 +50,21 @@ let LoginTeacher = async (req, res, next) => {
     try {
         const checkAdminUser = await AdminUserModel.findOne({ schoolId: req.body.schoolId }); 
         if (!checkAdminUser) {
-            return res.status(404).json("Invailid login !")
+            return res.status(404).json("Invailid login!")
         }
         let adminId = checkAdminUser._id;
         let teacher = await TeacherUserModel.findOne({adminId: adminId, email: req.body.email})
         if (!teacher) {
-            return res.status(404).json('Username or password invalid !');
+            return res.status(404).json('Username or password invalid!');
         }
         const passwordMatch = await bcrypt.compare(req.body.password, teacher.password);
         if (!passwordMatch) {
-            return res.status(404).json('Username or password invalid !');
+            return res.status(404).json('Username or password invalid!');
         }
         let teacherId = await teacher.teacherId;
         let teacherInfo = await TeacherModel.findOne({ _id: teacherId });
         if (teacherInfo.status == "Inactive") {
-            return res.status(400).json('Login permission inactive, please contact school administration !')
+            return res.status(400).json('Login permission inactive, please contact school administration!')
         }
         if (teacherInfo.status == "Active") {
             const payload = { id: teacher._id,adminId:adminId, email: teacher.email, name: teacherInfo.name };
@@ -74,9 +74,9 @@ let LoginTeacher = async (req, res, next) => {
                 return res.status(200).json({ teacherInfo: teacherInfo, accessToken, refreshToken });
             }
         }
-        return res.status(400).json('Login error !');
+        return res.status(400).json('Login error!');
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -89,7 +89,7 @@ let RefreshToken = async (req, res, next) => {
             res.send({ accessToken })
         }
         else {
-            res.status(403).send('token Unavailable!!')
+            res.status(403).send('Token unavailable!')
         }
     } catch (err) {
         res.status(500).json(err)

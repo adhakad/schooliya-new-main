@@ -32,7 +32,7 @@ let CreatePayment = async (req, res) => {
     await payment.save();
     res.status(200).json({ order });
   } catch (error) {
-    res.status(500).json({ error: 'Payment creation failed !' });
+    res.status(500).json({ error: 'Payment creation failed!' });
   }
 };
 
@@ -82,13 +82,13 @@ let ValidatePayment = async (req, res) => {
         }
       }
       if (!updatedPayment) {
-        return res.status(400).json({ success: false, message: 'Failed to update payment status !' });
+        return res.status(400).json({ success: false, message: 'Failed to update payment status!' });
       }
-      return res.status(400).json({ success: false, message: 'Payment validation failed !' });
+      return res.status(400).json({ success: false, message: 'Payment validation failed!' });
     }
   } catch (error) {
     console.error('Error validating payment:', error);
-    return res.status(500).json({ success: false, message: 'Error validating payment !' });
+    return res.status(500).json({ success: false, message: 'Error validating payment!' });
   }
 }
 module.exports = {

@@ -16,11 +16,11 @@ let GetSingleClassMarksheetTemplateByStream = async (req, res, next) => {
     try {
         const marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className,stream:stream });
         if(!marksheetTemplate){
-            return res.status(404).json(`Class ${className} ${streamMsg} template not found !`);
+            return res.status(404).json(`Class ${className} ${streamMsg} template not found!`);
         }
         return res.status(200).json(marksheetTemplate);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');;
+        return res.status(500).json('Internal Server Error!');;
     }
 }
 
@@ -35,7 +35,7 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
     try {
         const classSubjectList = await ClassSubjectModel.findOne({ adminId: adminId, class: className, stream: stream }, 'subject');
         if (!classSubjectList) {
-            return res.status(404).json('This class and subject group not found. !');
+            return res.status(404).json('This class and subject group not found!');
         }
         const marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
         if (!marksheetTemplate) {
@@ -43,7 +43,7 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
 
                 streamMsg = ``;
             }
-            return res.status(404).json(`Marksheet template not found !`);
+            return res.status(404).json(`Marksheet template not found!`);
         }
         const templateName = marksheetTemplate.templateName;
         const marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
@@ -51,11 +51,11 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
             if (stream === "N/A") {
                 streamMsg = ``;
             }
-            return res.status(404).json(`Marksheet template structure not found !`);
+            return res.status(404).json(`Marksheet template structure not found!`);
         }
         return res.status(200).json({ marksheetTemplateStructure: marksheetTemplateStructure, classSubjectList: classSubjectList });
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -68,11 +68,11 @@ let CreateExamResultStructure = async (req, res, next) => {
     try {
         let student = await StudentModel.findOne({ adminId: adminId, class: className, stream: stream});
         if (!student) {
-            return res.status(404).json('No student was found in this class, please add students !');
+            return res.status(404).json('No student was found in this class, please add students!');
         }
         const checkExamExist = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream});
         if (checkExamExist) {
-            return res.status(400).json(`This class template ${checkExamExist.templateName} already exist !`);
+            return res.status(400).json(`This class template ${checkExamExist.templateName} already exist!`);
         }
         let marksheetTemplateData = {
             adminId: adminId,
@@ -82,10 +82,10 @@ let CreateExamResultStructure = async (req, res, next) => {
             templateUrl:templateUrl
         };
         let marksheetTemplate = await MarksheetTemplateModel.create(marksheetTemplateData)
-        return res.status(200).json('Marksheet template add successfully.');
+        return res.status(200).json('Marksheet template created successfully.');
 
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');;
+        return res.status(500).json('Internal Server Error!');;
     }
 }
 
@@ -231,7 +231,7 @@ let DeleteResultStructure = async (req, res, next) => {
         const resultStr = await MarksheetTemplateModel.findOne({ _id: id });
         
         if (!resultStr) {
-            return res.status(200).json('Marksheet template not found.');
+            return res.status(200).json('Marksheet template not found!');
         }
 
         const { adminId, class: className, stream, templateName } = resultStr;

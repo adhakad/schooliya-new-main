@@ -14,12 +14,12 @@ let GetTeacherById = async (req, res, next) => {
     let teacherUserId = req.params.teacherUserId;
     const checkTeacher = await TeacherUserModel.findOne({ _id: teacherUserId, adminId: adminId, });
     if (!checkTeacher) {
-        return res.status(400).json("Invailid access !")
+        return res.status(400).json("Invailid access!")
     }
     let teacherId = checkTeacher.teacherId;
     const teacher = await TeacherModel.findOne({ _id: teacherId, adminId: adminId, });
     if (!teacher) {
-        return res.status(400).json("Invailid access !")
+        return res.status(400).json("Invailid access!")
     }
     return res.status(200).json(teacher);
 }
@@ -49,7 +49,7 @@ let GetTeacherPagination = async (req, res, next) => {
         teacherData.countTeacher = countTeacher;
         return res.json(teacherData);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
@@ -59,16 +59,16 @@ let CreateTeacher = async (req, res, next) => {
     try {
         const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
         if (!checkAdminPlan) {
-            return res.status(404).json(`Invalid Entry`);
+            return res.status(404).json(`Invalid entry!`);
         }
         let teacherLimit = checkAdminPlan.teacherLimit;
         let countTeacher = await TeacherModel.count({ adminId: adminId });
         if (countTeacher == teacherLimit || countTeacher > teacherLimit) {
-            return res.status(400).json(`You have exceeded the ${countTeacher} teacher limit for your current plan. Please increase the limit or upgrade to a higher plan to continue.`);
+            return res.status(400).json(`You have exceeded the ${countTeacher} teacher limit for your current plan. Please increase the limit or upgrade to a higher plan to continue!`);
         }
         const checkTeacher = await TeacherModel.findOne({ adminId: adminId, teacherUserId: teacherUserId });
         if (checkTeacher) {
-            return res.status(400).json("Teacher user id already exist !")
+            return res.status(400).json("Teacher user id already exist!")
         }
         const teacherData = {
             adminId: adminId,
@@ -80,7 +80,7 @@ let CreateTeacher = async (req, res, next) => {
         const createTeacher = await TeacherModel.create(teacherData);
         return res.status(200).json('Teacher created successfully.');
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 let TeacherPermission = async (req, res, next) => {
@@ -90,7 +90,7 @@ let TeacherPermission = async (req, res, next) => {
         let { marksheetPermission, admitCardPermission, studentPermission, admissionPermission, feeCollectionPermission, promoteFailPermission, transferCertificatePermission } = req.body.type;
         const checkTeacher = await TeacherModel.findOne({ _id: teacherId, adminId: adminId });
         if (!checkTeacher) {
-            return res.status(400).json("Invalid Request !")
+            return res.status(400).json("Invalid request!")
         }
 
         function getUniqueClasses(permissionArray) {
@@ -123,7 +123,7 @@ let TeacherPermission = async (req, res, next) => {
 
             // Agar 0 ke alawa koi value ho to 0 remove karo
             if (classArray.length > 1 && classArray.includes(0)) {
-                classArray = classArray.filter(num => num !== 0);
+                classArray = classArray.filter(num => num!== 0);
             }
 
             let hasValidClass = classArray.length > 0 && !(classArray.length === 1 && classArray[0] === 0);
@@ -136,7 +136,7 @@ let TeacherPermission = async (req, res, next) => {
         const updateTeacher = await TeacherModel.findByIdAndUpdate(teacherId, { $set: teacherData }, { new: true });
         return res.status(200).json('Teacher permissions set successfully.');
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 let UpdateTeacher = async (req, res, next) => {
@@ -151,7 +151,7 @@ let UpdateTeacher = async (req, res, next) => {
         const updateTeacher = await TeacherModel.findByIdAndUpdate(id, { $set: teacherData }, { new: true });
         return res.status(200).json('Teacher updated successfully.');
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 let ChangeStatus = async (req, res, next) => {
@@ -165,7 +165,7 @@ let ChangeStatus = async (req, res, next) => {
         const updateStatus = await TeacherModel.findByIdAndUpdate(id, { $set: teacherData }, { new: true });
         return res.status(200).json(`Teacher ${status} successfully.`);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 let DeleteTeacher = async (req, res, next) => {
@@ -173,9 +173,9 @@ let DeleteTeacher = async (req, res, next) => {
         const id = req.params.id;
         const deleteTeacher = await TeacherModel.findByIdAndRemove(id);
         const deleteTeacherUser = await TeacherUserModel.findByIdAndDelete({ _id: id })
-        return res.status(200).json('Teacher delete successfully.');
+        return res.status(200).json('Teacher deleted successfully.');
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 

@@ -29,23 +29,23 @@ let LoginAdmin = async (req, res, next) => {
         let { email, password } = req.body;
         let admin = await AdminUserModel.findOne({ email: email });
         if (!admin) {
-            return res.status(404).json({ errorMsg: 'Username or password invalid !' });
+            return res.status(404).json({ errorMsg: 'Username or password invalid!' });
         }
         if (!admin.verified) {
-            return res.status(400).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services.` });
+            return res.status(400).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services!` });
         }
         let adminId = admin._id;
         let adminPlan = await AdminPlanModel.findOne({ adminId: adminId });
         if (!adminPlan) {
-            return res.status(404).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services.` });
+            return res.status(404).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services!` });
         }
 
         if (adminPlan.expiryStatus === true) {
-            return res.status(400).json({ errorMsg: `Your ${adminPlan.activePlan} plan has expired. Please purchase your plan to continue enjoying Schooliya's services.` });
+            return res.status(400).json({ errorMsg: `Your ${adminPlan.activePlan} plan has expired. Please purchase your plan to continue enjoying Schooliya's services!` });
         }
         const passwordMatch = await bcrypt.compare(password, admin.password);
         if (!passwordMatch) {
-            return res.status(400).json({ errorMsg: 'Username or password invalid !' });
+            return res.status(400).json({ errorMsg: 'Username or password invalid!' });
         }
         const payload = { id: admin._id, email: admin.email };
         const accessToken = await tokenService.getAccessToken(payload);
@@ -54,7 +54,7 @@ let LoginAdmin = async (req, res, next) => {
         // }
         // return res.status(400).json({ errorMsg: 'Login error !' })
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
 
@@ -67,7 +67,7 @@ let RefreshToken = async (req, res, next) => {
             res.send({ accessToken })
         }
         else {
-            res.status(403).send('token Unavailable!!')
+            res.status(403).send('Token unavailable!')
         }
     } catch (err) {
         res.status(500).json(err)
@@ -101,7 +101,7 @@ let SignupAdmin = async (req, res, next) => {
                     if (existingUserPlan.expiryStatus == true) {
                         return res.status(400).json({ verified: true, paymentMode: true, email, adminInfo: existingUser });
                     }
-                    return res.status(400).json({ verified: true, paymentMode: false, errorMsg: `Your ${existingUserPlan.activePlan} plan is already active, enjoy your services.` });
+                    return res.status(400).json({ verified: true, paymentMode: false, errorMsg: `Your ${existingUserPlan.activePlan} plan is already active, enjoy your services!` });
                 }
             }
 
@@ -151,18 +151,18 @@ let ForgotPassword = async (req, res, next) => {
         const { email } = req.body;
         const admin = await AdminUserModel.findOne({ email: email });
         if (!admin) {
-            return res.status(404).json({ errorMsg: 'Email address not found !' });
+            return res.status(404).json({ errorMsg: 'Email address not found!' });
         }
         if (!admin.verified) {
-            return res.status(400).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services.` });
+            return res.status(400).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services!` });
         }
         let adminId = admin._id;
         let adminPlan = await AdminPlanModel.findOne({ adminId: adminId });
         if (!adminPlan) {
-            return res.status(404).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services.` });
+            return res.status(404).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services!` });
         }
         if (adminPlan.expiryStatus === true) {
-            return res.status(400).json({ errorMsg: `Your ${adminPlan.activePlan} plan has expired. Please purchase your plan to continue enjoying Schooliya's services.` });
+            return res.status(400).json({ errorMsg: `Your ${adminPlan.activePlan} plan has expired. Please purchase your plan to continue enjoying Schooliya's services!` });
         }
         await OTPModel.deleteMany({ email });
         const createdOTP = await OTPModel.create({ email, secureOtp: secureOtp });
@@ -170,7 +170,7 @@ let ForgotPassword = async (req, res, next) => {
         return res.status(200).json({ successMsg: 'Forgot password otp send successfully.', email: email });
 
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
 
@@ -216,7 +216,7 @@ let VerifyOTP = async (req, res, next) => {
             return res.status(404).json({ errorMsg: "Your OTP has expired!" });
         }
         if (userEnteredOTP !== otp.secureOtp) {
-            return res.status(400).json({ errorMsg: "Invalid OTP" });
+            return res.status(400).json({ errorMsg: "Invalid OTP!" });
 
         }
         if (userEnteredOTP == otp.secureOtp) {
@@ -227,7 +227,7 @@ let VerifyOTP = async (req, res, next) => {
             }
         }
     } catch (err) {
-        return res.status(500).json({ errorMsg: "Internal server error" });
+        return res.status(500).json({ errorMsg: "Internal server error!" });
     }
 }
 
@@ -245,10 +245,10 @@ let ResetPassword = async (req, res, next) => {
         const objectId = user._id;
         const updateAdminUser = await AdminUserModel.findByIdAndUpdate(objectId, { $set: resetAdminUserInfo }, { new: true });
         if (updateAdminUser) {
-            return res.status(200).json({ successMsg: 'Reset password successfully.' });
+            return res.status(200).json({ successMsg: 'Password reset successfully.' });
         }
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error !' });
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
 let GetSingleAdminUser = async (req, res, next) => {
@@ -258,7 +258,7 @@ let GetSingleAdminUser = async (req, res, next) => {
         const singleAdminUser = await AdminUserModel.findOne({ _id: objectId });
         return res.status(200).json(singleAdminUser);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 let GetSingleAdminPlan = async (req, res, next) => {
@@ -266,7 +266,7 @@ let GetSingleAdminPlan = async (req, res, next) => {
         const singleAdminPlan = await AdminPlanModel.findOne({ adminId: req.params.adminId });
         return res.status(200).json(singleAdminPlan);
     } catch (error) {
-        return res.status(500).json('Internal Server Error !');
+        return res.status(500).json('Internal Server Error!');
     }
 }
 
