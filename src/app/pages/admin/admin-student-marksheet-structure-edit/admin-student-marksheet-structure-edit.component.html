@@ -54,25 +54,25 @@
                                                 {{subject}}
                                             </mat-checkbox>
                                         </div>
-                                    </div>
-                                    <ng-container *ngIf="selectedTheoryMaxMarks.length > 0">
-                                        <h3>Theory Maximum Marks</h3>
-                                        <ng-container formGroupName="type">
-                                          <ng-container formArrayName="theoryMaxMarksPermission">
-                                            <div class="col-4 col-lg-2"
-                                                 *ngFor="let subject of selectedTheoryMaxMarks; let i = index">
-                                              <div [formGroupName]="i">
-                                                <mat-form-field appearance="outline">
-                                                  <mat-label>{{ subject }}</mat-label>
-                                                  <input matInput type="text" 
-                                                         [formControlName]="subject"
-                                                         placeholder="Enter Marks">
-                                                </mat-form-field>
-                                              </div>
-                                            </div>
-                                          </ng-container>
+                                        <ng-container *ngIf="selectedTheoryMaxMarks.length > 0">
+                                            <h3>Theory Maximum Marks</h3>
+                                            <ng-container formGroupName="type">
+                                                <ng-container formArrayName="theoryMaxMarksPermission">
+                                                    <div class="col-4 col-lg-2"
+                                                        *ngFor="let subject of selectedTheoryMaxMarks; let i = index">
+                                                        <div [formGroupName]="i">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>{{ subject }}</mat-label>
+                                                                <input matInput type="number"
+                                                                    [formControlName]="subject"
+                                                                    placeholder="Enter Marks">
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
                                         </ng-container>
-                                      </ng-container>
+                                    </div>
                                 </section>
                                 <div class="modal-footer">
                                     <button class="submit-button" mat-raised-button type="submit">Submit</button>
