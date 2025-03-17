@@ -157,8 +157,6 @@ export class AdminStudentMarksheetStructureComponent implements OnInit {
       this.errorCheck = true;
       this.errorMsg = err.error;
     })
-
-
   }
 
   marksheetTemplateDelete(id: String) {

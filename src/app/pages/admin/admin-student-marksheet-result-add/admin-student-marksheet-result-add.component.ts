@@ -361,8 +361,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       gradeMaxMarks: examFilteredData.gradeMaxMarks,
       gradeMinMarks: examFilteredData.gradeMinMarks
     };
-
-
+    console.log(this.resultStructureInfo)
   }
 
 

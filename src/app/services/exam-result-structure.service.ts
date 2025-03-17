@@ -15,6 +15,9 @@ export class ExamResultStructureService {
   getSingleClassMarksheetTemplateByStream(params: any) {
     return this.http.get(`${this.url}/admin/${params.adminId}/class/${params.cls}/stream/${params.stream}`);
   }
+  getSingleMarksheetTemplateById(id: any) {
+    return this.http.get(`${this.url}/admin/template/structure/${id}`);
+  }
   getSingleClassResultStrucByStream(params: any) {
     return this.http.get(`${this.url}/admin/${params.adminId}/template/structure/class/${params.cls}/stream/${params.stream}`);
   }

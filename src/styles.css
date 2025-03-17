@@ -250,12 +250,13 @@ body {
 .no-arrow[type="number"] {
   -moz-appearance: textfield;
 }
-/* ::ng-deep .toast-container .ngx-toastr {
+ ::ng-deep .toast-container .ngx-toastr {
   font-family: 'Poppins', sans-serif;
   border-radius: 5px;
-  background-color: #fff !important;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  background-color: #43ba7c !important;
 }
-::ng-deep .toast-success {
+/*::ng-deep .toast-success {
   border-left: 6px solid #2E7D32 !important;
   color: #2E7D32 !important;
 }
@@ -277,9 +278,10 @@ body {
 ::ng-deep .toast-message {
   font-size: 14px;
 }
+  */
 ::ng-deep .toast-progress {
-  background-color: #2b9231 !important; 
-} */
+  background-color: #fff !important; 
+} 
 @media (min-width: 576px) and (max-width: 767.98px) {
   .header {
     background-color: var(--common-color);

@@ -1,0 +1,87 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 col-lg-2">
+            <app-side-navbar></app-side-navbar>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12 main-container">
+                    <div class="row big-option-container">
+                        <div class="desktop-option">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <button mat-button class="menu-button">
+                                            <span>Marksheet > Template > Edit</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-9" style="text-align: right;">
+                                        <div class="row">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-option">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button mat-button class="menu-button">
+                                            <span>Marksheet > Template > Edit</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="main-container">
+                    <div class="col-12 col-lg-12 big-container">
+                        <div class="main-card" *ngIf="examStructure">
+                            <form [formGroup]="subjectPermissionForm" (ngSubmit)="subjectPermissionAdd()">
+                                <ng-container>
+                                    <h3>Theory Subject</h3>
+                                </ng-container>
+                                <section class="example-section mb-3">
+                                    <div class="row">
+                                        <div class="col-4" *ngFor="let subject of subjects,let i=index;">
+                                            <mat-checkbox class="example-margin"
+                                                [checked]="isTheoryMaxMarksSelected(subject)"
+                                                (change)="theoryMaxMarks(subject, $event)">
+                                                {{subject}}
+                                            </mat-checkbox>
+                                        </div>
+                                    </div>
+                                    <ng-container *ngIf="selectedTheoryMaxMarks.length > 0">
+                                        <h3>Theory Maximum Marks</h3>
+                                        <ng-container formGroupName="type">
+                                          <ng-container formArrayName="theoryMaxMarksPermission">
+                                            <div class="col-4 col-lg-2"
+                                                 *ngFor="let subject of selectedTheoryMaxMarks; let i = index">
+                                              <div [formGroupName]="i">
+                                                <mat-form-field appearance="outline">
+                                                  <mat-label>{{ subject }}</mat-label>
+                                                  <input matInput type="text" 
+                                                         [formControlName]="subject"
+                                                         placeholder="Enter Marks">
+                                                </mat-form-field>
+                                              </div>
+                                            </div>
+                                          </ng-container>
+                                        </ng-container>
+                                      </ng-container>
+                                </section>
+                                <div class="modal-footer">
+                                    <button class="submit-button" mat-raised-button type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

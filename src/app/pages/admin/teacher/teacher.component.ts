@@ -196,7 +196,6 @@ export class TeacherComponent implements OnInit {
       this.teacherService.teacherPaginationList(params).subscribe((res: any) => {
         if (res) {
           this.teacherInfo = res.teacherList;
-          console.log(this.teacherInfo)
           this.number = params.page;
           this.selectedMarksheetPermissionClass = [...res.teacherList[0].marksheetPermission.classes];
           this.selectedStudentPermissionClass = [...res.teacherList[0].studentPermission.classes];
