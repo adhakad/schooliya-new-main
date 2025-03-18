@@ -41,8 +41,8 @@
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card" *ngIf="examStructure">
-              <form [formGroup]="subjectPermissionForm" (ngSubmit)="subjectPermissionAdd()">
-                <!-- Theory Subject -->
+              <!-- <form [formGroup]="subjectPermissionForm" (ngSubmit)="subjectPermissionAdd()">
+                
                 <h3>Theory Subject</h3>
                 <div class="row">
                   <div class="col-2" *ngFor="let subject of subjects">
@@ -52,11 +52,11 @@
                   </div>
                 </div>
               
-                <!--  Theory Max Marks -->
+            
                 <ng-container *ngIf="selectedSubjects.length > 0">
                   <h3>Theory Maximum Marks</h3>
                   <ng-container formGroupName="type">
-                    <ng-container formArrayName="theoryMaxMarksPermission">
+                    <ng-container formArrayName="theoryMaxMarks">
                       <div class="row">
                         <div class="col-4 col-lg-2" *ngFor="let control of getTheoryMaxMarksArray().controls; let i = index" [formGroupName]="i">
                           <mat-form-field appearance="outline">
@@ -77,10 +77,10 @@
                     </ng-container>
                   </ng-container>
               
-                  <!--  Theory Pass Marks -->
+                
                   <h3>Theory Passing Marks</h3>
                   <ng-container formGroupName="type">
-                    <ng-container formArrayName="theoryPassMarksPermission">
+                    <ng-container formArrayName="theoryPassMarks">
                       <div class="row">
                         <div class="col-4 col-lg-2" *ngFor="let control of getTheoryPassMarksArray().controls; let i = index" [formGroupName]="i">
                           <mat-form-field appearance="outline">
@@ -102,12 +102,63 @@
                   </ng-container>
                 </ng-container>
               
-                <!--  Submit Button -->
+      
                 <div class="modal-footer">
                   <button mat-raised-button type="submit" color="primary">Submit</button>
                 </div>
-              </form>
+              </form> -->
               
+
+
+              <form [formGroup]="subjectPermissionForm" (ngSubmit)="subjectPermissionAdd()">
+                <!--  Theory Subjects -->
+                <h3>Theory Subjects</h3>
+                <div class="row">
+                  <div class="col-2" *ngFor="let subject of subjects">
+                    <mat-checkbox [checked]="isSubjectSelected(subject)" (change)="theoryMarksToggle(subject, $event)">
+                      {{ subject }}
+                    </mat-checkbox>
+                  </div>
+                </div>
+              
+                <!--  Dynamic Terms -->
+                <ng-container *ngFor="let term of terms">
+                  <h3>{{ term | titlecase }}</h3>
+              
+                  <h3>Theory Maximum Marks</h3>
+                  <ng-container [formGroupName]="term">
+                    <ng-container formArrayName="theoryMaxMarks">
+                      <div class="row">
+                        <div class="col-2" *ngFor="let control of getTheoryMaxMarksArray(term).controls; let i = index" [formGroupName]="i">
+                          <mat-form-field appearance="outline">
+                            <mat-label>{{ control.value.subject }} Max Marks</mat-label>
+                            <input matInput type="number" formControlName="value" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </ng-container>
+              
+                    <h3>Theory Passing Marks</h3>
+                    <ng-container formArrayName="theoryPassMarks">
+                      <div class="row">
+                        <div class="col-2" *ngFor="let control of getTheoryPassMarksArray(term).controls; let i = index" [formGroupName]="i">
+                          <mat-form-field appearance="outline">
+                            <mat-label>{{ control.value.subject }} Pass Marks</mat-label>
+                            <input matInput type="number" formControlName="value" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              
+                <!--  Submit Button -->
+                <button mat-raised-button color="primary" type="submit">Submit</button>
+              </form>
+
+
+
+
               
             </div>
           </div>
