@@ -1,8 +1,3 @@
-
-
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
@@ -16,12 +11,12 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./admin-student-marksheet-structure-edit.component.css']
 })
 export class AdminStudentMarksheetStructureEditComponent implements OnInit {
-  subjectPermissionForm: FormGroup;
+  subjectPermissionForm!: FormGroup;
   adminId: string = '';
   id: any;
   examStructure: any;
   subjects: any[] = [];
-  selectedTheoryMaxMarks: any[] = [];
+  selectedSubjects: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -29,32 +24,34 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     private toastr: ToastrService,
     private adminAuthService: AdminAuthService,
     private examResultStructureService: ExamResultStructureService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    // Form Initialize
     this.subjectPermissionForm = this.fb.group({
       _id: [''],
       type: this.fb.group({
-        theoryMaxMarksPermission: this.fb.array([], [Validators.required]),
-      }),
+        theoryMaxMarksPermission: this.fb.array([]),
+        theoryPassMarksPermission: this.fb.array([])
+      })
     });
-  }
 
-  ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.getSingleMarksheetTemplateById();
   }
 
-  // ✅ Marksheet Data ko fetch karna
+  // API Call to get data
   getSingleMarksheetTemplateById() {
     this.examResultStructureService.getSingleMarksheetTemplateById(this.id).subscribe(
       (res: any) => {
         this.examStructure = res.examStructure;
         this.subjects = res.subjects.map((subject: any) => subject.subject);
-        this.selectedTheoryMaxMarks = res.examStructure.term1.theoryMaxMarks.map(
-          (item: any) => Object.keys(item)[0]
-        );
-        this.patch(); // ✅ Form ko patch karo
+        this.selectedSubjects = res.examStructure.term1.theoryMaxMarks.map((item: any) => Object.keys(item)[0]);
+
+        // Form Patch
+        this.patchForm();
       },
       (err) => {
         this.toastr.error('Failed to fetch marksheet template');
@@ -62,76 +59,68 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     );
   }
 
-  // ✅ Subject ko add/remove karna
-  theoryMaxMarks(option: string, event: any) {
+  // Form Patch karne ka sahi tareeka
+  patchForm() {
+    const maxMarksControl = this.getTheoryMaxMarksArray();
+    const passMarksControl = this.getTheoryPassMarksArray();
+
+    maxMarksControl.clear();
+    passMarksControl.clear();
+
+    this.selectedSubjects.forEach(subject => {
+      const maxMarksValue = this.getDefaultValue(subject, 'theoryMaxMarks');
+      const passMarksValue = this.getDefaultValue(subject, 'theoryPassMarks');
+
+      // Proper FormGroup Bind kar rahe hain
+      maxMarksControl.push(
+        this.fb.group({
+          subject: [subject],
+          value: [maxMarksValue, Validators.required]
+        })
+      );
+      passMarksControl.push(
+        this.fb.group({
+          subject: [subject],
+          value: [passMarksValue, Validators.required]
+        })
+      );
+    });
+  }
+
+  // Default Value nikalna
+  getDefaultValue(subject: string, field: string) {
+    return this.examStructure?.term1?.[field]?.find((item: any) => item[subject])?.[subject] || '';
+  }
+
+  // Subject ko select karna
+  theoryMarksToggle(subject: string, event: any) {
     if (event.checked) {
-      if (!this.selectedTheoryMaxMarks.includes(option)) {
-        this.selectedTheoryMaxMarks.push(option);
+      if (!this.selectedSubjects.includes(subject)) {
+        this.selectedSubjects.push(subject);
       }
     } else {
-      this.selectedTheoryMaxMarks = this.selectedTheoryMaxMarks.filter(
-        (subject) => subject !== option
-      );
+      this.selectedSubjects = this.selectedSubjects.filter(s => s !== subject);
     }
-    this.patch(); // ✅ Form ko sync karo
+    this.patchForm();
   }
 
-  // ✅ Form ko patch karna
-  patch() {
-    const controlOne = <FormArray>(
-      this.subjectPermissionForm.get('type.theoryMaxMarksPermission')
-    );
-
-    // ✅ Pehle se added values ko store karo
-    const existingValues = controlOne.controls.reduce((acc: any, curr: any) => {
-      const key = Object.keys(curr.value)[0];
-      acc[key] = curr.value[key];
-      return acc;
-    }, {});
-
-    // ✅ Purane aur naye subjects ko sync karo
-    this.selectedTheoryMaxMarks.forEach((subject) => {
-      const existingIndex = this.selectedTheoryMaxMarks.indexOf(subject);
-
-      if (existingIndex !== -1 && existingValues[subject] !== undefined) {
-        // ✅ Agar subject pehle se available hai to value ko update karo
-        controlOne.at(existingIndex)?.patchValue({
-          [subject]: existingValues[subject],
-        });
-      } else {
-        // ✅ Agar naye subject ko add kar rahe hain to default value leke push karo
-        const existingValue = this.examStructure?.term1?.theoryMaxMarks.find(
-          (item: any) => Object.keys(item)[0] === subject
-        )?.[subject] || '';
-
-        controlOne.push(
-          this.fb.group({
-            [subject]: [existingValue, Validators.required],
-          })
-        );
-      }
-    });
-
-    // ✅ Agar koi subject uncheck kar diya ho to use remove karo
-    for (let i = controlOne.length - 1; i >= 0; i--) {
-      const key = Object.keys(controlOne.at(i).value)[0];
-      if (!this.selectedTheoryMaxMarks.includes(key)) {
-        controlOne.removeAt(i);
-      }
-    }
+  // Subject check hone ka status
+  isSubjectSelected(subject: string): boolean {
+    return this.selectedSubjects.includes(subject);
   }
 
-  // ✅ Checkbox ke liye selected state ko maintain karo
-  isTheoryMaxMarksSelected(option: string): boolean {
-    return this.selectedTheoryMaxMarks.includes(option);
+  // FormArray ko properly get kar rahe hain
+  getTheoryMaxMarksArray(): FormArray {
+    return this.subjectPermissionForm.get('type.theoryMaxMarksPermission') as FormArray;
   }
 
-  // ✅ Form ko submit karna
+  getTheoryPassMarksArray(): FormArray {
+    return this.subjectPermissionForm.get('type.theoryPassMarksPermission') as FormArray;
+  }
+
+  // Form ko Submit karna
   subjectPermissionAdd() {
     this.subjectPermissionForm.value._id = this.id;
     console.log(this.subjectPermissionForm.value);
-
-    
   }
 }
-
