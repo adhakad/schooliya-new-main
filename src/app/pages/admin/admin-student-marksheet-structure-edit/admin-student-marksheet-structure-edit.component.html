@@ -42,9 +42,8 @@
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card" *ngIf="examStructure">
               <form [formGroup]="subjectPermissionForm" (ngSubmit)="subjectPermissionAdd()">
-                <ng-container>
-                  <h3>Theory Subject</h3>
-                </ng-container>
+                <!-- Theory Subject -->
+                <h3>Theory Subject</h3>
                 <div class="row">
                   <div class="col-2" *ngFor="let subject of subjects">
                     <mat-checkbox [checked]="isSubjectSelected(subject)" (change)="theoryMarksToggle(subject, $event)">
@@ -53,33 +52,49 @@
                   </div>
                 </div>
               
+                <!--  Theory Max Marks -->
                 <ng-container *ngIf="selectedSubjects.length > 0">
-                  <!-- Theory Maximum Marks -->
                   <h3>Theory Maximum Marks</h3>
                   <ng-container formGroupName="type">
                     <ng-container formArrayName="theoryMaxMarksPermission">
                       <div class="row">
-                        <div class="col-4 col-lg-2" *ngFor="let control of getTheoryMaxMarksArray().controls; let i = index" 
-                          [formGroupName]="i">
+                        <div class="col-4 col-lg-2" *ngFor="let control of getTheoryMaxMarksArray().controls; let i = index" [formGroupName]="i">
                           <mat-form-field appearance="outline">
                             <mat-label>{{ control.value.subject }}</mat-label>
                             <input matInput type="number" formControlName="value" placeholder="Enter Marks">
+                            <mat-error *ngIf="control.get('value')?.hasError('required')">
+                              Maximum marks are required.
+                            </mat-error>
+                            <mat-error *ngIf="control.get('value')?.hasError('min')">
+                              Marks should be at least 0.
+                            </mat-error>
+                            <mat-error *ngIf="control.get('value')?.hasError('max')">
+                              Marks cannot exceed 100.
+                            </mat-error>
                           </mat-form-field>
                         </div>
                       </div>
                     </ng-container>
                   </ng-container>
               
-                  <!-- Theory Passing Marks -->
+                  <!--  Theory Pass Marks -->
                   <h3>Theory Passing Marks</h3>
                   <ng-container formGroupName="type">
                     <ng-container formArrayName="theoryPassMarksPermission">
                       <div class="row">
-                        <div class="col-4 col-lg-2" *ngFor="let control of getTheoryPassMarksArray().controls; let i = index" 
-                          [formGroupName]="i">
+                        <div class="col-4 col-lg-2" *ngFor="let control of getTheoryPassMarksArray().controls; let i = index" [formGroupName]="i">
                           <mat-form-field appearance="outline">
                             <mat-label>{{ control.value.subject }}</mat-label>
                             <input matInput type="number" formControlName="value" placeholder="Enter Marks">
+                            <mat-error *ngIf="control.get('value')?.hasError('required')">
+                              Passing marks are required.
+                            </mat-error>
+                            <mat-error *ngIf="control.get('value')?.hasError('min')">
+                              Marks should be at least 0.
+                            </mat-error>
+                            <mat-error *ngIf="control.get('value')?.hasError('max')">
+                              Marks cannot exceed 100.
+                            </mat-error>
                           </mat-form-field>
                         </div>
                       </div>
@@ -87,11 +102,12 @@
                   </ng-container>
                 </ng-container>
               
-                <!-- Submit Button -->
+                <!--  Submit Button -->
                 <div class="modal-footer">
                   <button mat-raised-button type="submit" color="primary">Submit</button>
                 </div>
               </form>
+              
               
             </div>
           </div>

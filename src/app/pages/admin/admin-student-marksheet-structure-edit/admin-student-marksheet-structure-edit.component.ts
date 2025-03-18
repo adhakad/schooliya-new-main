@@ -27,7 +27,6 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Form Initialize
     this.subjectPermissionForm = this.fb.group({
       _id: [''],
       type: this.fb.group({
@@ -36,21 +35,23 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
       })
     });
 
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
+    const getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.getSingleMarksheetTemplateById();
   }
 
-  // API Call to get data
+  //  API Call se data fetch kar rahe hain
   getSingleMarksheetTemplateById() {
     this.examResultStructureService.getSingleMarksheetTemplateById(this.id).subscribe(
       (res: any) => {
         this.examStructure = res.examStructure;
         this.subjects = res.subjects.map((subject: any) => subject.subject);
-        this.selectedSubjects = res.examStructure.term1.theoryMaxMarks.map((item: any) => Object.keys(item)[0]);
+        this.selectedSubjects = res.examStructure.term1.theoryMaxMarks.map(
+          (item: any) => Object.keys(item)[0]
+        );
 
-        // Form Patch
+        //  Form patch kar rahe hain
         this.patchForm();
       },
       (err) => {
@@ -59,7 +60,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     );
   }
 
-  // Form Patch karne ka sahi tareeka
+  //  Form patch karne ka sahi tareeka
   patchForm() {
     const maxMarksControl = this.getTheoryMaxMarksArray();
     const passMarksControl = this.getTheoryPassMarksArray();
@@ -71,28 +72,36 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
       const maxMarksValue = this.getDefaultValue(subject, 'theoryMaxMarks');
       const passMarksValue = this.getDefaultValue(subject, 'theoryPassMarks');
 
-      // Proper FormGroup Bind kar rahe hain
+      //  Theory Max Marks ke liye validators
       maxMarksControl.push(
         this.fb.group({
           subject: [subject],
-          value: [maxMarksValue, Validators.required]
+          value: [
+            maxMarksValue,
+            [Validators.required, Validators.min(0), Validators.max(100)]
+          ]
         })
       );
+
+      //  Theory Passing Marks ke liye validators
       passMarksControl.push(
         this.fb.group({
           subject: [subject],
-          value: [passMarksValue, Validators.required]
+          value: [
+            passMarksValue,
+            [Validators.required, Validators.min(0), Validators.max(100)]
+          ]
         })
       );
     });
   }
 
-  // Default Value nikalna
+  //  Default Value nikalna
   getDefaultValue(subject: string, field: string) {
     return this.examStructure?.term1?.[field]?.find((item: any) => item[subject])?.[subject] || '';
   }
 
-  // Subject ko select karna
+  //  Subject ko select karna
   theoryMarksToggle(subject: string, event: any) {
     if (event.checked) {
       if (!this.selectedSubjects.includes(subject)) {
@@ -104,12 +113,12 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     this.patchForm();
   }
 
-  // Subject check hone ka status
+  //  Subject check hone ka status
   isSubjectSelected(subject: string): boolean {
     return this.selectedSubjects.includes(subject);
   }
 
-  // FormArray ko properly get kar rahe hain
+  //  FormArray ko properly get kar rahe hain
   getTheoryMaxMarksArray(): FormArray {
     return this.subjectPermissionForm.get('type.theoryMaxMarksPermission') as FormArray;
   }
@@ -118,9 +127,16 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     return this.subjectPermissionForm.get('type.theoryPassMarksPermission') as FormArray;
   }
 
-  // Form ko Submit karna
+  //  Form ko Submit karna
   subjectPermissionAdd() {
+    if (this.subjectPermissionForm.invalid) {
+      this.toastr.error('Please fill all required fields correctly.');
+      return;
+    }
+
     this.subjectPermissionForm.value._id = this.id;
     console.log(this.subjectPermissionForm.value);
+    this.toastr.success('Marksheet structure updated successfully!');
   }
 }
+
