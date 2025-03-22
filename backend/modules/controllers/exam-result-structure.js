@@ -97,17 +97,17 @@ let CreateExamResultStructure = async (req, res, next) => {
         function generateExamStructure(examStructure, classSubjects) {
             for (const termKey in examStructure) {
                 const termData = examStructure[termKey];
-        
-                // Dynamic fields ko direct assign karo aur delete karo
+                termData.scholasticMarks = {};
                 for (const key in termData) {
                     if (typeof termData[key] !== 'object') {
                         const value = termData[key];
-                        termData[key] = classSubjects.subject.map(sub => ({ [sub.subject]: value }));
+                        termData.scholasticMarks[key] = classSubjects.subject.map(sub => ({ [sub.subject]: value }));
+                        delete termData[key];
                     }
                 }
             }
             return examStructure;
-        }
+        }           
         const updatedExamStructure = generateExamStructure(marksheetStructure.examStructure, classSubject);
         let subjects = [...classSubject.subject];
         let marksheetTemplateData = {
