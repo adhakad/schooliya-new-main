@@ -42,30 +42,40 @@
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card" *ngIf="examStructure">
               <form [formGroup]="subjectPermissionForm" (ngSubmit)="subjectPermissionAdd()">
-                <h3>Theory Subjects</h3>
-                <div class="row">
-                  <div class="col-2" *ngFor="let subject of subjects">
-                    <mat-checkbox [checked]="isSubjectSelected(subject)" (change)="theoryMarksToggle(subject, $event)">
-                      {{ subject }}
-                    </mat-checkbox>
+                <ng-container *ngFor="let group of getKeys(marksTypeGroups)">
+                  <h3>{{ group | titlecase }} Subjects</h3>
+                  <div class="row">
+                    <div class="col-2 col-lg-3" *ngFor="let subject of subjects">
+                      <mat-checkbox
+                        [checked]="isSubjectSelected(subject, group)"
+                        (change)="marksTypeToggle(subject, $event, group)"
+                      >
+                        {{ subject }}
+                      </mat-checkbox>
+                    </div>
                   </div>
-                </div>
+                </ng-container>
               
                 <ng-container *ngFor="let term of terms">
                   <h3>{{ term | titlecase }}</h3>
-              
                   <ng-container [formGroupName]="term">
-                    <ng-container *ngFor="let marksType of marksTypes">
-                      <h3>{{ marksType | titlecase }}</h3>
-                      <ng-container [formArrayName]="marksType">
-                        <div class="row">
-                          <div class="col-2" *ngFor="let control of getMarksArray(term, marksType).controls; let i = index" [formGroupName]="i">
-                            <mat-form-field appearance="outline">
-                              <mat-label>{{ control.value.subject }} {{ marksType }}</mat-label>
-                              <input matInput type="number" formControlName="value" />
-                            </mat-form-field>
+                    <ng-container *ngFor="let group of getKeys(marksTypeGroups)">
+                      <ng-container *ngFor="let marksType of marksTypeGroups[group]">
+                        <h3>{{ marksType | titlecase }}</h3>
+                        <ng-container [formArrayName]="marksType">
+                          <div class="row">
+                            <div
+                              class="col-4 col-lg-2"
+                              *ngFor="let control of getMarksArray(term, marksType).controls; let i = index"
+                              [formGroupName]="i"
+                            >
+                              <mat-form-field appearance="outline">
+                                <mat-label>{{ control.value.subject }}</mat-label>
+                                <input matInput type="number" formControlName="value" />
+                              </mat-form-field>
+                            </div>
                           </div>
-                        </div>
+                        </ng-container>
                       </ng-container>
                     </ng-container>
                   </ng-container>
@@ -73,6 +83,7 @@
               
                 <button mat-raised-button color="primary" type="submit">Submit</button>
               </form>
+              
               
             </div>
           </div>

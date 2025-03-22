@@ -16,9 +16,10 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   id: any;
   examStructure: any;
   subjects: any[] = [];
-  selectedSubjects: any[] = [];
+  selectedSubjects: { [key: string]: string[] } = {};
   terms: string[] = [];
-  marksTypes: string[] = []; // Dynamic marks types store karne ke liye
+  marksTypes: string[] = [];
+  marksTypeGroups: { [key: string]: string[] } = {};
 
   constructor(
     private fb: FormBuilder,
@@ -39,23 +40,19 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     this.getSingleMarksheetTemplateById();
   }
 
-  // Backend se marksheet template fetch karna
+  getKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+
   getSingleMarksheetTemplateById() {
     this.examResultStructureService.getSingleMarksheetTemplateById(this.id).subscribe(
       (res: any) => {
         this.examStructure = res.examStructure;
         this.subjects = res.subjects.map((subject: any) => subject.subject);
-        this.terms = Object.keys(this.examStructure); // Terms ko dynamically set karo
-        
-        // Pehla term ka subject list le lo
-        this.selectedSubjects = this.examStructure[this.terms[0]]?.scholasticMarks.theoryMaxMarks.map(
-          (item: any) => Object.keys(item)[0]
-        );
-
-        // Marks types ko identify karo (e.g., Theory, Practical, Project, Half-Yearly)
+        this.terms = Object.keys(this.examStructure);
         this.marksTypes = this.getMarksTypes();
-
-        // Form ko dynamically patch karo
+        this.groupMarksTypes();
+        this.initializeSelectedSubjects();
         this.patchForm();
       },
       (err) => {
@@ -64,7 +61,6 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     );
   }
 
-  // Available marks types nikalna
   getMarksTypes(): string[] {
     const allMarksTypes = new Set<string>();
     this.terms.forEach((term) => {
@@ -74,7 +70,33 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     return Array.from(allMarksTypes);
   }
 
-  // Dynamic Form Creation
+  groupMarksTypes() {
+    this.marksTypes.forEach((marksType) => {
+      const baseType = marksType.replace(/MaxMarks|PassMarks/, '');
+      if (!this.marksTypeGroups[baseType]) {
+        this.marksTypeGroups[baseType] = [];
+      }
+      this.marksTypeGroups[baseType].push(marksType);
+    });
+  }
+
+  initializeSelectedSubjects() {
+    Object.keys(this.marksTypeGroups).forEach((group) => {
+      this.selectedSubjects[group] = [];
+      this.terms.forEach(term => {
+        this.marksTypeGroups[group].forEach(marksType => {
+          const marksArray = this.examStructure[term]?.scholasticMarks?.[marksType] || [];
+          marksArray.forEach((item: any) => {
+            const subject = Object.keys(item)[0];
+            if (!this.selectedSubjects[group].includes(subject)) {
+              this.selectedSubjects[group].push(subject);
+            }
+          });
+        });
+      });
+    });
+  }
+
   patchForm() {
     this.terms.forEach((term) => {
       if (this.subjectPermissionForm.get(term)) {
@@ -86,53 +108,52 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
       const termGroup = this.fb.group({});
       this.subjectPermissionForm.addControl(term, termGroup);
 
-      this.marksTypes.forEach((marksType) => {
-        termGroup.addControl(marksType, this.fb.array([]));
+      Object.keys(this.marksTypeGroups).forEach((group) => {
+        this.marksTypeGroups[group].forEach((marksType) => {
+          termGroup.addControl(marksType, this.fb.array([]));
 
-        const marksControlArray = this.getMarksArray(term, marksType);
+          const marksControlArray = this.getMarksArray(term, marksType);
+          marksControlArray.clear();
 
-        this.selectedSubjects.forEach((subject) => {
-          marksControlArray.push(
-            this.fb.group({
-              subject: [subject],
-              value: [
-                this.getDefaultValue(subject, term, marksType),
-                [Validators.required, Validators.min(0), Validators.max(100)]
-              ]
-            })
-          );
+          this.selectedSubjects[group].forEach((subject) => {
+            marksControlArray.push(
+              this.fb.group({
+                subject: [subject],
+                value: [
+                  this.getDefaultValue(subject, term, marksType),
+                  [Validators.required, Validators.min(0), Validators.max(100)]
+                ]
+              })
+            );
+          });
         });
       });
     });
   }
 
-  // Default Value nikalna
   getDefaultValue(subject: string, term: string, marksType: string) {
     return this.examStructure?.[term]?.scholasticMarks?.[marksType]?.find((item: any) => item[subject])?.[subject] || '';
   }
 
-  // Subject ko toggle karna
-  theoryMarksToggle(subject: string, event: any) {
+  marksTypeToggle(subject: string, event: any, group: string) {
     if (event.checked) {
-      if (!this.selectedSubjects.includes(subject)) {
-        this.selectedSubjects.push(subject);
+      if (!this.selectedSubjects[group].includes(subject)) {
+        this.selectedSubjects[group].push(subject);
       }
     } else {
-      this.selectedSubjects = this.selectedSubjects.filter(s => s !== subject);
+      this.selectedSubjects[group] = this.selectedSubjects[group].filter(s => s !== subject);
     }
     this.patchForm();
   }
 
-  isSubjectSelected(subject: string): boolean {
-    return this.selectedSubjects.includes(subject);
+  isSubjectSelected(subject: string, group: string): boolean {
+    return this.selectedSubjects[group].includes(subject);
   }
 
-  // Dynamic FormArray Get Karna
   getMarksArray(term: string, marksType: string): FormArray {
     return this.subjectPermissionForm.get(`${term}.${marksType}`) as FormArray;
   }
 
-  // Form Submit
   subjectPermissionAdd() {
     if (this.subjectPermissionForm.invalid) {
       this.toastr.error('Please fill all required fields correctly.');
