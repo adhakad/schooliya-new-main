@@ -54,35 +54,26 @@
                 <ng-container *ngFor="let term of terms">
                   <h3>{{ term | titlecase }}</h3>
               
-                  <h3>Theory Maximum Marks</h3>
                   <ng-container [formGroupName]="term">
-                    <ng-container formArrayName="theoryMaxMarks">
-                      <div class="row">
-                        <div class="col-2" *ngFor="let control of getTheoryMaxMarksArray(term).controls; let i = index" [formGroupName]="i">
-                          <mat-form-field appearance="outline">
-                            <mat-label>{{ control.value.subject }} Max Marks</mat-label>
-                            <input matInput type="number" formControlName="value" />
-                          </mat-form-field>
+                    <ng-container *ngFor="let marksType of marksTypes">
+                      <h3>{{ marksType | titlecase }}</h3>
+                      <ng-container [formArrayName]="marksType">
+                        <div class="row">
+                          <div class="col-2" *ngFor="let control of getMarksArray(term, marksType).controls; let i = index" [formGroupName]="i">
+                            <mat-form-field appearance="outline">
+                              <mat-label>{{ control.value.subject }} {{ marksType }}</mat-label>
+                              <input matInput type="number" formControlName="value" />
+                            </mat-form-field>
+                          </div>
                         </div>
-                      </div>
-                    </ng-container>
-              
-                    <h3>Theory Passing Marks</h3>
-                    <ng-container formArrayName="theoryPassMarks">
-                      <div class="row">
-                        <div class="col-2" *ngFor="let control of getTheoryPassMarksArray(term).controls; let i = index" [formGroupName]="i">
-                          <mat-form-field appearance="outline">
-                            <mat-label>{{ control.value.subject }} Pass Marks</mat-label>
-                            <input matInput type="number" formControlName="value" />
-                          </mat-form-field>
-                        </div>
-                      </div>
+                      </ng-container>
                     </ng-container>
                   </ng-container>
                 </ng-container>
               
                 <button mat-raised-button color="primary" type="submit">Submit</button>
               </form>
+              
             </div>
           </div>
         </div>
