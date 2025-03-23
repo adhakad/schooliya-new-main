@@ -5,6 +5,7 @@ import { ClassSuffixPipe } from '../class-suffix.pipe';
 import { DateToWordsPipe } from '../date-to-words.pipe';
 import { SecureEmailPipe } from '../secure-email.pipe';
 import { NumberToWordsPipe } from '../number-to-words.pipe';
+import { FormatMarksTypePipe } from '../format-marks-type.pipe';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { NumberToWordsPipe } from '../number-to-words.pipe';
     ClassSuffixPipe,
     DateToWordsPipe,
     SecureEmailPipe,
-    NumberToWordsPipe
+    NumberToWordsPipe,
+    FormatMarksTypePipe
   ],
   imports: [
     CommonModule
@@ -23,7 +25,8 @@ import { NumberToWordsPipe } from '../number-to-words.pipe';
     ClassSuffixPipe,
     DateToWordsPipe,
     SecureEmailPipe,
-    NumberToWordsPipe
+    NumberToWordsPipe,
+    FormatMarksTypePipe
   ]
 })
 export class SharedPipeModule { }

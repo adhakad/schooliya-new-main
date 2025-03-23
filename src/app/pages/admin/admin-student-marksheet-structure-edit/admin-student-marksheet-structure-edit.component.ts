@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
@@ -119,7 +119,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
             marksControlArray.push(
               this.fb.group({
                 subject: [subject],
-                value: [
+                marks: [
                   this.getDefaultValue(subject, term, marksType),
                   [Validators.required, Validators.min(0), Validators.max(100)]
                 ]
@@ -155,7 +155,8 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   }
 
   subjectPermissionAdd() {
-    if (this.subjectPermissionForm.invalid) {
+    if (!this.subjectPermissionForm.valid) {
+      this.markFormGroupTouched(this.subjectPermissionForm);
       this.toastr.error('Please fill all required fields correctly.');
       return;
     }
@@ -164,5 +165,21 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     console.log(this.subjectPermissionForm.value);
 
     this.toastr.success('Marksheet structure updated successfully!');
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      } else if (control instanceof FormArray) {
+        control.controls.forEach(formGroupInsideFormArray => {
+          if (formGroupInsideFormArray instanceof FormGroup) {
+            this.markFormGroupTouched(formGroupInsideFormArray);
+          }
+        })
+      }
+    });
   }
 }
