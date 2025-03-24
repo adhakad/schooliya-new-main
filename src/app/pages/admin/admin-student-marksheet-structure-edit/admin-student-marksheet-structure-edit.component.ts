@@ -27,7 +27,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     private toastr: ToastrService,
     private adminAuthService: AdminAuthService,
     private examResultStructureService: ExamResultStructureService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subjectPermissionForm = this.fb.group({
@@ -48,6 +48,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     this.examResultStructureService.getSingleMarksheetTemplateById(this.id).subscribe(
       (res: any) => {
         this.examStructure = res.examStructure;
+        console.log(res)
         this.subjects = res.subjects.map((subject: any) => subject.subject);
         this.terms = Object.keys(this.examStructure);
         this.marksTypes = this.getMarksTypes();
@@ -162,7 +163,35 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     }
 
     this.subjectPermissionForm.value._id = this.id;
-    console.log(this.subjectPermissionForm.value);
+    const transformData = (data: Record<string, Record<string, any[]>>) =>
+      Object.fromEntries(
+        Object.entries(data).map(([term, termData]) => [
+          term,
+          {
+            scholasticMarks: Object.fromEntries(
+              Object.entries(termData).map(([key, marks]) => {
+                if (!Array.isArray(marks) || marks.length === 0) {
+                  return [key, {}];
+                }
+                const transformed = marks.reduce((acc, entry) => {
+                  const { subject, ...fields } = entry;
+                  Object.entries(fields).forEach(([field, value]) => {
+                    if (!acc[field]) acc[field] = {};
+                    acc[field][subject] = value;
+                  });
+
+                  return acc;
+                }, {} as Record<string, Record<string, number>>);
+                const result = Object.entries(transformed.marks).map(([subject, score]) => ({ [subject]: score }));
+                return [key, result];
+              })
+            ),
+          },
+        ])
+      );
+    let abc = transformData(this.subjectPermissionForm.value);
+    console.log(abc)
+
 
     this.toastr.success('Marksheet structure updated successfully!');
   }
