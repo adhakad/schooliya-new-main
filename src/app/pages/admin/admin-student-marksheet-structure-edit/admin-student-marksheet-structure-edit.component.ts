@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
 
+
 @Component({
   selector: 'app-admin-student-marksheet-structure-edit',
   templateUrl: './admin-student-marksheet-structure-edit.component.html',
@@ -12,6 +13,9 @@ import { ExamResultStructureService } from 'src/app/services/exam-result-structu
 })
 export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   subjectPermissionForm!: FormGroup;
+  successMsg: String = '';
+  errorMsg: String = '';
+  errorCheck: Boolean = false;
   adminId: string = '';
   id: any;
   examStructure: any;
@@ -31,7 +35,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.subjectPermissionForm = this.fb.group({
-      _id: ['']
+      _id: [''],
     });
 
     const getAdmin = this.adminAuthService.getLoggedInAdminInfo();
@@ -48,7 +52,6 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     this.examResultStructureService.getSingleMarksheetTemplateById(this.id).subscribe(
       (res: any) => {
         this.examStructure = res.examStructure;
-        console.log(res)
         this.subjects = res.subjects.map((subject: any) => subject.subject);
         this.terms = Object.keys(this.examStructure);
         this.marksTypes = this.getMarksTypes();
@@ -78,6 +81,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
         this.marksTypeGroups[baseType] = [];
       }
       this.marksTypeGroups[baseType].push(marksType);
+      console.log(this.marksTypeGroups)
     });
   }
 
@@ -154,46 +158,26 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   getMarksArray(term: string, marksType: string): FormArray {
     return this.subjectPermissionForm.get(`${term}.${marksType}`) as FormArray;
   }
-
+  successDone(msg: any) {
+    this.successMsg = '';
+    this.marksTypeGroups = {};
+    this.getSingleMarksheetTemplateById();
+    setTimeout(() => {
+      this.toastr.success(msg, 'Success');
+    }, 500)
+  }
   subjectPermissionAdd() {
-    if (!this.subjectPermissionForm.valid) {
-      this.markFormGroupTouched(this.subjectPermissionForm);
-      this.toastr.error('Please fill all required fields correctly.');
-      return;
+    if (this.subjectPermissionForm.valid) {
+      this.subjectPermissionForm.value._id = this.id;
+      this.examResultStructureService.updateMarksheetTemplateStructure(this.subjectPermissionForm.value).subscribe((res: any) => {
+        if (res) {
+          this.successDone(res);
+        }
+      }, err => {
+        this.errorCheck = true;
+        this.errorMsg = err.error;
+      })
     }
-
-    this.subjectPermissionForm.value._id = this.id;
-    const transformData = (data: Record<string, Record<string, any[]>>) =>
-      Object.fromEntries(
-        Object.entries(data).map(([term, termData]) => [
-          term,
-          {
-            scholasticMarks: Object.fromEntries(
-              Object.entries(termData).map(([key, marks]) => {
-                if (!Array.isArray(marks) || marks.length === 0) {
-                  return [key, {}];
-                }
-                const transformed = marks.reduce((acc, entry) => {
-                  const { subject, ...fields } = entry;
-                  Object.entries(fields).forEach(([field, value]) => {
-                    if (!acc[field]) acc[field] = {};
-                    acc[field][subject] = value;
-                  });
-
-                  return acc;
-                }, {} as Record<string, Record<string, number>>);
-                const result = Object.entries(transformed.marks).map(([subject, score]) => ({ [subject]: score }));
-                return [key, result];
-              })
-            ),
-          },
-        ])
-      );
-    let abc = transformData(this.subjectPermissionForm.value);
-    console.log(abc)
-
-
-    this.toastr.success('Marksheet structure updated successfully!');
   }
 
   markFormGroupTouched(formGroup: FormGroup) {

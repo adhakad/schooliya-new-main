@@ -61,7 +61,7 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
 let GetSingleMarksheetTemplateById = async (req, res, next) => {
     let id = req.params.id;
     try {
-        const marksheetTemplate = await MarksheetTemplateModel.findOne({ _id:id });
+        const marksheetTemplate = await MarksheetTemplateModel.findOne({ _id: id });
         if (!marksheetTemplate) {
             return res.status(404).json(`Template not found!`);
         }
@@ -107,7 +107,7 @@ let CreateExamResultStructure = async (req, res, next) => {
                 }
             }
             return examStructure;
-        }           
+        }
         const updatedExamStructure = generateExamStructure(marksheetStructure.examStructure, classSubject);
         let subjects = [...classSubject.subject];
         let marksheetTemplateData = {
@@ -117,7 +117,7 @@ let CreateExamResultStructure = async (req, res, next) => {
             templateName: templateName,
             templateUrl: templateUrl,
             examStructure: updatedExamStructure,
-            subjects:subjects
+            subjects: subjects
         };
         let marksheetTemplate = await MarksheetTemplateModel.create(marksheetTemplateData)
         return res.status(200).json('Marksheet template created successfully.');
@@ -263,6 +263,112 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     }
 // }
 
+
+let UpdateMarksheetTemplateStructure = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const templateFormData = req.body;
+        let singleTemplate = await MarksheetTemplateModel.findOne({_id:id}).lean();
+
+        // console.log(singleTemplate.examStructure)
+        
+        const transformData = (data) =>
+            Object.fromEntries(
+                Object.entries(data).map(([term, termData]) => [
+                    term,
+                    {
+                        scholasticMarks: Object.fromEntries(
+                            Object.entries(termData).map(([key, marks]) => {
+                                if (!Array.isArray(marks) || marks.length === 0) {
+                                    return [key, {}];
+                                }
+                                const transformed = marks.reduce((acc, entry) => {
+                                    const { subject, ...fields } = entry;
+                                    Object.entries(fields).forEach(([field, value]) => {
+                                        if (!acc[field]) acc[field] = {};
+                                        acc[field][subject] = value;
+                                    });
+
+                                    return acc;
+                                }, {});
+                                const result = Object.entries(transformed.marks).map(([subject, score]) => ({ [subject]: score }));
+                                return [key, result];
+                            })
+                        ),
+                    },
+                ])
+            );
+        let subjectPermissionFormData = transformData(templateFormData);
+        function mergeScholasticMarks(data1, examStructure) {
+            if (!data1.examStructure || !examStructure) return data1;
+        
+            for (let term in data1.examStructure) {
+                if (examStructure[term]?.scholasticMarks) {
+                    data1.examStructure[term].scholasticMarks = examStructure[term].scholasticMarks;
+                }
+            }
+        
+            return data1;
+        }
+        let transformedData = mergeScholasticMarks(singleTemplate, subjectPermissionFormData);
+        delete transformedData['_id'];
+        let updateTemaplateStructure = await MarksheetTemplateModel.findByIdAndUpdate(id,{ $set: transformedData }, { new: true });
+        if(updateTemaplateStructure){
+            return res.status(200).json("Marksheet template structure updated successfully.");
+        }
+    } catch (error) {
+        return res.status(500).json('Internal Server Error!');
+    }
+};
+
+
+// let UpdateMarksheetTemplateStructure = async(req,res,next) => {
+//     try {
+//         const id = req.params.id;
+//         const templateFormData = req.body;
+//         const transformData = (data) => 
+//             Object.fromEntries(
+//               Object.entries(data).map(([term, termData]) => [
+//                 term,
+//                 {
+//                   scholasticMarks: Object.fromEntries(
+//                     Object.entries(termData).map(([key, marks]) => {
+//                       if (!Array.isArray(marks) || marks.length === 0) {
+//                         return [key, {}];
+//                       }
+//                       const transformed = marks.reduce((acc, entry) => {
+//                         const { subject, ...fields } = entry;
+//                         Object.entries(fields).forEach(([field, value]) => {
+//                           if (!acc[field]) acc[field] = {};
+//                           acc[field][subject] = value;
+//                         });
+
+//                         return acc;
+//                       }, {});
+
+//                       const result = Object.entries(transformed.marks).map(([subject, score]) => ({ [subject]: score }));
+//                       return [key, result];
+//                     })
+//                   ),
+//                 },
+//               ])
+//             );
+
+//           let subjectPermissionFormData = transformData(templateFormData);
+//           delete subjectPermissionFormData['_id'];
+
+//         console.log(subjectPermissionFormData)
+//         const updateMarksheetTemplate = await MarksheetTemplateModel.findByIdAndUpdate(id, { $set: subjectPermissionFormData }, { new: true });
+//         console.log(updateMarksheetTemplate)
+//         return res.status(200).json('Marksheet template updated successfully.');
+//     } catch (error) {
+//         return res.status(500).json('Internal Server Error!');
+//     }
+// }
+
+
+
+
 let DeleteResultStructure = async (req, res, next) => {
     try {
         const id = req.params.id;
@@ -294,6 +400,7 @@ module.exports = {
     GetSingleClassMarksheetTemplateStructureByStream,
     GetSingleMarksheetTemplateById,
     CreateExamResultStructure,
+    UpdateMarksheetTemplateStructure,
     DeleteResultStructure
 
 }
