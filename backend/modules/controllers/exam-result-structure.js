@@ -24,6 +24,40 @@ let GetSingleClassMarksheetTemplateByStream = async (req, res, next) => {
     }
 }
 
+// let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) => {
+//     let adminId = req.params.id;
+//     let className = req.params.class;
+//     let stream = req.params.stream;
+//     if (stream === "stream") {
+//         stream = "N/A";
+//     }
+//     let streamMsg = '';
+//     try {
+//         const classSubjectList = await ClassSubjectModel.findOne({ adminId: adminId, class: className, stream: stream }, 'subject');
+//         if (!classSubjectList) {
+//             return res.status(404).json('This class and subject group not found!');
+//         }
+//         const marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
+//         if (!marksheetTemplate) {
+//             if (stream === "N/A") {
+
+//                 streamMsg = ``;
+//             }
+//             return res.status(404).json(`Marksheet template not found!`);
+//         }
+//         const templateName = marksheetTemplate.templateName;
+//         const marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
+//         if (!marksheetTemplateStructure) {
+//             if (stream === "N/A") {
+//                 streamMsg = ``;
+//             }
+//             return res.status(404).json(`Marksheet template structure not found!`);
+//         }
+//         return res.status(200).json({ marksheetTemplateStructure: marksheetTemplateStructure, classSubjectList: classSubjectList });
+//     } catch (error) {
+//         return res.status(500).json('Internal Server Error!');
+//     }
+// }
 let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) => {
     let adminId = req.params.id;
     let className = req.params.class;
@@ -37,22 +71,7 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
         if (!classSubjectList) {
             return res.status(404).json('This class and subject group not found!');
         }
-        const marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
-        if (!marksheetTemplate) {
-            if (stream === "N/A") {
-
-                streamMsg = ``;
-            }
-            return res.status(404).json(`Marksheet template not found!`);
-        }
-        const templateName = marksheetTemplate.templateName;
-        const marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
-        if (!marksheetTemplateStructure) {
-            if (stream === "N/A") {
-                streamMsg = ``;
-            }
-            return res.status(404).json(`Marksheet template structure not found!`);
-        }
+        const marksheetTemplateStructure = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
         return res.status(200).json({ marksheetTemplateStructure: marksheetTemplateStructure, classSubjectList: classSubjectList });
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
@@ -269,8 +288,6 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
         const id = req.params.id;
         const templateFormData = req.body;
         let singleTemplate = await MarksheetTemplateModel.findOne({_id:id}).lean();
-
-        // console.log(singleTemplate.examStructure)
         
         const transformData = (data) =>
             Object.fromEntries(
@@ -356,10 +373,7 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
 
 //           let subjectPermissionFormData = transformData(templateFormData);
 //           delete subjectPermissionFormData['_id'];
-
-//         console.log(subjectPermissionFormData)
 //         const updateMarksheetTemplate = await MarksheetTemplateModel.findByIdAndUpdate(id, { $set: subjectPermissionFormData }, { new: true });
-//         console.log(updateMarksheetTemplate)
 //         return res.status(200).json('Marksheet template updated successfully.');
 //     } catch (error) {
 //         return res.status(500).json('Internal Server Error!');

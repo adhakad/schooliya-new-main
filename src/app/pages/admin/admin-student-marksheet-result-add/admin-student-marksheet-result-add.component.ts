@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { read, utils, writeFile } from 'xlsx';
 import { ExamResultService } from 'src/app/services/exam-result.service';
-import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
+import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service'; 
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { StudentService } from 'src/app/services/student.service';
 import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
@@ -209,7 +209,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
           this.examResultInfo = res.studentInfo;
         }
 
-        // console.log(`examResultInfo:`, this.examResultInfo)
         let isDate = res.isDate;
         let marksheetTemplateStructure = res.marksheetTemplateStructure;
         let examType = Object.keys(marksheetTemplateStructure.examStructure);
@@ -268,76 +267,68 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     this.projectSubjects = [];
     this.halfYearlySubjects = [];
     this.coScholastic = [];
-
-    if (examFilteredData.theoryMaxMarks) {
-      this.theorySubjects = subjects.map((item: any) => {
-        const theorySubject = Object.values(item)[0];
+    if (examFilteredData.scholasticMarks.theoryMaxMarks) {
+      this.theorySubjects = examFilteredData.scholasticMarks.theoryMaxMarks.map((item: any) => {
+        const theorySubject = Object.keys(item)[0];
         return theorySubject;
       })
       if (this.theorySubjects) {
-        this.theoryMaxMarks = examFilteredData.theoryMaxMarks;
         this.patchTheory();
       }
     }
-    if (examFilteredData.practicalMaxMarks) {
-      this.practicalSubjects = subjects.map((item: any) => {
-        const practicalSubject = Object.values(item)[0];
+    if (examFilteredData.scholasticMarks.practicalMaxMarks) {
+      this.practicalSubjects = examFilteredData.scholasticMarks.practicalMaxMarks.map((item: any) => {
+        const practicalSubject = Object.keys(item)[0];
         return practicalSubject;
       })
       if (this.practicalSubjects) {
-        this.practicalMaxMarks = examFilteredData.practicalMaxMarks;
         this.patchPractical();
       }
     }
-    if (examFilteredData.periodicTestMaxMarks) {
-      this.periodicTestSubjects = subjects.map((item: any) => {
-        const periodicTestSubject = Object.values(item)[0];
+    if (examFilteredData.scholasticMarks.periodicTestMaxMarks) {
+      this.periodicTestSubjects = examFilteredData.scholasticMarks.periodicTestMaxMarks.map((item: any) => {
+        const periodicTestSubject = Object.keys(item)[0];
         return periodicTestSubject;
       })
       if (this.periodicTestSubjects) {
-        this.periodicTestMaxMarks = examFilteredData.periodicTestMaxMarks;
         this.patchPeriodicTest();
       }
     }
 
 
-    if (examFilteredData.noteBookMaxMarks) {
-      this.noteBookSubjects = subjects.map((item: any) => {
-        const noteBookSubject = Object.values(item)[0];
+    if (examFilteredData.scholasticMarks.noteBookMaxMarks) {
+      this.noteBookSubjects = examFilteredData.scholasticMarks.noteBookMaxMarks.map((item: any) => {
+        const noteBookSubject = Object.keys(item)[0];
         return noteBookSubject;
       })
       if (this.noteBookSubjects) {
-        this.noteBookMaxMarks = examFilteredData.noteBookMaxMarks;
         this.patchNoteBook();
       }
     }
-    if (examFilteredData.subjectEnrichmentMaxMarks) {
-      this.subjectEnrichmentSubjects = subjects.map((item: any) => {
-        const subjectEnrichmentSubject = Object.values(item)[0];
+    if (examFilteredData.scholasticMarks.subjectEnrichmentMaxMarks) {
+      this.subjectEnrichmentSubjects = examFilteredData.scholasticMarks.subjectEnrichmentMaxMarks.map((item: any) => {
+        const subjectEnrichmentSubject = Object.keys(item)[0];
         return subjectEnrichmentSubject;
       })
       if (this.subjectEnrichmentSubjects) {
-        this.subjectEnrichmentMaxMarks = examFilteredData.subjectEnrichmentMaxMarks;
         this.patchSubjectEnrichment();
       }
     }
-    if (examFilteredData.projectMaxMarks) {
-      this.projectSubjects = subjects.map((item: any) => {
-        const projectSubject = Object.values(item)[0];
+    if (examFilteredData.scholasticMarks.projectMaxMarks) {
+      this.projectSubjects = examFilteredData.scholasticMarks.projectMaxMarks.map((item: any) => {
+        const projectSubject = Object.keys(item)[0];
         return projectSubject;
       })
       if (this.projectSubjects) {
-        this.projectMaxMarks = examFilteredData.projectMaxMarks;
         this.patchProject();
       }
     }
-    if (examFilteredData.halfYearlyMaxMarks) {
-      this.halfYearlySubjects = subjects.map((item: any) => {
-        const halfYearlySubject = Object.values(item)[0];
+    if (examFilteredData.scholasticMarks.halfYearlyMaxMarks) {
+      this.halfYearlySubjects = examFilteredData.scholasticMarks.halfYearlyMaxMarks.map((item: any) => {
+        const halfYearlySubject = Object.keys(item)[0];
         return halfYearlySubject;
       })
       if (this.halfYearlySubjects) {
-        this.halfYearlyMaxMarks = examFilteredData.halfYearlyMaxMarks;
         this.patchHalfYearly();
       }
     }
@@ -349,21 +340,18 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     }
 
     this.resultStructureInfo = {
-
-      practicalMaxMarks: this.practicalSubjects.map((subject: any) => ({ [subject]: examFilteredData.practicalMaxMarks })),
-      noteBookMaxMarks: this.noteBookSubjects.map((subject: any) => ({ [subject]: examFilteredData.noteBookMaxMarks })),
-      periodicTestMaxMarks: this.periodicTestSubjects.map((subject: any) => ({ [subject]: examFilteredData.periodicTestMaxMarks })),
-      subjectEnrichmentMaxMarks: this.subjectEnrichmentSubjects.map((subject: any) => ({ [subject]: examFilteredData.subjectEnrichmentMaxMarks })),
-      projectMaxMarks: this.projectSubjects.map((subject: any) => ({ [subject]: examFilteredData.projectMaxMarks })),
-      halfYearlyMaxMarks: this.halfYearlySubjects.map((subject: any) => ({ [subject]: examFilteredData.halfYearlyMaxMarks })),
-      theoryMaxMarks: this.theorySubjects.map((subject: any) => ({ [subject]: examFilteredData.theoryMaxMarks })),
-      theoryPassMarks: this.theorySubjects.map((subject: any) => ({ [subject]: examFilteredData.theoryPassMarks })),
+      practicalMaxMarks: examFilteredData.scholasticMarks.practicalMaxMarks || [],
+      noteBookMaxMarks: examFilteredData.scholasticMarks.noteBookMaxMarks || [],
+      periodicTestMaxMarks: examFilteredData.scholasticMarks.periodicTestMaxMarks || [],
+      subjectEnrichmentMaxMarks: examFilteredData.scholasticMarks.subjectEnrichmentMaxMarks || [],
+      projectMaxMarks: examFilteredData.scholasticMarks.projectMaxMarks || [],
+      halfYearlyMaxMarks: examFilteredData.scholasticMarks.halfYearlyMaxMarks || [],
+      theoryMaxMarks: examFilteredData.scholasticMarks.theoryMaxMarks || [],
+      theoryPassMarks: examFilteredData.scholasticMarks.theoryPassMarks || [],
       gradeMaxMarks: examFilteredData.gradeMaxMarks,
       gradeMinMarks: examFilteredData.gradeMinMarks
     };
-    console.log(this.resultStructureInfo)
   }
-
 
   getSingleClassResultStrucByStream(params: any) {
     this.examResultStructureService.getSingleClassResultStrucByStream(params).subscribe((res: any) => {
@@ -375,7 +363,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       this.falseAllValue();
     })
   }
-
 
   patchTheory() {
     const controlOne = <FormArray>this.examResultForm.get('type.theoryMarks');

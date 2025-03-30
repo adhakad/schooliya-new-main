@@ -25,7 +25,6 @@ export class ExamResultStructureService {
     return this.http.put(`${this.url}/result-publish-status/${params.id}`,params);
   }
   updateMarksheetTemplateStructure(formData:any){
-    console.log(formData)
       return this.http.put(`${this.url}/template/structure/${formData._id}`, formData);
     }
   deleteResultStructure(id:any){
