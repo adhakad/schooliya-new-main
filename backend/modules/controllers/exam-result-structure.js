@@ -117,11 +117,18 @@ let CreateExamResultStructure = async (req, res, next) => {
             for (const termKey in examStructure) {
                 const termData = examStructure[termKey];
                 termData.scholasticMarks = {};
+        
                 for (const key in termData) {
-                    if (typeof termData[key] !== 'object') {
-                        const value = termData[key];
+                    const value = termData[key];
+        
+                    // अगर `supplySubjectLimit` है तो सीधे termData में रखें
+                    if (key === 'supplySubjectLimit') {
+                        termData[key] = value;
+                    } 
+                    // अगर यह object नहीं है और supplySubjectLimit भी नहीं है
+                    else if (typeof value !== 'object') {
                         termData.scholasticMarks[key] = classSubjects.subject.map(sub => ({ [sub.subject]: value }));
-                        delete termData[key];
+                        delete termData[key];  // इसे scholasticMarks में डालने के बाद हटाएं
                     }
                 }
             }
@@ -287,8 +294,8 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
     try {
         const id = req.params.id;
         const templateFormData = req.body;
-        let singleTemplate = await MarksheetTemplateModel.findOne({_id:id}).lean();
-        
+        let singleTemplate = await MarksheetTemplateModel.findOne({ _id: id }).lean();
+
         const transformData = (data) =>
             Object.fromEntries(
                 Object.entries(data).map(([term, termData]) => [
@@ -318,19 +325,19 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
         let subjectPermissionFormData = transformData(templateFormData);
         function mergeScholasticMarks(data1, examStructure) {
             if (!data1.examStructure || !examStructure) return data1;
-        
+
             for (let term in data1.examStructure) {
                 if (examStructure[term]?.scholasticMarks) {
                     data1.examStructure[term].scholasticMarks = examStructure[term].scholasticMarks;
                 }
             }
-        
+
             return data1;
         }
         let transformedData = mergeScholasticMarks(singleTemplate, subjectPermissionFormData);
         delete transformedData['_id'];
-        let updateTemaplateStructure = await MarksheetTemplateModel.findByIdAndUpdate(id,{ $set: transformedData }, { new: true });
-        if(updateTemaplateStructure){
+        let updateTemaplateStructure = await MarksheetTemplateModel.findByIdAndUpdate(id, { $set: transformedData }, { new: true });
+        if (updateTemaplateStructure) {
             return res.status(200).json("Marksheet template structure updated successfully.");
         }
     } catch (error) {

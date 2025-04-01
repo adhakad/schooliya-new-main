@@ -34,7 +34,7 @@ import { ToastrModule } from 'ngx-toastr';
       timeOut: 5000,
       positionClass: 'toast-top-right',
       // preventDuplicates: true,
-      progressBar: true
+      // progressBar: true
     }),
     HttpClientModule,
     ReactiveFormsModule,
