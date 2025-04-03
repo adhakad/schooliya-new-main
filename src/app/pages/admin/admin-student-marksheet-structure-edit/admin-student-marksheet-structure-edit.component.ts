@@ -36,6 +36,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   ngOnInit(): void {
     this.subjectPermissionForm = this.fb.group({
       _id: [''],
+      supplySubjectLimit: [''],
     });
 
     const getAdmin = this.adminAuthService.getLoggedInAdminInfo();
@@ -55,6 +56,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
         this.subjects = res.subjects.map((subject: any) => subject.subject);
         this.terms = Object.keys(this.examStructure);
         this.marksTypes = this.getMarksTypes();
+        this.subjectPermissionForm.patchValue({ supplySubjectLimit: this.examStructure.term1.supplySubjectLimit });
         this.groupMarksTypes();
         this.initializeSelectedSubjects();
         this.patchForm();
@@ -81,7 +83,6 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
         this.marksTypeGroups[baseType] = [];
       }
       this.marksTypeGroups[baseType].push(marksType);
-      console.log(this.marksTypeGroups)
     });
   }
 

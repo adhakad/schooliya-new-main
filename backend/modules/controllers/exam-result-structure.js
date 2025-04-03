@@ -145,7 +145,7 @@ let CreateExamResultStructure = async (req, res, next) => {
             examStructure: updatedExamStructure,
             subjects: subjects
         };
-        let marksheetTemplate = await MarksheetTemplateModel.create(marksheetTemplateData)
+        let marksheetTemplate = await MarksheetTemplateModel.create(marksheetTemplateData);
         return res.status(200).json('Marksheet template created successfully.');
 
     } catch (error) {
@@ -294,6 +294,7 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
     try {
         const id = req.params.id;
         const templateFormData = req.body;
+        const supplySubjectLimit = req.body.supplySubjectLimit;
         let singleTemplate = await MarksheetTemplateModel.findOne({ _id: id }).lean();
 
         const transformData = (data) =>
@@ -329,6 +330,9 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
             for (let term in data1.examStructure) {
                 if (examStructure[term]?.scholasticMarks) {
                     data1.examStructure[term].scholasticMarks = examStructure[term].scholasticMarks;
+                }
+                if (data1.examStructure[term]?.supplySubjectLimit !== undefined) {
+                    data1.examStructure[term].supplySubjectLimit = supplySubjectLimit;
                 }
             }
 
