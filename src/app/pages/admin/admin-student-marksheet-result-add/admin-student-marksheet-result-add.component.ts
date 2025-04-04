@@ -469,7 +469,9 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       }, 0);
     };
     const count = countSubjectsBelowPassingMarks(this.resultStructureInfo.theoryPassMarks, examResult.theoryMarks);
-    const resultStatus = count === 0 ? 'PASS' : count <= this.resultStructureInfo.supplySubjectLimit ? 'SUPPLY' : 'FAIL';
+    const resultStatus = this.resultStructureInfo.supplySubjectLimit === 0 ? 'PASS' : 
+    (count === 0 ? 'PASS' : count <= this.resultStructureInfo.supplySubjectLimit ? 'SUPPLY' : 'FAIL');
+
     const calculateMaxMarks = (marksArray: any[]): number => {
       return marksArray.reduce((total, subjectMarks) => {
         const subjectName = Object.keys(subjectMarks)[0];

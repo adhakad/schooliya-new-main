@@ -36,7 +36,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   ngOnInit(): void {
     this.subjectPermissionForm = this.fb.group({
       _id: [''],
-      supplySubjectLimit: [''],
+      supplySubjectLimit: ['',Validators.required],
     });
 
     const getAdmin = this.adminAuthService.getLoggedInAdminInfo();
