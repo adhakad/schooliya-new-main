@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { read, utils, writeFile } from 'xlsx';
 import { ExamResultService } from 'src/app/services/exam-result.service';
@@ -110,6 +110,19 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       this.getSingleClassResultStrucByStream(params);
     }
   }
+
+  hasError(controlName: string): boolean {
+    const control = this.examResultForm.get(controlName);
+    return !! (control && control.invalid && (control.touched || control.dirty));
+  }
+  
+  
+  
+  
+  
+  
+  
+  
 
   addExamResultModel(rollnumber: number) {
     this.showModal = true;
@@ -273,6 +286,8 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         return theorySubject;
       })
       if (this.theorySubjects) {
+        this.theoryMaxMarks = examFilteredData.scholasticMarks.theoryMaxMarks;
+        console.log(this.theoryMaxMarks)
         this.patchTheory();
       }
     }
@@ -282,6 +297,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         return practicalSubject;
       })
       if (this.practicalSubjects) {
+        this.practicalMaxMarks = examFilteredData.scholasticMarks.practicalMaxMarks;
         this.patchPractical();
       }
     }
@@ -291,6 +307,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         return periodicTestSubject;
       })
       if (this.periodicTestSubjects) {
+        this.periodicTestMaxMarks = examFilteredData.scholasticMarks.periodicTestMaxMarks;
         this.patchPeriodicTest();
       }
     }
@@ -302,6 +319,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         return noteBookSubject;
       })
       if (this.noteBookSubjects) {
+        this.noteBookMaxMarks = examFilteredData.scholasticMarks.noteBookMaxMarks;
         this.patchNoteBook();
       }
     }
@@ -311,6 +329,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         return subjectEnrichmentSubject;
       })
       if (this.subjectEnrichmentSubjects) {
+        this.subjectEnrichmentMaxMarks = examFilteredData.scholasticMarks.subjectEnrichmentMaxMarks;
         this.patchSubjectEnrichment();
       }
     }
@@ -320,6 +339,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         return projectSubject;
       })
       if (this.projectSubjects) {
+        this.projectMaxMarks = examFilteredData.scholasticMarks.projectMaxMarks;
         this.patchProject();
       }
     }
@@ -329,6 +349,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         return halfYearlySubject;
       })
       if (this.halfYearlySubjects) {
+        this.halfYearlyMaxMarks = examFilteredData.scholasticMarks.halfYearlyMaxMarks;
         this.patchHalfYearly();
       }
     }
@@ -365,12 +386,53 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     })
   }
 
+  // patchTheory() {
+  //   const controlOne = <FormArray>this.examResultForm.get('type.theoryMarks');
+  //   this.theorySubjects.forEach((x: any) => {
+  //     controlOne.push(this.patchTheoryValues(x));
+  //   })
+  // }
+
   patchTheory() {
-    const controlOne = <FormArray>this.examResultForm.get('type.theoryMarks');
-    this.theorySubjects.forEach((x: any) => {
-      controlOne.push(this.patchTheoryValues(x));
-    })
+    const controlOne = this.examResultForm.get('type.theoryMarks') as FormArray;
+    this.theorySubjects.forEach(subject => {
+      controlOne.push(this.patchTheoryValues(subject));
+    });
   }
+
+  patchTheoryValues(subject: string): FormGroup {
+    const maxMarks = this.getMaxMarksForSubject(subject);
+    return this.fb.group({
+      [subject]: ['', [
+        Validators.required,
+        Validators.max(maxMarks),
+        Validators.pattern('^[0-9]+$')
+      ]]
+    });
+  }
+
+  getMaxMarksForSubject(subject: string): number {
+    const found = this.theoryMaxMarks.find((obj:any) => obj.hasOwnProperty(subject));
+    return found ? found[subject] : 100;
+  }
+
+  getTheoryControl(index: number, subject: string): AbstractControl | null {
+    const control = this.examResultForm.get(['type', 'theoryMarks']) as FormArray;
+    const group = control.at(index) as FormGroup;
+    return group.get(subject);
+  }
+  
+    
+
+
+
+
+
+
+
+
+
+
 
   patchPractical() {
     const controlOne = <FormArray>this.examResultForm.get('type.practicalMarks');
@@ -416,11 +478,23 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   }
 
 
-  patchTheoryValues(theoryMarks: any) {
-    return this.fb.group({
-      [theoryMarks]: ['', [Validators.required, Validators.max(this.theoryMaxMarks), Validators.pattern('^[0-9]+$')]],
-    })
-  }
+  // patchTheoryValues(theoryMarks: any) {
+  //   return this.fb.group({
+  //     [theoryMarks]: ['', [Validators.required, Validators.max(this.theoryMaxMarks), Validators.pattern('^[0-9]+$')]],
+  //   })
+  // }
+  // patchTheoryValues(subject: string): FormGroup {
+  //   return this.fb.group({
+  //     [subject]: [
+  //       '', 
+  //       [
+  //         Validators.required,
+  //         Validators.max(this.theoryMaxMarks),
+  //         Validators.pattern('^[0-9]+$') // only digits allowed
+  //       ]
+  //     ]
+  //   });
+  // }
 
   patchPracticalValues(practicalMarks: any) {
     return this.fb.group({
@@ -459,6 +533,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   }
 
   examResultAddUpdate() {
+    console.log(this.examResultForm.value.type)
     const examResult = this.examResultForm.value.type;
     const countSubjectsBelowPassingMarks = (passMarks: any[], actualMarks: any[]): number => {
       return passMarks.reduce((count, passMarkSubject, index) => {

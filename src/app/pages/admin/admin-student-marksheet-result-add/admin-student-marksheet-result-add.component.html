@@ -102,8 +102,7 @@
                                 </table>
                             </div>
                             <div class="modal fade show" [class.show]="showModal">
-                                <div class="modal-dialog modal-lg" role="document"
-                                    [class.modal-lg]="!deleteMode">
+                                <div class="modal-dialog modal-lg" role="document" [class.modal-lg]="!deleteMode">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title mt-2">{{updateMode?'UPDATE': deleteMode ?
@@ -160,28 +159,73 @@
                                                                         </mat-select>
                                                                     </mat-form-field>
                                                                 </div>
-                                                                <ng-container *ngIf="theorySubjects.length>0">
-                                                                    <h3>Theory Marks (out of {{theoryMaxMarks}})</h3>
+                                                                <ng-container *ngIf="theorySubjects.length > 0">
+                                                                    <h3>Theory Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="theoryMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of theorySubjects; let i = index">
-                                                                                <div [formGroupName]="i">
-                                                                                    <mat-form-field
-                                                                                        appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                *ngFor="let subject of theorySubjects; let i = index">
+                                                                                <div [formGroupName]="i" class="">
+                                                                                    <mat-form-field appearance="outline"
+                                                                                        [ngClass]="{'has-error': hasError('subject')}">
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject">
                                                                                     </mat-form-field>
+                                                                                    <mat-error
+                                                                                        *ngIf="getTheoryControl(i, subject)?.hasError('required') &&
+                                                                                        (getTheoryControl(i, subject)?.touched || getTheoryControl(i, subject)?.dirty)">
+                                                                                        {{ subject | titlecase }} marks is
+                                                                                        required
+                                                                                    </mat-error>
+                                                                                    <mat-error
+                                                                                        *ngIf="getTheoryControl(i, subject)?.hasError('max')">
+                                                                                        Maximum {{
+                                                                                        getMaxMarksForSubject(subject)
+                                                                                        }} marks allowed
+                                                                                    </mat-error>
+                                                                                    <mat-error
+                                                                                        *ngIf="getTheoryControl(i, subject)?.hasError('pattern')">
+                                                                                        Only numbers allowed
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
+                                                                <!-- <ng-container *ngIf="theorySubjects.length > 0">
+                                                                    <h3>Theory Marks</h3>
+                                                                    <ng-container formGroupName="type">
+                                                                      <ng-container formArrayName="theoryMarks">
+                                                                        <div class="row">
+                                                                          <div class="col-4 col-lg-2" *ngFor="let subject of theorySubjects; let i = index">
+                                                                            <div [formGroupName]="i">
+                                                                              <mat-form-field appearance="outline">
+                                                                                <mat-label>{{ subject | titlecase }}</mat-label>
+                                                                                <input matInput type="text" [formControlName]="subject">
+                                                                  
+                                                                                <mat-error *ngIf="getTheoryControl(i, subject)?.hasError('required')">
+                                                                                  {{ subject | titlecase }} marks is required
+                                                                                </mat-error>
+                                                                  
+                                                                                <mat-error *ngIf="getTheoryControl(i, subject)?.hasError('max')">
+                                                                                  Max allowed: {{ getMaxMarksForSubject(subject) }} marks
+                                                                                </mat-error>
+                                                                  
+                                                                                <mat-error *ngIf="getTheoryControl(i, subject)?.hasError('pattern')">
+                                                                                  Only numbers allowed
+                                                                                </mat-error>
+                                                                              </mat-form-field>
+                                                                            </div>
+                                                                          </div>
+                                                                        </div>
+                                                                      </ng-container>
+                                                                    </ng-container>
+                                                                  </ng-container> -->
 
                                                                 <ng-container *ngIf="practicalSubjects.length>0">
-                                                                    <h3>Practical Marks (out of {{practicalMaxMarks}})</h3>
+                                                                    <h3>Practical Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="practicalMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -201,7 +245,7 @@
                                                                 </ng-container>
 
                                                                 <ng-container *ngIf="periodicTestSubjects.length>0">
-                                                                    <h3>Perodic Test Marks (out of {{periodicTestMaxMarks}})</h3>
+                                                                    <h3>Perodic Test Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="periodicTestMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -220,7 +264,7 @@
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container *ngIf="noteBookSubjects.length>0">
-                                                                    <h3>Note Book Marks (out of {{noteBookMaxMarks}})</h3>
+                                                                    <h3>Note Book Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="noteBookMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -240,7 +284,7 @@
                                                                 </ng-container>
                                                                 <ng-container
                                                                     *ngIf="subjectEnrichmentSubjects.length>0">
-                                                                    <h3>Subject Enrichment Marks (out of {{subjectEnrichmentMaxMarks}})</h3>
+                                                                    <h3>Subject Enrichment Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container
                                                                             formArrayName="subjectEnrichmentMarks">
@@ -260,7 +304,7 @@
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container *ngIf="halfYearlySubjects.length>0">
-                                                                    <h3>Half Yearly Marks (out of {{halfYearlyMaxMarks}})</h3>
+                                                                    <h3>Half Yearly Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="halfYearlyMarks">
                                                                             <div class="col-4 col-lg-2"
@@ -279,7 +323,7 @@
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container *ngIf="projectSubjects.length>0">
-                                                                    <h3>Project Marks (out of {{projectMaxMarks}})</h3>
+                                                                    <h3>Project Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="projectMarks">
                                                                             <div class="col-4 col-lg-2"
