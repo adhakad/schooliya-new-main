@@ -110,11 +110,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       this.getSingleClassResultStrucByStream(params);
     }
   }
-
-  hasError(controlName: string): boolean {
-    const control = this.examResultForm.get(controlName);
-    return !! (control && control.invalid && (control.touched || control.dirty));
-  }
   
   
   
@@ -386,89 +381,32 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     })
   }
 
-  // patchTheory() {
-  //   const controlOne = <FormArray>this.examResultForm.get('type.theoryMarks');
-  //   this.theorySubjects.forEach((x: any) => {
-  //     controlOne.push(this.patchTheoryValues(x));
-  //   })
-  // }
-
   patchTheory() {
-    const controlOne = this.examResultForm.get('type.theoryMarks') as FormArray;
-    this.theorySubjects.forEach(subject => {
-      controlOne.push(this.patchTheoryValues(subject));
-    });
-  }
-
-  patchTheoryValues(subject: string): FormGroup {
-    const maxMarks = this.getMaxMarksForSubject(subject);
-    return this.fb.group({
-      [subject]: ['', [
-        Validators.required,
-        Validators.max(maxMarks),
-        Validators.pattern('^[0-9]+$')
-      ]]
-    });
-  }
-
-  getMaxMarksForSubject(subject: string): number {
-    const found = this.theoryMaxMarks.find((obj:any) => obj.hasOwnProperty(subject));
-    return found ? found[subject] : 100;
-  }
-
-  getTheoryControl(index: number, subject: string): AbstractControl | null {
-    const control = this.examResultForm.get(['type', 'theoryMarks']) as FormArray;
-    const group = control.at(index) as FormGroup;
-    return group.get(subject);
+    this.patchSubjectMarks(this.theorySubjects, 'type.theoryMarks', this.theoryMaxMarks);
   }
   
-    
-
-
-
-
-
-
-
-
-
-
-
   patchPractical() {
-    const controlOne = <FormArray>this.examResultForm.get('type.practicalMarks');
-    this.practicalSubjects.forEach((x: any) => {
-      controlOne.push(this.patchPracticalValues(x))
-    })
+    this.patchSubjectMarks(this.practicalSubjects, 'type.practicalMarks', this.practicalMaxMarks);
   }
+  
   patchPeriodicTest() {
-    const controlOne = <FormArray>this.examResultForm.get('type.periodicTestMarks');
-    this.periodicTestSubjects.forEach((x: any) => {
-      controlOne.push(this.patchPeriodicTestValues(x))
-    })
+    this.patchSubjectMarks(this.periodicTestSubjects, 'type.periodicTestMarks', this.periodicTestMaxMarks);
   }
+  
   patchNoteBook() {
-    const controlOne = <FormArray>this.examResultForm.get('type.noteBookMarks');
-    this.noteBookSubjects.forEach((x: any) => {
-      controlOne.push(this.patchNoteBookValues(x))
-    })
+    this.patchSubjectMarks(this.noteBookSubjects, 'type.noteBookMarks', this.noteBookMaxMarks);
   }
+  
   patchSubjectEnrichment() {
-    const controlOne = <FormArray>this.examResultForm.get('type.subjectEnrichmentMarks');
-    this.subjectEnrichmentSubjects.forEach((x: any) => {
-      controlOne.push(this.patchSubjectEnrichmentValues(x))
-    })
+    this.patchSubjectMarks(this.subjectEnrichmentSubjects, 'type.subjectEnrichmentMarks', this.subjectEnrichmentMaxMarks);
   }
+  
   patchProject() {
-    const controlOne = <FormArray>this.examResultForm.get('type.projectMarks');
-    this.projectSubjects.forEach((x: any) => {
-      controlOne.push(this.patchProjectValues(x))
-    })
+    this.patchSubjectMarks(this.projectSubjects, 'type.projectMarks', this.projectMaxMarks);
   }
+  
   patchHalfYearly() {
-    const controlOne = <FormArray>this.examResultForm.get('type.halfYearlyMarks');
-    this.halfYearlySubjects.forEach((x: any) => {
-      controlOne.push(this.patchHalfYearlyValues(x))
-    })
+    this.patchSubjectMarks(this.halfYearlySubjects, 'type.halfYearlyMarks', this.halfYearlyMaxMarks);
   }
   patchCoScholastic() {
     const controlOne = <FormArray>this.examResultForm.get('type.coScholastic');
@@ -476,62 +414,65 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       controlOne.push(this.patchCoScholasticValues(x))
     })
   }
-
-
-  // patchTheoryValues(theoryMarks: any) {
-  //   return this.fb.group({
-  //     [theoryMarks]: ['', [Validators.required, Validators.max(this.theoryMaxMarks), Validators.pattern('^[0-9]+$')]],
-  //   })
-  // }
-  // patchTheoryValues(subject: string): FormGroup {
-  //   return this.fb.group({
-  //     [subject]: [
-  //       '', 
-  //       [
-  //         Validators.required,
-  //         Validators.max(this.theoryMaxMarks),
-  //         Validators.pattern('^[0-9]+$') // only digits allowed
-  //       ]
-  //     ]
-  //   });
-  // }
-
-  patchPracticalValues(practicalMarks: any) {
-    return this.fb.group({
-      [practicalMarks]: ['', [Validators.required, Validators.max(this.practicalMaxMarks), Validators.pattern('^[0-9]+$')]],
-    })
-  }
-  patchPeriodicTestValues(periodicTestMarks: any) {
-    return this.fb.group({
-      [periodicTestMarks]: ['', [Validators.required, Validators.max(periodicTestMarks), Validators.pattern('^[0-9]+$')]],
-    })
-  }
-  patchNoteBookValues(noteBookMarks: any) {
-    return this.fb.group({
-      [noteBookMarks]: ['', [Validators.required, Validators.max(this.noteBookMaxMarks), Validators.pattern('^[0-9]+$')]],
-    })
-  }
-  patchSubjectEnrichmentValues(subjectEnrichmentMarks: any) {
-    return this.fb.group({
-      [subjectEnrichmentMarks]: ['', [Validators.required, Validators.max(this.subjectEnrichmentMaxMarks), Validators.pattern('^[0-9]+$')]],
-    })
-  }
-  patchProjectValues(projectMarks: any) {
-    return this.fb.group({
-      [projectMarks]: ['', [Validators.required, Validators.max(this.projectMaxMarks), Validators.pattern('^[0-9]+$')]],
-    })
-  }
-  patchHalfYearlyValues(halfYearlyMarks: any) {
-    return this.fb.group({
-      [halfYearlyMarks]: ['', [Validators.required, Validators.max(this.halfYearlyMaxMarks), Validators.pattern('^[0-9]+$')]],
-    })
-  }
   patchCoScholasticValues(coScholastic: any) {
     return this.fb.group({
       [coScholastic]: ['', [Validators.required]],
     })
   }
-
+  
+  createMarksGroup(subject: string, maxMarksList: any[], requireMax: boolean = true): FormGroup {
+    const maxMarks = this.getMaxMarksFromList(subject, maxMarksList);
+    const validators = [Validators.required, Validators.pattern('^[0-9]+$')];
+  
+    if (requireMax) {
+      validators.push(Validators.max(maxMarks));
+    }
+  
+    return this.fb.group({
+      [subject]: ['', validators]
+    });
+  }
+  getMaxMarksFromList(subject: string, maxMarksList: any[]): number {
+    const found = maxMarksList.find((obj: any) => obj.hasOwnProperty(subject));
+    return found ? found[subject] : 100;
+  }
+  
+  patchSubjectMarks(subjects: string[], formArrayPath: string, maxMarksList: any[], requireMax: boolean = true) {
+    const control = this.examResultForm.get(formArrayPath) as FormArray;
+    subjects.forEach(subject => {
+      control.push(this.createMarksGroup(subject, maxMarksList, requireMax));
+    });
+  }
+  getControlBySubject(index: number, subject: string, formArrayPath: string): AbstractControl | null {
+    const control = this.examResultForm.get(formArrayPath) as FormArray;
+    const group = control.at(index) as FormGroup;
+    return group.get(subject);
+  }
+  hasError(index: number, subject: string, formArrayPath: string, errorCode: string): boolean {
+    const control = this.getControlBySubject(index, subject, formArrayPath);
+    return !!(control?.hasError(errorCode) && (control.touched || control.dirty));
+  }  
+  getSingleFieldError(index: number, subject: string, formArrayPath: string, maxMarksList: any[]): string | null {
+    const control = this.getControlBySubject(index, subject, formArrayPath);
+    if (!control || !(control.touched || control.dirty)) return null;
+  
+    if (control.hasError('required')) {
+      return `${this.toTitleCase(subject)} marks is required`;
+    }
+    if (control.hasError('max')) {
+      const max = this.getMaxMarksFromList(subject, maxMarksList);
+      return `Maximum ${max} marks allowed`;
+    }
+    if (control.hasError('pattern')) {
+      return `Only numbers allowed`;
+    }
+  
+    return null;
+  }
+  
+  toTitleCase(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
   examResultAddUpdate() {
     console.log(this.examResultForm.value.type)
     const examResult = this.examResultForm.value.type;
