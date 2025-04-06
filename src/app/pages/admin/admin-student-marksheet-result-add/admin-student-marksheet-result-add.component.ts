@@ -91,10 +91,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       }),
     });
   }
-
-
-
-
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
@@ -110,15 +106,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       this.getSingleClassResultStrucByStream(params);
     }
   }
-  
-  
-  
-  
-  
-  
-  
-  
-
   addExamResultModel(rollnumber: number) {
     this.showModal = true;
     this.deleteMode = false;
@@ -137,22 +124,8 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   }
 
   falseFormValue() {
-    const controlOne = <FormArray>this.examResultForm.get('type.theoryMarks');
-    const controlTwo = <FormArray>this.examResultForm.get('type.practicalMarks');
-    const controlThree = <FormArray>this.examResultForm.get('type.periodicTestMarks');
-    const controlFour = <FormArray>this.examResultForm.get('type.noteBookMarks');
-    const controlFive = <FormArray>this.examResultForm.get('type.subjectEnrichmentMarks');
-    const controlSix = <FormArray>this.examResultForm.get('type.coScholastic');
-    const controlSeven = <FormArray>this.examResultForm.get('type.projectMarks');
-    const controlEight = <FormArray>this.examResultForm.get('type.halfYearlyMarks');
+    const controlOne = <FormArray>this.examResultForm.get('type.coScholastic');
     controlOne.clear();
-    controlTwo.clear();
-    controlThree.clear();
-    controlFour.clear();
-    controlFive.clear();
-    controlSix.clear();
-    controlSeven.clear();
-    controlEight.clear();
   }
   falseAllValue() {
     this.falseFormValue();
@@ -474,7 +447,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
   examResultAddUpdate() {
-    console.log(this.examResultForm.value.type)
     const examResult = this.examResultForm.value.type;
     const countSubjectsBelowPassingMarks = (passMarks: any[], actualMarks: any[]): number => {
       return passMarks.reduce((count, passMarkSubject, index) => {
