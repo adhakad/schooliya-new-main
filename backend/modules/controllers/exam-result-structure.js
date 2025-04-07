@@ -72,6 +72,9 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
             return res.status(404).json('This class and subject group not found!');
         }
         const marksheetTemplateStructure = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
+        if(!marksheetTemplateStructure){
+            return res.status(404).json(`Template not found!`);
+        }
         return res.status(200).json({ marksheetTemplateStructure: marksheetTemplateStructure, classSubjectList: classSubjectList });
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

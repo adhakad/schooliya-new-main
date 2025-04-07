@@ -211,13 +211,11 @@ export class AdminStudentMarksheetComponent implements OnInit {
         };
         let mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
         this.mappedResults = mappedResults.sort((a: any, b: any) => a.name.localeCompare(b.name));
-        console.log(mappedResults[0].resultDetail.term1)
         this.statusCode = 200;
       }
     }, err => {
       this.errorCheck = true;
       this.statusCode = err.status;
-      console.log(err.error)
     })
     setTimeout(() => {
       this.loader = false;
@@ -357,6 +355,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
     }
     this.examResultStructureService.getSingleClassResultStrucByStream(params).subscribe((res: any) => {
       if (res) {
+        console.log(res)
         this.errorCheck = false;
         this.templateStatusCode = 200;
         this.marksheetTemplateStructureInfo = res;
@@ -365,6 +364,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
     }, err => {
       this.errorCheck = true;
       this.templateStatusCode = err.status;
+      console.log(err.statusCode);
       this.falseAllValue();
     })
   }

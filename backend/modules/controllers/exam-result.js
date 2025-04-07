@@ -142,15 +142,7 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
         if (examResult.length <= 0) {
             return res.status(404).json({ errorMsg: 'This class exam result not found!' });
         }
-        let templateName = marksheetTemplate.templateName;
-        let marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
-        if (!marksheetTemplateStructure) {
-            if (stream === "N/A") {
-                streamMsg = ``;
-            }
-            return res.status(404).json({ errorMsg: `This class ${streamMsg} marksheet template not found!` });
-        }
-        return res.status(200).json({ examResultInfo: examResult, studentInfo: student, marksheetTemplateStructure: marksheetTemplateStructure, isDate: isDate });
+        return res.status(200).json({ examResultInfo: examResult, studentInfo: student, marksheetTemplateStructure: marksheetTemplate, isDate: isDate });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
