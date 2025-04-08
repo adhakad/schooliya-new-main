@@ -198,8 +198,8 @@
                                                     <p class="mb-0">{{result.name | titlecase}}</p>
                                                 </td>
                                                 <!-- <td>
-                        <p class="mb-0">{{result.admissionNo}}</p>
-                      </td> -->
+                              <p class="mb-0">{{result.admissionNo}}</p>
+                            </td> -->
                                                 <td>
                                                     <p class="mb-0">{{result.rollNumber}}</p>
                                                 </td>
@@ -226,7 +226,8 @@
                                 <p *ngIf="templateStatusCode==200 && statusCode ==404">Marksheet Not Found, Please Add
                                     Result !</p>
                                 <p *ngIf="statusCode ==500 || templateStatusCode==500">Internal Server Error !</p>
-                                <p *ngIf="templateStatusCode ==404">Please Select Marksheet Template Format !</p>
+                                <p *ngIf="templateStatusCode ==404 && cls && stream">Please Select Marksheet Template
+                                    Format !</p>
                             </div>
                             <div class="modal fade show" [class.show]="showModal">
                                 <div class="modal-dialog" role="document">
@@ -380,11 +381,7 @@
                                                                             </th>
                                                                             <th scope="col">
                                                                                 &nbsp;&nbsp;THEORY&nbsp;&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
-                                                                            <!-- <th scope="col">
-                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
-                                      </th> -->
                                                                             <th scope="col"
                                                                                 style="border-right: 1px solid transparent;">
                                                                                 &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
@@ -396,7 +393,6 @@
                                                                                 {{ exam.subject |
                                                                                 uppercase }}</td>
                                                                             <td>{{ exam.theoryMarks }}</td>
-                                                                            <!-- <td>{{ exam.totalMarks }}</td> -->
                                                                             <td
                                                                                 style="text-align: center;border-right: 1px solid transparent;">
                                                                                 {{
@@ -457,16 +453,13 @@
                                                                             </th>
                                                                             <th scope="col">
                                                                                 &nbsp;&nbsp;&nbsp;THEORY&nbsp;&nbsp;&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
-                                                                                &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
+                                                                                &nbsp;PRACTICAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col">GRADE</th>
                                                                         </tr>
@@ -540,29 +533,24 @@
                                                                             </th>
                                                                             <th scope="col">
                                                                                 &nbsp;&nbsp;THEORY&nbsp;&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
-                                                                                &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
+                                                                                &nbsp;PRACTICAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col">
                                                                                 &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;THEORY&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;THEORY&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
+                                                                                &nbsp;PRACTICAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="border-right: 1px solid transparent; ">
@@ -712,27 +700,22 @@
                                                                                 style="text-align: left !important;padding-left: 25px;border:none;">
                                                                             </th>
                                                                             <th scope="col">&nbsp;THEORY&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
-                                                                                &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
+                                                                                &nbsp;PRACTICAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                                                                &nbsp;THEORY&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;PRACTICAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
+                                                                                &nbsp;PRACTICAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;TOTAL&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col">&nbsp;GRAND TOTAL&nbsp;</th>
                                                                             <th scope="col"
@@ -820,49 +803,36 @@
                                                                                 style="text-align: left !important;padding-left: 25px;border:none;">
                                                                             </th>
                                                                             <th scope="col">&nbsp;THEORY&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
                                                                                 PER.
-                                                                                TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks}}
+                                                                                TEST
                                                                             </th>
                                                                             <th scope="col">NOTE
-                                                                                BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks}}
+                                                                                BOOK
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
+                                                                                &nbsp;SEA&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;TOTAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">&nbsp;GRADE&nbsp;</th>
                                                                             <th scope="col">
-                                                                                &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                                                                &nbsp;THEORY&nbsp;
                                                                             </th>
                                                                             <th scope="col">PER.
-                                                                                TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}
+                                                                                TEST
                                                                             </th>
                                                                             <th scope="col">NOTE
-                                                                                BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.noteBookMaxMarks}}
+                                                                                BOOK
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
+                                                                                &nbsp;SEA&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;TOTAL&nbsp;
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="border-right: 1px solid transparent; ">
@@ -998,8 +968,6 @@
                                                                     </table>
                                                                 </ng-container>
 
-
-
                                                                 <ng-container
                                                                     *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T6"'>
                                                                     <table class="custom-table"
@@ -1029,48 +997,35 @@
                                                                                 style="text-align: left !important;padding-left: 25px;border:none;">
                                                                             </th>
                                                                             <th scope="col">&nbsp;THEORY&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
                                                                                 PER.
-                                                                                TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks}}
+                                                                                TEST
                                                                             </th>
                                                                             <th scope="col">NOTE
-                                                                                BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks}}
+                                                                                BOOK
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
+                                                                                &nbsp;SEA&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;TOTAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;THEORY&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                                                                &nbsp;THEORY&nbsp;
                                                                             </th>
                                                                             <th scope="col">PER.
-                                                                                TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}
+                                                                                TEST
                                                                             </th>
                                                                             <th scope="col">NOTE
-                                                                                BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.noteBookMaxMarks}}
+                                                                                BOOK
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;SEA&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
+                                                                                &nbsp;SEA&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;TOTAL&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;TOTAL&nbsp;
                                                                             </th>
                                                                             <th scope="col">GRAND TOTAL</th>
                                                                             <th scope="col"
@@ -1161,7 +1116,8 @@
                                                                             </th>
                                                                             <th colspan="5" scope="colgroup"
                                                                                 style="height: 48px;font-size: 18px;border-top: rgb(169, 159, 240);">
-                                                                                EDUCATIONAL ASSESSMENT
+                                                                                EDUCATIONAL
+                                                                                ASSESSMENT
                                                                             </th>
                                                                         </tr>
                                                                         <tr>
@@ -1170,23 +1126,17 @@
                                                                             </th>
                                                                             <th scope="col">
                                                                                 &nbsp;&nbsp;&nbsp;WRITTEN&nbsp;&nbsp;&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
-                                                                                HALF
-                                                                                YEARLY<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.halfYearlyMaxMarks}}
+                                                                                HALF YEARLY
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
-                                                                                &nbsp;PROJECT&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks}}
+                                                                                &nbsp;PROJECT&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.halfYearlyMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col">GRADE</th>
                                                                         </tr>
@@ -1246,7 +1196,8 @@
                                                                             </th>
                                                                             <th colspan="4" scope="colgroup"
                                                                                 style="height: 48px;font-size: 18px;border-top: rgb(169, 159, 240);">
-                                                                                EDUCATIONAL ASSESSMENT
+                                                                                EDUCATIONAL
+                                                                                ASSESSMENT
                                                                             </th>
                                                                         </tr>
                                                                         <tr>
@@ -1255,16 +1206,13 @@
                                                                             </th>
                                                                             <th scope="col">
                                                                                 &nbsp;&nbsp;&nbsp;WRITTEN&nbsp;&nbsp;&nbsp;
-                                                                                <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                                                             </th>
                                                                             <th scope="col"
                                                                                 style="padding-top:5px;padding-bottom: 5px;">
-                                                                                &nbsp;PROJECT&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks}}
+                                                                                &nbsp;PROJECT&nbsp;
                                                                             </th>
                                                                             <th scope="col">
-                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.projectMaxMarks
-                                                                                +
-                                                                                mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                             </th>
                                                                             <th scope="col">GRADE</th>
                                                                         </tr>
@@ -1485,8 +1433,4 @@
             </div>
         </div>
     </div>
-    <!-- <div class="spinner-container" *ngIf="loader">
-    <div class="spinner-overlay" *ngIf="loader">
-      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
-    </div>
-  </div> -->
+</div>

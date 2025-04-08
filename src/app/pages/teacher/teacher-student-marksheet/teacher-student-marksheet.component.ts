@@ -222,13 +222,11 @@ export class TeacherStudentMarksheetComponent implements OnInit {
         };
         let mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
         this.mappedResults = mappedResults.sort((a: any, b: any) => a.name.localeCompare(b.name));
-        console.log(mappedResults[0].resultDetail.term1)
         this.statusCode = 200;
       }
     }, err => {
       this.errorCheck = true;
       this.statusCode = err.status;
-      console.log(err.error)
     })
     setTimeout(() => {
       this.loader = false;

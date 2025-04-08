@@ -1,4 +1,10 @@
 @import'../../admin/dashboard/dashboard.component.css';
+.file-input {
+  height: 50px;
+  color: #4e4caacd;
+  border: 1px solid #4e4caacd;
+  border-radius: 5px;
+}
 .sign-table{
     border: 1px solid transparent;
    }

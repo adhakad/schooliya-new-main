@@ -355,7 +355,6 @@ export class AdminStudentMarksheetComponent implements OnInit {
     }
     this.examResultStructureService.getSingleClassResultStrucByStream(params).subscribe((res: any) => {
       if (res) {
-        console.log(res)
         this.errorCheck = false;
         this.templateStatusCode = 200;
         this.marksheetTemplateStructureInfo = res;
@@ -364,7 +363,6 @@ export class AdminStudentMarksheetComponent implements OnInit {
     }, err => {
       this.errorCheck = true;
       this.templateStatusCode = err.status;
-      console.log(err.statusCode);
       this.falseAllValue();
     })
   }

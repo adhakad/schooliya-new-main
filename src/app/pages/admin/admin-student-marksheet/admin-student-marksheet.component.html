@@ -30,7 +30,8 @@
                         </ng-container>
                       </div>
                       <div class="col-2">
-                        <ng-container *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
+                        <ng-container
+                          *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200 && statusCode !==0">
                           <button class="submit-button" mat-raised-button
                             routerLink="/admin/marksheet/result/add/{{cls}}/{{stream}}"
                             *ngIf="cls && stream && templateStatusCode==200 && statusCode !==200">Add Result</button>
@@ -254,8 +255,7 @@
                               <div class="table-container" style="position: relative;height: 100%;">
                                 <div class="row mt-5">
                                   <div class="col-2">
-                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}"
-                                      alt="school logo">
+                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}" alt="school logo">
                                   </div>
                                   <div class="col-10" style="text-align: center;">
                                     <div class="school-name">
@@ -279,8 +279,7 @@
                                   </div>
                                 </div>
                                 <table class="custom-table" style="margin-bottom: 0;">
-                                  <tr
-                                    style="height: 28px !important;background-color: rgb(169, 159, 240);">
+                                  <tr style="height: 28px !important;background-color: rgb(169, 159, 240);">
                                     <th class="text-bold"
                                       style="height: 28px !important;font-size:19px;padding-left: 15px;border: none;padding-top: 7px;padding-bottom: 7px;">
                                       STUDENT'S PROFILE</th>
@@ -311,8 +310,7 @@
                                   </tr>
                                 </table>
                                 <table class="custom-table" style="margin-bottom: 0;">
-                                  <tr
-                                    style="height: 28px !important;background-color: rgb(169, 159, 240);">
+                                  <tr style="height: 28px !important;background-color: rgb(169, 159, 240);">
                                     <th class="text-bold"
                                       style="height: 28px !important;font-size: 19px;padding-left: 15px; border: none;padding-top: 7px;padding-bottom: 7px;">
                                       ACADEMIC PERFORMANCE - SCHOLASTIC AREA</th>
@@ -409,7 +407,9 @@
                                       <td>{{ exam.theoryMarks }}</td>
                                       <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
                                       <td>{{ exam.totalMarks }}</td>
-                                      <td style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ exam.grade
+                                      <td style="text-align: left;">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                        exam.grade
                                         }}</td>
                                     </tr>
                                     <table class="custom-table"
@@ -704,7 +704,7 @@
                                         style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
-                                        <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
                                       <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
                                       <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
                                       <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}
@@ -712,7 +712,7 @@
                                       <td>{{ exam.totalMarks }}</td>
                                       <td style="text-align: left;padding-left: 20px;">{{ exam.grade
                                         }}</td>
-                                        <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ?
                                         result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ?
@@ -858,7 +858,7 @@
                                         style="text-align: left !important;padding-left: 15px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{ exam.subject |
                                         uppercase }}</td>
-                                        <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
                                       <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
                                       <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
                                       <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}
@@ -906,7 +906,8 @@
                                         <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
                                       <th colspan="5" scope="colgroup"
-                                        style="height: 48px;font-size: 18px;border-top: rgb(169, 159, 240);">EDUCATIONAL ASSESSMENT
+                                        style="height: 48px;font-size: 18px;border-top: rgb(169, 159, 240);">EDUCATIONAL
+                                        ASSESSMENT
                                       </th>
                                     </tr>
                                     <tr>
@@ -935,7 +936,9 @@
                                       <td>{{ exam.halfYearlyMarks }}</td>
                                       <td>{{ exam.projectMarks }}</td>
                                       <td>{{ exam.totalMarks }}</td>
-                                      <td style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ exam.grade
+                                      <td style="text-align: left;">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                        exam.grade
                                         }}</td>
                                     </tr>
                                     <table class="custom-table"
@@ -967,7 +970,8 @@
                                         <p style="position: relative;font-size: 18px;margin-top: 20px;">SUBJECT</p>
                                       </th>
                                       <th colspan="4" scope="colgroup"
-                                        style="height: 48px;font-size: 18px;border-top: rgb(169, 159, 240);">EDUCATIONAL ASSESSMENT
+                                        style="height: 48px;font-size: 18px;border-top: rgb(169, 159, 240);">EDUCATIONAL
+                                        ASSESSMENT
                                       </th>
                                     </tr>
                                     <tr>
@@ -992,7 +996,9 @@
                                       <td>{{ exam.theoryMarks }}</td>
                                       <td>{{ exam.projectMarks }}</td>
                                       <td>{{ exam.totalMarks }}</td>
-                                      <td style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ exam.grade
+                                      <td style="text-align: left;">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                        exam.grade
                                         }}</td>
                                     </tr>
                                     <table class="custom-table"
@@ -1019,8 +1025,7 @@
 
                                 <ng-container *ngIf='mappedResults.length>0'>
                                   <table class="custom-table" style="margin-bottom: 0;">
-                                    <tr
-                                      style="height: 28px !important;background-color: rgb(169, 159, 240);">
+                                    <tr style="height: 28px !important;background-color: rgb(169, 159, 240);">
                                       <th class="text-bold"
                                         style="height: 28px !important;font-size:19px;padding-left: 15px;border: none;padding-top: 7px;padding-bottom: 7px;">
                                         CO-SCHOLASTIC & DISCIPLINE AREA (3 Point Grading Scale A,B,C)</th>
@@ -1091,8 +1096,7 @@
                                   </ng-container>
 
                                   <table class="custom-table" style="margin-top: -2px;margin-bottom: 0;">
-                                    <tr
-                                      style="height: 28px !important;background-color: rgb(169, 159, 240);">
+                                    <tr style="height: 28px !important;background-color: rgb(169, 159, 240);">
                                       <th class="text-bold"
                                         style="height: 28px !important;font-size:19px;padding-left: 15px;border: none;padding-top: 7px;padding-bottom: 7px;">
                                         SUBJECT GRADE RANGE</th>
@@ -1165,8 +1169,4 @@
       </div>
     </div>
   </div>
-  <!-- <div class="spinner-container" *ngIf="loader">
-    <div class="spinner-overlay" *ngIf="loader">
-      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
-    </div>
-  </div> -->
+</div>
