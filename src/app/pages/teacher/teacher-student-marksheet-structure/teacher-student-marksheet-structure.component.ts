@@ -39,6 +39,16 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   isChecked!: Boolean;
   adminId: string = '';
   teacherInfo: any;
+  availableTemplates = [
+    { name: 'T1', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573664/T1_bqzgw1.jpg' },
+    { name: 'T2', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573792/T2_gqvlzs.jpg' },
+    { name: 'T3', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573816/T3_ckic7f.jpg' },
+    { name: 'T4', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573842/T4_ggp7wb.jpg' },
+    { name: 'T5', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573869/T5_jolapq.jpg' },
+    { name: 'T6', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573893/T6_q5f8qh.jpg' },
+    { name: 'T7', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573917/T7_bistg7.jpg' },
+    { name: 'T8', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573944/T8_p1ukhf.jpg' }
+  ];
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
@@ -63,8 +73,11 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.isBrowser) {
+    this.initiateCarousel();
+  }
 
+  initiateCarousel() {
+    if (this.isBrowser) {
       setTimeout(() => {
         jQuery(this.el.nativeElement).find('.template-carousel').owlCarousel({
           stagePadding: 15,
@@ -87,9 +100,8 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
               items: 2,
             },
           }
-        })
-      }, 1500);
-
+        });
+      }, 500); // Reduced timeout
     }
   }
 
@@ -122,14 +134,14 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.errorMsg = '';
     this.deleteMode = false;
     this.deleteById = '';
-    this.examResultInfo;
+    this.examResultInfo = null;
     this.processedTheoryData = [];
     this.processedPracticalData = [];
     this.examResultForm.reset();
   }
   successDone(msg: any) {
     this.closeModal();
-    this.getSingleClassMarksheetTemplateByStream(this.cls)
+    this.getSingleClassMarksheetTemplateByStream(this.cls);
     setTimeout(() => {
       this.toastr.success(msg, 'Success');
     }, 500)
@@ -144,12 +156,19 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
       if (res) {
         this.marksheetTemplate = res;
         this.marksheetSelectMode = false;
+      } else {
+        this.marksheetTemplate = null;
+        this.marksheetSelectMode = true;
+        this.initiateCarousel(); // Initialize carousel if no template is set
       }
     }, err => {
+      this.marksheetTemplate = null;
+      this.marksheetSelectMode = true;
+      this.initiateCarousel(); // Initialize carousel on error as well
     })
   }
-
   examResultAddUpdate() {
+    this.disabled = false;
     this.examResultForm.value.adminId = this.adminId;
     this.examResultForm.value.class = this.cls;
     this.examResultForm.value.stream = this.stream;
@@ -161,14 +180,15 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
       this.errorCheck = true;
       this.errorMsg = err.error;
     })
-
-
   }
 
   marksheetTemplateDelete(id: String) {
     this.examResultStructureService.deleteResultStructure(id).subscribe((res: any) => {
       if (res) {
+        this.disabled = true;
         this.marksheetSelectMode = true;
+        this.marksheetTemplate = null; // Clear existing template
+        this.initiateCarousel(); // Re-initialize the template carousel
         this.successDone(res);
         this.deleteById = '';
       }
