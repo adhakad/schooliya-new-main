@@ -54,10 +54,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   subjectEnrichmentMaxMarks: any;
   projectMaxMarks: any;
   halfYearlyMaxMarks: any;
-
-
-
-
   fileChoose: boolean = false;
   existRollnumber: number[] = [];
   bulkResult: any[] = [];

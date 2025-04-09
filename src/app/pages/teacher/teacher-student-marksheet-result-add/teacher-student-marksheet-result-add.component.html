@@ -158,144 +158,234 @@
                                                                             </div>
                                                                         </mat-select>
                                                                     </mat-form-field>
+                                                                    <mat-error
+                                                                        *ngIf="examResultForm.get('examType')?.hasError('required') && examResultForm.get('examType')?.touched">
+                                                                        Exam name is required
+                                                                    </mat-error>
                                                                 </div>
-                                                                <ng-container *ngIf="theorySubjects.length>0">
-                                                                    <h3>Theory Marks (out of {{theoryMaxMarks}})</h3>
+                                                                <ng-container *ngIf="theorySubjects.length > 0">
+                                                                    <h3>Theory Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="theoryMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of theorySubjects; let i = index">
+                                                                                *ngFor="let subject of theorySubjects; let i = index">
                                                                                 <div [formGroupName]="i">
                                                                                     <mat-form-field
                                                                                         appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject"
+                                                                                            [ngClass]="{
+                                                                                  'has-error':
+                                                                                    getControlBySubject(i, subject, 'type.theoryMarks')?.invalid &&
+                                                                                    (getControlBySubject(i, subject, 'type.theoryMarks')?.dirty ||
+                                                                                      getControlBySubject(i, subject, 'type.theoryMarks')?.touched)
+                                                                                }" />
                                                                                     </mat-form-field>
+
+                                                                                    <mat-error
+                                                                                        *ngIf="getSingleFieldError(i, subject, 'type.theoryMarks', theoryMaxMarks)">
+                                                                                        {{ getSingleFieldError(i,
+                                                                                        subject, 'type.theoryMarks',
+                                                                                        theoryMaxMarks) }}
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-
-                                                                <ng-container *ngIf="practicalSubjects.length>0">
-                                                                    <h3>Practical Marks (out of {{practicalMaxMarks}})
-                                                                    </h3>
+                                                                <ng-container *ngIf="practicalSubjects.length > 0">
+                                                                    <h3>Practical Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="practicalMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of practicalSubjects; let i = index">
+                                                                                *ngFor="let subject of practicalSubjects; let i = index">
                                                                                 <div [formGroupName]="i">
                                                                                     <mat-form-field
                                                                                         appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject"
+                                                                                            [ngClass]="{
+                                                                                  'has-error':
+                                                                                    getControlBySubject(i, subject, 'type.practicalMarks')?.invalid &&
+                                                                                    (getControlBySubject(i, subject, 'type.practicalMarks')?.dirty ||
+                                                                                      getControlBySubject(i, subject, 'type.practicalMarks')?.touched)
+                                                                                }" />
                                                                                     </mat-form-field>
+
+                                                                                    <mat-error
+                                                                                        *ngIf="getSingleFieldError(i, subject, 'type.practicalMarks', practicalMaxMarks)">
+                                                                                        {{ getSingleFieldError(i,
+                                                                                        subject, 'type.practicalMarks',
+                                                                                        practicalMaxMarks) }}
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-
-                                                                <ng-container *ngIf="periodicTestSubjects.length>0">
-                                                                    <h3>Perodic Test Marks (out of
-                                                                        {{periodicTestMaxMarks}})</h3>
+                                                                <ng-container *ngIf="periodicTestSubjects.length > 0">
+                                                                    <h3>Periodic Test Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="periodicTestMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of periodicTestSubjects; let i = index">
+                                                                                *ngFor="let subject of periodicTestSubjects; let i = index">
                                                                                 <div [formGroupName]="i">
                                                                                     <mat-form-field
                                                                                         appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject"
+                                                                                            [ngClass]="{
+                                                                                  'has-error':
+                                                                                    getControlBySubject(i, subject, 'type.periodicTestMarks')?.invalid &&
+                                                                                    (getControlBySubject(i, subject, 'type.periodicTestMarks')?.dirty ||
+                                                                                      getControlBySubject(i, subject, 'type.periodicTestMarks')?.touched)
+                                                                                }" />
                                                                                     </mat-form-field>
+
+                                                                                    <mat-error
+                                                                                        *ngIf="getSingleFieldError(i, subject, 'type.periodicTestMarks', periodicTestMaxMarks)">
+                                                                                        {{ getSingleFieldError(i,
+                                                                                        subject,
+                                                                                        'type.periodicTestMarks',
+                                                                                        periodicTestMaxMarks) }}
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <ng-container *ngIf="noteBookSubjects.length>0">
-                                                                    <h3>Note Book Marks (out of {{noteBookMaxMarks}})
-                                                                    </h3>
+                                                                <ng-container *ngIf="noteBookSubjects.length > 0">
+                                                                    <h3>Note Book Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="noteBookMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of noteBookSubjects; let i = index">
+                                                                                *ngFor="let subject of noteBookSubjects; let i = index">
                                                                                 <div [formGroupName]="i">
                                                                                     <mat-form-field
                                                                                         appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject"
+                                                                                            [ngClass]="{
+                                                                                  'has-error':
+                                                                                    getControlBySubject(i, subject, 'type.noteBookMarks')?.invalid &&
+                                                                                    (getControlBySubject(i, subject, 'type.noteBookMarks')?.dirty ||
+                                                                                      getControlBySubject(i, subject, 'type.noteBookMarks')?.touched)
+                                                                                }" />
                                                                                     </mat-form-field>
+
+                                                                                    <mat-error
+                                                                                        *ngIf="getSingleFieldError(i, subject, 'type.noteBookMarks', noteBookMaxMarks)">
+                                                                                        {{ getSingleFieldError(i,
+                                                                                        subject, 'type.noteBookMarks',
+                                                                                        noteBookMaxMarks) }}
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
                                                                 <ng-container
-                                                                    *ngIf="subjectEnrichmentSubjects.length>0">
-                                                                    <h3>Subject Enrichment Marks (out of
-                                                                        {{subjectEnrichmentMaxMarks}})</h3>
+                                                                    *ngIf="subjectEnrichmentSubjects.length > 0">
+                                                                    <h3>Subject Enrichment Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container
                                                                             formArrayName="subjectEnrichmentMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of subjectEnrichmentSubjects; let i = index">
+                                                                                *ngFor="let subject of subjectEnrichmentSubjects; let i = index">
                                                                                 <div [formGroupName]="i">
                                                                                     <mat-form-field
                                                                                         appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject"
+                                                                                            [ngClass]="{
+                                                                                  'has-error':
+                                                                                    getControlBySubject(i, subject, 'type.subjectEnrichmentMarks')?.invalid &&
+                                                                                    (getControlBySubject(i, subject, 'type.subjectEnrichmentMarks')?.dirty ||
+                                                                                      getControlBySubject(i, subject, 'type.subjectEnrichmentMarks')?.touched)
+                                                                                }" />
                                                                                     </mat-form-field>
+
+                                                                                    <mat-error
+                                                                                        *ngIf="getSingleFieldError(i, subject, 'type.subjectEnrichmentMarks', subjectEnrichmentMaxMarks)">
+                                                                                        {{ getSingleFieldError(i,
+                                                                                        subject,
+                                                                                        'type.subjectEnrichmentMarks',
+                                                                                        subjectEnrichmentMaxMarks) }}
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <ng-container *ngIf="halfYearlySubjects.length>0">
-                                                                    <h3>Half Yearly Marks (out of
-                                                                        {{halfYearlyMaxMarks}})</h3>
+                                                                <ng-container *ngIf="halfYearlySubjects.length > 0">
+                                                                    <h3>Half Yearly Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="halfYearlyMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of halfYearlySubjects; let i = index">
+                                                                                *ngFor="let subject of halfYearlySubjects; let i = index">
                                                                                 <div [formGroupName]="i">
                                                                                     <mat-form-field
                                                                                         appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject"
+                                                                                            [ngClass]="{
+                                                                                  'has-error':
+                                                                                    getControlBySubject(i, subject, 'type.halfYearlyMarks')?.invalid &&
+                                                                                    (getControlBySubject(i, subject, 'type.halfYearlyMarks')?.dirty ||
+                                                                                      getControlBySubject(i, subject, 'type.halfYearlyMarks')?.touched)
+                                                                                }" />
                                                                                     </mat-form-field>
+
+                                                                                    <mat-error
+                                                                                        *ngIf="getSingleFieldError(i, subject, 'type.halfYearlyMarks', halfYearlyMaxMarks)">
+                                                                                        {{ getSingleFieldError(i,
+                                                                                        subject, 'type.halfYearlyMarks',
+                                                                                        halfYearlyMaxMarks) }}
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <ng-container *ngIf="projectSubjects.length>0">
-                                                                    <h3>Project Marks (out of {{projectMaxMarks}})</h3>
+                                                                <ng-container *ngIf="projectSubjects.length > 0">
+                                                                    <h3>Project Marks</h3>
                                                                     <ng-container formGroupName="type">
                                                                         <ng-container formArrayName="projectMarks">
                                                                             <div class="col-4 col-lg-2"
-                                                                                *ngFor="let subjects of projectSubjects; let i = index">
+                                                                                *ngFor="let subject of projectSubjects; let i = index">
                                                                                 <div [formGroupName]="i">
                                                                                     <mat-form-field
                                                                                         appearance="outline">
-                                                                                        <mat-label>{{subjects |
-                                                                                            titlecase}}</mat-label>
+                                                                                        <mat-label>{{ subject |
+                                                                                            titlecase }}</mat-label>
                                                                                         <input matInput type="text"
-                                                                                            [formControlName]="subjects">
+                                                                                            [formControlName]="subject"
+                                                                                            [ngClass]="{
+                                                                                  'has-error':
+                                                                                    getControlBySubject(i, subject, 'type.projectMarks')?.invalid &&
+                                                                                    (getControlBySubject(i, subject, 'type.projectMarks')?.dirty ||
+                                                                                      getControlBySubject(i, subject, 'type.projectMarks')?.touched)
+                                                                                }" />
                                                                                     </mat-form-field>
+
+                                                                                    <mat-error
+                                                                                        *ngIf="getSingleFieldError(i, subject, 'type.projectMarks', projectMaxMarks)">
+                                                                                        {{ getSingleFieldError(i,
+                                                                                        subject, 'type.projectMarks',
+                                                                                        projectMaxMarks) }}
+                                                                                    </mat-error>
                                                                                 </div>
                                                                             </div>
                                                                         </ng-container>
@@ -345,9 +435,4 @@
             </div>
         </div>
     </div>
-    <!-- <div class="spinner-container" *ngIf="loader">
-        <div class="spinner-overlay" *ngIf="loader">
-            <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
-                strokeWidth="3"></mat-progress-spinner>
-        </div>
-    </div> -->
+</div>
