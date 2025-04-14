@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { TeacherStudentMarksheetStructureEditRoutingModule } from './teacher-student-marksheet-structure-edit-routing.module';
 import { TeacherStudentMarksheetStructureEditComponent } from './teacher-student-marksheet-structure-edit.component';
+import { TeacherSharedModule } from '../teacher-shared/teacher-shared.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { TeacherStudentMarksheetStructureEditComponent } from './teacher-student
   ],
   imports: [
     CommonModule,
-    TeacherStudentMarksheetStructureEditRoutingModule
+    TeacherStudentMarksheetStructureEditRoutingModule,
+    TeacherSharedModule
   ]
 })
 export class TeacherStudentMarksheetStructureEditModule { }
