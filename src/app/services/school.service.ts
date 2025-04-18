@@ -8,6 +8,7 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 })
 export class SchoolService {
   url = `${environment.API_URL}/v1/school`;
+  private schoolData: any = null;
   constructor(private http: HttpClient) { }
   getSchoolNameLogo() {
     return this.http.get<any>(`${this.url}/name-logo`);
@@ -34,6 +35,13 @@ export class SchoolService {
   }
   getSchool(adminId:any) {
     return this.http.get<any>(`${this.url}/${adminId}`);
+  }
+  setSchoolData(data: any) {
+    this.schoolData = data;
+  }
+
+  getSchoolData() {
+    return this.schoolData;
   }
   updateSchool(schoolData: any) {
     // Use FormData for handling file updates if needed
