@@ -59,40 +59,37 @@ export class AdminAuthService {
     this.token = accessToken;
     if (accessToken) {
       const now = new Date();
-      const base64Url = accessToken.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const accessTokenExp = (JSON.parse(atob(accessToken.split('.')[1]))).exp;
-      const accessTokenExpDate = new Date(accessTokenExp * 1000)
+      const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
+      const accessTokenExpDate = new Date(decodedToken.exp * 1000);
       const accessTokenExpIn = Math.floor((accessTokenExpDate.getTime() - now.getTime()) / 1000) + 1;
-      let checkAccessToken = this.getAccessToken()?.accessToken;
-      if (checkAccessToken) {
-        return
+
+      if (!this.getAccessToken()?.accessToken) {
+        const base64 = accessToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        this.cookieService.set("adminAccessToken", accessToken, accessTokenExpDate, '/');
+        this.cookieService.set("_uD", base64, accessTokenExpDate, '/');
+        this.setAuthTimer(accessTokenExpIn);
+        this.isAdminAuthenticated = true;
+        this.authStatusListener.next(true);
+        this.router.navigate(["/admin/dashboard"], { replaceUrl: true });
       }
-      this.cookieService.set("adminAccessToken", accessToken, accessTokenExpDate);
-      this.cookieService.set("_uD", base64, accessTokenExpDate);
-      this.setAuthTimer(accessTokenExpIn);
-      this.isAdminAuthenticated = true;
-      this.authStatusListener.next(true);
-      this.router.navigate(["/admin/dashboard"], { replaceUrl: true });
     }
   }
+
   storeRefreshToken(refreshToken: string) {
     if (refreshToken) {
-      const refreshTokenExp = (JSON.parse(atob(refreshToken.split('.')[1]))).exp;
-      const refreshTokenExpDate = new Date(refreshTokenExp * 1000)
-      this.cookieService.set("adminRefreshToken", refreshToken, refreshTokenExpDate);
+      const decodedToken = JSON.parse(atob(refreshToken.split('.')[1]));
+      const refreshTokenExpDate = new Date(decodedToken.exp * 1000);
+      this.cookieService.set("adminRefreshToken", refreshToken, refreshTokenExpDate, '/');
     }
   }
 
   autoAuthAdmin() {
-    const authInformation = this.getAccessToken();
-    if (!authInformation) {
-      return;
-    }
+    const authInfo = this.getAccessToken();
+    if (!authInfo) return;
     const now = new Date();
-    const accessTokenExpIn = authInformation.accessTokenExpDate.getTime() - now.getTime();
+    const accessTokenExpIn = authInfo.accessTokenExpDate.getTime() - now.getTime();
     if (accessTokenExpIn > 0) {
-      this.token = authInformation.accessToken;
+      this.token = authInfo.accessToken;
       this.isAdminAuthenticated = true;
       this.setAuthTimer(accessTokenExpIn / 1000);
       this.authStatusListener.next(true);
@@ -109,101 +106,77 @@ export class AdminAuthService {
     this.token = null;
     this.isAdminAuthenticated = false;
     this.authStatusListener.next(false);
-    clearTimeout(this.tokenTimer);
-    this.deleteAccessToken();
-    // this.checkUserCookies();
-    this.deleteAccessToken();
-    this.router.navigate(["/"], { replaceUrl: true });
-  }
 
-  private checkUserCookies() {
-    const accessToken = this.cookieService.get("adminAccessToken");
-    const userDetail = this.cookieService.get("_uD");
-    if (!accessToken && !userDetail) {
-      return;
+    if (this.tokenTimer) {
+      clearTimeout(this.tokenTimer);
     }
-    this.deleteAccessToken();
-    const accessTokenRepeat = this.cookieService.get("adminAccessToken");
-    const userDetailRepeat = this.cookieService.get("_uD");
-    if (!accessTokenRepeat && !userDetailRepeat) {
-      return;
-    }
-    this.deleteAccessToken();
+
+    this.deleteAllCookies();
+
+    setTimeout(() => {
+      this.router.navigate(["/"], { replaceUrl: true });
+    }, 100); // Ensures cookies are cleared before redirection
   }
 
   getAccessToken() {
     const accessToken = this.cookieService.get("adminAccessToken");
-    if (!accessToken) {
-      return;
-    }
-    const accessTokenExp = (JSON.parse(atob(accessToken.split('.')[1]))).exp;
-    const accessTokenExpDate = new Date(accessTokenExp * 1000)
+    if (!accessToken) return;
+
+    const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
+    const accessTokenExpDate = new Date(decodedToken.exp * 1000);
+
     return {
-      accessToken: accessToken,
-      accessTokenExpDate: new Date(accessTokenExpDate)
-    }
+      accessToken,
+      accessTokenExpDate
+    };
   }
+
   getRefreshToken() {
     const refreshToken = this.cookieService.get("adminRefreshToken");
-    if (!refreshToken) {
-      return;
-    }
-    const refreshTokenExp = (JSON.parse(atob(refreshToken.split('.')[1]))).exp;
-    const refreshTokenExpDate = new Date(refreshTokenExp * 1000)
+    if (!refreshToken) return;
+
+    const decodedToken = JSON.parse(atob(refreshToken.split('.')[1]));
+    const refreshTokenExpDate = new Date(decodedToken.exp * 1000);
+
     return {
-      refreshToken: refreshToken,
-      refreshTokenExpDate: new Date(refreshTokenExpDate)
-    }
+      refreshToken,
+      refreshTokenExpDate
+    };
   }
 
   getLoggedInAdminInfo() {
-    let token = this.getAccessToken()?.accessToken;
-    if (!token) {
-      return
-    }
+    const token = this.getAccessToken()?.accessToken;
+    if (!token) return;
+
     return this.getLoggedInAdmin(token);
   }
 
   private getLoggedInAdmin(token: string) {
     let userDetail = this.cookieService.get("_uD");
+
     if (token && !userDetail) {
-      let base64Url = token.split('.')[1];
-      let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const accessTokenExp = (JSON.parse(atob(token.split('.')[1]))).exp;
-      const accessTokenExpDate = new Date(accessTokenExp * 1000)
-      this.cookieService.set("_uD", base64, accessTokenExpDate);
-      let jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      let payload = JSON.parse(jsonPayload).payload;
-      return payload;
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const expDate = new Date(decodedToken.exp * 1000);
+      this.cookieService.set("_uD", base64, expDate, '/');
+
+      const payloadJson = decodeURIComponent(window.atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''));
+      return JSON.parse(payloadJson).payload;
     }
 
-    let jsonPayload = decodeURIComponent(window.atob(userDetail).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    let payload = JSON.parse(jsonPayload).payload;
-    return payload;
-  }
-
-  private deleteAccessToken() {
-    this.cookieService.delete("adminAccessToken");
-    this.cookieService.delete("adminAccessToken");
-    this.cookieService.delete("_uD");
-    this.cookieService.delete("_vN");
+    const payloadJson = decodeURIComponent(window.atob(userDetail).split('').map(c =>
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join(''));
+    return JSON.parse(payloadJson).payload;
   }
 
   deleteAllCookies() {
-    this.token = null;
-    this.isAdminAuthenticated = false;
-    this.authStatusListener.next(false);
-    this.deleteAllCookie();
-    this.deleteAllCookie();
-  }
-  deleteAllCookie() {
-    this.cookieService.delete("_uD");
-    this.cookieService.delete("adminAccessToken");
-    this.cookieService.delete("adminRefreshToken");
-    this.cookieService.delete("_vN");
+    this.cookieService.delete("adminAccessToken", '/');
+    this.cookieService.delete("adminRefreshToken", '/');
+    this.cookieService.delete("_uD", '/');
+    this.cookieService.delete("_vN", '/');
   }
 }
+

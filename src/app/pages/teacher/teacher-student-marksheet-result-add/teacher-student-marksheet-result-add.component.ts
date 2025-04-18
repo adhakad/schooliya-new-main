@@ -619,7 +619,7 @@ export class TeacherStudentMarksheetResultAddComponent implements OnInit {
           if (this.practicalSubjects.length === 0) {
             delete this.examResultForm.value.type.practicalMarks;
           }
-          this.examResultForm.value.createdBy = "Admin";
+          this.examResultForm.value.createdBy = this.createdBy;
           // this.examResultForm.value.examType = this.selectedExam;
           this.examResultForm.value.stream = this.stream;
           this.examResultForm.value.class = this.cls;

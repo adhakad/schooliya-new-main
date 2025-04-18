@@ -82,10 +82,8 @@ export class TeacherAuthService {
   autoAuthTeacher() {
     const authInfo = this.getAccessToken();
     if (!authInfo) return;
-
     const now = new Date();
     const accessTokenExpIn = authInfo.accessTokenExpDate.getTime() - now.getTime();
-
     if (accessTokenExpIn > 0) {
       this.token = authInfo.accessToken;
       this.isTeacherAuthenticated = true;

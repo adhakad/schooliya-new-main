@@ -28,6 +28,11 @@ const MarksheetTemplateModel = mongoose.model('marksheet-template', {
     },
     examStructure: {},
     subjects: {},
+    createdBy: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

@@ -95,7 +95,7 @@ let GetSingleMarksheetTemplateById = async (req, res, next) => {
 
 let CreateExamResultStructure = async (req, res, next) => {
     let className = req.body.class;
-    let { adminId, stream, templateName, templateUrl } = req.body;
+    let { adminId, stream, templateName, templateUrl,createdBy } = req.body;
     if (stream === "stream") {
         stream = "N/A";
     }
@@ -146,7 +146,8 @@ let CreateExamResultStructure = async (req, res, next) => {
             templateName: templateName,
             templateUrl: templateUrl,
             examStructure: updatedExamStructure,
-            subjects: subjects
+            subjects: subjects,
+            createdBy:createdBy
         };
         let marksheetTemplate = await MarksheetTemplateModel.create(marksheetTemplateData);
         return res.status(200).json('Marksheet template created successfully.');
@@ -298,6 +299,7 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
         const id = req.params.id;
         const templateFormData = req.body;
         const supplySubjectLimit = req.body.supplySubjectLimit;
+        const createdBy = req.body.createdBy;
         let singleTemplate = await MarksheetTemplateModel.findOne({ _id: id }).lean();
 
         const transformData = (data) =>
@@ -343,6 +345,7 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
         }
         let transformedData = mergeScholasticMarks(singleTemplate, subjectPermissionFormData);
         delete transformedData['_id'];
+        transformedData.createdBy = createdBy;
         let updateTemaplateStructure = await MarksheetTemplateModel.findByIdAndUpdate(id, { $set: transformedData }, { new: true });
         if (updateTemaplateStructure) {
             return res.status(200).json("Marksheet template structure updated successfully.");

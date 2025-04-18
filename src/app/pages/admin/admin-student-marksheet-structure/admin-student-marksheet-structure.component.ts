@@ -52,7 +52,8 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
       class: [''],
       stream: [''],
       templateName: ['', Validators.required],
-      templateUrl: ['', Validators.required]
+      templateUrl: ['', Validators.required],
+      createdBy:[''],
     });
   }
 
@@ -171,6 +172,7 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
     this.examResultForm.value.adminId = this.adminId;
     this.examResultForm.value.class = this.cls;
     this.examResultForm.value.stream = this.stream;
+    this.examResultForm.value.createdBy = "Admin"
     this.examResultStructureService.addExamResultStructure(this.examResultForm.value).subscribe((res: any) => {
       if (res) {
         this.successDone(res);

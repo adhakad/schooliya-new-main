@@ -31,13 +31,15 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
     private toastr: ToastrService,
     private adminAuthService: AdminAuthService,
     private examResultStructureService: ExamResultStructureService
-  ) { }
-
-  ngOnInit(): void {
+  ) { 
     this.subjectPermissionForm = this.fb.group({
       _id: [''],
       supplySubjectLimit: ['',Validators.required],
+      createdBy: [''],
     });
+  }
+
+  ngOnInit(): void {
 
     const getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
@@ -170,6 +172,7 @@ export class AdminStudentMarksheetStructureEditComponent implements OnInit {
   subjectPermissionAdd() {
     if (this.subjectPermissionForm.valid) {
       this.subjectPermissionForm.value._id = this.id;
+      this.subjectPermissionForm.value.createdBy = "Admin";
       this.examResultStructureService.updateMarksheetTemplateStructure(this.subjectPermissionForm.value).subscribe((res: any) => {
         if (res) {
           this.successDone(res);

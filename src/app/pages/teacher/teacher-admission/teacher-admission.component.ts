@@ -132,7 +132,6 @@ export class TeacherAdmissionComponent implements OnInit {
     this.teacherService.getTeacherById(params).subscribe((res: any) => {
       if (res) {
         this.classInfo = res.admissionPermission.classes;
-        console.log(this.classInfo)
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
 

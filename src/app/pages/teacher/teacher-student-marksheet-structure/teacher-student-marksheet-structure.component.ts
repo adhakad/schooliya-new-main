@@ -37,6 +37,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
   loader: Boolean = true;
   isChecked!: Boolean;
+  createdBy: String = '';
   adminId: string = '';
   teacherInfo: any;
   availableTemplates = [
@@ -55,13 +56,17 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
       class: [''],
       stream: [''],
       templateName: ['', Validators.required],
-      templateUrl: ['', Validators.required]
+      templateUrl: ['', Validators.required],
+      createdBy: ['']
     });
   }
 
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
+    if (this.teacherInfo) {
+      this.getTeacherById(this.teacherInfo)
+    }
     this.cls = this.activatedRoute.snapshot.paramMap.get('class');
     this.stream = this.activatedRoute.snapshot.paramMap.get('stream');
     if (this.cls && this.stream) {
@@ -71,7 +76,18 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
       }, 1000);
     }
   }
+  getTeacherById(teacherInfo: any) {
+    let params = {
+      adminId: teacherInfo.adminId,
+      teacherUserId: teacherInfo.id,
+    }
+    this.teacherService.getTeacherById(params).subscribe((res: any) => {
+      if (res) {
+        this.createdBy = `${res.name} (${res.teacherUserId})`;
+      }
 
+    })
+  }
   ngAfterViewInit() {
     this.initiateCarousel();
   }
@@ -172,6 +188,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.examResultForm.value.adminId = this.adminId;
     this.examResultForm.value.class = this.cls;
     this.examResultForm.value.stream = this.stream;
+    this.examResultForm.value.createdBy = this.createdBy;
     this.examResultStructureService.addExamResultStructure(this.examResultForm.value).subscribe((res: any) => {
       if (res) {
         this.successDone(res);
