@@ -150,6 +150,7 @@ export class TeacherAdmissionComponent implements OnInit {
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
+    printHtml += '@page { size: A3; margin: 10mm; }';
     printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
     printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
