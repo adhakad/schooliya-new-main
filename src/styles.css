@@ -1,3 +1,5 @@
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
 html,
 body {
   margin: 0;
@@ -240,6 +242,7 @@ body {
 ::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
   background-color: #fff !important;
 }
+
 .no-arrow::-webkit-outer-spin-button,
 .no-arrow::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -250,13 +253,49 @@ body {
 .no-arrow[type="number"] {
   -moz-appearance: textfield;
 }
- /* ::ng-deep .toast-container .ngx-toastr {
+::ng-deep .toast-container .ngx-toastr.toast-success {
   font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 6px;
+  padding: 20px 20px 20px 50px;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #000;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-image: none !important;
   border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-  background-color: #43ba7c !important;
-} */
-/*::ng-deep .toast-success {
+  /* border: 1px solid #43ba7c; */
+  top: 12vh !important;
+  /* border-left: 6px solid #43ba7c !important; */
+  right: 15px;
+}
+
+/* Style for the circle and checkmark icon using Unicode */
+.toast-container .ngx-toastr.toast-success::before {
+  font-family: 'Font Awesome\ 5 Free';
+  content: '\f00c';
+  font-weight: 900;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #43ba7c;
+  color: #fff;
+  /* border: 1px solid #43ba7c; */
+  font-size: 14px;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+::ng-deep .toast-container .ngx-toastr:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+/*
+::ng-deep .toast-success {
   border-left: 6px solid #2E7D32 !important;
   color: #2E7D32 !important;
 }
@@ -277,8 +316,8 @@ body {
 }
 ::ng-deep .toast-message {
   font-size: 14px;
-}
-  */
+} */
+ 
 /* ::ng-deep .toast-progress {
   background-color: #fff !important; 
 }  */

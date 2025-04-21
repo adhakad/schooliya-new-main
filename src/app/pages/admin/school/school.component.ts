@@ -127,7 +127,7 @@ export class SchoolComponent implements OnInit {
     this.getSchool();
     this.closeModal();
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

@@ -25,6 +25,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TeacherStudentComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   studentForm: FormGroup;
   excelForm: FormGroup;
   showModal: boolean = false;
@@ -226,6 +227,7 @@ export class TeacherStudentComponent implements OnInit {
     this.singleStudentInfo;
     this.singleStudentTCInfo;
     this.admissionType = '';
+    this.resetFileInput();
     this.studentForm.reset();
     this.excelForm.reset();
   }
@@ -513,6 +515,11 @@ export class TeacherStudentComponent implements OnInit {
       this.parseExcel(arrayBuffer);
     };
     fileReader.readAsArrayBuffer(file);
+  }
+  resetFileInput(): void {
+    if (this.fileInput && this.fileInput.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   parseExcel(arrayBuffer: any): void {

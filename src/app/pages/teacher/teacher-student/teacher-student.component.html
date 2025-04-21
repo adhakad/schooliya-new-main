@@ -677,7 +677,7 @@
                             </mat-form-field>
                           </div>
                           <div class="custom-file">
-                            <input type="file" name="file" class="form-control file-input" id="inputGroupFile" required
+                            <input #fileInput type="file" name="file" class="form-control file-input" id="inputGroupFile" required
                               (change)="handleImport($event)"
                               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                           </div>
