@@ -353,7 +353,7 @@ export class StudentComponent implements OnInit {
     this.successMsg = '';
     this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

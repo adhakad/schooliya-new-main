@@ -282,7 +282,7 @@ export class TeacherStudentAdmitCardStructureComponent implements OnInit {
     this.closeModal();
     this.getAdmitCardStructureByClass();
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

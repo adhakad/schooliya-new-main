@@ -253,6 +253,7 @@ body {
 .no-arrow[type="number"] {
   -moz-appearance: textfield;
 }
+
 ::ng-deep .toast-container .ngx-toastr.toast-success {
   font-family: 'Poppins', sans-serif;
   position: relative;
@@ -261,14 +262,13 @@ body {
   padding: 20px 20px 20px 50px;
   border-radius: 3px;
   background-color: #fff;
-  color: #000;
+  color: #474747;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-image: none !important;
   border-radius: 5px;
   /* border: 1px solid #43ba7c; */
   top: 12vh !important;
   /* border-left: 6px solid #43ba7c !important; */
-  right: 15px;
 }
 
 /* Style for the circle and checkmark icon using Unicode */
@@ -279,21 +279,39 @@ body {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 24px;
-  height: 24px;
+  width: 21px;
+  height: 21px;
   border-radius: 50%;
   background-color: #43ba7c;
   color: #fff;
-  /* border: 1px solid #43ba7c; */
-  font-size: 14px;
+  /* background-color: #fff;
+  color: #43ba7c;
+  border: 1px solid #43ba7c; */
+  font-size: 12px;
   position: absolute;
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
 }
+
 ::ng-deep .toast-container .ngx-toastr:hover {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+::ng-deep .toast-close-button {
+  color: transparent !important;
+  /* क्लोज बटन का रंग */
+  opacity: 0.8 !important;
+  padding: 0 !important;
+  /* अतिरिक्त पैडिंग हटाएं */
+  top: 50%;
+}
+
+::ng-deep .toast-close-button:hover {
+  opacity: 1 !important;
+}
+
+
 /*
 ::ng-deep .toast-success {
   border-left: 6px solid #2E7D32 !important;
@@ -317,7 +335,7 @@ body {
 ::ng-deep .toast-message {
   font-size: 14px;
 } */
- 
+
 /* ::ng-deep .toast-progress {
   background-color: #fff !important; 
 }  */
@@ -530,5 +548,13 @@ body {
   .side-navbar li button.active-link {
     background: #fff;
     color: #8142ff;
+  }
+
+  ::ng-deep .toast-container .ngx-toastr.toast-success {
+    min-width: 350px;
+  }
+
+  ::ng-deep .toast-close-button {
+    color: #828282 !important;
   }
 }

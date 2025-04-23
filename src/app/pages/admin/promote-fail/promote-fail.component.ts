@@ -253,7 +253,7 @@ export class PromoteFailComponent implements OnInit {
     this.closeModal();
     this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

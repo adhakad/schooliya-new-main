@@ -156,7 +156,7 @@ export class TransferCertificateComponent implements OnInit {
         this.closeModal();
         this.getStudents({ page: this.page });
         setTimeout(() => {
-          this.toastr.success(res.successMsg, 'Success');
+          this.toastr.success('',res.successMsg);
         }, 500)
       }
     }, err => {
@@ -307,7 +307,7 @@ export class TransferCertificateComponent implements OnInit {
     this.closeModal();
     this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

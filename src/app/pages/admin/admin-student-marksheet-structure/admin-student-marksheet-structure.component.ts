@@ -143,7 +143,7 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
     this.closeModal();
     this.getSingleClassMarksheetTemplateByStream(this.cls);
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
   getSingleClassMarksheetTemplateByStream(cls: any) {

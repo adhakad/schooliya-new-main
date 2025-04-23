@@ -166,7 +166,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       this.getSingleClassResultStrucByStream(params);
     }
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

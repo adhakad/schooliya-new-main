@@ -77,7 +77,7 @@ export class IssuedTransferCertificateComponent implements OnInit {
     this.closeModal();
     this.getIssuedTransferCertificate({ page: this.page });
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
   transferCertificateDelete(id: any) {

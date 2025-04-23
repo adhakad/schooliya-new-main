@@ -163,7 +163,7 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     this.getSingleClassResultStrucByStream();
     this.getStudentExamResultByClass();
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

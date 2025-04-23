@@ -141,13 +141,11 @@ export class SchoolComponent implements OnInit {
     });
   }
 
-  // Handle file input for school logo
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.schoolForm.patchValue({ schoolLogo: file });
 
-      // Create a preview for the logo
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.logoPreview = e.target.result;
@@ -165,7 +163,7 @@ export class SchoolComponent implements OnInit {
         this.schoolService.updateSchool(this.schoolForm.value).subscribe(
           (res: any) => {
             if (res) {
-              this.successDone('School updated successfully');
+              this.successDone(res);
             }
           },
           (err) => {
@@ -177,7 +175,7 @@ export class SchoolComponent implements OnInit {
         this.schoolService.addSchool(this.schoolForm.value).subscribe(
           (res: any) => {
             if (res) {
-              this.successDone('School added successfully');
+              this.successDone(res);
             }
           },
           (err) => {
@@ -193,7 +191,7 @@ export class SchoolComponent implements OnInit {
   schoolDelete(id: String) {
     this.schoolService.deleteSchool(id).subscribe((res: any) => {
       if (res) {
-        this.successDone('School deleted successfully');
+        this.successDone(res);
         this.schoolInfo = '';
         this.deleteById = '';
       }

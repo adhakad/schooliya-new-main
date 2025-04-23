@@ -152,7 +152,7 @@ export class UpgradePlanPaymentComponent implements OnInit {
             this.errorMsg = '';
             this.successMsg = validationResponse.successMsg;
             this.router.navigate(["/admin/upgrade-plan"], { replaceUrl: true });
-            this.toastr.success('Congratulations! Your plan has been upgraded.', 'Success');
+            this.toastr.success('','Congratulations! Your plan has been upgraded.');
           });
         }
       },

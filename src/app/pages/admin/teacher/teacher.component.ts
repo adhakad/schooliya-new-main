@@ -271,7 +271,7 @@ export class TeacherComponent implements OnInit {
     this.successMsg = '';
     this.getTeacher({ page: this.page });
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

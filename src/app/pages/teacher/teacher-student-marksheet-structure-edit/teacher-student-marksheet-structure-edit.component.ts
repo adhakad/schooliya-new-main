@@ -185,7 +185,7 @@ export class TeacherStudentMarksheetStructureEditComponent implements OnInit {
     this.marksTypeGroups = {};
     this.getSingleMarksheetTemplateById();
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
   subjectPermissionAdd() {

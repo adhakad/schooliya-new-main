@@ -91,7 +91,7 @@ export class ClassSubjectComponent implements OnInit {
     this.successMsg = '';
     this.getClassSubject({ page: 1 });
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

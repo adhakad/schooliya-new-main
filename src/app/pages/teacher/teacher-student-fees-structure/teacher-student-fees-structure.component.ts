@@ -201,7 +201,7 @@ export class TeacherStudentFeesStructureComponent implements OnInit {
     this.getFeesStructureBySession(this.adminId, this.selectedSession);
     this.closeModal();
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

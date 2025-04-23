@@ -159,7 +159,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.closeModal();
     this.getSingleClassMarksheetTemplateByStream(this.cls);
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
   getSingleClassMarksheetTemplateByStream(cls: any) {

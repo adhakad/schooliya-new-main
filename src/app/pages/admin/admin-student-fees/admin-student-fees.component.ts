@@ -351,13 +351,13 @@ export class AdminStudentFeesComponent implements OnInit {
             this.receiptInstallment = res;
             if (res.admissionFeesPayable == true) {
               this.clsFeesStructure.feesType = [{ Admission: res.admissionFees }, ...this.clsFeesStructure.feesType];
-              this.toastr.success('Fee Amount Collected Successfully', 'Success');
+              this.toastr.success('','Fee Amount Collected Successfully');
               this.showModal = false;
               this.showPrintModal = true;
             }
             if (res.admissionFeesPayable == false) {
               this.clsFeesStructure = this.clsFeesStructure;
-              this.toastr.success('Fee Amount Collected Successfully', 'Success');
+              this.toastr.success('','Fee Amount Collected Successfully',);
               this.showModal = false;
               this.showPrintModal = true;
             }

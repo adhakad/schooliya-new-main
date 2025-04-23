@@ -301,7 +301,7 @@ export class AdmissionComponent implements OnInit {
     this.closeModal();
     this.getStudentsByAdmission({ page: this.page });
     setTimeout(() => {
-      this.toastr.success(msg, 'Success');
+      this.toastr.success('',msg);
     }, 500)
   }
 

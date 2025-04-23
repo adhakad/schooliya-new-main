@@ -100,7 +100,7 @@ export class SubjectComponent implements OnInit {
     this.successMsg = '';
     this.getSubject({ page: 1 });
     setTimeout(() => {
-      this.toastr.success(res, 'Success');
+      this.toastr.success('',res);
     }, 500)
   }
   subjectAddUpdate() {
