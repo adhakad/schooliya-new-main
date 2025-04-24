@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class PaymentComponent implements OnInit {
   signupForm: FormGroup;
   otpForm: FormGroup;
+  hide:boolean = true;
   loader: Boolean = true;
   successMsg: String = '';
   paymentMode: boolean = false;

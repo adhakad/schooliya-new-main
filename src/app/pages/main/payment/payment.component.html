@@ -41,7 +41,12 @@
                                         <div class="col-12 col-lg-6">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Password</mat-label>
-                                                <input matInput type="password" formControlName="password">
+                                                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                                                <mat-icon matSuffix (click)="hide = !hide" style="cursor: pointer;"
+                                                    [attr.aria-label]="hide ? 'Hide password' : 'Show password'"
+                                                    [attr.aria-pressed]="!hide">
+                                                    {{hide ? 'visibility_off' : 'visibility'}}
+                                                </mat-icon>
                                                 <mat-hint
                                                     *ngIf="signupForm.get('password')?.hasError('required') && signupForm.get('password')?.touched"
                                                     class="form-text text-danger">Password is required.</mat-hint>
@@ -307,22 +312,28 @@
                                         <div class="col-9">
                                             <div class="row">
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658384/visa_tnc6fg.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658384/visa_tnc6fg.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658336/mastercard_yziy3e.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658336/mastercard_yziy3e.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658347/paytm_dvbzj5.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658347/paytm_dvbzj5.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658358/phonepe_bzd1kc.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658358/phonepe_bzd1kc.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658302/google-pay_tvncpj.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658302/google-pay_tvncpj.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658370/upi_ao6vls.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658370/upi_ao6vls.png"
+                                                        alt="">
                                                 </div>
                                             </div>
                                         </div>
@@ -434,22 +445,28 @@
                                         <div class="col-9">
                                             <div class="row">
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658384/visa_tnc6fg.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658384/visa_tnc6fg.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658336/mastercard_yziy3e.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658336/mastercard_yziy3e.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658347/paytm_dvbzj5.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658347/paytm_dvbzj5.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658358/phonepe_bzd1kc.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658358/phonepe_bzd1kc.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658302/google-pay_tvncpj.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658302/google-pay_tvncpj.png"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658370/upi_ao6vls.png" alt="">
+                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658370/upi_ao6vls.png"
+                                                        alt="">
                                                 </div>
                                             </div>
                                         </div>

@@ -502,15 +502,15 @@
                                 </mat-error>
                               </mat-form-field>
                               <mat-form-field appearance="outline">
-                                <mat-label>Faimly Annual Income (&#8377;)</mat-label>
+                                <mat-label>Family Annual Income (&#8377;)</mat-label>
                                 <input matInput type="number" formControlName="familyAnnualIncome" class="no-arrow">
                                 <mat-error
                                   *ngIf="studentForm.get('familyAnnualIncome')?.hasError('required') && studentForm.get('familyAnnualIncome')?.touched">
-                                  Faimly annual income is required
+                                  Family annual income is required
                                 </mat-error>
                                 <mat-error
                                   *ngIf="studentForm.get('familyAnnualIncome')?.hasError('pattern') && studentForm.get('familyAnnualIncome')?.touched">
-                                  Please enter a valid Faimly Annual Income (numeric characters only)
+                                  Please enter a valid Family Annual Income (numeric characters only)
                                 </mat-error>
                               </mat-form-field>
                             </div>

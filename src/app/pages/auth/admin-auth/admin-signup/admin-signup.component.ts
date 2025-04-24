@@ -10,6 +10,7 @@ import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 export class AdminSignupComponent implements OnInit {
   errorMsg: string = '';
   signupForm: FormGroup;
+  hide = true;
   classInfo:any;
   constructor(private fb: FormBuilder, public adminAuthService: AdminAuthService, private router: Router) {
     this.signupForm = this.fb.group({

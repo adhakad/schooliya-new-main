@@ -16,6 +16,7 @@ export class AdminForgotComponent implements OnInit {
   otpForm: FormGroup;
   resetForm: FormGroup;
   formType: String = 'Forgot';
+  hide: boolean = true;
   email: any;
   varifiedAdminInfo: any;
   constructor(private fb: FormBuilder, private router: Router, private adminAuthService: AdminAuthService,) {
@@ -82,7 +83,7 @@ export class AdminForgotComponent implements OnInit {
         // this.formType = 'ResetSuccsess';
         // if (this.formType == 'ResetSuccsess') {
         //   this.successMsg = res.successMsg;
-          this.router.navigate(["/admin/login"], { replaceUrl: true });
+        this.router.navigate(["/admin/login"], { replaceUrl: true });
         // }
       }
     }, err => {
