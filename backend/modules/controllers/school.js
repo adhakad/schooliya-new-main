@@ -77,7 +77,7 @@ let CreateSchool = async (req, res, next) => {
         };
         const createSchool = await SchoolModel.create(schoolData);
         if (createSchool) {
-            return res.status(200).json('School created successfully.');
+            return res.status(200).json('School created successfully');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
@@ -142,7 +142,7 @@ let UpdateSchool = async (req, res, next) => {
         }
         const updateSchool = await SchoolModel.findByIdAndUpdate(id, { $set: schoolData }, { new: true });
         if (updateSchool) {
-            return res.status(200).json('School updated successfully.');
+            return res.status(200).json('School updated successfully');
         } else {
             return res.status(404).json('School not found!');
         }
@@ -157,7 +157,7 @@ let DeleteSchool = async (req, res, next) => {
         await cloudinary.uploader.destroy(singleSchool.schoolLogoPublicId);
         const deleteSchool = await SchoolModel.findByIdAndRemove(id);
         if (deleteSchool) {
-            return res.status(200).json('School deleted successfully.');
+            return res.status(200).json('School deleted successfully');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

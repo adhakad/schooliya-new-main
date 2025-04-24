@@ -78,7 +78,7 @@ let CreateTeacher = async (req, res, next) => {
             otp: otp,
         }
         const createTeacher = await TeacherModel.create(teacherData);
-        return res.status(200).json('Teacher created successfully.');
+        return res.status(200).json('Teacher created successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }
@@ -134,7 +134,7 @@ let TeacherPermission = async (req, res, next) => {
             };
         }
         const updateTeacher = await TeacherModel.findByIdAndUpdate(teacherId, { $set: teacherData }, { new: true });
-        return res.status(200).json('Teacher permissions set successfully.');
+        return res.status(200).json('Teacher permissions set successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }
@@ -149,7 +149,7 @@ let UpdateTeacher = async (req, res, next) => {
             education: education
         }
         const updateTeacher = await TeacherModel.findByIdAndUpdate(id, { $set: teacherData }, { new: true });
-        return res.status(200).json('Teacher updated successfully.');
+        return res.status(200).json('Teacher updated successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }
@@ -163,7 +163,7 @@ let ChangeStatus = async (req, res, next) => {
             status: status
         }
         const updateStatus = await TeacherModel.findByIdAndUpdate(id, { $set: teacherData }, { new: true });
-        return res.status(200).json(`Teacher ${status} successfully.`);
+        return res.status(200).json(`Teacher ${status} successfully`);
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }
@@ -173,7 +173,7 @@ let DeleteTeacher = async (req, res, next) => {
         const id = req.params.id;
         const deleteTeacher = await TeacherModel.findByIdAndRemove(id);
         const deleteTeacherUser = await TeacherUserModel.findByIdAndDelete({ _id: id })
-        return res.status(200).json('Teacher deleted successfully.');
+        return res.status(200).json('Teacher deleted successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }

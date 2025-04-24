@@ -58,12 +58,12 @@ let CreateIssuedTransferCertificate = async (req, res, next) => {
             if (deleteAdmitCard || deleteExamResult || deleteFeesCollection) {
                 let createIssuedTransferCertificate = await IssuedTransferCertificateModel.create(studentData);
                 if (createIssuedTransferCertificate) {
-                    return res.status(200).json({ IssueTransferCertificate: 'IssueTransferCertificate', successMsg: `Transfer Certificate has been successfully created, and the student's data is now available on the Issued Transfer Certificate page.` });
+                    return res.status(200).json({ IssueTransferCertificate: 'IssueTransferCertificate', successMsg: `Transfer Certificate has been successfully created, and the student's data is now available on the Issued Transfer Certificate page` });
                 }
             }
             let createIssuedTransferCertificate = await IssuedTransferCertificateModel.create(studentData);
             if (createIssuedTransferCertificate) {
-                return res.status(200).json({ IssueTransferCertificate: 'IssueTransferCertificate', successMsg: `Transfer Certificate has been successfully created, and the student's data is now available on the Issued Transfer Certificate page.` });
+                return res.status(200).json({ IssueTransferCertificate: 'IssueTransferCertificate', successMsg: `Transfer Certificate has been successfully created, and the student's data is now available on the Issued Transfer Certificate page` });
             }
         }
     } catch (error) {
@@ -81,7 +81,7 @@ let DeleteIssuedTransferCertificate = async (req, res, next) => {
         }
 
         const issuedTransferCertificate = await IssuedTransferCertificateModel.findByIdAndRemove(id);
-        return res.status(200).json('Issued transfer certificate detail delete successfully.');
+        return res.status(200).json('Issued transfer certificate detail deleted successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }

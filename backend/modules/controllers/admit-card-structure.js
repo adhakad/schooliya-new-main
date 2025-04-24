@@ -94,7 +94,7 @@ let CreateAdmitCardStructure = async (req, res, next) => {
         let admitCardStructure = await AdmitCardStructureModel.create(admitCardStructureData);
         let studentAdmitCard = await AdmitCardModel.create(studentAdmitCardData);
         if (admitCardStructure && studentAdmitCard) {
-            return res.status(200).json('Admit card structure created successfully.');
+            return res.status(200).json('Admit card structure created successfully');
         }
 
     } catch (error) {
@@ -112,7 +112,7 @@ let DeleteAdmitCardStructure = async (req, res, next) => {
         const deleteAdmitCard = await AdmitCardModel.deleteMany({ adminId: adminId, class: className, stream: stream, examType: examType });
         const deleteAdmitCardStructure = await AdmitCardStructureModel.findByIdAndRemove(id);
         if (deleteAdmitCard && deleteAdmitCardStructure) {
-            return res.status(200).json('Admit card structure deleted successfully.');
+            return res.status(200).json('Admit card structure deleted successfully');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

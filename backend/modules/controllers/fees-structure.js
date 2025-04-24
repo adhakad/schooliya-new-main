@@ -123,11 +123,11 @@ let CreateFeesStructure = async (req, res, next) => {
                 if (checkStudent && studentFeesData.length > 0) {
                     const checkStudentFeesData = await FeesCollectionModel.create(studentFeesData);
                     if (checkStudentFeesData) {
-                        return res.status(200).json('Fees structure created successfully.');
+                        return res.status(200).json('Fees structure created successfully');
                     }
                 }
             }
-            return res.status(200).json('Fees structure created successfully.');
+            return res.status(200).json('Fees structure created successfully');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
@@ -156,9 +156,9 @@ let DeleteFeesStructure = async (req, res, next) => {
             FeesStructureModel.findByIdAndRemove(id),
         ]);
         if (deleteFeesRecord.deletedCount > 0 || deleteFeesStructure) {
-            return res.status(200).json('Fees structure deleted successfully.');
+            return res.status(200).json('Fees structure deleted successfully');
         } else {
-            return res.status(500).json('Failed to deleted Fees structure.');
+            return res.status(500).json('Failed to deleted Fees structure');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

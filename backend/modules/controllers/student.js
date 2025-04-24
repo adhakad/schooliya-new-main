@@ -366,7 +366,7 @@ let CreateStudent = async (req, res, next) => {
                     paidFees: createStudentFeesData.paidFees,
                     dueFees: createStudentFeesData.dueFees
                 }
-                return res.status(200).json('Student created successfully.');
+                return res.status(200).json('Student created successfully');
             }
         }
     } catch (error) {
@@ -675,7 +675,7 @@ let CreateBulkStudentRecord = async (req, res, next) => {
             if (createStudentFeesData) {
                 await session.commitTransaction();
                 session.endSession();
-                return res.status(200).json('Student created successfully.');
+                return res.status(200).json('Student created successfully');
             }
         }
         await session.abortTransaction();
@@ -696,7 +696,7 @@ let UpdateStudent = async (req, res, next) => {
             session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId,extraField :[{samagraId: samagraId}], admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession
         }
         const updateStudent = await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
-        return res.status(200).json('Student updated successfully.');
+        return res.status(200).json('Student updated successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }
@@ -782,7 +782,7 @@ let StudentClassPromote = async (req, res, next) => {
                     let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
                     let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
                     if (createStudentFeesData && deleteFeesCollection) {
-                        return res.status(200).json({ successMsg: `The student has successfully been promoted to the class.`, className: className });
+                        return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
                     }
 
                 }
@@ -836,7 +836,7 @@ let StudentClassPromote = async (req, res, next) => {
                     });
                 let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
                 if (createStudentFeesData) {
-                    return res.status(200).json({ successMsg: `The student has successfully been promoted to the class.`, className: className });
+                    return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
                 }
             }
 
@@ -934,7 +934,7 @@ let StudentClassFail = async (req, res, next) => {
                     let deleteFeesCollection = await FeesCollectionModel.findOneAndDelete({ studentId: studentId });
                     let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
                     if (createStudentFeesData && deleteFeesCollection) {
-                        return res.status(200).json({ successMsg: `The student has successfully been promoted to the class.`, className: className });
+                        return res.status(200).json({ successMsg: `The student has successfully been promoted to the class`, className: className });
                     }
 
                 }
@@ -988,7 +988,7 @@ let StudentClassFail = async (req, res, next) => {
                     });
                 let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
                 if (createStudentFeesData) {
-                    return res.status(200).json({ successMsg: `The student has successfully been fail to the class.`, className: className });
+                    return res.status(200).json({ successMsg: `The student has successfully been fail to the class`, className: className });
                 }
             }
 
@@ -1013,7 +1013,7 @@ let ChangeStatus = async (req, res, next) => {
             status: status
         }
         const updateStatus = await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
-        return res.status(200).json('Student updated successfully.');
+        return res.status(200).json('Student updated successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }
@@ -1031,9 +1031,9 @@ let DeleteStudent = async (req, res, next) => {
             ]);
 
             if (deleteAdmitCard || deleteExamResult || deleteFeesCollection) {
-                return res.status(200).json('Student deleted successfully.');
+                return res.status(200).json('Student deleted successfully');
             }
-            return res.status(200).json('Student deleted successfully.');
+            return res.status(200).json('Student deleted successfully');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

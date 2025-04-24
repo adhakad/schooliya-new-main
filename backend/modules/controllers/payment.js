@@ -131,7 +131,7 @@ let ValidatePayment = async (req, res) => {
     const accessToken = await tokenService.getAccessToken(payload);
     const refreshToken = await tokenService.getRefreshToken(payload);
 
-    return res.status(200).json({ success: true, accessToken, refreshToken, adminInfo, successMsg: 'Payment successfully Received.' });
+    return res.status(200).json({ success: true, accessToken, refreshToken, adminInfo, successMsg: 'Payment successfully Received' });
   } catch (error) {
     return res.status(500).json({ errorMsg: 'Error validating payment!' });
   }
@@ -198,7 +198,7 @@ let ValidateUpgradePlanPayment = async (req, res) => {
     const accessToken = await tokenService.getAccessToken(payload);
     const refreshToken = await tokenService.getRefreshToken(payload);
 
-    return res.status(200).json({ success: true, accessToken, refreshToken, adminInfo, successMsg: 'Payment successfully Received.' });
+    return res.status(200).json({ success: true, accessToken, refreshToken, adminInfo, successMsg: 'Payment successfully Received' });
   } catch (error) {
     return res.status(500).json({ errorMsg: 'Error validating payment!' });
   }

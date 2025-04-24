@@ -78,7 +78,7 @@ let ValidatePayment = async (req, res) => {
           { new: true }
         );
         if (updatedDocument) {
-          return res.status(200).json({ success: true, message: 'Payment successfully validated.' });
+          return res.status(200).json({ success: true, message: 'Payment successfully validated' });
         }
       }
       if (!updatedPayment) {

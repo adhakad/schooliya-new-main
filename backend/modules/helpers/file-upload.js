@@ -4,16 +4,17 @@ const multer = require('multer');
 const DIR = './public'
 
 // Multer Mime Type Validation
-let filter =  (req, file, cb) => {
+const filter = (req, file, cb) => {
   if (
     file.mimetype == 'image/png' ||
     file.mimetype == 'image/jpg' ||
     file.mimetype == 'image/jpeg'
   ) {
-    cb(null, true)
+    cb(null, true);
   } else {
-    cb(null, false)
-    return cb(new Error('Only .png, .jpg and .jpeg format allowed!'))
+    const error = new Error('Only .png, .jpg and .jpeg format allowed!');
+    error.name = 'INVALID_FILE_TYPE';
+    cb(error, false);
   }
 };
 let filename = (req, file, cb) => {

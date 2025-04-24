@@ -199,11 +199,11 @@ let CreateExamResult = async (req, res, next) => {
             }
             if (examTypeExist[0] !== examType) {
                 const updatedExamResult = await ExamResultModel.findByIdAndUpdate(id, { $set: { [`resultDetail.${examType}`]: { ...resultDetail, createdBy: createdBy, } } }, { new: true });
-                return res.status(200).json('Student exam result created successfully.');
+                return res.status(200).json('Student exam result created successfully');
             }
             if (examTypeExist[1] !== examType) {
                 const updatedExamResult = await ExamResultModel.findByIdAndUpdate(id, { $set: { [`resultDetail.${examType}`]: { ...resultDetail, createdBy: createdBy, } } }, { new: true });
-                return res.status(200).json('Student exam result created successfully.');
+                return res.status(200).json('Student exam result created successfully');
             }
             return res.status(400).json(`Roll number ${rollNumber} ${examType} result already exist!`);
         }
@@ -220,7 +220,7 @@ let CreateExamResult = async (req, res, next) => {
             }
         }
         let createExamResult = await ExamResultModel.create(examResultData);
-        return res.status(200).json('Student exam result created successfully.');
+        return res.status(200).json('Student exam result created successfully');
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
     }
@@ -320,7 +320,7 @@ let DeleteMarksheetResult = async (req, res, next) => {
         }
         const deleteResult = await ExamResultModel.findByIdAndRemove(id);
         if (deleteResult) {
-            return res.status(200).json('Marksheet result deleted successfully.');
+            return res.status(200).json('Marksheet result deleted successfully');
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error !');;

@@ -150,7 +150,7 @@ let CreateExamResultStructure = async (req, res, next) => {
             createdBy:createdBy
         };
         let marksheetTemplate = await MarksheetTemplateModel.create(marksheetTemplateData);
-        return res.status(200).json('Marksheet template created successfully.');
+        return res.status(200).json('Marksheet template created successfully');
 
     } catch (error) {
         return res.status(500).json('Internal Server Error!');;
@@ -348,7 +348,7 @@ let UpdateMarksheetTemplateStructure = async (req, res, next) => {
         transformedData.createdBy = createdBy;
         let updateTemaplateStructure = await MarksheetTemplateModel.findByIdAndUpdate(id, { $set: transformedData }, { new: true });
         if (updateTemaplateStructure) {
-            return res.status(200).json("Marksheet template structure updated successfully.");
+            return res.status(200).json("Marksheet template structure updated successfully");
         }
     } catch (error) {
         return res.status(500).json('Internal Server Error!');
@@ -418,7 +418,7 @@ let DeleteResultStructure = async (req, res, next) => {
         const [deleteResultStructure, deleteResult] = deleteOps;
 
 
-        return res.status(200).json('Marksheet template deleted successfully.');
+        return res.status(200).json('Marksheet template deleted successfully');
 
     } catch (error) {
         return res.status(500).json('Internal Server Error!');

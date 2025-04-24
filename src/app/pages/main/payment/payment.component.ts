@@ -254,7 +254,7 @@ export class PaymentComponent implements OnInit {
             this.adminAuthService.storeAccessToken(accessToken);
             this.adminAuthService.storeRefreshToken(refreshToken);
             this.router.navigate(["/admin/dashboard"], { replaceUrl: true });
-            this.toastr.success('Congratulations! Your plan is now active.', 'Success');
+            this.toastr.success('','Congratulations! Your plan is now active.');
           });
         }
       },
