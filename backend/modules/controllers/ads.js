@@ -2,35 +2,6 @@
 const fs = require("fs");
 const AdsModel = require('../models/ads');
 
-let sendMail = async (req, res, next) => {
-    try {
-        // Create a transporter using Gmail SMTP
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'dhakaddeepak9340700360@gmail.com',
-                pass: 'cbgcwsgpajyhvztj'
-            },
-            port: 587
-        });
-
-        const mailOptions = {
-            from: 'dhakaddeepak9340700360@gmail.com',
-            to: 'adhakad12345@hotmail.com',
-            subject: 'Hello from Nodemailer',
-            text: 'Hello, this is a test email sent from Nodemailer!'
-        };
-
-        let info = await transporter.sendMail(mailOptions);
-        console.log('Email sent:', info.response);
-
-        res.status(200).send('Email sent successfully');
-    } catch (error) {
-        console.error('Error sending email:', error);
-        next(error);
-    }
-};
-
 let countAds = async (req, res, next) => {
     let countAds = await AdsModel.count();
     return res.status(200).json({ countAds });
@@ -124,7 +95,6 @@ let DeleteAds = async (req, res, next) => {
 module.exports = {
     countAds,
     GetAdsPagination,
-    sendMail,
     GetAllAds,
     GetSingleAds,
     CreateAds,

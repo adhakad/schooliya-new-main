@@ -148,7 +148,7 @@
                     </div>
 
                     <form [formGroup]="schoolForm" (ngSubmit)="schoolAddUpdate()">
-                      <div class="modal-body" *ngIf="!deleteMode"> 
+                      <div class="modal-body" *ngIf="!deleteMode">
 
                         <div *ngIf="errorCheck && !updateMode">
                           <p class="error-message">{{errorMsg}}</p>
@@ -224,7 +224,12 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Affiliated Board</mat-label>
-                                <input matInput type="text" formControlName="board">
+                                <mat-select matInput type="text" formControlName="board" panelClass="long-option-panel">
+                                  <div *ngFor="let board of boardInfo,let i = index">
+                                    <mat-option value="{{board.boardNameByState}}">{{board.boardsName}}
+                                      ({{board.boardsShortName}})</mat-option>
+                                  </div>
+                                </mat-select>
                                 <mat-error
                                   *ngIf="schoolForm.get('board')?.hasError('required') && schoolForm.get('board')?.touched">
                                   Affiliated board is required
@@ -237,7 +242,11 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Medium</mat-label>
-                                <input matInput type="text" formControlName="medium">
+                                <mat-select type="text" matInput formControlName="medium">
+                                  <div *ngFor="let medium of mediums">
+                                    <mat-option value="{{medium.medium}}">{{medium.medium}}</mat-option>
+                                  </div>
+                                </mat-select>
                                 <mat-error
                                   *ngIf="schoolForm.get('medium')?.hasError('required') && schoolForm.get('medium')?.touched">
                                   Medium is required

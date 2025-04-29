@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class PaymentComponent implements OnInit {
   signupForm: FormGroup;
   otpForm: FormGroup;
-  hide:boolean = true;
+  hide: boolean = true;
   loader: Boolean = true;
   successMsg: String = '';
   paymentMode: boolean = false;
@@ -35,9 +35,9 @@ export class PaymentComponent implements OnInit {
   taxes: any;
   totalAmount: any;
   step: number = 1;
-  numberOfStudent:number=0;
-  perStudentIncrementPrice:number = 5;
-  studentIncrementRange:number=50;
+  numberOfStudent: number = 0;
+  perStudentIncrementPrice: number = 5;
+  studentIncrementRange: number = 50;
   indianStates: string[] = [
     'Andhra Pradesh',
     'Arunachal Pradesh',
@@ -68,7 +68,7 @@ export class PaymentComponent implements OnInit {
     'Uttarakhand',
     'West Bengal'
   ];
-  constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute,private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
@@ -99,13 +99,14 @@ export class PaymentComponent implements OnInit {
       this.getSinglePlans(this.id);
     }
     this.loadRazorpayScript();
+    
     setTimeout(() => {
       this.loader = false;
     }, 1000)
   }
   updateNumber(value: number): void {
     this.numberOfStudent += value;
-    this.totalAmount += value*this.perStudentIncrementPrice;
+    this.totalAmount += value * this.perStudentIncrementPrice;
   }
   loadRazorpayScript(): void {
     const script = this.renderer.createElement('script');
@@ -222,7 +223,7 @@ export class PaymentComponent implements OnInit {
     const razorpayPaymentId = response.razorpay_payment_id;
     const razorpayOrderId = response.razorpay_order_id;
     const razorpaySignature = response.razorpay_signature;
-      const paymentData = {
+    const paymentData = {
       payment_id: razorpayPaymentId,
       order_id: razorpayOrderId,
       signature: razorpaySignature,
@@ -255,7 +256,7 @@ export class PaymentComponent implements OnInit {
             this.adminAuthService.storeAccessToken(accessToken);
             this.adminAuthService.storeRefreshToken(refreshToken);
             this.router.navigate(["/admin/dashboard"], { replaceUrl: true });
-            this.toastr.success('','Congratulations! Your plan is now active.');
+            this.toastr.success('', 'Congratulations! Your plan is now active.');
           });
         }
       },

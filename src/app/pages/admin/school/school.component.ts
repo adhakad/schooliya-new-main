@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SchoolService } from 'src/app/services/school.service';
+import { BoardService } from 'src/app/services/board.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -20,6 +21,8 @@ export class SchoolComponent implements OnInit {
   errorMsg: String = '';
   errorCheck: Boolean = false;
   schoolInfo: any;
+  boardInfo: any;
+  mediums: any;
   loader: Boolean = true;
   adminId!: String;
   logoPreview: any = null;  // For showing school logo preview
@@ -56,7 +59,8 @@ export class SchoolComponent implements OnInit {
   constructor(
     private fb: FormBuilder, private toastr: ToastrService,
     private schoolService: SchoolService,
-    private adminAuthService: AdminAuthService
+    private adminAuthService: AdminAuthService,
+    private boardService: BoardService,
   ) {
     this.schoolForm = this.fb.group({
       _id: [''],
@@ -83,6 +87,8 @@ export class SchoolComponent implements OnInit {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
     this.getSchool();
+    this.getBoard();
+    this.allOptions();
     setTimeout(() => {
       this.loader = false;
     }, 2000);
@@ -127,7 +133,7 @@ export class SchoolComponent implements OnInit {
     this.getSchool();
     this.closeModal();
     setTimeout(() => {
-      this.toastr.success('',msg);
+      this.toastr.success('', msg);
     }, 500)
   }
 
@@ -137,6 +143,14 @@ export class SchoolComponent implements OnInit {
         this.schoolInfo = res;
         this.errorCheck = true;
         this.errorMsg = 'School detail already exists!';
+      }
+    });
+  }
+  getBoard() {
+    this.boardService.getBoardList().subscribe((res: any) => {
+      if (res) {
+        console.log(res)
+        this.boardInfo = res;
       }
     });
   }
@@ -196,5 +210,9 @@ export class SchoolComponent implements OnInit {
         this.deleteById = '';
       }
     });
+  }
+
+  allOptions() {
+    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
   }
 }

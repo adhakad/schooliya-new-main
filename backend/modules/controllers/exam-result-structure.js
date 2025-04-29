@@ -124,14 +124,12 @@ let CreateExamResultStructure = async (req, res, next) => {
                 for (const key in termData) {
                     const value = termData[key];
         
-                    // अगर `supplySubjectLimit` है तो सीधे termData में रखें
                     if (key === 'supplySubjectLimit') {
                         termData[key] = value;
                     } 
-                    // अगर यह object नहीं है और supplySubjectLimit भी नहीं है
                     else if (typeof value !== 'object') {
                         termData.scholasticMarks[key] = classSubjects.subject.map(sub => ({ [sub.subject]: value }));
-                        delete termData[key];  // इसे scholasticMarks में डालने के बाद हटाएं
+                        delete termData[key];
                     }
                 }
             }
