@@ -120,8 +120,23 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   }
 
   falseFormValue() {
-    const controlOne = <FormArray>this.examResultForm.get('type.coScholastic');
+    const controlOne = <FormArray>this.examResultForm.get('type.theoryMarks');
+    const controlTwo = <FormArray>this.examResultForm.get('type.practicalMarks');
+    const controlThree = <FormArray>this.examResultForm.get('type.periodicTestMarks');
+    const controlFour = <FormArray>this.examResultForm.get('type.noteBookMarks');
+    const controlFive = <FormArray>this.examResultForm.get('type.subjectEnrichmentMarks');
+    const controlSix = <FormArray>this.examResultForm.get('type.projectMarks');
+    const controlSeven = <FormArray>this.examResultForm.get('type.halfYearlyMarks');
+    const controlEight = <FormArray>this.examResultForm.get('type.coScholastic');
     controlOne.clear();
+    controlTwo.clear();
+    controlThree.clear();
+    controlFour.clear();
+    controlFive.clear();
+    controlSix.clear();
+    controlSeven.clear();
+    controlEight.clear();
+
   }
   falseAllValue() {
     this.falseFormValue();

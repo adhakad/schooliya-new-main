@@ -137,7 +137,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
     }, err => {
       this.errorCheck = true;
       if (err.status == 404) {
-        this.errorMsg = 'No student was found, please add students !'
+        this.errorMsg = err.error
       }
     })
   }

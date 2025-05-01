@@ -72,25 +72,27 @@ const schoolSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: 'India',
+    trim: true,
   },
   pinCode: {
-    type: Number,
+    type: String,
     required: true,
     trim: true,
   },
   phoneOne: {
-    type: Number,
+    type: String,
     required: true,
     trim: true,
   },
   phoneSecond: {
-    type: Number,
+    type: String,
     trim: true,
   },
   email: {
     type: String,
     required: true,
     trim: true,
+    lowercase: true,
   },
   createdAt: {
     type: Date,

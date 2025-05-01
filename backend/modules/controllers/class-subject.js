@@ -61,7 +61,7 @@ let GetSingleClassSubjectByStream = async (req, res, next) => {
     try {
         const classSubjectList = await ClassSubjectModel.findOne({adminId:adminId,class:className,stream:stream});
         if(!classSubjectList){
-            return res.status(404).json( 'Please group subjcts according to class!' );
+            return res.status(404).json( 'Please group subjcts in this class!' );
         }
         return res.status(200).json(classSubjectList);
     } catch (error) {

@@ -49,10 +49,6 @@ let CreateSchool = async (req, res, next) => {
     const { adminId, schoolName, affiliationNumber, schoolCode, foundedYear, board, medium, street, city, district, state, country, pinCode, phoneOne, phoneSecond, email } = req.body;
 
     try {
-        let countSchool = await SchoolModel.count({ adminId: adminId });
-        // if (countSchool > 0) {
-        //     return res.status(400).json('School detail already exists!');
-        // }
         const result = await cloudinary.uploader.upload(req.file.path);
         fs.unlinkSync(req.file.path);
         let schoolData = {

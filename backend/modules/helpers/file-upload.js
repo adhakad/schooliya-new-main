@@ -25,7 +25,7 @@ let filename = (req, file, cb) => {
 let schoolLogo = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, `${DIR}`)
+      cb(null, `${DIR}/school-logo/`)
     },
     filename: filename
   }),
