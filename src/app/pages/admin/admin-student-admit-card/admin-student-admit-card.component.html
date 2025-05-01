@@ -192,7 +192,7 @@
                 style="text-align: center;margin-top: 200px;">
                 <p *ngIf="statusCode ==404 && templateStatusCode==200">Admit Card Not Found !</p>
                 <p *ngIf="statusCode ==500 || templateStatusCode==500">Internal Server Error !</p>
-                <p *ngIf="templateStatusCode ==404">Please Create Admit Card Structure !</p>
+                <p *ngIf="templateStatusCode ==404 && cls && stream">Please Create Admit Card Structure !</p>
               </div>
               <div class="modal fade show custom-modal" [class.show]="showModal">
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">

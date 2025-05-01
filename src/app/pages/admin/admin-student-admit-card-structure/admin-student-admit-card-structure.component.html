@@ -160,7 +160,11 @@
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Exam Name</mat-label>
-                                                                <input type="text" matInput formControlName="examType">
+                                                                <mat-select type="text" matInput formControlName="examType">
+                                                                  <div *ngFor="let examType of allExamType">
+                                                                    <mat-option value="{{examType.examType}}">{{examType.examType}}</mat-option>
+                                                                  </div>
+                                                                </mat-select>
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('examType')?.hasError('required') && admitcardForm.get('examType')?.touched">
                                                                     Exam name is required

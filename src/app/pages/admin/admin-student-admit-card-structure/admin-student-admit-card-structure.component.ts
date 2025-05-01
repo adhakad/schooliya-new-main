@@ -29,7 +29,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
   classInfo: any[] = [];
   stream: string = '';
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
-
+  allExamType:any;
   examTime: any[] = ["8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM"];
   loader: Boolean = true;
   adminId!: string;
@@ -52,6 +52,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
     this.adminId = getAdmin?.id;
     this.getClass();
     this.getAdmitCardStructureByClass();
+    this.allOptions();
   }
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
@@ -353,5 +354,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
       }
     })
   }
-
+  allOptions() {
+    this.allExamType = [{ examType: 'Quaterly Exam' }, { examType: 'Half Yearly Exam' },{ examType: 'Yearly Exam' },{ examType: 'Final Exam' },{ examType: 'Pre Board Exam' },{ examType: 'Term 1 Exam' },{ examType: 'Term 2 Exam' }]
+  }
 }
