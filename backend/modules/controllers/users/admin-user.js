@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const tokenService = require('../../services/admin-token');
 const AdminUserModel = require('../../models/users/admin-user');
 const AdminPlanModel = require('../../models/users/admin-plan');
+const SchoolModel = require('../../models/school');
 const PaymentModel = require('../../models/payment');
 const OTPModel = require('../../models/otp');
 const smtp_host = SMTP_HOST;
@@ -14,8 +15,8 @@ const sender_email_address = SENDER_EMAIL_ADDRESS;
 
 const transporter = nodemailer.createTransport({
     host: smtp_host,
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
     auth: {
         user: `apikey`,
         pass: smtp_api_key
@@ -129,16 +130,23 @@ let SignupAdmin = async (req, res, next) => {
             schoolId: schoolId
         };
 
-        const [createdUser, createdOTP] = await Promise.all([
-            AdminUserModel.create(userData),
-            OTPModel.create({ email, secureOtp: secureOtp })
-        ]);
+        const createUser = await AdminUserModel.create(userData);
         sendEmail(email, secureOtp);
+        const schoolData = {
+            adminId:createUser._id,
+            schoolName,
+            affiliationNumber
+        }
+        const [createdOTP,createSchool] = await Promise.all([
+            OTPModel.create({ email, secureOtp: secureOtp }),
+            SchoolModel.create(schoolData)
+        ]);
         return res.status(200).json({ successMsg: 'Admin registered successfully', email });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
+
 
 let ForgotPassword = async (req, res, next) => {
     function generateSecureOTP() {

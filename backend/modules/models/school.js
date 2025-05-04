@@ -1,7 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 
-const schoolSchema = new mongoose.Schema({
+const SchoolModel = mongoose.model('school', {
   adminId: {
     type: String,
     required: true,
@@ -14,12 +14,10 @@ const schoolSchema = new mongoose.Schema({
   },
   schoolLogo: {
     type: String,
-    required: true,
     trim: true,
   },
   schoolLogoPublicId: {
     type: String,
-    required: true,
     trim: true,
   },
   affiliationNumber: {
@@ -30,58 +28,47 @@ const schoolSchema = new mongoose.Schema({
   },
   schoolCode: {
     type: String,
-    required: true,
     unique: true,
     trim: true,
   },
   foundedYear: {
     type: Number,
-    required: true,
   },
   board: {
     type: String,
-    required: true,
     trim: true,
   },
   medium: {
     type: String,
-    required: true,
     trim: true,
   },
   street: {
     type: String,
-    required: true,
     trim: true,
   },
   city: {
     type: String,
-    required: true,
     trim: true,
   },
   district: {
     type: String,
-    required: true,
     trim: true,
   },
   state: {
     type: String,
-    required: true,
     trim: true,
   },
   country: {
     type: String,
-    required: true,
     default: 'India',
     trim: true,
   },
   pinCode: {
     type: String,
-    required: true,
     trim: true,
   },
   phoneOne: {
     type: String,
-    required: true,
     trim: true,
   },
   phoneSecond: {
@@ -90,7 +77,6 @@ const schoolSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
     trim: true,
     lowercase: true,
   },
@@ -100,6 +86,5 @@ const schoolSchema = new mongoose.Schema({
   },
 });
 
-const School = mongoose.model('School', schoolSchema);
 
-module.exports = School;
+module.exports = SchoolModel;
