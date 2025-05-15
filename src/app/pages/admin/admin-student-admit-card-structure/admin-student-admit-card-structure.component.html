@@ -53,13 +53,13 @@
                                         <th>Exam Name</th>
                                         <th>Class</th>
                                         <th>Stream</th>
-                                        <th>Admit Card Structure</th>
-                                        <!-- <th>Result Publish</th> -->
+                                        <th>View</th>
+                                        <th>Edit</th>
                                         <th>Remove</th>
                                     </tr>
                                 </thead>
                                 <tbody *ngIf="examAdmitCard && examAdmitCard.length>0">
-                                    <tr *ngFor="let examAdmitCard of examAdmitCard,let i=index">
+                                    <tr *ngFor="let examAdmitCard of examAdmitCard; let i=index">
                                         <td>
                                             <p class="mb-0">{{i+1}}</p>
                                         </td>
@@ -74,7 +74,11 @@
                                         </td>
                                         <td class="mb-0">
                                             <mat-icon
-                                                (click)="openAdmitCardStructureModal(examAdmitCard)">launch</mat-icon>
+                                                (click)="openAdmitCardStructureModal(examAdmitCard)">visibility</mat-icon>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon (click)="editAdmitCardStructureModel(examAdmitCard)">edit
+                                            </mat-icon>
                                         </td>
                                         <td class="mb-0">
                                             <mat-icon
@@ -84,13 +88,13 @@
 
                                 </tbody>
                             </table>
-                            <div *ngIf="examAdmitCard && examAdmitCard.length>0" style="text-align: center;margin-top: 200px;">
+                            <div *ngIf="examAdmitCard && examAdmitCard.length>0"
+                                style="text-align: center;margin-top: 200px;">
                                 <p>Note : Remove the existing admit card to generate a new one.</p>
                             </div>
 
                             <div class="modal fade show" [class.show]="showModal">
-                                <div class="modal-dialog modal-dialog-scrollable"
-                                    [class.modal-lg]="!deleteMode">
+                                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">{{updateMode?'UPDATE': deleteMode ? 'DELETE'
@@ -110,14 +114,26 @@
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Class</mat-label>
-                                                                <mat-select matInput formControlName="class">
-                                                                    <div *ngFor="let classInfo of classInfo">
-                                                                        <mat-option value="{{classInfo.class}}"
-                                                                            (click)="chooseClass(classInfo.class)">{{classInfo.class
-                                                                            |
-                                                                            classSuffix}}</mat-option>
-                                                                    </div>
-                                                                </mat-select>
+                                                                <ng-container *ngIf="!updateMode">
+                                                                    <mat-select matInput formControlName="class">
+                                                                        <div *ngFor="let classInfo of classInfo">
+                                                                            <mat-option value="{{classInfo.class}}"
+                                                                                (click)="chooseClass(classInfo.class)">{{classInfo.class
+                                                                                |
+                                                                                classSuffix}}</mat-option>
+                                                                        </div>
+                                                                    </mat-select>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="updateMode">
+                                                                    <mat-select matInput formControlName="class"
+                                                                        [disabled]="updateMode">
+                                                                        <div *ngFor="let classInfo of classInfo">
+                                                                            <mat-option [value]="cls">{{cls |
+                                                                                classSuffix}}</mat-option>
+                                                                        </div>
+                                                                    </mat-select>
+                                                                </ng-container>
+
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('class')?.hasError('required') && admitcardForm.get('class')?.touched">
                                                                     Class is required
@@ -132,7 +148,7 @@
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Stream</mat-label>
                                                                 <mat-select type="text" matInput
-                                                                    formControlName="stream">
+                                                                    formControlName="stream" [disabled]="updateMode">
                                                                     <ng-container *ngIf="cls==12 || cls==11">
                                                                         <div *ngFor="let subject of streamMainSubject">
                                                                             <mat-option value="{{subject}}"
@@ -160,10 +176,12 @@
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Exam Name</mat-label>
-                                                                <mat-select type="text" matInput formControlName="examType">
-                                                                  <div *ngFor="let examType of allExamType">
-                                                                    <mat-option value="{{examType.examType}}">{{examType.examType}}</mat-option>
-                                                                  </div>
+                                                                <mat-select type="text" matInput
+                                                                    formControlName="examType">
+                                                                    <div *ngFor="let examType of allExamType">
+                                                                        <mat-option
+                                                                            value="{{examType.examType}}">{{examType.examType}}</mat-option>
+                                                                    </div>
                                                                 </mat-select>
                                                                 <mat-error
                                                                     *ngIf="admitcardForm.get('examType')?.hasError('required') && admitcardForm.get('examType')?.touched">
@@ -192,24 +210,28 @@
                                                                         <div
                                                                             *ngFor="let subjects of classSubject; let i = index">
                                                                             <a mat-raised-button class="pt-2 pb-2 mb-4"
-                                                                                style="background-color: transparent;box-shadow: none;">{{subjects.subject | titlecase}}</a>
+                                                                                style="background-color: transparent;box-shadow: none;">{{subjects.subject
+                                                                                | titlecase}}</a>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-3">
                                                                         <div formGroupName="type">
                                                                             <div formArrayName="examDate">
-                                                                                <div
-                                                                                    *ngFor="let subjects of classSubject; let i = index">
-                                                                                    <div [formGroupName]="i">
-                                                                                        <mat-form-field
-                                                                                            class="custom-date-input"
-                                                                                            appearance="outline">
-                                                                                            <mat-label>Exam
-                                                                                                Date</mat-label>
-                                                                                            <input type="date" matInput
-                                                                                                [formControlName]="subjects.subject" (keydown)="preventManualInput($event)">
-                                                                                        </mat-form-field>
-                                                                                    </div>
+                                                                                <div *ngFor="let subjects of classSubject; let i = index"
+                                                                                    [formGroupName]="i">
+
+                                                                                    <mat-form-field
+                                                                                        appearance="outline">
+                                                                                        <mat-label>Exam
+                                                                                            Date</mat-label>
+                                                                                        <input type="date " matInput readonly
+                                                                                            [matDatepicker]="pickers"
+                                                                                            [formControlName]="subjects.subject" />
+                                                                                        <mat-datepicker-toggle matSuffix
+                                                                                            [for]="pickers"></mat-datepicker-toggle>
+                                                                                        <mat-datepicker
+                                                                                            #pickers></mat-datepicker>
+                                                                                    </mat-form-field>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -217,24 +239,21 @@
                                                                     <div class="col-3">
                                                                         <div formGroupName="type">
                                                                             <div formArrayName="startTime">
-                                                                                <div
-                                                                                    *ngFor="let subjects of classSubject; let i = index">
-                                                                                    <div [formGroupName]="i">
-                                                                                        <mat-form-field
-                                                                                            appearance="outline">
-                                                                                            <mat-label>Start
-                                                                                                Time</mat-label>
-                                                                                            <mat-select type="text"
-                                                                                                matInput
-                                                                                                [formControlName]="subjects.subject">
-                                                                                                <div
-                                                                                                    *ngFor="let subject of examTime">
-                                                                                                    <mat-option
-                                                                                                        value="{{subject}}">{{subject}}</mat-option>
-                                                                                                </div>
-                                                                                            </mat-select>
-                                                                                        </mat-form-field>
-                                                                                    </div>
+                                                                                <div *ngFor="let subjects of classSubject; let i = index"
+                                                                                    [formGroupName]="i">
+                                                                                    <mat-form-field
+                                                                                        appearance="outline">
+                                                                                        <mat-label>Start
+                                                                                            Time</mat-label>
+                                                                                        <mat-select type="text" matInput
+                                                                                            [formControlName]="subjects.subject">
+                                                                                            <div
+                                                                                                *ngFor="let subject of examTime">
+                                                                                                <mat-option
+                                                                                                    value="{{subject}}">{{subject}}</mat-option>
+                                                                                            </div>
+                                                                                        </mat-select>
+                                                                                    </mat-form-field>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -242,24 +261,21 @@
                                                                     <div class="col-3">
                                                                         <div formGroupName="type">
                                                                             <div formArrayName="endTime">
-                                                                                <div
-                                                                                    *ngFor="let subjects of classSubject; let i = index">
-                                                                                    <div [formGroupName]="i">
-                                                                                        <mat-form-field
-                                                                                            appearance="outline">
-                                                                                            <mat-label>End
-                                                                                                Time</mat-label>
-                                                                                            <mat-select type="text"
-                                                                                                matInput
-                                                                                                [formControlName]="subjects.subject">
-                                                                                                <div
-                                                                                                    *ngFor="let subject of examTime">
-                                                                                                    <mat-option
-                                                                                                        value="{{subject}}">{{subject}}</mat-option>
-                                                                                                </div>
-                                                                                            </mat-select>
-                                                                                        </mat-form-field>
-                                                                                    </div>
+                                                                                <div *ngFor="let subjects of classSubject; let i = index"
+                                                                                    [formGroupName]="i">
+                                                                                    <mat-form-field
+                                                                                        appearance="outline">
+                                                                                        <mat-label>End
+                                                                                            Time</mat-label>
+                                                                                        <mat-select type="text" matInput
+                                                                                            [formControlName]="subjects.subject">
+                                                                                            <div
+                                                                                                *ngFor="let subject of examTime">
+                                                                                                <mat-option
+                                                                                                    value="{{subject}}">{{subject}}</mat-option>
+                                                                                            </div>
+                                                                                        </mat-select>
+                                                                                    </mat-form-field>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -269,8 +285,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <ng-container *ngIf="classSubject.length>0">
-                                                    <h3 style="font-size: 16px;letter-spacing: normal;margin-left: 20px;">Note : As
+                                                <ng-container *ngIf="classSubject.length>0 && !updateMode">
+                                                    <h3
+                                                        style="font-size: 16px;letter-spacing: normal;margin-left: 20px;">
+                                                        Note : As
                                                         soon
                                                         as the admit card structure for the {{cls | classSuffix}}
                                                         class <span *ngIf="cls==12 || cls==11">{{stream}}</span>
@@ -278,15 +296,27 @@
                                                         created, the admit cards for all the students will be
                                                         automatically generated.</h3>
                                                 </ng-container>
+                                                <ng-container *ngIf="classSubject.length>0 && updateMode">
+                                                    <h3
+                                                        style="font-size: 16px;letter-spacing: normal;margin-left: 20px;">
+                                                        Note :
+                                                        Update the admit card structure for the {{cls | classSuffix}}
+                                                        class <span *ngIf="cls==12 || cls==11">{{stream}}</span>.
+                                                        The admit cards for all the students will be automatically
+                                                        updated.</h3>
+                                                </ng-container>
                                             </div>
                                             <div class="modal-footer" *ngIf="!deleteMode && classSubject.length>0">
                                                 <button class="submit-button" mat-raised-button
-                                                    [disabled]="!admitcardForm.valid" type="submit">Submit</button>
+                                                    type="submit">{{updateMode ?
+                                                    'Update' : 'Submit'}}</button>
                                             </div>
                                             <div *ngIf="deleteMode">
                                                 <div class="modal-body">
                                                     <ng-container>
-                                                        <h3 style="font-size: 16px;letter-spacing: normal;margin-left: 20px;">Note :
+                                                        <h3
+                                                            style="font-size: 16px;letter-spacing: normal;margin-left: 20px;">
+                                                            Note :
                                                             As
                                                             soon as the admit card structure for the {{cls |
                                                             classSuffix}} class <span
@@ -336,7 +366,7 @@
                                                                         {{ i + 1 }}
                                                                     </td>
                                                                     <td>
-                                                                        {{ exam.subject | titlecase}}
+                                                                        {{ exam.subject | titlecase }}
                                                                     </td>
                                                                     <td>
                                                                         {{ exam.date }}
@@ -352,8 +382,8 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button style="background-color: transparent;" class="submit-button"
-                                                mat-raised-button type="submit"></button>
+                                            <button class="close-button" mat-raised-button type="button"
+                                                (click)="closeModal()">Close</button>
                                         </div>
                                     </div>
                                 </div>
@@ -364,9 +394,4 @@
             </div>
         </div>
     </div>
-    <!-- <div class="spinner-container" *ngIf="loader">
-        <div class="spinner-overlay" *ngIf="loader">
-            <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
-                strokeWidth="3"></mat-progress-spinner>
-        </div>
-    </div> -->
+</div>

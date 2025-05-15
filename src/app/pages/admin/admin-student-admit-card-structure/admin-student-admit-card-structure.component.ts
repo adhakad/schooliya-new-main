@@ -8,376 +8,369 @@ import { ClassService } from 'src/app/services/class.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-admin-student-admit-card-structure',
-  templateUrl: './admin-student-admit-card-structure.component.html',
-  styleUrls: ['./admin-student-admit-card-structure.component.css']
+    selector: 'app-admin-student-admit-card-structure',
+    templateUrl: './admin-student-admit-card-structure.component.html',
+    styleUrls: ['./admin-student-admit-card-structure.component.css']
 })
 export class AdminStudentAdmitCardStructureComponent implements OnInit {
-  cls: number = 0;
-  admitcardForm: FormGroup;
-  showModal: boolean = false;
-  showAdmitCardStructureModal: boolean = false;
-  updateMode: boolean = false;
-  deleteMode: boolean = false;
-  deleteById: String = '';
-  errorMsg: String = '';
-  errorCheck: Boolean = false;
-  classSubject: any[] = [];
-  examAdmitCard: any;
-  admitCardInfo: any;
-  processedData: any[] = [];
-  classInfo: any[] = [];
-  stream: string = '';
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
-  allExamType: any;
-  examTime: any[] = ["8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM"];
-  loader: Boolean = true;
-  adminId!: string;
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private admitCardStructureService: AdmitCardStructureService) {
-    this.admitcardForm = this.fb.group({
-      adminId: [''],
-      class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      stream: ['', Validators.required],
-      examType: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
-      type: this.fb.group({
-        examDate: this.fb.array([], [Validators.required]),
-        startTime: this.fb.array([], [Validators.required]),
-        endTime: this.fb.array([], [Validators.required]),
-      }),
-    });
-  }
+    cls: number = 0;
+    admitcardForm: FormGroup;
+    showModal: boolean = false;
+    showAdmitCardStructureModal: boolean = false;
+    updateMode: boolean = false;
+    deleteMode: boolean = false;
+    deleteById: String = '';
+    errorMsg: string = '';
+    errorCheck: Boolean = false;
+    classSubject: any[] = [];
+    examAdmitCard: any;
+    admitCardInfo: any;
+    processedData: any[] = [];
+    classInfo: any[] = [];
+    stream: string = '';
+    streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+    allExamType: any;
+    examTime: any[] = ["8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM"];
+    loader: Boolean = true;
+    adminId!: string;
+    editData: any;
 
-  ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
-    this.getClass();
-    this.getAdmitCardStructureByClass();
-    this.allOptions();
-  }
-  getClass() {
-    this.classService.getClassList().subscribe((res: any) => {
-      if (res) {
-        this.classInfo = res;
-      }
-    })
-  }
-  chooseClass(cls: any) {
-    this.errorCheck = false;
-    this.errorMsg = '';
-    this.cls = 0;
-    this.cls = cls;
-    this.classSubject = [];
-    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
-      this.admitcardForm.get('stream')?.setValue("N/A");
-      this.stream = '';
-      this.stream = 'stream';
-      if (this.cls && this.stream) {
-        let params = {
-          cls: this.cls,
-          stream: this.stream,
-          adminId: this.adminId,
-        }
-        this.getSingleClassSubjectByStream(params);
-      }
+    constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private admitCardStructureService: AdmitCardStructureService) {
+        this.admitcardForm = this.fb.group({
+            adminId: [''],
+            class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+            stream: ['', Validators.required],
+            examType: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
+            type: this.fb.group({
+                examDate: this.fb.array([], [Validators.required]),
+                startTime: this.fb.array([], [Validators.required]),
+                endTime: this.fb.array([], [Validators.required]),
+            }),
+        });
     }
-  }
-  chooseStream(stream: any) {
-    this.stream = '';
-    this.stream = stream;
-    if (this.cls && this.stream) {
-      let params = {
-        cls: this.cls,
-        stream: this.stream,
-        adminId: this.adminId,
-      }
-      this.getSingleClassSubjectByStream(params);
+
+    ngOnInit(): void {
+        let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
+        this.adminId = getAdmin?.id;
+        this.getClass();
+        this.getAdmitCardStructureByClass();
+        this.allOptions();
     }
-  }
-  preventManualInput(event: KeyboardEvent) {
-    event.preventDefault();  // यह मैन्युअल एंट्री को रोकेगा
-  }
-  falseFormValue() {
-    const controlOne = <FormArray>this.admitcardForm.get('type.examDate');
-    const controlTwo = <FormArray>this.admitcardForm.get('type.startTime');
-    const controlThree = <FormArray>this.admitcardForm.get('type.endTime');
-    controlOne.clear();
-    controlTwo.clear();
-    controlThree.clear();
-    this.admitcardForm.reset();
-  }
-  falseAllValue() {
-    this.falseFormValue();
-    this.classSubject = [];
-    this.admitcardForm.reset();
-  }
-  // classStreamFormValueSet() {
-  //   if (this.cls < 11 && this.cls !== 0 || this.cls == 200 || this.cls == 201 || this.cls == 202) {
-  //     this.admitcardForm.get('stream')?.setValue("N/A");
-  //     this.loader = false;
-  //     this.showModal = true;
-  //   }
-  //   if (this.cls == 12 || this.cls == 11) {
-  //     this.admitcardForm.get('stream')?.setValue(this.stream);
-  //     this.loader = false;
-  //     this.showModal = true;
-  //   }
-  // }
-
-  getSingleClassSubjectByStream(params: any) {
-    this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
-      if (res) {
-        this.classSubject = res.subject;
-        if (this.classSubject) {
-          this.patch();
-
-        }
-      }
-      if (!res) {
+    getClass() {
+        this.classService.getClassList().subscribe((res: any) => {
+            if (res) {
+                this.classInfo = res;
+            }
+        })
+    }
+    chooseClass(cls: any) {
+        this.errorCheck = false;
+        this.errorMsg = '';
+        this.cls = 0;
+        this.cls = cls;
         this.classSubject = [];
-      }
-    }, err => {
-      this.errorCheck = true;
-      if (err.status == 404) {
-        this.errorMsg = err.error
-      }
-    })
-  }
+        if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
+            this.admitcardForm.get('stream')?.setValue("N/A");
+            this.stream = '';
+            this.stream = 'stream';
+            if (this.cls && this.stream) {
+                let params = {
+                    cls: this.cls,
+                    stream: this.stream,
+                    adminId: this.adminId,
+                    patchValueMode: true
 
-  getAdmitCardStructureByClass() {
-    let params = {
-      cls: this.cls,
-      adminId: this.adminId,
-      stream: this.stream,
-    }
-    this.admitCardStructureService.admitCardStructureByClass(params).subscribe((res: any) => {
-      if (res) {
-        this.examAdmitCard = res;
-        this.loader = false;
-        // setTimeout(() => {
-        //   this.loader = false;
-        // }, 1000)
-        // let date = new Date();
-        // let examDate: any = this.examAdmitCard[0]?.examDate;
-
-        // // Convert the date strings to Date objects
-        // const datesAsObjects = examDate?.map((entry: any) => {
-        //   const subject = Object.keys(entry)[0];
-        //   const dateParts = entry[subject].split('.');
-        //   const dateObject = new Date(
-        //     parseInt(dateParts[2], 10),
-        //     parseInt(dateParts[1], 10) - 1,
-        //     parseInt(dateParts[0], 10)
-        //   );
-        //   return { subject, date: dateObject };
-        // });
-
-        // // Sort the dates in ascending order
-        // datesAsObjects?.sort((a: any, b: any) => a.date - b.date);
-
-        // // Get the last date
-        // const lastDate = datesAsObjects[datesAsObjects?.length - 1];
-
-
-
-        // console.log(lastDate)
-        // console.log(date)
-
-
-        // const date1 = lastDate;
-        // const date2 = date;
-
-        // // Set the time components of both dates to zero
-        // const newDate1 = new Date(date1);
-        // newDate1.setHours(0, 0, 0, 0);
-
-        // const newDate2 = new Date(date2);
-        // newDate2.setHours(0, 0, 0, 0);
-
-        // // Compare the dates
-        // if (newDate1.getTime() === newDate2.getTime()) {
-        //   console.log('The dates are equal.');
-        // } else if (newDate1.getTime() < newDate2.getTime()) {
-        //   console.log('date1 is before date2.');
-        // } else {
-        //   console.log('date1 is after date2.');
-        // }
-
-
-
-
-        // // const dateString: string = "20.07.2023";
-        // // const [day, month, year]: number[] = dateString.split(".").map(Number);
-        // // const dateObject: Date = new Date(year, month - 1, day);
-        // // const timestamp: number = Math.floor(dateObject.getTime() / 1000);
-
-        // // console.log(timestamp);
-
-      }
-    }, err => {
-      if (err.status == 404) {
-        // if (this.cls && this.stream) {
-        //   this.classStreamFormValueSet();
-        //   let params = {
-        //     cls: this.cls,
-        //     stream: this.stream,
-        //     adminId: this.adminId,
-        //   }
-        //   this.getSingleClassSubjectByStream(params);
-        // }
-      }
-    })
-  }
-  processData(examAdmitCard: any) {
-    for (let i = 0; i < examAdmitCard.examDate.length; i++) {
-      const subject = Object.keys(examAdmitCard.examDate[i])[0];
-      const date = Object.values(examAdmitCard.examDate[i])[0];
-      const startTime = Object.values(examAdmitCard.examStartTime[i])[0];
-      const endTime = Object.values(examAdmitCard.examEndTime[i])[0];
-
-      this.processedData.push({
-        subject,
-        date,
-        timing: `${startTime} to ${endTime}`
-      });
-    }
-  }
-
-  addAdmitCardModel() {
-    this.showModal = true;
-  }
-  openAdmitCardStructureModal(examAdmitCard: any) {
-    this.showAdmitCardStructureModal = true;
-    this.admitCardInfo = examAdmitCard;
-    this.processData(examAdmitCard);
-  }
-  deleteAdmitCardStructureModel(id: String) {
-    this.showModal = true;
-    this.deleteMode = true;
-    this.deleteById = id;
-  }
-
-  closeModal() {
-    this.showModal = false;
-    this.errorMsg = '';
-    this.deleteMode = false;
-    this.deleteById = '';
-    this.showAdmitCardStructureModal = false;
-    this.admitCardInfo;
-    this.processedData = [];
-    this.falseAllValue();
-    this.admitcardForm.reset();
-  }
-  successDone(msg: any) {
-    this.closeModal();
-    this.getAdmitCardStructureByClass();
-    setTimeout(() => {
-      this.toastr.success('', msg);
-    }, 500)
-  }
-
-  patch() {
-    const controlOne = <FormArray>this.admitcardForm.get('type.examDate');
-    this.classSubject.forEach((x: any) => {
-      controlOne.push(this.patchExamDate(x.subject))
-    })
-
-    const controlTwo = <FormArray>this.admitcardForm.get('type.startTime');
-    this.classSubject.forEach((x: any) => {
-      controlTwo.push(this.patchStartTime(x.subject))
-    })
-    const controlThree = <FormArray>this.admitcardForm.get('type.endTime');
-    this.classSubject.forEach((x: any) => {
-      controlThree.push(this.patchEndTime(x.subject))
-    })
-  }
-  patchExamDate(examDate: any) {
-    return this.fb.group({
-      [examDate]: ['', Validators.required,],
-    })
-  }
-  patchStartTime(startTime: any) {
-    return this.fb.group({
-      [startTime]: ['', Validators.required,],
-    })
-  }
-
-  patchEndTime(endTime: any) {
-    return this.fb.group({
-      [endTime]: ['', Validators.required,],
-    })
-  }
-
-  toMins(t: string): number {
-    let [h, m] = t.replace(/ AM| PM/, '').split(':').map(Number);
-    if (t.includes('PM') && h !== 12) h += 12;
-    if (t.includes('AM') && h === 12) h = 0;
-    return h * 60 + m;
-  }
-  admitcardAddUpdate() {
-    const { startTime, endTime } = this.admitcardForm.value.type;
-    for (let i = 0; i < startTime.length; i++) {
-      const sub = Object.keys(startTime[i])[0];
-      const start = this.toMins(startTime[i][sub]);
-      const end = this.toMins(endTime[i][sub]);
-      if (start === end) {
-        this.errorCheck = true;
-        this.errorMsg = `${sub} : Start time and end time cannot be the same!`
-        return;
-      }
-      if (start >= end) {
-        this.errorCheck = true;
-        this.errorMsg = `${sub} : Start time must be before end time!`
-        return;
-      }
-    }
-
-    this.admitcardForm.value.type.examDate = this.admitcardForm.value.type.examDate.map((exam: any) => {
-      const subject = Object.keys(exam)[0];
-      const dateStr = exam[subject];
-      const dateObj = new Date(dateStr);
-      const day = String(dateObj.getDate()).padStart(2, '0');
-      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const year = dateObj.getFullYear();
-      const formattedDate = `${day}.${month}.${year}`;
-      return { [subject]: formattedDate };
-    });
-    this.admitcardForm.value.adminId = this.adminId;
-    this.admitCardStructureService.addAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
-      if (res) {
-        this.successDone(res);
-      }
-    }, err => {
-      this.errorCheck = true;
-      this.errorMsg = err.error;
-    })
-    // }
-
-  }
-
-  onToggleChange(id: any, admitCardPublishStatus: any) {
-    let params = {
-      id: id,
-      admitCardPublishStatus: admitCardPublishStatus
-    }
-    this.admitCardStructureService.changeAdmitCardPublishStatus(params)
-      .subscribe(
-        (response: any) => {
-        },
-        error => {
-          console.log(error)
+                }
+                this.getSingleClassSubjectByStream(params);
+            }
         }
-      );
-  }
+    }
+    chooseStream(stream: any) {
+        this.stream = '';
+        this.stream = stream;
+        if (this.cls && this.stream) {
+            let params = {
+                cls: this.cls,
+                stream: this.stream,
+                adminId: this.adminId,
+                patchValueMode: true
+            }
+            this.getSingleClassSubjectByStream(params);
+        }
+    }
 
-  admitCardStructureDelete(id: String) {
-    this.admitCardStructureService.deleteAdmitCardStructure(id).subscribe((res: any) => {
-      if (res) {
-        this.successDone(res);
+    falseFormValue() {
+        const controlOne = <FormArray>this.admitcardForm.get('type.examDate');
+        const controlTwo = <FormArray>this.admitcardForm.get('type.startTime');
+        const controlThree = <FormArray>this.admitcardForm.get('type.endTime');
+        controlOne.clear();
+        controlTwo.clear();
+        controlThree.clear();
+        this.admitcardForm.reset();
+    }
+    falseAllValue() {
+        this.falseFormValue();
+        this.classSubject = [];
+        this.admitcardForm.reset();
+        this.updateMode = false;
+        this.editData = null;
+    }
+
+    getSingleClassSubjectByStream(params: any) {
+        this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
+            if (res) {
+                this.classSubject = res.subject;
+                if (this.classSubject && params.patchValueMode == true) {
+                    this.patch();
+
+                }
+            }
+            if (!res) {
+                this.classSubject = [];
+            }
+        }, err => {
+            this.errorCheck = true;
+            if (err.status == 404) {
+                this.errorMsg = err.error
+            }
+        })
+    }
+
+    getAdmitCardStructureByClass() {
+        let params = {
+            cls: this.cls,
+            adminId: this.adminId,
+            stream: this.stream,
+        }
+        this.admitCardStructureService.admitCardStructureByClass(params).subscribe((res: any) => {
+            if (res) {
+                this.examAdmitCard = res;
+                this.loader = false;
+            }
+        }, err => {
+            if (err.status == 404) {
+            }
+        })
+    }
+    processData(examAdmitCard: any) {
+        for (let i = 0; i < examAdmitCard.examDate.length; i++) {
+            const subject = Object.keys(examAdmitCard.examDate[i])[0];
+            const date = Object.values(examAdmitCard.examDate[i])[0];
+            const startTime = Object.values(examAdmitCard.examStartTime[i])[0];
+            const endTime = Object.values(examAdmitCard.examEndTime[i])[0];
+
+            this.processedData.push({
+                subject,
+                date,
+                timing: `${startTime} to ${endTime}`
+            });
+        }
+    }
+
+    addAdmitCardModel() {
+        this.showModal = true;
+        this.updateMode = false; // Ensure updateMode is false when adding a new admit card.
+        this.editData = null;
+    }
+    openAdmitCardStructureModal(examAdmitCard: any) {
+        this.showAdmitCardStructureModal = true;
+        this.admitCardInfo = examAdmitCard;
+        this.processData(examAdmitCard);
+    }
+    deleteAdmitCardStructureModel(id: String) {
+        this.showModal = true;
+        this.deleteMode = true;
+        this.deleteById = id;
+    }
+
+    closeModal() {
+        this.showModal = false;
+        this.errorMsg = '';
+        this.deleteMode = false;
         this.deleteById = '';
-      }
-    })
-  }
-  allOptions() {
-    this.allExamType = [{ examType: 'Quaterly Exam' }, { examType: 'Half Yearly Exam' }, { examType: 'Yearly Exam' }, { examType: 'Final Exam' }, { examType: 'Pre Board Exam' }, { examType: 'Term 1 Exam' }, { examType: 'Term 2 Exam' }]
-  }
+        this.showAdmitCardStructureModal = false;
+        this.admitCardInfo;
+        this.processedData = [];
+        this.falseAllValue();
+        this.admitcardForm.reset();
+        this.updateMode = false;
+        this.editData = null;
+    }
+    successDone(msg: any) {
+        this.closeModal();
+        this.getAdmitCardStructureByClass();
+        setTimeout(() => {
+            this.toastr.success('', msg);
+        }, 500)
+    }
+
+    patch() {
+        const controlOne = <FormArray>this.admitcardForm.get('type.examDate');
+        this.classSubject.forEach((x: any) => {
+            controlOne.push(this.patchExamDate(x.subject))
+        })
+
+        const controlTwo = <FormArray>this.admitcardForm.get('type.startTime');
+        this.classSubject.forEach((x: any) => {
+            controlTwo.push(this.patchStartTime(x.subject))
+        })
+        const controlThree = <FormArray>this.admitcardForm.get('type.endTime');
+        this.classSubject.forEach((x: any) => {
+            controlThree.push(this.patchEndTime(x.subject))
+        })
+    }
+    patchExamDate(examDate: any) {
+        return this.fb.group({
+            [examDate]: ['', Validators.required,],
+        })
+    }
+    patchStartTime(startTime: any) {
+        return this.fb.group({
+            [startTime]: ['', Validators.required,],
+        })
+    }
+
+    patchEndTime(endTime: any) {
+        return this.fb.group({
+            [endTime]: ['', Validators.required,],
+        })
+    }
+
+    toMins(t: string): number {
+        let [h, m] = t.replace(/ AM| PM/, '').split(':').map(Number);
+        if (t.includes('PM') && h !== 12) h += 12;
+        if (t.includes('AM') && h === 12) h = 0;
+        return h * 60 + m;
+    }
+
+    admitcardAddUpdate() {
+        console.log(this.admitcardForm.value)
+        const { startTime, endTime } = this.admitcardForm.value.type;
+        for (let i = 0; i < startTime.length; i++) {
+            const sub = Object.keys(startTime[i])[0];
+            const start = this.toMins(startTime[i][sub]);
+            const end = this.toMins(endTime[i][sub]);
+            if (start === end) {
+                this.errorCheck = true;
+                this.errorMsg = `${sub.charAt(0).toUpperCase() + sub.slice(1).toLowerCase()} : Start time and end time cannot be the same!`
+                return;
+            }
+            if (start >= end) {
+                this.errorCheck = true;
+                this.errorMsg = `${sub.charAt(0).toUpperCase() + sub.slice(1).toLowerCase()} : Start time must be before end time!`
+                return;
+            }
+        }
+
+        this.admitcardForm.value.type.examDate = this.admitcardForm.value.type.examDate.map((exam: any) => {
+            const subject = Object.keys(exam)[0];
+            const dateStr = exam[subject];
+            const dateObj = new Date(dateStr);
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+            const formattedDate = `${day}/${month}/${year}`;
+            return { [subject]: formattedDate };
+        });
+        this.admitcardForm.value.adminId = this.adminId;
+        if (this.updateMode) {
+            console.log(this.updateMode)
+            this.admitCardStructureService.updateAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
+                if (res) {
+                    this.successDone(res);
+                }
+            }, err => {
+                this.errorCheck = true;
+                this.errorMsg = err.error;
+            });
+        } else {
+            console.log(this.updateMode)
+            this.admitCardStructureService.addAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
+                if (res) {
+                    this.successDone(res);
+                }
+            }, err => {
+                this.errorCheck = true;
+                this.errorMsg = err.error;
+            });
+        }
+        // }
+
+    }
+
+    onToggleChange(id: any, admitCardPublishStatus: any) {
+        let params = {
+            id: id,
+            admitCardPublishStatus: admitCardPublishStatus
+        }
+        this.admitCardStructureService.changeAdmitCardPublishStatus(params)
+            .subscribe(
+                (response: any) => {
+                },
+                error => {
+                    console.log(error)
+                }
+            );
+    }
+
+    admitCardStructureDelete(id: String) {
+        this.admitCardStructureService.deleteAdmitCardStructure(id).subscribe((res: any) => {
+            if (res) {
+                this.successDone(res);
+                this.deleteById = '';
+            }
+        })
+    }
+
+    editAdmitCardStructureModel(data: any) {
+        this.showModal = true;
+        this.updateMode = true;
+        this.editData = data;
+        this.cls = data.class;
+        this.stream = data.stream;
+        if (this.stream == "N/A" || data.stream == "N/A") {
+            this.stream = "stream";
+        }
+        let params = {
+            cls: this.cls,
+            stream: this.stream,
+            adminId: this.adminId,
+            patchValueMode: false
+        };
+        this.getSingleClassSubjectByStream(params);
+        this.admitcardForm.patchValue({
+            adminId: data.adminId,
+            class: data.class,
+            stream: data.stream,
+            examType: data.examType,
+        });
+        const examDateControl = this.admitcardForm.get('type.examDate') as FormArray;
+        const startTimeControl = this.admitcardForm.get('type.startTime') as FormArray;
+        const endTimeControl = this.admitcardForm.get('type.endTime') as FormArray;
+
+        // examDateControl.clear();
+        // startTimeControl.clear();
+        // endTimeControl.clear();
+        data.examDate.forEach((item: any) => {
+            const formattedItem: any = {};
+
+            // हर key (जैसे hindi, english आदि) को loop करके Date में convert करो
+            Object.keys(item).forEach(key => {
+                const dateParts = item[key].split('/');
+                const isoDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`); // YYYY-MM-DD
+                formattedItem[key] = isoDate;
+            });
+
+            examDateControl.push(this.fb.group(formattedItem));
+        });
+        data.examStartTime.forEach((item: any) => {
+            startTimeControl.push(this.fb.group(item));
+        });
+        data.examEndTime.forEach((item: any) => {
+            endTimeControl.push(this.fb.group(item));
+        });
+    }
+    allOptions() {
+        this.allExamType = [{ examType: 'Quaterly Exam' }, { examType: 'Half Yearly Exam' }, { examType: 'Yearly Exam' }, { examType: 'Final Exam' }, { examType: 'Pre Board Exam' }, { examType: 'Term 1 Exam' }, { examType: 'Term 2 Exam' }]
+    }
 }

@@ -269,11 +269,11 @@ export class StudentComponent implements OnInit {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = true;
-    const dobArray = student.dob.split('-'); // Assuming format is 'dd-mm-yyyy'
-    const doaArray = student.doa.split('-'); // Assuming format is 'dd-mm-yyyy'
+    const dobArray = student.dob.split('/');
+    const doaArray = student.doa.split('/');
 
-    const dobISO = new Date(`${dobArray[2]}-${dobArray[1]}-${dobArray[0]}`); // 'yyyy-mm-dd'
-    const doaISO = new Date(`${doaArray[2]}-${doaArray[1]}-${doaArray[0]}`); // 'yyyy-mm-dd'
+    const dobISO = new Date(`${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`);
+    const doaISO = new Date(`${doaArray[2]}/${doaArray[1]}/${doaArray[0]}`);
 
     // Patch the form with the student data
     this.studentForm.patchValue({
@@ -288,8 +288,8 @@ export class StudentComponent implements OnInit {
       stream: student.stream,
       rollNumber: student.rollNumber,
       name: student.name,
-      dob: dobISO, // Set Date of Birth
-      doa: doaISO, // Set Date of Admission
+      dob: dobISO,
+      doa: doaISO,
       aadharNumber: student.aadharNumber,
       samagraId: student.samagraId,
       udiseNumber: student.udiseNumber,
@@ -438,10 +438,10 @@ export class StudentComponent implements OnInit {
           });
         }
         const dob = new Date(this.studentForm.get('dob')?.value);
-        const formattedDob = `${dob.getDate()}-${dob.getMonth() + 1}-${dob.getFullYear()}`;
+        const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
 
         const doa = new Date(this.studentForm.get('doa')?.value);
-        const formattedDoa = `${doa.getDate()}-${doa.getMonth() + 1}-${doa.getFullYear()}`;
+        const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
 
         // Prepare the final form data
         const formData = {

@@ -133,14 +133,16 @@ let SignupAdmin = async (req, res, next) => {
         const createUser = await AdminUserModel.create(userData);
         sendEmail(email, secureOtp);
         const schoolData = {
-            adminId:createUser._id,
-            schoolName,
-            affiliationNumber
+            adminId: createUser._id,
+            schoolName: schoolName,
+            affiliationNumber: affiliationNumber
         }
-        const [createdOTP,createSchool] = await Promise.all([
+        console.log("a")
+        const [createdOTP, createSchool] = await Promise.all([
             OTPModel.create({ email, secureOtp: secureOtp }),
             SchoolModel.create(schoolData)
         ]);
+        console.log("b")
         return res.status(200).json({ successMsg: 'Admin registered successfully', email });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });

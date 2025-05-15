@@ -1,5 +1,2 @@
 @import'../../admin/dashboard/dashboard.component.css';
 @import'../../admin/admin-student-fees/admin-student-fees.component.css';
-.custom-date-input {
-    font-size: 12px !important;
-}
