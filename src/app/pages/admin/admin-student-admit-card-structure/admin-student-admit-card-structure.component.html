@@ -46,48 +46,50 @@
                 <div class="main-container">
                     <div class="col-12 col-lg-12 big-container">
                         <div class="main-card">
-                            <table class="table align-middle bg-white">
-                                <thead class="bg-light">
-                                    <tr class="text-muted">
-                                        <th>S.No.</th>
-                                        <th>Exam Name</th>
-                                        <th>Class</th>
-                                        <th>Stream</th>
-                                        <th>View</th>
-                                        <th>Edit</th>
-                                        <th>Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody *ngIf="examAdmitCard && examAdmitCard.length>0">
-                                    <tr *ngFor="let examAdmitCard of examAdmitCard; let i=index">
-                                        <td>
-                                            <p class="mb-0">{{i+1}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{examAdmitCard.examType | titlecase}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{examAdmitCard.class | classSuffix}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{examAdmitCard.stream}}</p>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon
-                                                (click)="openAdmitCardStructureModal(examAdmitCard)">visibility</mat-icon>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon (click)="editAdmitCardStructureModel(examAdmitCard)">edit
-                                            </mat-icon>
-                                        </td>
-                                        <td class="mb-0">
-                                            <mat-icon
-                                                (click)="deleteAdmitCardStructureModel(examAdmitCard._id)">delete</mat-icon>
-                                        </td>
-                                    </tr>
+                            <div class="table-wrapper">
+                                <table class="table align-middle bg-white">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>S.No.</th>
+                                            <th>Exam Name</th>
+                                            <th>Class</th>
+                                            <th>Stream</th>
+                                            <th>View</th>
+                                            <th>Edit</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="examAdmitCard && examAdmitCard.length>0">
+                                        <tr *ngFor="let examAdmitCard of examAdmitCard; let i=index">
+                                            <td>
+                                                <p class="mb-0">{{i+1}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{examAdmitCard.examType | titlecase}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{examAdmitCard.class | classSuffix}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{examAdmitCard.stream}}</p>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon
+                                                    (click)="openAdmitCardStructureModal(examAdmitCard)">visibility</mat-icon>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon (click)="editAdmitCardStructureModel(examAdmitCard)">edit
+                                                </mat-icon>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon
+                                                    (click)="deleteAdmitCardStructureModel(examAdmitCard._id)">delete</mat-icon>
+                                            </td>
+                                        </tr>
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div *ngIf="examAdmitCard && examAdmitCard.length>0"
                                 style="text-align: center;margin-top: 200px;">
                                 <p>Note : Remove the existing admit card to generate a new one.</p>
@@ -224,7 +226,8 @@
                                                                                         appearance="outline">
                                                                                         <mat-label>Exam
                                                                                             Date</mat-label>
-                                                                                        <input type="date " matInput readonly
+                                                                                        <input type="date " matInput
+                                                                                            readonly
                                                                                             [matDatepicker]="pickers"
                                                                                             [formControlName]="subjects.subject" />
                                                                                         <mat-datepicker-toggle matSuffix
