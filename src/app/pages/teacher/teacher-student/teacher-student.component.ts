@@ -36,6 +36,7 @@ export class TeacherStudentComponent implements OnInit {
   deleteMode: boolean = false;
   deleteById: String = '';
   errorMsg: String = '';
+  successMsg: String = '';
   errorCheck: Boolean = false;
   statusCode: Number = 0;
 
@@ -222,6 +223,7 @@ export class TeacherStudentComponent implements OnInit {
     this.fileChoose = false;
     this.errorCheck = false;
     this.errorMsg = '';
+    this.successMsg = '';
     this.classSubject = [];
     this.promotedClass;
     this.singleStudentInfo;
@@ -288,11 +290,11 @@ export class TeacherStudentComponent implements OnInit {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = true;
-    const dobArray = student.dob.split('-'); // Assuming format is 'dd-mm-yyyy'
-    const doaArray = student.doa.split('-'); // Assuming format is 'dd-mm-yyyy'
+    const dobArray = student.dob.split('/');
+    const doaArray = student.doa.split('/');
 
-    const dobISO = new Date(`${dobArray[2]}-${dobArray[1]}-${dobArray[0]}`); // 'yyyy-mm-dd'
-    const doaISO = new Date(`${doaArray[2]}-${doaArray[1]}-${doaArray[0]}`); // 'yyyy-mm-dd'
+    const dobISO = new Date(`${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`);
+    const doaISO = new Date(`${doaArray[2]}/${doaArray[1]}/${doaArray[0]}`);
 
     // Patch the form with the student data
     this.studentForm.patchValue({
@@ -307,8 +309,8 @@ export class TeacherStudentComponent implements OnInit {
       stream: student.stream,
       rollNumber: student.rollNumber,
       name: student.name,
-      dob: dobISO, // Set Date of Birth
-      doa: doaISO, // Set Date of Admission
+      dob: dobISO,
+      doa: doaISO,
       aadharNumber: student.aadharNumber,
       samagraId: student.samagraId,
       udiseNumber: student.udiseNumber,
@@ -334,7 +336,8 @@ export class TeacherStudentComponent implements OnInit {
     const classValue = student.class;
     if (classValue && this.classMap[classValue]) {
       this.studentForm.patchValue({
-        class: this.classMap[classValue] // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
+        class: this.classMap[classValue], // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
+
       });
     }
     if (this.updateMode) {
@@ -349,6 +352,13 @@ export class TeacherStudentComponent implements OnInit {
     this.deleteById = id;
   }
 
+  getClass() {
+    this.classService.getClassList().subscribe((res: any) => {
+      if (res) {
+        this.classInfo = res;
+      }
+    })
+  }
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
@@ -361,9 +371,10 @@ export class TeacherStudentComponent implements OnInit {
   }
   successDone(msg: any) {
     this.closeModal();
+    this.successMsg = '';
     this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.toastr.success('',msg);
+      this.toastr.success('', msg);
     }, 500)
   }
 
@@ -429,39 +440,32 @@ export class TeacherStudentComponent implements OnInit {
   }
 
 
-
   studentAddUpdate() {
     if (this.studentForm.valid) {
       this.studentForm.value.adminId = this.adminId;
       this.studentForm.value.class = this.className;
+      this.studentForm.value.admissionType = 'Old';
+      this.studentForm.value.createdBy = this.createdBy;
 
+      const classText = this.studentForm.get('class')?.value;
+      const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
+      if (classValue) {
+        this.studentForm.patchValue({
+          class: classValue
+        });
+      }
+      const dob = new Date(this.studentForm.get('dob')?.value);
+      const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
+
+      const doa = new Date(this.studentForm.get('doa')?.value);
+      const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
+
+      const formData = {
+        ...this.studentForm.value,
+        dob: formattedDob,
+        doa: formattedDoa,
+      };
       if (this.updateMode) {
-
-        const classText = this.studentForm.get('class')?.value;
-
-        // टेक्स्ट को ओरिजिनल वैल्यू (जैसे 200, 201, 202) में कन्वर्ट करें
-        const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
-
-        // अगर वैल्यू मिली, तो उसे फॉर्म में अपडेट करें ताकि सही वैल्यू डेटाबेस में जाए
-        if (classValue) {
-          this.studentForm.patchValue({
-            class: classValue
-          });
-        }
-        const dob = new Date(this.studentForm.get('dob')?.value);
-        const formattedDob = `${dob.getDate()}-${dob.getMonth() + 1}-${dob.getFullYear()}`;
-
-        const doa = new Date(this.studentForm.get('doa')?.value);
-        const formattedDoa = `${doa.getDate()}-${doa.getMonth() + 1}-${doa.getFullYear()}`;
-
-        // Prepare the final form data
-        const formData = {
-          ...this.studentForm.value,
-          dob: formattedDob, // Convert back to 'dd-mm-yyyy'
-          doa: formattedDoa  // Convert back to 'dd-mm-yyyy'
-        };
-
-
         this.studentService.updateStudent(formData).subscribe((res: any) => {
           if (res) {
             this.successDone(res);
@@ -471,9 +475,7 @@ export class TeacherStudentComponent implements OnInit {
           this.errorMsg = err.error;
         })
       } else {
-        this.studentForm.value.admissionType = 'Old';
-        this.studentForm.value.createdBy = this.createdBy;
-        this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
+        this.studentService.addStudent(formData).subscribe((res: any) => {
           if (res) {
             this.successDone(res);
           }
@@ -484,7 +486,6 @@ export class TeacherStudentComponent implements OnInit {
       }
     }
   }
-
   changeStatus(id: any, statusValue: any) {
     if (id) {
       let params = {
@@ -521,7 +522,6 @@ export class TeacherStudentComponent implements OnInit {
       this.fileInput.nativeElement.value = '';
     }
   }
-
   parseExcel(arrayBuffer: any): void {
     const workbook = new ExcelJS.Workbook();
     workbook.xlsx.load(arrayBuffer).then((workbook) => {
@@ -545,16 +545,30 @@ export class TeacherStudentComponent implements OnInit {
         data.splice(index, 1);
       });
       const fields = data[0];
-      // Data ke baki ke rows
       const dataRows = data.slice(1);
-      // Data ko objects mein map karna
+
       const mappedData = dataRows.map((row: any) => {
         const obj: any = {};
-        fields.forEach((field: any, index: any) => {
-          obj[field] = row[index];
+        fields.forEach((field: any, i: number) => {
+          let v = row[i];
+
+          if ((field === 'Dob' || field === 'Doa')) {
+            if (typeof v === 'string' && v.includes('/')) {
+              const [d, m, y] = v.split('/');
+              v = `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${y}`;
+            } else if (v instanceof Date || !isNaN(Date.parse(v))) {
+              const date = new Date(v);
+              v = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+            }
+          }
+
+          obj[field] = v;
         });
         return obj;
       });
+
+
+
 
       function transformKeys(dataArray: any) {
         return dataArray.map((obj: any) => {
@@ -583,7 +597,6 @@ export class TeacherStudentComponent implements OnInit {
       }
     });
   }
-
   addBulkStudentRecord() {
     let studentRecordData = {
       bulkStudentRecord: this.bulkStudentRecord,

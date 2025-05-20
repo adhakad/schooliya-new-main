@@ -139,7 +139,7 @@ let GetStudentPaginationByAdmissionAndClass = async (req, res, next) => {
 
 let GetStudentPaginationByClass = async (req, res, next) => {
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
-    let isDate = currentDateIst.toFormat('dd-MM-yyyy');
+    let isDate = currentDateIst.toFormat('dd/MM/yyyy');
     let searchText = req.body.filters.searchText;
     if (searchText == 'NURSERY' || searchText == 'Nursery' || searchText == 'nursery') {
         searchText = 200;
@@ -230,24 +230,24 @@ let GetSingleStudent = async (req, res, next) => {
 let CreateStudent = async (req, res, next) => {
     let receiptNo = Math.floor(Math.random() * 899999 + 100000);
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
-    const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
+    const istDateTimeString = currentDateIst.toFormat('dd/MM/yyyy hh:mm:ss a');
     let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy } = req.body;
     let className = req.body.class;
     if (stream === "stream") {
         stream = "N/A";
     }
     if (admissionType == 'New') {
-        doa = currentDateIst.toFormat('dd-MM-yyyy');
+        doa = currentDateIst.toFormat('dd/MM/yyyy');
         admissionClass = className;
     } else {
-        const parsedDate = DateTime.fromFormat(doa, 'dd-MM-yyyy');
+        const parsedDate = DateTime.fromFormat(doa, 'dd/MM/yyyy');
         if (!parsedDate.isValid) {
-            doa = DateTime.fromISO(doa).toFormat("dd-MM-yyyy");
+            doa = DateTime.fromISO(doa).toFormat("dd/MM/yyyy");
         }
     }
-    const parsedDate = DateTime.fromFormat(dob, 'dd-MM-yyyy');
+    const parsedDate = DateTime.fromFormat(dob, 'dd/MM/yyyy');
     if (!parsedDate.isValid) {
-        dob = DateTime.fromISO(dob).toFormat("dd-MM-yyyy");
+        dob = DateTime.fromISO(dob).toFormat("dd/MM/yyyy");
     }
     let studentData = {
         session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy
@@ -402,7 +402,7 @@ let CreateStudent = async (req, res, next) => {
 
 let CreateBulkStudentRecord = async (req, res, next) => {
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
-    const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
+    const istDateTimeString = currentDateIst.toFormat('dd/MM/yyyy hh:mm:ss a');
     let bulkStudentRecord = req.body.bulkStudentRecord;
     let selectedSession = req.body.session;
     let className = req.body.class;

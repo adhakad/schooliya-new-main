@@ -348,12 +348,12 @@ export class StudentComponent implements OnInit {
       }
     })
   }
-  successDone(msg:any) {
+  successDone(msg: any) {
     this.closeModal();
     this.successMsg = '';
     this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.toastr.success('',msg);
+      this.toastr.success('', msg);
     }, 500)
   }
 
@@ -423,35 +423,27 @@ export class StudentComponent implements OnInit {
     if (this.studentForm.valid) {
       this.studentForm.value.adminId = this.adminId;
       this.studentForm.value.class = this.className;
+      this.studentForm.value.admissionType = 'Old';
+      this.studentForm.value.createdBy = 'Admin';
 
+      const classText = this.studentForm.get('class')?.value;
+      const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
+      if (classValue) {
+        this.studentForm.patchValue({
+          class: classValue
+        });
+      }
+      const dob = new Date(this.studentForm.get('dob')?.value);
+      const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
+
+      const doa = new Date(this.studentForm.get('doa')?.value);
+      const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
+
+
+      this.studentForm.value.dob = formattedDob;
+      this.studentForm.value.doa = formattedDoa;
       if (this.updateMode) {
-
-        const classText = this.studentForm.get('class')?.value;
-
-        // टेक्स्ट को ओरिजिनल वैल्यू (जैसे 200, 201, 202) में कन्वर्ट करें
-        const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
-
-        // अगर वैल्यू मिली, तो उसे फॉर्म में अपडेट करें ताकि सही वैल्यू डेटाबेस में जाए
-        if (classValue) {
-          this.studentForm.patchValue({
-            class: classValue
-          });
-        }
-        const dob = new Date(this.studentForm.get('dob')?.value);
-        const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
-
-        const doa = new Date(this.studentForm.get('doa')?.value);
-        const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
-
-        // Prepare the final form data
-        const formData = {
-          ...this.studentForm.value,
-          dob: formattedDob, // Convert back to 'dd-mm-yyyy'
-          doa: formattedDoa  // Convert back to 'dd-mm-yyyy'
-        };
-
-
-        this.studentService.updateStudent(formData).subscribe((res: any) => {
+        this.studentService.updateStudent(this.studentForm.value).subscribe((res: any) => {
           if (res) {
             this.successDone(res);
           }
@@ -460,8 +452,7 @@ export class StudentComponent implements OnInit {
           this.errorMsg = err.error;
         })
       } else {
-        this.studentForm.value.admissionType = 'Old';
-        this.studentForm.value.createdBy = 'Admin';
+        console.log(this.studentForm.value)
         this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
           if (res) {
             this.successDone(res);
@@ -537,8 +528,20 @@ export class StudentComponent implements OnInit {
       // Data ko objects mein map karna
       const mappedData = dataRows.map((row: any) => {
         const obj: any = {};
-        fields.forEach((field: any, index: any) => {
-          obj[field] = row[index];
+        fields.forEach((field: any, i: number) => {
+          let v = row[i];
+
+          if ((field === 'Dob' || field === 'Doa')) {
+            if (typeof v === 'string' && v.includes('/')) {
+              const [d, m, y] = v.split('/');
+              v = `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${y}`;
+            } else if (v instanceof Date || !isNaN(Date.parse(v))) {
+              const date = new Date(v);
+              v = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+            }
+          }
+
+          obj[field] = v;
         });
         return obj;
       });
