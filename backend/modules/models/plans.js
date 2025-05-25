@@ -12,8 +12,18 @@ const PlansModel = mongoose.model('plan', {
         required: true,
         trim: true,
     },
-    upgradePrice:{
+    upgradePrice: {
         type: Number,
+        required: true,
+        trim: true,
+    },
+    withoutDiscountPrice: {
+        type: Number,
+        required: true,
+        trim: true,
+    },
+    discountPercentage: {
+        type: String,
         required: true,
         trim: true,
     },

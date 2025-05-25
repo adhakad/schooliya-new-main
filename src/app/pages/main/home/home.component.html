@@ -10,7 +10,8 @@
                                 Just &#8377;
                                 {{plansInfo[0]?.price}}</span>
                         </h3>
-                        <h2 style="font-family: 'Noto Sans', sans-serif !important;">Simplify School Management with Our User Friendly Interface</h2>
+                        <h2 style="font-family: 'Noto Sans', sans-serif !important;">Simplify School Management with Our
+                            User Friendly Interface</h2>
                         <p>
                             Transform your school's management with our easy to use online software. It's packed with
                             features that enables you to simplify the tasks at hand and categorise various things
@@ -48,7 +49,9 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-10">
-                        <p>We are fuelled by our zeal to make back-end activities of running a school easier and smoother. Our online school management software offers all the necessary tools and essential features at an affordable and unbeatable market price.
+                        <p>We are fuelled by our zeal to make back-end activities of running a school easier and
+                            smoother. Our online school management software offers all the necessary tools and essential
+                            features at an affordable and unbeatable market price.
                         </p>
                     </div>
                 </div>
@@ -87,7 +90,6 @@
         </div>
     </div>
 
-
     <div class="container-fluid" style="padding: 0 !important;">
         <div class="container-fluid pricing-section">
             <div class="row">
@@ -102,9 +104,18 @@
                                     <h2>{{plansInfo[0]?.plans}}</h2>
                                     <p>Everything You Need to Manage Your School</p>
                                 </div>
-                                <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
+                                <div class="pricing-discount">
+                                    <p class="text-muted">
+                                        &#8377; {{plansInfo[0]?.withoutDiscountPrice}}</p>
+                                    <mat-chip selected class="discount-button">
+                                        SAVE {{plansInfo[0]?.discountPercentage}}%
+                                    </mat-chip>
+                                </div>
+                                <h4>
+                                    <span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                     {{plansInfo[0]?.price}}<span style="font-size: medium;font-weight: 500;"> /
-                                        Year</span></h4>
+                                        Year</span>
+                                </h4>
                                 <button class="pricing-button-light" mat-raised-button
                                     routerLink="/payment/{{plansInfo[0]?._id}}">Buy Now</button>
                                 <div class="pricing-amount">
@@ -115,7 +126,7 @@
                                     <div class="row module-access">
                                         <p>Student Limit<span>&nbsp;&nbsp;&nbsp;( Up to
                                                 {{plansInfo[0]?.studentLimit}} )</span></p>
-                                        <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p>
+                                        <!-- <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p> -->
                                         <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Up to 3 )</span></p>
                                     </div>
                                     <div class="row module-list">
@@ -161,10 +172,20 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-md-6 col-lg-4 card-container">
-                            <div class="pricing-card border">
+                            <div class="pricing-card border position-relative">
+                                <div>
+                                    <mat-chip class="most-popular" selected>MOST POPULAR</mat-chip>
+                                </div>
                                 <div class="pricing-title">
                                     <h2>{{plansInfo[1]?.plans}}</h2>
                                     <p>Level-up with more listing and enhanced features</p>
+                                </div>
+                                <div class="pricing-discount">
+                                    <p class="text-muted">
+                                        &#8377; {{plansInfo[1]?.withoutDiscountPrice}}</p>
+                                    <mat-chip selected class="discount-button">
+                                        SAVE {{plansInfo[1]?.discountPercentage}}%
+                                    </mat-chip>
                                 </div>
                                 <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                     {{plansInfo[1]?.price}}<span style="font-size: medium;font-weight: 500;"> /
@@ -179,7 +200,7 @@
                                     <div class="row module-access">
                                         <p>Student Limit<span>&nbsp;&nbsp;&nbsp;( Up to
                                                 {{plansInfo[1]?.studentLimit}} )</span></p>
-                                        <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p>
+                                        <!-- <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p> -->
                                         <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Up to 5 )</span></p>
                                     </div>
                                     <div class="row module-list">
@@ -231,6 +252,13 @@
                                     <h2>{{plansInfo[2]?.plans}}</h2>
                                     <p>Enjoy Your Extensive Features and Higher Listing Limits</p>
                                 </div>
+                                <div class="pricing-discount">
+                                    <p class="text-muted">
+                                        &#8377; {{plansInfo[2]?.withoutDiscountPrice}}</p>
+                                    <mat-chip selected class="discount-button">
+                                        SAVE {{plansInfo[2]?.discountPercentage}}%
+                                    </mat-chip>
+                                </div>
                                 <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                     {{plansInfo[2]?.price}}<span style="font-size: medium;font-weight: 500;"> /
                                         Year</span></h4>
@@ -243,7 +271,7 @@
                                 <div class="pricing-feature">
                                     <div class="row module-access">
                                         <p>Student Limit<span>&nbsp;&nbsp;&nbsp; Unlimited</span></p>
-                                        <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p>
+                                        <!-- <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span></p> -->
                                         <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Up to 10 )</span></p>
                                     </div>
                                     <div class="row module-list">
@@ -306,7 +334,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733650017/student_eqtfos.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733650017/student_eqtfos.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Student Management</h3>
@@ -320,7 +349,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649886/admission_ag0g0a.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649886/admission_ag0g0a.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Admission Management</h3>
@@ -333,7 +363,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649963/fees_llshuv.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649963/fees_llshuv.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Fees Management</h3>
@@ -346,7 +377,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649906/admit-card_qpoz3e.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649906/admit-card_qpoz3e.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Admit Card Management</h3>
@@ -360,7 +392,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649981/marksheet_d60trz.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649981/marksheet_d60trz.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Marksheet Management</h3>
@@ -374,13 +407,14 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733650028/tc_eo3xcv.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733650028/tc_eo3xcv.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Transfer Certificate Management</h3>
                                 </div>
                             </div>
-                            <p>Easily manage and issue  transfer certificates with just a click using
+                            <p>Easily manage and issue transfer certificates with just a click using
                                 our simplify module</p>
                         </div>
                     </div>
@@ -388,7 +422,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649919/book_numrf9.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649919/book_numrf9.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Subject Management</h3>
@@ -402,7 +437,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649945/books-group_wuptvt.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733649945/books-group_wuptvt.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Class Subject Management</h3>
@@ -415,7 +451,8 @@
                         <div class="service-card">
                             <div class="row">
                                 <div class="col-1 col-sm-2 col-md-2 col-lg-2"><img
-                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733650001/staff-access_ayhxi3.png" alt="">
+                                        src="https://res.cloudinary.com/dzzrracge/image/upload/v1733650001/staff-access_ayhxi3.png"
+                                        alt="">
                                 </div>
                                 <div class="col-11 col-sm-10 col-md-10 col-lg-10">
                                     <h3>Saff Access Management</h3>

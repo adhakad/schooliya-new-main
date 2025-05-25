@@ -206,12 +206,13 @@
 }
 
 .pricing-card {
+   position: relative;
    background-color: #fff;
    width: 100%;
    height: auto;
-   padding: 8vh 5% 3vh 5%;
+   padding: 4vh 7% 3vh 7%;
    margin-bottom: 4vh;
-   border: 1px solid #e3dfea;
+   border: 1px solid #ccbdec;
    border-radius: 20px;
    margin-bottom: 5vh;
 }
@@ -219,6 +220,24 @@
 .border {
    border: 2px solid #9a34fff9 !important;
 }
+
+.pricing-card .most-popular {
+   position: absolute;
+   vertical-align: baseline;
+   top: -12px;
+   left: 50%;
+   transform: translateX(-50%);
+   z-index: 10;
+   background-color: #9a34ff;
+   color: #fff;
+   padding: 1.5px 8px;
+   border-radius: 20px;
+   width: auto;
+   height: auto;
+   line-height: 1.5;
+   font-size: 12.5px;
+}
+
 
 .pricing-card h2 {
    color: #382066;
@@ -231,6 +250,31 @@
 
 .pricing-card .pricing-title {
    min-height: 11vh;
+}
+
+.pricing-card .pricing-discount {
+   text-align: center;
+   margin-top: 18px;
+   margin-bottom: 25px;
+}
+
+.pricing-card .pricing-discount p {
+   text-decoration: line-through;
+   display: inline;
+   font-size: 15px;
+}
+
+.pricing-card .pricing-discount .discount-button {
+   display: inline-block;
+   vertical-align: baseline;
+   margin-left: 12px;
+   background-color: rgb(215, 255, 232);
+   color: rgb(0, 142, 66);
+   padding: 6px 12px;
+   border-radius: 20px;
+   height: auto;
+   line-height: 1.5;
+   font-size: 15px;
 }
 
 .pricing-card p {
@@ -614,7 +658,7 @@
       height: auto;
       padding: 12vh 5% 9vh 5%;
       margin-bottom: 8vh;
-      border: 1px solid #e3dfea;
+      border: 1px solid #ccbdec;
       border-radius: 20px;
    }
 
@@ -633,6 +677,31 @@
 
    .pricing-card .pricing-title {
       min-height: 15vh;
+   }
+
+   .pricing-card .pricing-discount {
+      text-align: center;
+      margin-top: 18px;
+      margin-bottom: 25px;
+   }
+
+   .pricing-card .pricing-discount p {
+      text-decoration: line-through;
+      display: inline;
+      font-size: 15px;
+   }
+
+   .pricing-card .pricing-discount .discount-button {
+      display: inline-block;
+      vertical-align: baseline;
+      margin-left: 12px;
+      background-color: rgb(215, 255, 232);
+      color: rgb(0, 142, 66);
+      padding: 6px 12px;
+      border-radius: 20px;
+      height: auto;
+      line-height: 1.5;
+      font-size: 15px;
    }
 
    .pricing-card p {
@@ -1006,7 +1075,7 @@
       height: auto;
       padding: 8vh 5% 3vh 5%;
       margin-bottom: 4vh;
-      border: 1px solid #e3dfea;
+      border: 1px solid #ccbdec;
       border-radius: 20px;
    }
 
@@ -1025,6 +1094,31 @@
 
    .pricing-card .pricing-title {
       min-height: 11vh;
+   }
+
+   .pricing-card .pricing-discount {
+      text-align: center;
+      margin-top: 5px;
+      margin-bottom: 30px;
+   }
+
+   .pricing-card .pricing-discount p {
+      text-decoration: line-through;
+      display: inline;
+      font-size: 15px;
+   }
+
+   .pricing-card .pricing-discount .discount-button {
+      display: inline-block;
+      vertical-align: baseline;
+      margin-left: 12px;
+      background-color: rgb(215, 255, 232);
+      color: rgb(0, 142, 66);
+      padding: 6px 12px;
+      border-radius: 20px;
+      height: auto;
+      line-height: 1.5;
+      font-size: 15px;
    }
 
    .pricing-card p {
@@ -1397,7 +1491,7 @@
       height: auto;
       padding: 8vh 5% 9vh 5%;
       margin-bottom: 8vh;
-      border: 1px solid #e3dfea;
+      border: 1px solid #ccbdec;
       border-radius: 20px;
    }
 
@@ -1416,6 +1510,31 @@
 
    .pricing-card .pricing-title {
       min-height: 15vh;
+   }
+
+   .pricing-card .pricing-discount {
+      text-align: center;
+      margin-top: 5px;
+      margin-bottom: 30px;
+   }
+
+   .pricing-card .pricing-discount p {
+      text-decoration: line-through;
+      display: inline;
+      font-size: 15px;
+   }
+
+   .pricing-card .pricing-discount .discount-button {
+      display: inline-block;
+      vertical-align: baseline;
+      margin-left: 12px;
+      background-color: rgb(215, 255, 232);
+      color: rgb(0, 142, 66);
+      padding: 6px 12px;
+      border-radius: 20px;
+      height: auto;
+      line-height: 1.5;
+      font-size: 15px;
    }
 
    .pricing-card p {
@@ -1790,9 +1909,9 @@
       background-color: #fff;
       width: 100%;
       height: auto;
-      padding: 8vh 5% 5% 5%;
+      padding: 5vh 7% 5% 7%;
       margin-bottom: 0;
-      border: 1px solid #e3dfea;
+      border: 1px solid #ccbdec;
       border-radius: 20px;
    }
 
@@ -1804,7 +1923,6 @@
       color: #382066;
       font-weight: 600;
       font-weight: 600;
-      ;
       font-size: 25px;
       font-weight: 700;
       letter-spacing: .75px;
@@ -1813,6 +1931,31 @@
 
    .pricing-card .pricing-title {
       min-height: 15vh;
+   }
+
+   .pricing-card .pricing-discount {
+      text-align: center;
+      margin-top: 2px;
+      margin-bottom: 30px;
+   }
+
+   .pricing-card .pricing-discount p {
+      text-decoration: line-through;
+      display: inline;
+      font-size: 15px;
+   }
+
+   .pricing-card .pricing-discount .discount-button {
+      display: inline-block;
+      vertical-align: baseline;
+      margin-left: 12px;
+      background-color: rgb(215, 255, 232);
+      color: rgb(0, 142, 66);
+      padding: 6px 12px;
+      border-radius: 20px;
+      height: auto;
+      line-height: 1.5;
+      font-size: 15px;
    }
 
    .pricing-section .title h2 {

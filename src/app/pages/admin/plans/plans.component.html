@@ -91,6 +91,18 @@
                             class="form-text text-danger">Price is required</mat-hint>
                         </mat-form-field>
                         <mat-form-field appearance="outline">
+                          <mat-label>Without Discount Price</mat-label>
+                          <input matInput type="text" formControlName="withoutDiscountPrice">
+                          <mat-hint *ngIf="!plansForm.get('withoutDiscountPrice')?.valid && plansForm.get('withoutDiscountPrice')?.touched"
+                            class="form-text text-danger">Without discount price is required</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Discount Percentage</mat-label>
+                          <input matInput type="text" formControlName="discountPercentage">
+                          <mat-hint *ngIf="!plansForm.get('discountPercentage')?.valid && plansForm.get('discountPercentage')?.touched"
+                            class="form-text text-danger">Discount percentage is required</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
                           <mat-label>Teacher Limit</mat-label>
                           <input matInput type="text" formControlName="teacherLimit">
                           <mat-hint *ngIf="!plansForm.get('teacherLimit')?.valid && plansForm.get('teacherLimit')?.touched"

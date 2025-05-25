@@ -30,6 +30,8 @@ export class PlansComponent implements OnInit {
       _id: [''],
       plans: ['', Validators.required],
       price: ['', Validators.required],
+      withoutDiscountPrice: ['', Validators.required],
+      discountPercentage: ['', Validators.required],
       teacherLimit: ['', Validators.required],
       studentLimit: ['', Validators.required],
       perStudentIncrementPrice: ['', Validators.required],

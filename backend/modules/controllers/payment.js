@@ -59,11 +59,10 @@ let ValidatePayment = async (req, res) => {
   const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit, teacherLimit } = req.body;
   const adminInfo = { id, email, activePlan, amount, currency };
   let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
-  const secretKey = 'JRHMapIAVSkH49pYgMjDiER1';
   const body = `${orderId}|${paymentId}`;
 
   try {
-    const expectedSignature = crypto.createHmac("sha256", secretKey).update(body).digest("hex");
+    const expectedSignature = crypto.createHmac("sha256", key_secret).update(body).digest("hex");
     if (expectedSignature!== signature) {
       return res.status(400).json({ errorMsg: 'Invailid signature!' });
     }
@@ -142,11 +141,10 @@ let ValidateUpgradePlanPayment = async (req, res) => {
   const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit, teacherLimit } = req.body;
   const adminInfo = { id, email, activePlan, amount, currency };
   let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
-  const secretKey = 'JRHMapIAVSkH49pYgMjDiER1';
   const body = `${orderId}|${paymentId}`;
 
   try {
-    const expectedSignature = crypto.createHmac("sha256", secretKey).update(body).digest("hex");
+    const expectedSignature = crypto.createHmac("sha256", key_secret).update(body).digest("hex");
     if (expectedSignature!== signature) {
       return res.status(400).json({ errorMsg: 'Invailid signature!' });
     }

@@ -25,6 +25,13 @@
                                             <h2>{{plansInfo[0]?.plans}}</h2>
                                             <p>Everything You Need to Launch Your School Management</p>
                                         </div>
+                                        <div class="pricing-discount">
+                                            <p class="text-muted">
+                                                &#8377; {{plansInfo[0]?.withoutDiscountPrice}}</p>
+                                            <mat-chip selected class="discount-button">
+                                                SAVE {{plansInfo[0]?.discountPercentage}}%
+                                            </mat-chip>
+                                        </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                             {{plansInfo[0]?.price}}<span style="font-size: medium;font-weight: 500;"> /
                                                 Year</span></h4>
@@ -45,7 +52,8 @@
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
                                                     <p><span>Increase Limit Only
-                                                            ₹{{plansInfo[0]?.perStudentIncrementPrice}} Per Student</span>
+                                                            ₹{{plansInfo[0]?.perStudentIncrementPrice}} Per
+                                                            Student</span>
                                                     </p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon>
@@ -87,9 +95,19 @@
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4 pricing-card-container">
                                     <div class="pricing-card border">
+                                        <div>
+                                            <mat-chip class="most-popular" selected>MOST POPULAR</mat-chip>
+                                        </div>
                                         <div class="pricing-title">
                                             <h2>{{plansInfo[1]?.plans}}</h2>
                                             <p>Level-up with more listing and enhanced features</p>
+                                        </div>
+                                        <div class="pricing-discount">
+                                            <p class="text-muted">
+                                                &#8377; {{plansInfo[1]?.withoutDiscountPrice}}</p>
+                                            <mat-chip selected class="discount-button">
+                                                SAVE {{plansInfo[1]?.discountPercentage}}%
+                                            </mat-chip>
                                         </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                             {{plansInfo[1]?.price}}<span style="font-size: medium;font-weight: 500;"> /
@@ -112,7 +130,8 @@
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
                                                     <p><span>Increase Limit Only
-                                                            ₹{{plansInfo[1]?.perStudentIncrementPrice}} Per Student</span>
+                                                            ₹{{plansInfo[1]?.perStudentIncrementPrice}} Per
+                                                            Student</span>
                                                     </p>
                                                 </div>
                                                 <div class="col-2"><mat-icon class="done">done</mat-icon></div>
@@ -157,6 +176,13 @@
                                         <div class="pricing-title">
                                             <h2>{{plansInfo[2]?.plans}}</h2>
                                             <p>Enjoy Your Extensive Features and Higher Listing Limits</p>
+                                        </div>
+                                        <div class="pricing-discount">
+                                            <p class="text-muted">
+                                                &#8377; {{plansInfo[2]?.withoutDiscountPrice}}</p>
+                                            <mat-chip selected class="discount-button">
+                                                SAVE {{plansInfo[2]?.discountPercentage}}%
+                                            </mat-chip>
                                         </div>
                                         <h4><span style="font-size: 22px;font-weight: 500;">&#8377;</span>
                                             {{plansInfo[2]?.price}}<span style="font-size: medium;font-weight: 500;"> /
