@@ -270,7 +270,7 @@ let CreateStudent = async (req, res, next) => {
         if (!checkClassSubject) {
             return res.status(404).json(`Please group subjects according to class and stream!`);
         }
-        if (aadharNumber!== null && aadharNumber!== undefined) {
+        if (aadharNumber !== null && aadharNumber !== undefined) {
             const checkAadharNumber = await StudentModel.findOne({ aadharNumber: aadharNumber });
             if (checkAadharNumber) {
                 return res.status(400).json(`Aadhar card number already exist!`);
@@ -278,15 +278,15 @@ let CreateStudent = async (req, res, next) => {
             studentData.aadharNumber = aadharNumber;
         }
 
-        if (samagraId!== null && samagraId!== undefined) {
+        if (samagraId !== null && samagraId !== undefined) {
             const checkSamagraId = await StudentModel.findOne({ samagraId: samagraId });
             if (checkSamagraId) {
                 return res.status(400).json(`Samagra id already exist!`);
             }
             studentData.samagraId = samagraId;
-            studentData.extraField = [{samagraId: samagraId}]
+            studentData.extraField = [{ samagraId: samagraId }]
         }
-        if (udiseNumber!== null && udiseNumber!== undefined) {
+        if (udiseNumber !== null && udiseNumber !== undefined) {
             const checkUdiseNumber = await StudentModel.findOne({ udiseNumber: udiseNumber });
             if (checkUdiseNumber) {
                 return res.status(400).json(`UDISE Number already exist!`);
@@ -320,7 +320,7 @@ let CreateStudent = async (req, res, next) => {
         let studentFeesData = {
             adminId: adminId,
             session: session,
-            currentSession:session,
+            currentSession: session,
             previousSessionFeesStatus: false,
             previousSessionClass: 0,
             previousSessionStream: "empty",
@@ -374,326 +374,230 @@ let CreateStudent = async (req, res, next) => {
     }
 }
 
-// let CreateStudentAdmissionEnquiry = async (req, res, next) => {
-//     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
-//     const doae = currentDateIst.toFormat('dd-MM-yyyy');
-//     let { name, session, stream, dob, gender, category, religion, nationality, contact, address, lastSchool, fatherName, fatherQualification, fatherOccupation, fatherContact, fatherAnnualIncome, motherName, motherQualification, motherOccupation, motherContact, motherAnnualIncome } = req.body;
-//     let className = req.body.class;
-//     if (stream === "stream") {
-//         stream = "N/A";
-//     }
-//     dob = DateTime.fromISO(dob).toFormat("dd-MM-yyyy");
-//     const studentData = {
-//         name, session, stream, class: className, dob: dob, doae: doae, gender, category, religion, nationality, contact, address, lastSchool, fatherName, fatherQualification, fatherOccupation, fatherContact, fatherAnnualIncome, motherName, motherQualification, motherOccupation, motherContact, motherAnnualIncome
-//     }
-//     try {
-//         const checkContact = await AdmissionEnquiryModel.findOne({ name: name, contact: contact });
-//         if (checkContact) {
-//             return res.status(400).json(`Name: ${name} phone ${contact} is already fill online admission form, please visit school and confirm your admission!`);
-//         }
-//         let createAdmissionEnquiryModel = await AdmissionEnquiryModel.create(studentData);
-//         if (createAdmissionEnquiryModel) {
-//             return res.status(200).json({ successMsg: 'Online admission form submited successfully.' });
-//         }
-//     } catch (error) {
-//         return res.status(500).json('Internal Server Error!');
-//     }
-// }
 
-let CreateBulkStudentRecord = async (req, res, next) => {
+
+
+
+
+
+
+
+
+const CreateBulkStudentRecord = async (req, res, next) => {
+    const { bulkStudentRecord, session: selectedSession, class: classNameParam, stream: streamParam, adminId, createdBy } = req.body;
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     const istDateTimeString = currentDateIst.toFormat('dd/MM/yyyy hh:mm:ss a');
-    let bulkStudentRecord = req.body.bulkStudentRecord;
-    let selectedSession = req.body.session;
-    let className = req.body.class;
-    let stream = req.body.stream;
-    let adminId = req.body.adminId;
-    let createdBy = req.body.createdBy;
-    className = parseInt(className);
-    if (stream === "stream") {
-        stream = "N/A";
-    }
+
+    const className = parseInt(classNameParam);
+    const stream = streamParam === "stream" ? "N/A" : streamParam;
+
     const classMappings = {
-        "Nursery": 200,
-        "LKG": 201,
-        "UKG": 202,
-        "1st": 1,
-        "2nd": 2,
-        "3rd": 3,
-        "4th": 4,
-        "5th": 5,
-        "6th": 6,
-        "7th": 7,
-        "8th": 8,
-        "9th": 9,
-        "10th": 10,
-        "11th": 11,
-        "12th": 12,
+        "nursery": 200, "lkg": 201, "ukg": 202, "1st": 1, "2nd": 2, "3rd": 3, "4th": 4, "5th": 5, "6th": 6,
+        "7th": 7, "8th": 8, "9th": 9, "10th": 10, "11th": 11, "12th": 12,
     };
-    bulkStudentRecord.forEach((student) => {
-        // student.class = parseInt(classMappings[student.class] || "Unknown");
-        student.admissionClass = parseInt(classMappings[student.admissionClass]);
-    });
-    let studentData = [];
-    for (const student of bulkStudentRecord) {
-        studentData.push({
-            session: selectedSession,
-            medium: student.medium,
-            adminId: adminId,
-            name: student.name,
-            rollNumber: student.rollNumber,
-            feesConcession: student.feesConcession,
-            udiseNumber: student.udiseNumber,
-            aadharNumber: student.aadharNumber,
-            samagraId: student.samagraId,
-            extraField : [{samagraId: student.samagraId}],
-            admissionNo: student.admissionNo,
-            admissionType: student.admissionType,
-            stream: stream,
-            class: className,
-            admissionClass: student.admissionClass,
-            dob: student.dob,
-            doa: student.doa,
-            gender: student.gender,
-            category: student.category,
-            religion: student.religion,
-            nationality: student.nationality,
-            bankAccountNo: student.bankAccountNo,
-            bankIfscCode: student.bankIfscCode,
-            address: student.address,
-            fatherName: student.fatherName,
-            fatherQualification: student.fatherQualification,
-            motherName: student.motherName,
-            motherQualification: student.motherQualification,
-            fatherOccupation: student.fatherOccupation,
-            motherOccupation: student.motherOccupation,
-            parentsContact: student.parentsContact,
-            familyAnnualIncome: student.familyAnnualIncome,
-            createdBy: createdBy,
-        });
-    }
+
+    const fieldsToParseInt = ["udiseNumber", "aadharNumber", "samagraId", "bankAccountNo", "parentsContact", "feesConcession", "familyAnnualIncome"];
+    const validGenders = new Set(['male', 'female', 'other']);
+    const validCategories = new Set(['general', 'obc', 'sc', 'st', 'ews', 'other']);
+
+    const toTitleCase = (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
     const session = await StudentModel.startSession();
     session.startTransaction();
+
     try {
-        const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
+        // --- Initial Validations (Fail Fast) ---
+        if (!bulkStudentRecord || bulkStudentRecord.length === 0) {
+            return res.status(400).json('No student records provided.');
+        }
+        if (bulkStudentRecord.length > 200) {
+            return res.status(400).json('File too large. Please make sure that file records are less than or equal to 200!');
+        }
+
+        // --- Parallelize Initial Database Checks ---
+        const [checkAdminPlan, countStudent, checkFeesStr, existingRecords] = await Promise.all([
+            AdminPlan.findOne({ adminId }).lean(),
+            StudentModel.countDocuments({ adminId }),
+            FeesStructureModel.findOne({ adminId, session: selectedSession, class: className, stream }).lean(),
+            StudentModel.find({ adminId }).lean() // Fetch all existing records once
+        ]);
+
         if (!checkAdminPlan) {
-            return res.status(404).json(`Invalid entry!`);
+            return res.status(404).json('Invalid admin plan entry!');
         }
-        let studentLimit = checkAdminPlan.studentLimit;
-        let countStudent = await StudentModel.count({ adminId: adminId });
-        let allStudentCount = studentData.length + countStudent;
-        if (countStudent == studentLimit || countStudent > studentLimit || allStudentCount > studentLimit) {
-            return res.status(400).json(`You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue!`);
-        }
-        if (studentData.length > 100) {
-            return res.status(400).json('File too large, Please make sure that file records to less then or equals to 100!');
-        }
-        const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: studentData[0].session, class: className, stream: stream });
         if (!checkFeesStr) {
-            return res.status(404).json(`Please create fees structure!`);
-        }
-        const otherClassAdmissionNo = [];
-        // for (const student of studentData) {
-        //     if (student.class!== className) {
-        //         const { admissionNo } = student;
-        //         if (admissionNo) {
-        //             otherClassAdmissionNo.push(admissionNo);
-        //         }
-        //         continue;
-        //     }
-        // }
-        // if (otherClassAdmissionNo.length > 0) {
-        //     const spreadAdmissionNo = otherClassAdmissionNo.join(', ');
-        //     return res.status(400).json(`Admission number(s) ${spreadAdmissionNo} student(s) class is invailid!`);
-        // }
-        const existRecords = await StudentModel.find({ adminId: adminId }).lean();
-        const duplicateAadharNumber = [];
-        const duplicateSamagraId = [];
-        const duplicateAdmissionNo = [];
-        for (const student of studentData) {
-            const { admissionNo, aadharNumber, samagraId } = student;
-            let aadharNumberExists;
-            if (aadharNumber!== null && aadharNumber!== undefined) {
-                aadharNumberExists = existRecords.some(record => record.aadharNumber == aadharNumber);
-            }
-            let samagraIdExists;
-            if (samagraId!== null && samagraId!== undefined) {
-                samagraIdExists = existRecords.some(record => record.samagraId == samagraId);
-            }
-            let admissionNoExists;
-            if (admissionNo!== null && admissionNo!== undefined) {
-                admissionNoExists = existRecords.some(record => record.admissionNo == admissionNo);
-            }
-
-            if (aadharNumberExists) {
-                duplicateAadharNumber.push(aadharNumber);
-            }
-            if (samagraIdExists) {
-                duplicateSamagraId.push(samagraId);
-            }
-            if (admissionNoExists) {
-                duplicateAdmissionNo.push(admissionNo);
-            }
-        }
-        if (duplicateAadharNumber.length > 0) {
-            const spreadAadharNumber = duplicateAadharNumber.join(', ');
-            return res.status(400).json(`Aadhar card number(s) ${spreadAadharNumber} already exist!`);
-        }
-        if (duplicateSamagraId.length > 0) {
-            const spreadSamagraId = duplicateSamagraId.join(', ');
-            return res.status(400).json(`Samagra id number(s) ${spreadSamagraId} already exist!`);
-        }
-        if (duplicateAdmissionNo.length > 0) {
-            const spreadAdmissionNo = duplicateAdmissionNo.join(', ');
-            return res.status(400).json(`Admission number(s) ${spreadAdmissionNo} already exist!`);
+            return res.status(404).json('Please create a fees structure for the selected class and session!');
         }
 
-        // Helper function to convert string to Title Case
-        function toTitleCase(str) {
-            return str.replace(/\w\S*/g, (txt) => {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
+        const studentLimit = checkAdminPlan.studentLimit;
+        const allStudentCount = bulkStudentRecord.length + countStudent;
+
+        if (allStudentCount > studentLimit) {
+            return res.status(400).json(`Your current plan allows up to ${studentLimit} students. Adding these ${bulkStudentRecord.length} students would exceed your limit. Please increase the limit or upgrade to a higher plan to continue! You currently have ${countStudent} students.`);
         }
 
-        const existingRecords = await StudentModel.find({ adminId: adminId, class: className }).lean();
-        let index = 3;
+        // --- Prepare Sets for Fast Lookups of Existing Data ---
+        const existingAdmissionNos = new Set(existingRecords.map(r => r.admissionNo).filter(Boolean));
+        const existingAadharNumbers = new Set(existingRecords.map(r => r.aadharNumber).filter(Boolean));
+        const existingSamagraIds = new Set(existingRecords.map(r => r.samagraId).filter(Boolean));
+        const existingRollNumbersInClass = new Set(existingRecords.filter(r => r.class === className).map(r => r.rollNumber).filter(Boolean));
 
-        for (const student of studentData) {
-            const {
-                medium,
-                name,
-                fatherName,
-                motherName,
-                fatherQualification,
-                motherQualification,
-                fatherOccupation,
-                motherOccupation,
-                familyAnnualIncome,
-                rollNumber,
-                admissionNo,
-                feesConcession,
-                admissionType,
-                admissionClass,
-                dob,
-                doa,
-                gender,
-                category,
-                religion,
-                nationality,
-                address
-            } = student;
+        // --- Process and Validate Each Student Record in a Single Pass ---
+        const studentDataToInsert = [];
+        const feesDataToInsert = [];
 
-            // Track missing fields
-            const missingFields = [];
+        // Sets to track uniqueness within the current batch
+        const batchAdmissionNos = new Set();
+        const batchAadharNumbers = new Set();
+        const batchSamagraIds = new Set();
+        const batchRollNumbers = new Set();
 
-            if (medium === null || medium === undefined) missingFields.push('medium');
-            if (name === null || name === undefined) missingFields.push('name');
-            if (fatherName === null || fatherName === undefined) missingFields.push('fatherName');
-            if (motherName === null || motherName === undefined) missingFields.push('motherName');
-            if (fatherQualification === null || fatherQualification === undefined) missingFields.push('fatherQualification');
-            if (motherQualification === null || motherQualification === undefined) missingFields.push('motherQualification');
-            if (fatherOccupation === null || fatherOccupation === undefined) missingFields.push('fatherOccupation');
-            if (motherOccupation === null || motherOccupation === undefined) missingFields.push('motherOccupation');
-            if (familyAnnualIncome === null || familyAnnualIncome === undefined) missingFields.push('familyAnnualIncome');
-            if (rollNumber === null || rollNumber === undefined) missingFields.push('rollNumber');
-            if (admissionNo === null || admissionNo === undefined) missingFields.push('admissionNo');
-            if (feesConcession === null || feesConcession === undefined) missingFields.push('feesConcession');
-            if (admissionType === null || admissionType === undefined) missingFields.push('admissionType');
-            if (admissionClass === null || admissionClass === undefined || isNaN(admissionClass)) missingFields.push('admissionClass');
-            if (dob === null || dob === undefined) missingFields.push('dob');
-            if (doa === null || doa === undefined) missingFields.push('doa');
-            if (gender === null || gender === undefined) missingFields.push('gender');
-            if (category === null || category === undefined) missingFields.push('category');
-            if (religion === null || religion === undefined) missingFields.push('religion');
-            if (nationality === null || nationality === undefined) missingFields.push('nationality');
-            if (address === null || address === undefined) missingFields.push('address');
+        for (let i = 0; i < bulkStudentRecord.length; i++) {
+            const student = { ...bulkStudentRecord[i] }; // Shallow copy
 
-            // If there are missing fields, return error for current row
+            // --- Data Parsing and Normalization ---
+            const classKey = (student.admissionClass || "").toString().toLowerCase().trim();
+            student.admissionClass = parseInt(classMappings[classKey]);
+            student.admissionNo = parseInt(student.admissionNo);
+            student.admissionType = student.admissionType.toLowerCase();
+            student.rollNumber = parseInt(student.rollNumber);
+
+            for (const field of fieldsToParseInt) {
+                if (student[field] !== null && student[field] !== undefined) {
+                    student[field] = parseInt(student[field]);
+                }
+            }
+
+            // --- Field Presence & Data Type Validation ---
+            const requiredFields = [
+                'medium', 'name', 'fatherName', 'motherName', 'fatherQualification',
+                'motherQualification', 'fatherOccupation', 'motherOccupation',
+                'familyAnnualIncome', 'rollNumber', 'admissionNo', 'feesConcession',
+                'admissionType', 'admissionClass', 'dob', 'doa', 'gender', 'category',
+                'religion', 'nationality', 'address'
+            ];
+
+            const missingFields = requiredFields.filter(field =>
+                student[field] === null || student[field] === undefined ||
+                (typeof student[field] === 'string' && student[field].trim() === '') ||
+                (field === 'admissionClass' && isNaN(student[field]))
+            );
+
             if (missingFields.length > 0) {
-                const formattedMissingFields = missingFields.map(toTitleCase); // Convert to Title Case
-                return res.status(400).json(`Row ${index} is missing required fields: ( ${formattedMissingFields.join(', ')} ). Please fill in all mandatory fields before continuing!`);
+                const formattedMissingFields = missingFields.map(toTitleCase);
+                throw new Error(`Row ${i + 3} is missing required fields: ( ${formattedMissingFields.join(', ')} ). Please fill in all mandatory fields before continuing!`);
             }
-            if (feesConcession > checkFeesStr.totalFees) {
-                return res.status(400).json(`Row ${index} shows a fee concession amount greater than the total academic fee!`);
+            // --- Uniqueness Checks (Existing DB + Current Batch) ---
+            if (student.admissionNo && (existingAdmissionNos.has(student.admissionNo) || batchAdmissionNos.has(student.admissionNo))) {
+                throw new Error(`Row ${i + 3} has an Admission number (${student.admissionNo}) that already exists. Please fix it before continuing!`);
+            }
+            if (student.rollNumber && (existingRollNumbersInClass.has(student.rollNumber) || batchRollNumbers.has(student.rollNumber))) {
+                throw new Error(`Row ${i + 3} has a Roll number (${student.rollNumber}) that already exists in this class. Please fix it before continuing!`);
+            }
+            if (student.aadharNumber && (existingAadharNumbers.has(student.aadharNumber) || batchAadharNumbers.has(student.aadharNumber))) {
+                throw new Error(`Row ${i + 3} has an Aadhar number (${student.aadharNumber}) that already exists. Please fix it before continuing!`);
+            }
+            if (student.samagraId && (existingSamagraIds.has(student.samagraId) || batchSamagraIds.has(student.samagraId))) {
+                throw new Error(`Row ${i + 3} has a Samagra ID (${student.samagraId}) that already exists. Please fix it before continuing!`);
+            }
+            // --- Data Content Validation (using normalized values) ---
+            const normalizedGender = String(student.gender).toLowerCase();
+            const normalizedCategory = String(student.category).toLowerCase();
+
+            if (!validGenders.has(normalizedGender)) {
+                throw new Error(`Row ${i + 3} has invalid value for Gender: "${student.gender}". Allowed values are: (Male, Female, Other).`);
+            }
+            if (!validCategories.has(normalizedCategory)) {
+                throw new Error(`Row ${i + 3} has invalid value for Category: "${student.category}". Allowed values are: (General, OBC, SC, ST, EWS, Other).`);
+            }
+            // Validate feesConcession is a valid number AND then check its value
+            if (isNaN(student.feesConcession)) {
+                throw new Error(`Row ${i + 3} has an invalid value for Fee Concession: "${bulkStudentRecord[i].feesConcession}". It must be a valid number.`);
             }
 
-            const rollNumberExists = existingRecords.some(record => record.rollNumber == rollNumber);
-            if (rollNumberExists) {
-                return res.status(400).json(`Row ${index} has a roll number (${rollNumber}) that already exists. Please fix it before continuing!`);
+            if (student.feesConcession < 0) {
+                throw new Error(`Row ${i + 3} has a negative fee concession amount (${student.feesConcession}). Please provide a non-negative value.`);
             }
 
-            index++;
+            if (student.feesConcession > checkFeesStr.totalFees) {
+                throw new Error(`Row ${i + 3} shows a fee concession amount (${student.feesConcession}) greater than the total academic fee (${checkFeesStr.totalFees})!`);
+            }
+
+            // Add to batch sets to prevent duplicates *within the current bulk upload*
+            if (student.admissionNo) batchAdmissionNos.add(student.admissionNo);
+            if (student.aadharNumber) batchAadharNumbers.add(student.aadharNumber);
+            if (student.samagraId) batchSamagraIds.add(student.samagraId);
+            if (student.rollNumber) batchRollNumbers.add(student.rollNumber); // Check roll number uniqueness for current class
+
+            // Prepare student data for insertion
+            const studentObj = {
+                session: selectedSession, medium: student.medium, adminId: adminId, name: student.name,
+                rollNumber: student.rollNumber, feesConcession: student.feesConcession, udiseNumber: student.udiseNumber,
+                aadharNumber: student.aadharNumber, samagraId: student.samagraId,
+                extraField: [{ samagraId: student.samagraId }], // Consider if this is truly needed or can be removed
+                admissionNo: student.admissionNo, admissionType: student.admissionType, stream: stream,
+                class: className, admissionClass: student.admissionClass, dob: student.dob, doa: student.doa,
+                gender: student.gender, category: student.category, religion: student.religion,
+                nationality: student.nationality, bankAccountNo: student.bankAccountNo,
+                bankIfscCode: student.bankIfscCode, address: student.address, fatherName: student.fatherName,
+                fatherQualification: student.fatherQualification, motherName: student.motherName,
+                motherQualification: student.motherQualification, fatherOccupation: student.fatherOccupation,
+                motherOccupation: student.motherOccupation, parentsContact: student.parentsContact,
+                familyAnnualIncome: student.familyAnnualIncome, createdBy: createdBy,
+            };
+            studentDataToInsert.push(studentObj);
         }
 
+        // --- Bulk Insertion of Students ---
+        const createdStudents = await StudentModel.insertMany(studentDataToInsert, { session });
 
-        const createStudent = await StudentModel.create(studentData, { session });
-        let admissionFees = checkFeesStr.admissionFees;
-        let studentFeesData = [];
-        let totalFeesInStr = checkFeesStr.totalFees;
-        for (let i = 0; i < createStudent.length; i++) {
-            let totalFees = 0;
-            let student = createStudent[i];
-            totalFees = totalFeesInStr - student.feesConcession;
-            let feesObject = {
-                adminId: adminId,
-                studentId: student._id,
-                class: className,
-                stream: stream,
-                session: studentData[0].session,
-                currentSession:studentData[0].session,
-                previousSessionFeesStatus: false,
-                previousSessionClass: 0,
-                previousSessionStream: "empty",
-                admissionFeesPayable: false,
-                admissionFees: 0,
-                totalFees: totalFees,
-                feesConcession: student.feesConcession,
-                allFeesConcession: student.feesConcession,
-                paidFees: 0,
-                dueFees: totalFees,
-                AllTotalFees: totalFees,
-                AllPaidFees: 0,
-                AllDueFees: totalFees,
+        // --- Prepare Fees Data (using the _ids from newly created students) ---
+        for (const student of createdStudents) {
+            let totalFees = checkFeesStr.totalFees - student.feesConcession;
+            const feesObject = {
+                adminId: adminId, studentId: student._id, class: className, stream: stream,
+                session: selectedSession, currentSession: selectedSession, previousSessionFeesStatus: false,
+                previousSessionClass: 0, previousSessionStream: "empty", admissionFeesPayable: false,
+                admissionFees: 0, totalFees: totalFees, feesConcession: student.feesConcession,
+                allFeesConcession: student.feesConcession, paidFees: 0, dueFees: totalFees,
+                AllTotalFees: totalFees, AllPaidFees: 0, AllDueFees: totalFees,
             };
-            if (student.admissionType === 'New') {
+
+            if (student.admissionType === 'new') {
                 feesObject.admissionFeesPayable = true;
-                feesObject.admissionFees += admissionFees;
-                feesObject.totalFees += admissionFees;
-                feesObject.paidFees += admissionFees;
+                feesObject.admissionFees = checkFeesStr.admissionFees;
+                feesObject.totalFees += checkFeesStr.admissionFees;
+                feesObject.paidFees = checkFeesStr.admissionFees;
                 feesObject.dueFees = feesObject.totalFees - feesObject.paidFees;
-                feesObject.AllTotalFees += admissionFees;
-                feesObject.AllPaidFees += admissionFees;
-                feesObject.AllDueFees = feesObject.totalFees - feesObject.paidFees;
+                feesObject.AllTotalFees += checkFeesStr.admissionFees;
+                feesObject.AllPaidFees = checkFeesStr.admissionFees;
+                feesObject.AllDueFees = feesObject.AllTotalFees - feesObject.AllPaidFees;
                 feesObject.admissionFeesPaymentDate = istDateTimeString;
             }
-
-            studentFeesData.push(feesObject);
+            feesDataToInsert.push(feesObject);
         }
-        if (createStudent && studentFeesData.length > 0) {
-            const createStudentFeesData = await FeesCollectionModel.create(studentFeesData, { session });
 
-            if (createStudentFeesData) {
-                await session.commitTransaction();
-                session.endSession();
-                return res.status(200).json('Student created successfully');
-            }
-        }
-        await session.abortTransaction();
+        // --- Bulk Insertion of Fees Data ---
+        await FeesCollectionModel.insertMany(feesDataToInsert, { session });
+
+        // --- Commit Transaction and Respond ---
+        await session.commitTransaction();
         session.endSession();
-        return res.status(500).json('Error creating student and fees data!');
+        return res.status(200).json('Student records and fees data created successfully!');
+
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
-        return res.status(500).json('Internal Server Error!');
+        return res.status(400).json(error.message || 'Internal Server Error while creating student records. Please try again later.'); // Return specific error message to client
     }
-}
+};
 
 let UpdateStudent = async (req, res, next) => {
     try {
         const id = req.params.id;
         let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession } = req.body;
         const studentData = {
-            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId,extraField :[{samagraId: samagraId}], admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession
+            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, extraField: [{ samagraId: samagraId }], admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession
         }
         const updateStudent = await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
         return res.status(200).json('Student updated successfully');
@@ -762,7 +666,7 @@ let StudentClassPromote = async (req, res, next) => {
                         adminId: adminId,
                         studentId: studentId,
                         session: session,
-                        currentSession:session,
+                        currentSession: session,
                         previousSessionFeesStatus: false,
                         previousSessionClass: 0,
                         previousSessionStream: "empty",
@@ -795,7 +699,7 @@ let StudentClassPromote = async (req, res, next) => {
                     adminId: adminId,
                     studentId,
                     session: session,
-                    currentSession:session,
+                    currentSession: session,
                     previousSessionFeesStatus: true,
                     previousSessionClass: 0,
                     previousSessionStream: "empty",
@@ -819,7 +723,7 @@ let StudentClassPromote = async (req, res, next) => {
                     },
                     {
                         $set: {
-                            currentSession:session,
+                            currentSession: session,
                             previousSessionClass: previousSessionClass,
                             previousSessionStream: previousSessionStream,
                             class: className,
@@ -914,7 +818,7 @@ let StudentClassFail = async (req, res, next) => {
                         adminId: adminId,
                         studentId: studentId,
                         session: session,
-                        currentSession:session,
+                        currentSession: session,
                         previousSessionFeesStatus: false,
                         previousSessionClass: 0,
                         previousSessionStream: "empty",
@@ -947,7 +851,7 @@ let StudentClassFail = async (req, res, next) => {
                     adminId: adminId,
                     studentId,
                     session: session,
-                    currentSession:session,
+                    currentSession: session,
                     previousSessionFeesStatus: true,
                     previousSessionClass: 0,
                     previousSessionStream: "empty",
@@ -971,7 +875,7 @@ let StudentClassFail = async (req, res, next) => {
                     },
                     {
                         $set: {
-                            currentSession:session,
+                            currentSession: session,
                             previousSessionClass: previousSessionClass,
                             previousSessionStream: previousSessionStream,
                             class: className,

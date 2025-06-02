@@ -10,6 +10,7 @@ const StudentModel = mongoose.model('student', {
     medium: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     adminId: {
@@ -25,6 +26,7 @@ const StudentModel = mongoose.model('student', {
     name: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     class: {
@@ -35,6 +37,7 @@ const StudentModel = mongoose.model('student', {
     stream: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     admissionClass: {
@@ -50,6 +53,7 @@ const StudentModel = mongoose.model('student', {
     admissionType: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     dob: {
@@ -65,21 +69,25 @@ const StudentModel = mongoose.model('student', {
     gender: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     category: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     religion: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     nationality: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     udiseNumber: {
@@ -106,40 +114,48 @@ const StudentModel = mongoose.model('student', {
     address: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     lastSchool: {
         type: String,
+        lowercase: true,
         trim: true
     },
     fatherName: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     fatherQualification: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     fatherOccupation: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     motherName: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     motherQualification: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     motherOccupation: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     parentsContact: {

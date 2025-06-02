@@ -560,12 +560,12 @@ export class StudentComponent implements OnInit {
       }
       // Transform the keys of the array
       const transformedDataArray = transformKeys(mappedData);
-      if (transformedDataArray.length > 100) {
+      if (transformedDataArray.length > 200) {
         this.fileChoose = false;
         this.errorCheck = true;
-        this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 100';
+        this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 200';
       }
-      if (transformedDataArray.length <= 100) {
+      if (transformedDataArray.length <= 200) {
         this.bulkStudentRecord = transformedDataArray;
         this.fileChoose = true;
         this.errorCheck = false;
@@ -649,23 +649,46 @@ export class StudentComponent implements OnInit {
       'parentsContact',
       'familyAnnualIncome',
     ];
-    function toTitleCase(str: string) {
-      return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
+    function toTitleCase(str: string): string {
+      return str.replace(/\w\S*/g, (txt) =>
+        txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
+      );
     }
-    function orderObjectsByHeaders(studentInfoByClass: any, header: any, selectedSession: string) {
-      const filteredData = studentInfoByClass.filter((obj: any) => obj.session === selectedSession);
-      return filteredData.map((obj: any) => {
-        const orderedObj: any = {};
-        header.forEach((header: any) => {
-          let value = obj[header];
-          if (["name", "fatherName", "motherName"].includes(header) && typeof value === "string") {
-            value = toTitleCase(value);
+
+    function orderObjectsByHeaders(
+      studentInfoByClass: any[],
+      headers: string[],
+      selectedSession: string
+    ): any[] {
+      const stringFieldsSet = new Set([
+        "name", "fatherName", "motherName", "medium", "admissionType", "gender",
+        "admissionClass", "category", "religion", "nationality", "address",
+        "fatherQualification", "motherQualification", "fatherOccupation", "motherOccupation"
+      ]);
+
+      const categorySet = new Set(["obc", "sc", "st", "ews"]);
+
+      return studentInfoByClass
+        .filter(obj => obj.session === selectedSession)
+        .map(obj => {
+          const result: any = {};
+          for (let i = 0; i < headers.length; i++) {
+            const key = headers[i];
+            let value = obj[key];
+
+            if (typeof value === "string" && stringFieldsSet.has(key)) {
+              value =
+                key === "category" && categorySet.has(value.toLowerCase())
+                  ? value.toUpperCase()
+                  : toTitleCase(value);
+            }
+
+            result[key] = value;
           }
-          orderedObj[header] = value;
+          return result;
         });
-        return orderedObj;
-      });
     }
+
     const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
     const modifiedHeader = header.map(field =>
       field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
