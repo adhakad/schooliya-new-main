@@ -174,8 +174,7 @@
                           <p class="mb-0">{{students.class | classSuffix}}</p>
                         </td>
                         <td>
-                          <p class="mb-0" *ngIf="students.class==11 || students.class==12">{{students.stream |
-                            titlecase}}
+                          <p class="mb-0" *ngIf="students.class==11 || students.class==12">{{students.stream | streamTitleCase}}
                           </p>
                           <p class="mb-0" *ngIf="students.class !==11 && students.class !==12">N/A</p>
                         </td>

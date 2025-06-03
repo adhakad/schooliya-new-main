@@ -71,7 +71,7 @@
                                                 <p class="mb-0">{{examAdmitCard.class | classSuffix}}</p>
                                             </td>
                                             <td>
-                                                <p class="mb-0">{{examAdmitCard.stream}}</p>
+                                                <p class="mb-0">{{examAdmitCard.stream | streamTitleCase}}</p>
                                             </td>
                                             <td class="mb-0">
                                                 <mat-icon
@@ -372,7 +372,7 @@
                                                             <h3>{{admitCardInfo?.examType | titlecase}} Admit
                                                                 Card Class - {{admitCardInfo?.class | classSuffix}}
                                                                 <span *ngIf="cls==11 || cls==12">-
-                                                                    {{admitCardInfo?.stream}}</span>
+                                                                    {{admitCardInfo?.stream | streamTitleCase}}</span>
                                                             </h3>
                                                         </ng-container>
                                                         <table class="custom-table">

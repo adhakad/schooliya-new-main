@@ -7,6 +7,7 @@ import { SecureEmailPipe } from '../secure-email.pipe';
 import { NumberToWordsPipe } from '../number-to-words.pipe';
 import { FormatMarksTypePipe } from '../format-marks-type.pipe';
 import { TitlecaseSeparatorPipe } from '../titlecase-separator.pipe';
+import { StreamTitleCasePipe } from '../stream-title-case.pipe';
 
 
 @NgModule({
@@ -17,19 +18,21 @@ import { TitlecaseSeparatorPipe } from '../titlecase-separator.pipe';
     SecureEmailPipe,
     NumberToWordsPipe,
     FormatMarksTypePipe,
-    TitlecaseSeparatorPipe
+    TitlecaseSeparatorPipe,
+    StreamTitleCasePipe
   ],
   imports: [
     CommonModule
   ],
-  exports:[
+  exports: [
     ChunkPipe,
     ClassSuffixPipe,
     DateToWordsPipe,
     SecureEmailPipe,
     NumberToWordsPipe,
     FormatMarksTypePipe,
-    TitlecaseSeparatorPipe
+    TitlecaseSeparatorPipe,
+    StreamTitleCasePipe
   ]
 })
 export class SharedPipeModule { }

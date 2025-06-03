@@ -64,7 +64,7 @@
                                                 <p class="mb-0">{{result.class | classSuffix}}</p>
                                             </td>
                                             <td>
-                                                <p class="mb-0">{{result.stream}}</p>
+                                                <p class="mb-0">{{result.stream | streamTitleCase}}</p>
                                             </td>
                                             <td>
                                                 <ng-container *ngFor="let exam of result.examType,let i=index;">

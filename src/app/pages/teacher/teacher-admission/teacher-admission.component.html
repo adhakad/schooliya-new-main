@@ -111,7 +111,7 @@
                         <p class="mb-0">{{students.class | classSuffix}}</p>
                       </td>
                       <td>
-                        <p class="mb-0">{{students.stream | titlecase}}</p>
+                        <p class="mb-0">{{students.stream | streamTitleCase}}</p>
                       </td>
                       <td>
                         <p class="mb-0">{{students.rollNumber}}</p>
@@ -636,7 +636,7 @@
                                     <td class="text-bold">Class :</td>
                                     <td>{{singleStudentInfo?.class | classSuffix}}</td>
                                     <td class="text-bold">Stream :</td>
-                                    <td>{{singleStudentInfo?.stream  | titlecase}}</td>
+                                    <td>{{singleStudentInfo?.stream | streamTitleCase}}</td>
                                   </tr>
                                   <tr style="height: 25px;"></tr>
                                   <tr>

@@ -92,7 +92,7 @@
                         <p class="mb-0">{{students.class | classSuffix}}</p>
                       </td>
                       <td>
-                        <p class="mb-0">{{students.stream | titlecase}}</p>
+                        <p class="mb-0">{{students.stream | streamTitleCase}}</p>
                       </td>
                       <td>
                         <p class="mb-0">{{students.rollNumber}}</p>
@@ -149,7 +149,7 @@
                               <p>Roll Number - {{singleStudentInfo.rollNumber}}</p>
                             </div>
                             <div class="col-12 col-lg-6">
-                              <p>Stream - {{singleStudentInfo.stream | titlecase}}</p>
+                              <p>Stream - {{singleStudentInfo.stream | streamTitleCase}}</p>
                             </div>
                             <ng-container>
                               <h3 style="color: #8d6dff;">Student Info</h3>

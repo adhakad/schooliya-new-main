@@ -145,7 +145,7 @@
                                                 <p class="mb-0">{{students.class | classSuffix}}</p>
                                             </td>
                                             <td>
-                                                <p class="mb-0">{{students.stream}}</p>
+                                                <p class="mb-0">{{students.stream | streamTitleCase}}</p>
                                             </td>
                                             <td>
                                                 <p class="mb-0">{{students.session}}</p>
@@ -421,7 +421,7 @@
                                                             <p>Roll Number - {{singleStudentInfo.rollNumber}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
-                                                            <p>Stream - {{singleStudentInfo.stream}}</p>
+                                                            <p>Stream - {{singleStudentInfo.stream | streamTitleCase}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
                                                             <p>Fees Concession - &#8377;
