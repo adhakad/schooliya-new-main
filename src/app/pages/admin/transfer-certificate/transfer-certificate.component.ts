@@ -46,13 +46,6 @@ export class TransferCertificateComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
   selectedValue: number = 0;
-
-  sessions: any;
-  categorys: any;
-  religions: any;
-  qualifications: any;
-  occupations: any;
-  mediums: any;
   stream: string = '';
   notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
@@ -89,7 +82,6 @@ export class TransferCertificateComponent implements OnInit {
     this.loader = false;
     this.getSchool();
     this.getClass();
-    this.allOptions();
     this.activatedRoute.queryParams.subscribe((params) => {
       this.cls = +params['cls'] || 0;
       this.stream = params['stream'] || '';
@@ -156,7 +148,7 @@ export class TransferCertificateComponent implements OnInit {
         this.closeModal();
         this.getStudents({ page: this.page });
         setTimeout(() => {
-          this.toastr.success('',res.successMsg);
+          this.toastr.success('', res.successMsg);
         }, 500)
       }
     }, err => {
@@ -237,20 +229,6 @@ export class TransferCertificateComponent implements OnInit {
     return printHtml;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   closeModal() {
     this.showStudentInfoViewModal = false;
     this.showStudentTCFormModal = false;
@@ -276,7 +254,7 @@ export class TransferCertificateComponent implements OnInit {
     this.showStudentTCFormModal = true;
     this.singleStudentInfo = student;
     let stream: String = student.stream;
-    if (stream == "N/A") {
+    if (stream == "n/a") {
       stream = this.notApplicable;
     }
     let params = {
@@ -296,7 +274,10 @@ export class TransferCertificateComponent implements OnInit {
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
-        this.classSubject = res.subject;
+        this.classSubject = res.subject.map((item: any) => {
+          return { subject: item.subject.toUpperCase() };
+        });
+
       }
       if (!res) {
         this.classSubject = [];
@@ -307,7 +288,7 @@ export class TransferCertificateComponent implements OnInit {
     this.closeModal();
     this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.toastr.success('',msg);
+      this.toastr.success('', msg);
     }, 500)
   }
 
@@ -372,14 +353,6 @@ export class TransferCertificateComponent implements OnInit {
     });
   }
 
-  allOptions() {
-    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
-    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
-    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
-  }
   getTC() {
     this.errorCheck = false;
     this.errorMsg = '';

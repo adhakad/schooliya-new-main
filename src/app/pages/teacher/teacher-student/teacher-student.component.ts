@@ -729,11 +729,11 @@ export class TeacherStudentComponent implements OnInit {
   }
 
   allOptions() {
-    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'EWS' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
-    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
-    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
+    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }];
+    this.categorys = [{ category: 'general' }, { category: 'obc' }, { category: 'sc' }, { category: 'st' }, { category: 'ews' }, { category: 'other' }];
+    this.religions = [{ religion: 'hinduism' }, { religion: 'buddhism' }, { religion: 'christanity' }, { religion: 'jainism' }, { religion: 'sikhism' }, { religion: 'aninism / adivasi' }, { religion: 'islam' }, { religion: 'baha i faith ' }, { religion: 'judaism' }, { religion: 'zoroastrianism' }, { religion: 'other' }];
+    this.qualifications = [{ qualification: 'doctoral degree' }, { qualification: 'masters degree' }, { qualification: 'graduate diploma' }, { qualification: 'graduate certificate' }, { qualification: 'graduate certificate' }, { qualification: 'bachelor degree' }, { qualification: 'advanced diploma' }, { qualification: 'primary school' }, { qualification: 'high school' }, { qualification: 'higher secondary school' }, { qualification: 'illiterate' }, { qualification: 'other' }];
+    this.occupations = [{ occupation: 'agriculture(farmer)' }, { occupation: 'laborer' }, { occupation: 'self employed' }, { occupation: 'private job' }, { occupation: 'state govt. employee' }, { occupation: 'central govt. employee' }, { occupation: 'military job' }, { occupation: 'para-military job' }, { occupation: 'psu employee' }, { occupation: 'other' }];
+    this.mediums = [{ medium: 'hindi' }, { medium: 'english' }];
   }
 }

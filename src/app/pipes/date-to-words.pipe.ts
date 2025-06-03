@@ -12,7 +12,7 @@ export class DateToWordsPipe implements PipeTransform {
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    const dateParts = inputDate.split('-');
+    const dateParts = inputDate.split('/');
     const day = +dateParts[0];
     const monthIndex = +dateParts[1] - 1;
     const year = +dateParts[2];

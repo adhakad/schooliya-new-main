@@ -46,13 +46,6 @@ export class PromoteFailComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
   selectedValue: number = 0;
-
-  sessions: any;
-  categorys: any;
-  religions: any;
-  qualifications: any;
-  occupations: any;
-  mediums: any;
   stream: string = '';
   notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
@@ -106,7 +99,6 @@ export class PromoteFailComponent implements OnInit {
     this.loader = false;
     this.getSchool();
     this.getClass();
-    this.allOptions();
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
@@ -384,13 +376,4 @@ export class PromoteFailComponent implements OnInit {
   //     })
   //   }
   // }
-
-  allOptions() {
-    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Muslim' }, { religion: 'Other' }]
-    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
-    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
-  }
 }

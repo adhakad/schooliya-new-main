@@ -73,8 +73,7 @@
                                             <mat-label *ngIf="!cls">Class</mat-label>
                                             <mat-select type="number" matInput>
                                                 <div *ngFor="let class of classInfo">
-                                                    <mat-option value="{{class}}"
-                                                        (click)="chooseClass(class)">{{class
+                                                    <mat-option value="{{class}}" (click)="chooseClass(class)">{{class
                                                         |
                                                         classSuffix}}</mat-option>
                                                 </div>
@@ -149,7 +148,7 @@
                                                 <p class="mb-0">{{students.class | classSuffix}}</p>
                                             </td>
                                             <td>
-                                                <p class="mb-0">{{students.stream}}</p>
+                                                <p class="mb-0">{{students.stream | titlecase}}</p>
                                             </td>
                                             <td>
                                                 <p class="mb-0">{{students.rollNumber}}</p>
@@ -202,7 +201,7 @@
                                                             <p>Academic Session - {{singleStudentInfo.session}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
-                                                            <p>Medium - {{singleStudentInfo.medium}}</p>
+                                                            <p>Medium - {{singleStudentInfo.medium | titlecase}}</p>
                                                         </div>
 
                                                         <div class="col-12 col-lg-6">
@@ -215,7 +214,7 @@
                                                             <p>Roll Number - {{singleStudentInfo.rollNumber}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
-                                                            <p>Stream - {{singleStudentInfo.stream}}</p>
+                                                            <p>Stream - {{singleStudentInfo.stream | titlecase}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
                                                             <p>Fees Concession - &#8377;
@@ -340,7 +339,7 @@
                                                             <p>Class - {{singleStudentInfo.class | classSuffix}}</p>
                                                         </div>
                                                         <div class="col-12 col-lg-6">
-                                                            <p>Stream - {{singleStudentInfo.stream}}</p>
+                                                            <p>Stream - {{singleStudentInfo.stream | titlecase}}</p>
                                                         </div>
                                                         <br> <br> <br>
                                                         <div class="col-12 col-lg-6">
@@ -586,7 +585,8 @@
                                                                             <p>:&nbsp;&nbsp;&nbsp;&nbsp;(In
                                                                                 Words)&nbsp;&nbsp;<span
                                                                                     class="text-bold">{{singleStudentTCInfo?.dob
-                                                                                    | dateToWords}}</span></p>
+                                                                                    | dateToWords | titlecase}}</span>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -621,11 +621,12 @@
                                                                     <tr>
                                                                         <td class="text-left td-left">
                                                                             <p>8. Whether the pupil belongs to
-                                                                                General/OBC/SC/ST</p>
+                                                                                General/OBC/SC/ST/Other</p>
                                                                         </td>
                                                                         <td class="text-left td-right">
                                                                             <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                                                                    class="text-bold">{{singleStudentTCInfo?.category}}</span>
+                                                                                    class="text-bold">{{singleStudentTCInfo?.category
+                                                                                    | uppercase}}</span>
                                                                             </p>
                                                                         </td>
                                                                     </tr>
@@ -636,9 +637,9 @@
                                                                         </td>
                                                                         <td class="text-left td-right">
                                                                             <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                                                                    class="text-bold">{{singleStudentTCInfo?.doa}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class
-                                                                                    :{{singleStudentTCInfo?.admissionClass
-                                                                                    | classSuffix}}</span></p>
+                                                                                    class="text-bold">{{singleStudentTCInfo?.doa}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudentTCInfo?.admissionClass
+                                                                                    | classSuffix | uppercase }}</span>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -649,7 +650,8 @@
                                                                         <td class="text-left td-right">
                                                                             <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
                                                                                     class="text-bold">{{singleStudentTCInfo?.class
-                                                                                    | classSuffix}}</span></p>
+                                                                                    | classSuffix | uppercase}}</span>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -661,7 +663,8 @@
                                                                             <p>:&nbsp;&nbsp;&nbsp;&nbsp;<span
                                                                                     class="text-bold">{{singleStudentTCInfo?.class
                                                                                     |
-                                                                                    classSuffix}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudentTCInfo?.lastExamStatus
+                                                                                    classSuffix |
+                                                                                    uppercase}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{singleStudentTCInfo?.lastExamStatus
                                                                                     | uppercase}}</span></p>
                                                                         </td>
                                                                     </tr>

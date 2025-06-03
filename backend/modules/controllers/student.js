@@ -154,7 +154,7 @@ let GetStudentPaginationByClass = async (req, res, next) => {
     let adminId = req.body.adminId;
     let stream = req.body.stream;
     if (stream == "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     let searchObj = {};
     if (searchText) {
@@ -208,7 +208,7 @@ let GetStudentPaginationByClass = async (req, res, next) => {
 let GetAllStudentByClass = async (req, res, next) => {
     let stream = req.params.stream;
     if (stream == "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     try {
         let singleStudent = await StudentModel.find({ adminId: req.params.id, class: req.params.class, stream: stream }, '-status -__v').sort({ _id: -1 });
@@ -234,7 +234,7 @@ let CreateStudent = async (req, res, next) => {
     let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy } = req.body;
     let className = req.body.class;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     if (admissionType == 'New') {
         doa = currentDateIst.toFormat('dd/MM/yyyy');
@@ -389,7 +389,7 @@ const CreateBulkStudentRecord = async (req, res, next) => {
     const istDateTimeString = currentDateIst.toFormat('dd/MM/yyyy hh:mm:ss a');
 
     const className = parseInt(classNameParam);
-    const stream = streamParam === "stream" ? "N/A" : streamParam;
+    const stream = streamParam === "stream" ? "n/a" : streamParam;
 
     const classMappings = {
         "nursery": 200, "lkg": 201, "ukg": 202, "1st": 1, "2nd": 2, "3rd": 3, "4th": 4, "5th": 5, "6th": 6,
@@ -611,7 +611,7 @@ let StudentClassPromote = async (req, res, next) => {
         const studentId = req.params.id;
         let { adminId, session, rollNumber, stream, feesConcession } = req.body;
         if (stream == "stream") {
-            stream = "N/A";
+            stream = "n/a";
         }
         let className = parseInt(req.body.class);
         let checkStudent = await StudentModel.findOne({ _id: studentId });
@@ -622,7 +622,7 @@ let StudentClassPromote = async (req, res, next) => {
         if (className == cls && className === 12) {
             return res.status(400).json({ errorMsg: `In this school, students cannot be promoted after the ${className}th class!` });
         }
-        if (className === 10 && stream == "N/A" || className === 11 && stream == "N/A") {
+        if (className === 10 && stream == "n/a" || className === 11 && stream == "n/a") {
             return res.status(400).json({ errorMsg: `Invalid stream for this class!` });
         }
 
@@ -763,7 +763,7 @@ let StudentClassFail = async (req, res, next) => {
         const studentId = req.params.id;
         let { adminId, session, rollNumber, stream, feesConcession } = req.body;
         if (stream == "stream") {
-            stream = "N/A";
+            stream = "n/a";
         }
         let className = parseInt(req.body.class);
         let checkStudent = await StudentModel.findOne({ _id: studentId });
@@ -774,7 +774,7 @@ let StudentClassFail = async (req, res, next) => {
         // if (className == cls && className === 12) {
         //     return res.status(400).json({ errorMsg: `In this school, students cannot be promoted after the ${className}th class` });
         // }
-        // if (className === 10 && stream == "N/A" || className === 11 && stream == "N/A") {
+        // if (className === 10 && stream == "n/a" || className === 11 && stream == "n/a") {
         //     return res.status(400).json({ errorMsg: `Invalid stream for this class!` });
         // }
 

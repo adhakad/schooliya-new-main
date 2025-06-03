@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { read, utils, writeFile } from 'xlsx';
 import * as ExcelJS from 'exceljs';
@@ -47,13 +48,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
   selectedValue: number = 0;
-
-  sessions: any;
-  categorys: any;
-  religions: any;
-  qualifications: any;
-  occupations: any;
-  mediums: any;
   stream: string = '';
   notApplicable: string = "stream";
   streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
@@ -74,7 +68,7 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   adminId!: String
   teacherInfo: any;
   createdBy: String = '';
-  constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private printPdfService: PrintPdfService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
+  constructor(private fb: FormBuilder,  public activatedRoute: ActivatedRoute, private router: Router, private toastr: ToastrService, private printPdfService: PrintPdfService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private issuedTransferCertificate: IssuedTransferCertificateService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.tcForm = this.fb.group({
       adminId: [''],
       lastExamStatus: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
@@ -93,7 +87,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
       this.getTeacherById(this.teacherInfo)
     }
     this.getSchool();
-    this.allOptions();
   }
   getTeacherById(teacherInfo: any) {
     let params = {
@@ -115,13 +108,12 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
       }
     })
   }
-  chooseClass(cls: any) {
-    this.page = 0;
-    this.className = cls;
+  chooseClass(cls: number) {
     this.cls = cls;
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
       this.studentInfo = [];
+      this.updateRouteParams();
       this.getStudents({ page: 1 });
     }
     if (cls == 11 || cls == 12) {
@@ -129,23 +121,26 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
         this.stream = '';
       }
       this.studentInfo = [];
+      this.updateRouteParams();
       this.getStudents({ page: 1 });
     }
   }
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
-      let params = {
-        adminId: this.adminId,
-        cls: this.cls,
-        stream: stream,
-      }
+      this.studentInfo = [];
+      this.updateRouteParams();
       this.getStudents({ page: 1 });
     }
   }
-  chooseStream(event: any) {
-    this.stream = event.value;
+  updateRouteParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
+      queryParamsHandling: 'merge' // Keep other query params
+    });
   }
+
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
   }
@@ -154,11 +149,14 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
 
     singleStudentInfo.serialNo = this.serialNo;
     this.issuedTransferCertificate.createTransferCertificate(singleStudentInfo).subscribe((res: any) => {
-      if (res == 'IssueTransferCertificate') {
+      if (res.IssueTransferCertificate == 'IssueTransferCertificate') {
         const printContent = this.getPrintOneAdmitCardContent();
         this.printPdfService.printContent(printContent);
         this.closeModal();
         this.getStudents({ page: this.page });
+        setTimeout(() => {
+          this.toastr.success('', res.successMsg);
+        }, 500)
       }
     }, err => {
       this.errorCheck = true;
@@ -263,7 +261,7 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     this.showStudentTCFormModal = true;
     this.singleStudentInfo = student;
     let stream: String = student.stream;
-    if (stream == "N/A") {
+    if (stream == "n/a") {
       stream = this.notApplicable;
     }
     let params = {
@@ -276,25 +274,28 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
       if (res) {
-        this.classInfo = res;
+        this.classInfo = res.map((item: any) => item.class);
       }
     })
   }
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
-        this.classSubject = res.subject;
+        this.classSubject = res.subject.map((item: any) => {
+          return { subject: item.subject.toUpperCase() };
+        });
+
       }
       if (!res) {
         this.classSubject = [];
       }
     })
   }
-  successDone(msg:any) {
+  successDone(msg: any) {
     this.closeModal();
     this.getStudents({ page: this.page });
     setTimeout(() => {
-      this.toastr.success('',msg);
+      this.toastr.success('', msg);
     }, 500)
   }
 
@@ -333,7 +334,7 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
         page: $event.page,
         limit: $event.limit ? $event.limit : this.recordLimit,
         adminId: this.adminId,
-        class: this.className,
+        class: this.cls,
         stream: this.stream,
       };
       this.recordLimit = params.limit;
@@ -359,14 +360,6 @@ export class TeacherStudentTransferCertificateComponent implements OnInit {
     });
   }
 
-  allOptions() {
-    this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }]
-    this.categorys = [{ category: 'General' }, { category: 'OBC' }, { category: 'SC' }, { category: 'ST' }, { category: 'Other' }]
-    this.religions = [{ religion: 'Hinduism' }, { religion: 'Buddhism' }, { religion: 'Christanity' }, { religion: 'Jainism' }, { religion: 'Sikhism' }, { religion: 'Aninism / Adivasi' }, { religion: 'Islam' }, { religion: 'Baha I faith ' }, { religion: 'Judaism' }, { religion: 'Zoroastrianism' }, { religion: 'Other' }]
-    this.qualifications = [{ qualification: 'Doctoral Degree' }, { qualification: 'Masters Degree' }, { qualification: 'Graduate Diploma' }, { qualification: 'Graduate Certificate' }, { qualification: 'Graduate Certificate' }, { qualification: 'Bachelor Degree' }, { qualification: 'Advanced Diploma' }, { qualification: 'Primary School' }, { qualification: 'High School' }, { qualification: 'Higher Secondary School' }, { qualification: 'Illiterate' }, { qualification: 'Other' }]
-    this.occupations = [{ occupation: 'Agriculture(Farmer)' }, { occupation: 'Laborer' }, { occupation: 'Self Employed' }, { occupation: 'Private Job' }, { occupation: 'State Govt. Employee' }, { occupation: 'Central Govt. Employee' }, { occupation: 'Military Job' }, { occupation: 'Para-Military Job' }, { occupation: 'PSU Employee' }, { occupation: 'Other' }]
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
-  }
   getTC() {
     this.errorCheck = false;
     this.errorMsg = '';

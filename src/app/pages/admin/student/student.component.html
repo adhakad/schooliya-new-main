@@ -192,7 +192,7 @@
                         <p class="mb-0">{{students.session}}</p>
                       </td>
                       <td>
-                        <p class="mb-0">{{students.createdBy}}</p>
+                        <p class="mb-0">{{students.createdBy | titlecase}}</p>
                       </td>
                       <td class="mb-0">
                         <mat-icon (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
@@ -254,7 +254,7 @@
                                 <mat-label>Medium</mat-label>
                                 <mat-select type="text" matInput formControlName="medium">
                                   <div *ngFor="let medium of mediums">
-                                    <mat-option value="{{medium.medium}}">{{medium.medium}}</mat-option>
+                                    <mat-option value="{{medium.medium}}">{{medium.medium | titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -417,9 +417,9 @@
                                 <mat-label>Gender</mat-label>
                                 <mat-select type="text" matInput formControlName="gender">
                                   <div>
-                                    <mat-option value="Male">Male</mat-option>
-                                    <mat-option value="Female">Female</mat-option>
-                                    <mat-option value="Other">Other</mat-option>
+                                    <mat-option value="male">Male</mat-option>
+                                    <mat-option value="female">Female</mat-option>
+                                    <mat-option value="other">Other</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -433,7 +433,7 @@
                                 <mat-label>Category</mat-label>
                                 <mat-select type="text" matInput formControlName="category">
                                   <div *ngFor="let category of categorys">
-                                    <mat-option value="{{category.category}}">{{category.category}}</mat-option>
+                                    <mat-option value="{{category.category}}">{{category.category | titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -447,7 +447,7 @@
                                 <mat-label>Religion</mat-label>
                                 <mat-select type="text" matInput formControlName="religion">
                                   <div *ngFor="let religion of religions">
-                                    <mat-option value="{{religion.religion}}">{{religion.religion}}</mat-option>
+                                    <mat-option value="{{religion.religion}}">{{religion.religion | titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -461,8 +461,8 @@
                                 <mat-label>Nationality</mat-label>
                                 <mat-select type="text" matInput formControlName="nationality">
                                   <div>
-                                    <mat-option value="Indian">Indian</mat-option>
-                                    <mat-option value="Other">Other</mat-option>
+                                    <mat-option value="indian">Indian</mat-option>
+                                    <mat-option value="other">Other</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -548,7 +548,7 @@
                                 <mat-select type="text" matInput formControlName="fatherQualification">
                                   <div *ngFor="let qualification of qualifications">
                                     <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification}}</mat-option>
+                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -560,7 +560,7 @@
                                 <mat-label>Father Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="fatherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -599,7 +599,7 @@
                                 <mat-select type="text" matInput formControlName="motherQualification">
                                   <div *ngFor="let qualification of qualifications">
                                     <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification}}</mat-option>
+                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -611,7 +611,7 @@
                                 <mat-label>Mother Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="motherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -778,7 +778,7 @@
                               <p>Academic Session - {{singleStudentInfo.session}}</p>
                             </div>
                             <div class="col-12 col-lg-6">
-                              <p>Medium - {{singleStudentInfo.medium}}</p>
+                              <p>Medium - {{singleStudentInfo.medium | titlecase}}</p>
                             </div>
 
                             <div class="col-12 col-lg-6">
@@ -791,7 +791,7 @@
                               <p>Roll Number - {{singleStudentInfo.rollNumber}}</p>
                             </div>
                             <div class="col-12 col-lg-6">
-                              <p>Stream - {{singleStudentInfo.stream}}</p>
+                              <p>Stream - {{singleStudentInfo.stream | titlecase}}</p>
                             </div>
                             <div class="col-12 col-lg-6">
                               <p>Fees Concession - &#8377; {{singleStudentInfo.feesConcession}}</p>
