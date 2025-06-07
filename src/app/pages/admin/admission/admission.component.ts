@@ -47,7 +47,7 @@ export class AdmissionComponent implements OnInit {
   stream: string = '';
   mediums: any;
   // notApplicable: String = "stream";
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   cls: number = 0;
   clsFeesStructure: any;
   schoolInfo: any;
@@ -213,7 +213,7 @@ export class AdmissionComponent implements OnInit {
     this.clsFeesStructure = {};
     this.cls = cls;
     if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
-      this.studentForm.get('stream')?.setValue("N/A");
+      this.studentForm.get('stream')?.setValue("n/a");
       this.stream = '';
       this.stream = 'stream';
       if (this.stream) {

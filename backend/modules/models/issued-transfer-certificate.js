@@ -30,6 +30,7 @@ const IssuedTransferCertificateModel = mongoose.model('issued-transfer-certifica
     stream: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true
     },
     // admissionClass:{

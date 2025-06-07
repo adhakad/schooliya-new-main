@@ -15,6 +15,7 @@ const ClassSubjectModel = mongoose.model('class-subject', {
     stream: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true,
     },
     subject: {},

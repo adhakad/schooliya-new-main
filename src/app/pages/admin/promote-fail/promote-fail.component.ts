@@ -48,7 +48,7 @@ export class PromoteFailComponent implements OnInit {
   selectedValue: number = 0;
   stream: string = '';
   notApplicable: string = "stream";
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   cls: number = 0;
   className: any;
   admissionType: string = '';
@@ -204,7 +204,7 @@ export class PromoteFailComponent implements OnInit {
     this.showStudentTCModal = true;
     this.singleStudentInfo = student;
     let stream: String = student.stream;
-    if (stream == "N/A") {
+    if (stream == "n/a") {
       stream = this.notApplicable;
     }
     let params = {

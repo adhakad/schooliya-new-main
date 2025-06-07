@@ -29,7 +29,7 @@ export class ClassSubjectComponent implements OnInit {
   subjectInfo: any[] = [];
   classSubjectInfo: any[] = [];
   selectedSubjectGroup: any[] = [];
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
 
   recordLimit: number = 5;
   filters: any = {};
@@ -107,7 +107,7 @@ export class ClassSubjectComponent implements OnInit {
   chooseClass(cls: any) {
     this.cls = cls;
     if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
-      this.classSubjectForm.get('stream')?.setValue("N/A");
+      this.classSubjectForm.get('stream')?.setValue("n/a");
     }
   }
 

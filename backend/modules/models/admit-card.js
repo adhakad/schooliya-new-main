@@ -21,6 +21,7 @@ const AdmitCardSchema = new Schema({
   stream: {
     type: String,
     required: true,
+    lowercase: true,
     trim: true,
   },
   examType: {

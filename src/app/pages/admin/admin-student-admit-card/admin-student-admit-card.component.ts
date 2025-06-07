@@ -35,7 +35,7 @@ export class AdminStudentAdmitCardComponent implements OnInit {
   examType: any[] = [];
   stream: string = '';
   notApplicable: string = "stream";
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   selectedValue: number = 0;
   adminId!: string;
   constructor(public activatedRoute: ActivatedRoute, private router: Router, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private admitCardService: AdmitCardService, private printPdfService: PrintPdfService, private admitCardStructureService: AdmitCardStructureService) {

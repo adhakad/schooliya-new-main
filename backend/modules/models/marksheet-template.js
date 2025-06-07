@@ -14,6 +14,7 @@ const MarksheetTemplateModel = mongoose.model('marksheet-template', {
     stream: {
         type: String,
         required: true,
+        lowercase: true,
         trim: true,
     },
     templateName: {

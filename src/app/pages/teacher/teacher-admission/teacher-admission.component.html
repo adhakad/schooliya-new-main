@@ -182,8 +182,8 @@
                                 <mat-label>Class Applied for</mat-label>
                                 <mat-select matInput formControlName="class">
                                   <div *ngFor="let classInfo of classInfo">
-                                    <mat-option value="{{classInfo.class}}"
-                                      (click)="chooseClass(classInfo.class)">{{classInfo.class |
+                                    <mat-option value="{{classInfo}}"
+                                      (click)="chooseClass(classInfo)">{{classInfo |
                                       classSuffix}}</mat-option>
                                   </div>
                                 </mat-select>
@@ -209,7 +209,7 @@
                                   </ng-container>
                                   <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
                                     <div>
-                                      <mat-option value="N/A">N/A</mat-option>
+                                      <mat-option value="n/a">N/A</mat-option>
                                     </div>
                                   </ng-container>
                                 </mat-select>

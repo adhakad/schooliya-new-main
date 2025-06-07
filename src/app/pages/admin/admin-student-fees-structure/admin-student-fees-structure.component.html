@@ -81,7 +81,7 @@
                                                 <p class="mb-0">{{clsFeesStructure[i]?.class | classSuffix}}</p>
                                             </td>
                                             <td>
-                                                <p class="mb-0">{{clsFeesStructure[i]?.stream}}</p>
+                                                <p class="mb-0">{{clsFeesStructure[i]?.stream | streamTitleCase}}</p>
                                             </td>
                                             <td>
                                                 <p class="mb-0">&#8377; {{clsFeesStructure[i]?.totalFees}}</p>
@@ -252,7 +252,7 @@
                                         <h5 class="modal-title">FEE STRUCTURE CLASS - {{singleFessStructure?.class |
                                             classSuffix}} <span
                                                 *ngIf="singleFessStructure?.class==11 || singleFessStructure?.class==12">(
-                                                {{singleFessStructure?.stream}} )</span></h5>
+                                                {{singleFessStructure?.stream | streamTitleCase}} )</span></h5>
                                         <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                     </div>
                                     <div class="modal-body">

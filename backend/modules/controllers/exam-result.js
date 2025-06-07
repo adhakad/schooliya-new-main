@@ -30,7 +30,7 @@ let GetSingleStudentExamResult = async (req, res, next) => {
         let studentId = student._id;
         let stream = student.stream;
         if (stream === "stream") {
-            stream = "N/A";
+            stream = "n/a";
         }
         let examResult = await ExamResultModel.findOne({ adminId: adminId, studentId: studentId })
         if (!examResult) {
@@ -57,7 +57,7 @@ let GetSingleStudentExamResultById = async (req, res, next) => {
         let className = student.class;
         let adminId = student.adminId;
         if (stream === "stream") {
-            stream = "N/A";
+            stream = "n/a";
         }
         let examResult = await ExamResultModel.findOne({ adminId: adminId, studentId: studentId });
         if (!examResult) {
@@ -80,7 +80,7 @@ let GetAllStudentResultByClassStream = async (req, res, next) => {
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     let streamMsg = `${stream} stream`;
     try {
@@ -95,7 +95,7 @@ let GetAllStudentResultByClassStream = async (req, res, next) => {
         }
         let marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
         if (!marksheetTemplate) {
-            if (stream === "N/A") {
+            if (stream === "n/a") {
                 streamMsg = ``;
             }
             return res.status(404).json({ statusCode: 404, errorMsg: `Not Found!` });
@@ -103,7 +103,7 @@ let GetAllStudentResultByClassStream = async (req, res, next) => {
         let templateName = marksheetTemplate.templateName;
         let marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
         if (!marksheetTemplateStructure) {
-            if (stream === "N/A") {
+            if (stream === "n/a") {
                 streamMsg = ``;
             }
             return res.status(404).json({ errorMsg: `Not Found!` });
@@ -121,7 +121,7 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     let streamMsg = `${stream} stream`;
     try {
@@ -133,7 +133,7 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
 
         let marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
         if (!marksheetTemplate) {
-            if (stream === "N/A") {
+            if (stream === "n/a") {
                 streamMsg = ``;
             }
             return res.status(404).json({ errorMsg: `This class ${streamMsg} marksheet template not found!` });
@@ -182,7 +182,7 @@ let CreateExamResult = async (req, res, next) => {
     let className = req.body.class;
     let { adminId, rollNumber, examType, stream, resultDetail, createdBy } = req.body;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     try {
         const student = await StudentModel.findOne({ adminId: adminId, rollNumber: rollNumber, class: className, stream: stream });
@@ -230,7 +230,7 @@ let CreateExamResult = async (req, res, next) => {
 //     let { examType, stream, createdBy } = req.body;
 //     let className = req.body.bulkResult[0].Class
 //     if (stream === "stream") {
-//         stream = "N/A";
+//         stream = "n/a";
 //     }
 //     let result = [];
 //     let newClsRollNumber = [];

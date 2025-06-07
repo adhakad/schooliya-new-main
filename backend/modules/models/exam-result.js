@@ -19,6 +19,7 @@ const ExamResultModel = mongoose.model('exam-result', {
   stream: {
     type: String,
     required: true,
+    lowercase: true,
     trim: true,
   },
   resultDetail:{},

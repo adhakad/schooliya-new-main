@@ -9,7 +9,7 @@ let GetSingleClassAdmitCardStructureByStream = async (req, res, next) => {
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     try {
         const singleAdmitCardStr = await AdmitCardStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
@@ -64,7 +64,7 @@ let CreateAdmitCardStructure = async (req, res, next) => {
         endTime: combinedData.map(item => item.endTime)
     };
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
 
     try {
@@ -152,7 +152,7 @@ let UpdateAdmitCardStructure = async (req, res, next) => {
         endTime: combinedData.map(item => item.endTime)
     };
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
 
     try {

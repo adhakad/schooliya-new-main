@@ -53,7 +53,7 @@ export class TeacherStudentMarksheetComponent implements OnInit {
   stream: string = '';
   notApplicable: string = "stream";
   examType: any[] = [];
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   loader: Boolean = false;
   adminId!: string;
   teacherInfo: any;

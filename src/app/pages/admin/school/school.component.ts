@@ -213,6 +213,6 @@ export class SchoolComponent implements OnInit {
   }
 
   allOptions() {
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }]
+    this.mediums = [{ medium: 'Hindi' }, { medium: 'English'},{medium:'Hindi & English'}]
   }
 }

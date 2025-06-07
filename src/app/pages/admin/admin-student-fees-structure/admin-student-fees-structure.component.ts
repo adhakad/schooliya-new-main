@@ -38,7 +38,7 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   classInfo: any[] = [];
   stream: string = '';
   notApplicable: string = "stream";
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   schoolInfo: any;
   loader: Boolean = true;
   adminId!: string;
@@ -109,7 +109,7 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
       this.feesForm.get('class')?.setValue(cls);
-      this.feesForm.get('stream')?.setValue("N/A");
+      this.feesForm.get('stream')?.setValue("n/a");
     }
     if (cls == 11 || cls == 12) {
       this.feesForm.get('class')?.setValue(cls);

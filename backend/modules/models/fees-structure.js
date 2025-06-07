@@ -19,6 +19,7 @@ const FeesModel = mongoose.model('fees-structure', {
   stream: {
     type: String,
     required: true,
+    lowercase: true,
     trim: true,
   },
   admissionFees: {

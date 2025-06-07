@@ -28,7 +28,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
     processedData: any[] = [];
     classInfo: any[] = [];
     stream: string = '';
-    streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+    streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
     allExamType: any;
     examTime: any[] = ["8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM"];
     loader: Boolean = true;
@@ -70,7 +70,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         this.cls = cls;
         this.classSubject = [];
         if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
-            this.admitcardForm.get('stream')?.setValue("N/A");
+            this.admitcardForm.get('stream')?.setValue("n/a");
             this.stream = '';
             this.stream = 'stream';
             if (this.cls && this.stream) {
@@ -244,7 +244,6 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
     }
 
     admitcardAddUpdate() {
-        console.log(this.admitcardForm.value)
         const { startTime, endTime } = this.admitcardForm.value.type;
         for (let i = 0; i < startTime.length; i++) {
             const sub = Object.keys(startTime[i])[0];
@@ -274,7 +273,6 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         });
         this.admitcardForm.value.adminId = this.adminId;
         if (this.updateMode) {
-            console.log(this.updateMode)
             this.admitCardStructureService.updateAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
                 if (res) {
                     this.successDone(res);
@@ -284,7 +282,6 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
                 this.errorMsg = err.error;
             });
         } else {
-            console.log(this.updateMode)
             this.admitCardStructureService.addAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
                 if (res) {
                     this.successDone(res);
@@ -328,7 +325,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         this.editData = data;
         this.cls = data.class;
         this.stream = data.stream;
-        if (this.stream == "N/A" || data.stream == "N/A") {
+        if (this.stream == "n/a" || data.stream == "n/a") {
             this.stream = "stream";
         }
         let params = {

@@ -14,6 +14,7 @@ const AdmitCardStructureModel = mongoose.model('admit-card-structure', {
   stream: {
     type: String,
     required: true,
+    lowercase: true,
     trim: true,
   },
   examType: {

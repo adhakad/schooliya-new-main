@@ -41,7 +41,7 @@ let CreateIssuedTransferCertificate = async (req, res, next) => {
     let className = req.body.class;
 
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
 
     const studentData = {

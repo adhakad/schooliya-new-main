@@ -10,7 +10,7 @@ let GetSingleClassMarksheetTemplateByStream = async (req, res, next) => {
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     let streamMsg = `${stream} stream`;
     try {
@@ -29,7 +29,7 @@ let GetSingleClassMarksheetTemplateByStream = async (req, res, next) => {
 //     let className = req.params.class;
 //     let stream = req.params.stream;
 //     if (stream === "stream") {
-//         stream = "N/A";
+//         stream = "n/a";
 //     }
 //     let streamMsg = '';
 //     try {
@@ -39,7 +39,7 @@ let GetSingleClassMarksheetTemplateByStream = async (req, res, next) => {
 //         }
 //         const marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
 //         if (!marksheetTemplate) {
-//             if (stream === "N/A") {
+//             if (stream === "n/a") {
 
 //                 streamMsg = ``;
 //             }
@@ -48,7 +48,7 @@ let GetSingleClassMarksheetTemplateByStream = async (req, res, next) => {
 //         const templateName = marksheetTemplate.templateName;
 //         const marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
 //         if (!marksheetTemplateStructure) {
-//             if (stream === "N/A") {
+//             if (stream === "n/a") {
 //                 streamMsg = ``;
 //             }
 //             return res.status(404).json(`Marksheet template structure not found!`);
@@ -63,7 +63,7 @@ let GetSingleClassMarksheetTemplateStructureByStream = async (req, res, next) =>
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     let streamMsg = '';
     try {
@@ -97,7 +97,7 @@ let CreateExamResultStructure = async (req, res, next) => {
     let className = req.body.class;
     let { adminId, stream, templateName, templateUrl,createdBy } = req.body;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     try {
         let student = await StudentModel.findOne({ adminId: adminId, class: className, stream: stream });

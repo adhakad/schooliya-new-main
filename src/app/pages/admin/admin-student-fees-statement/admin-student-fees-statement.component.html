@@ -69,7 +69,7 @@
                                         <td class="text-bold">Class :</td>
                                         <td>{{clsFeesStructure?.class | classSuffix}} <span
                                                 *ngIf="clsFeesStructure?.class==11 || clsFeesStructure?.class==12">(
-                                                {{clsFeesStructure?.stream}} )</span></td>
+                                                {{clsFeesStructure?.stream | streamTitleCase}} )</span></td>
                                     </tr>
                                     <tr>
                                         <td class="text-bold">Student Name :</td>

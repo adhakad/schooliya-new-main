@@ -9,7 +9,7 @@ let GetSingleClassFeesStructureByStream = async (req, res, next) => {
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     try {
         const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className, stream: stream });
@@ -52,7 +52,7 @@ let CreateFeesStructure = async (req, res, next) => {
     let { adminId, stream, session, admissionFees, totalFees } = req.body;
     let feesType = req.body.type.feesType;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     let feesTypeTotal = feesType.reduce((total, obj) => {
         let value = Object.values(obj)[0];

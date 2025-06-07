@@ -183,7 +183,7 @@ let GetAllStudentFeesCollectionByClass = async (req, res, next) => {
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     try {
         const student = await StudentModel.find({ adminId: adminId, class: className, stream: stream }, '_id session admissionNo name rollNumber class stream fatherName motherName dob');
@@ -204,7 +204,7 @@ let CreateFeesCollection = async (req, res, next) => {
     let className = req.body.class;
     let { adminId, session, studentId, stream, feesAmount, createdBy } = req.body;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     let receiptNo = Math.floor(Math.random() * 899999 + 100000);
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');

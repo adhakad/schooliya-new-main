@@ -195,7 +195,7 @@
                           <p class="mb-0">{{result.class | classSuffix}}</p>
                         </td>
                         <td>
-                          <p class="mb-0">{{result.stream}}</p>
+                          <p class="mb-0">{{result.stream | streamTitleCase}}</p>
                         </td>
                         <td class="mb-0">
                           <mat-icon (click)="deleteMarksheetResultModel(result.resultId)">delete</mat-icon>

@@ -56,7 +56,7 @@ let GetSingleClassSubjectByStream = async (req, res, next) => {
     let className = parseInt(req.params.class);
     let stream = req.params.stream;
     if(stream==="stream"){
-        stream = "N/A"
+        stream = "n/a"
     }
     try {
         const classSubjectList = await ClassSubjectModel.findOne({adminId:adminId,class:className,stream:stream});

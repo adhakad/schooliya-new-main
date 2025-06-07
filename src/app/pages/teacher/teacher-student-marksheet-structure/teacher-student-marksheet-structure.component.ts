@@ -34,7 +34,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   processedPracticalData: any[] = [];
   cls: any;
   stream: any;
-  streamMainSubject: any[] = ['Mathematics(Science)', 'Biology(Science)', 'History(Arts)', 'Sociology(Arts)', 'Political Science(Arts)', 'Accountancy(Commerce)', 'Economics(Commerce)', 'Agriculture', 'Home Science'];
+  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   loader: Boolean = true;
   isChecked!: Boolean;
   createdBy: String = '';

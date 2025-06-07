@@ -44,6 +44,7 @@ const FeesCollectionModel = mongoose.model('fees-collection', {
   stream: {
     type: String,
     required: true,
+    lowercase: true,
     trim: true,
   },
   admissionFees: {

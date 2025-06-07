@@ -77,7 +77,7 @@
                         <p class="mb-0">{{classSubject.class | classSuffix}}</p>
                       </td>
                       <td>
-                        <p class="fw-normal mb-1">{{classSubject.stream}}</p>
+                        <p class="fw-normal mb-1">{{classSubject.stream | streamTitleCase}}</p>
                       </td>
                       <td>
                         <ng-container *ngFor="let subject of classSubject.subject,let i=index;">
@@ -139,7 +139,7 @@
                                   </ng-container>
                                   <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
                                     <div>
-                                      <mat-option value="N/A">N/A</mat-option>
+                                      <mat-option value="n/a">N/A</mat-option>
                                     </div>
                                   </ng-container>
                                 </mat-select>

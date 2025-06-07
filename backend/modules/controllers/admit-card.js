@@ -21,7 +21,7 @@ let GetSingleStudentAdmitCard = async (req, res, next) => {
         let studentId = student._id;
         let stream = student.stream;
         if (stream === "stream") {
-            stream = "N/A";
+            stream = "n/a";
         }
         let admitCard = await AdmitCardModel.findOne({ adminId: adminId, studentId: studentId });
         if (!admitCard) {
@@ -55,7 +55,7 @@ let GetSingleStudentAdmitCardById = async (req, res, next) => {
         }
         let stream = student.stream;
         if (stream === "stream") {
-            stream = "N/A";
+            stream = "n/a";
         }
         let className = admitCard.class;
 
@@ -80,7 +80,7 @@ let GetAllStudentAdmitCardByClass = async (req, res, next) => {
     let className = req.params.class;
     let stream = req.params.stream;
     if (stream === "stream") {
-        stream = "N/A";
+        stream = "n/a";
     }
     try {
         const studentInfo = await StudentModel.find({ adminId: adminId, class: className,stream:stream }, '_id adminId session admissionNo name dob rollNumber class fatherName motherName stream');
