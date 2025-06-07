@@ -416,9 +416,9 @@ const CreateBulkStudentRecord = async (req, res, next) => {
 
         // --- Parallelize Initial Database Checks ---
         const [checkAdminPlan, countStudent, checkFeesStr, existingRecords] = await Promise.all([
-            AdminPlan.findOne({ adminId }).lean(),
+            AdminPlan.findOne({ adminId }),
             StudentModel.countDocuments({ adminId }),
-            FeesStructureModel.findOne({ adminId, session: selectedSession, class: className, stream }).lean(),
+            FeesStructureModel.findOne({ adminId, session: selectedSession, class: className, stream }),
             StudentModel.find({ adminId }).lean() // Fetch all existing records once
         ]);
 
