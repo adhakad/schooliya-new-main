@@ -227,7 +227,7 @@
    top: -12px;
    left: 50%;
    transform: translateX(-50%);
-   z-index: 10;
+   z-index: 1;
    background-color: #9a34fff9;
    color: #fff;
    padding: 2px 10px;

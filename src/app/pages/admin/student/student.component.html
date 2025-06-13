@@ -53,7 +53,7 @@
                               <ng-container *ngIf="cls==12 || cls==11">
                                 <div *ngFor="let subject of streamMainSubject">
                                   <mat-option (click)="filterStream(subject)"
-                                    value="{{subject}}">{{subject}}</mat-option>
+                                    value="{{subject}}">{{subject | streamTitleCase}}</mat-option>
                                 </div>
                               </ng-container>
                             </mat-select>
@@ -118,7 +118,7 @@
                         <mat-select type="text" matInput>
                           <ng-container *ngIf="cls==12 || cls==11">
                             <div *ngFor="let subject of streamMainSubject">
-                              <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                              <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject | streamTitleCase}}</mat-option>
                             </div>
                           </ng-container>
                         </mat-select>
