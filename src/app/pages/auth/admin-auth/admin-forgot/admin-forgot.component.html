@@ -4,7 +4,7 @@
     <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='Forgot'">
       <div class="row">
         <div class="col-12 col-lg-10 offset-lg-1">
-          <h3>Forget Password</h3>
+          <h3>Forgot Password</h3>
           <div class="col-12">
             <h2>{{errorMsg}}</h2>
             <form [formGroup]="forgotForm" (ngSubmit)="forgotPassword()" *ngIf="formType=='Forgot'">

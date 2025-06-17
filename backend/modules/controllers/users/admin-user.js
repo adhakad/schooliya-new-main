@@ -76,7 +76,7 @@ let RefreshToken = async (req, res, next) => {
 
 let SignupAdmin = async (req, res, next) => {
     function generateSecureOTP() {
-        const otp = crypto.randomInt(100000, 1000000); // Generates a number between 100000 and 999999
+        const otp = crypto.randomInt(100000, 1000000);
         return otp;
     }
     const secureOtp = generateSecureOTP();
@@ -180,7 +180,7 @@ let ForgotPassword = async (req, res, next) => {
     }
 }
 
-const sendEmail = async (email, secureOtp) => {
+let sendEmail = async (email, secureOtp) => {
     const mailOptions = {
         from: {
             name: 'Schooliya',

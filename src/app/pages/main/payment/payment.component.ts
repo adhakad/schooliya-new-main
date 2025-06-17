@@ -193,7 +193,7 @@ export class PaymentComponent implements OnInit {
     this.paymentService.createPayment(paymentData).subscribe(
       (response: any) => {
         const options = {
-          key: 'rzp_live_URUiLO1c3Ant5i',
+          key: 'rzp_test_5pxCVjGZq8W9HJ',
           amount: response.order.amount,
           currency: response.order.currency,
           name: 'Schooliya',
