@@ -63,7 +63,7 @@ let ValidatePayment = async (req, res) => {
 
   try {
     const expectedSignature = crypto.createHmac("sha256", key_secret).update(body).digest("hex");
-    if (expectedSignature!== signature) {
+    if (expectedSignature !== signature) {
       return res.status(400).json({ errorMsg: 'Invailid signature!' });
     }
 
@@ -145,7 +145,7 @@ let ValidateUpgradePlanPayment = async (req, res) => {
 
   try {
     const expectedSignature = crypto.createHmac("sha256", key_secret).update(body).digest("hex");
-    if (expectedSignature!== signature) {
+    if (expectedSignature !== signature) {
       return res.status(400).json({ errorMsg: 'Invailid signature!' });
     }
 
@@ -181,7 +181,7 @@ let ValidateUpgradePlanPayment = async (req, res) => {
           studentLimit,
           teacherLimit,
           paymentStatus: true,
-          updatedAt:Date.now(),
+          updatedAt: Date.now(),
         }
       },
       { upsert: true, new: true }
@@ -212,7 +212,8 @@ async function sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, 
     from: { name: 'Schooliya', address: sender_email_address },
     to: email,
     subject: 'Payment Confirmation & Invoice from Schooliya',
-    html: `
+    text: `Dear User,Thank you for your payment. This is a confirmation that your transaction has been successfully processed.If you have any questions, feel free to contact us.Best regards,The Schooliya Team`,
+    html: `<html><body>
       <div style="font-family: Arial, sans-serif; background-color: #f3f4f6; padding: 10px;">
         <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px 18px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
           <div style="text-align: left; margin-bottom: 20px;">
@@ -263,6 +264,7 @@ async function sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, 
           </p>
         </div>
       </div>
+      </body></html>
     `
   };
   try {

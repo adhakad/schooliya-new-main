@@ -15,8 +15,8 @@ const sender_email_address = SENDER_EMAIL_ADDRESS;
 
 const transporter = nodemailer.createTransport({
     host: smtp_host,
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
         user: `apikey`,
         pass: smtp_api_key
@@ -80,7 +80,6 @@ let SignupAdmin = async (req, res, next) => {
         return otp;
     }
     const secureOtp = generateSecureOTP();
-
     const { email, password, name, mobile, city, state, address, pinCode, schoolName, affiliationNumber } = req.body;
     try {
         const existingUser = await AdminUserModel.findOne({ email });
@@ -106,6 +105,10 @@ let SignupAdmin = async (req, res, next) => {
             }
 
         }
+        // let schoolAffiliationNumber = await SchoolModel.findOne({ affiliationNumber: affiliationNumber });
+        // if (schoolAffiliationNumber) {
+        //     return res.status(400).json({ errorMsg: 'School affiliation number already exist!' });
+        // }
         let schoolId = 0;
         let lastIssuedSchoolId = await AdminUserModel.findOne({}).sort({ _id: -1 });
         if (!lastIssuedSchoolId) {
@@ -115,7 +118,6 @@ let SignupAdmin = async (req, res, next) => {
             schoolId = lastIssuedSchoolId.schoolId + 1;
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const userData = {
             email,
             password: hashedPassword,
@@ -129,20 +131,15 @@ let SignupAdmin = async (req, res, next) => {
             affiliationNumber,
             schoolId: schoolId
         };
-
         const createUser = await AdminUserModel.create(userData);
         sendEmail(email, secureOtp);
-        const schoolData = {
-            adminId: createUser._id,
-            schoolName: schoolName,
-            affiliationNumber: affiliationNumber
-        }
-        console.log("a")
-        const [createdOTP, createSchool] = await Promise.all([
-            OTPModel.create({ email, secureOtp: secureOtp }),
-            SchoolModel.create(schoolData)
-        ]);
-        console.log("b")
+        // const schoolData = {
+        //     adminId: createUser._id,
+        //     schoolName: schoolName,
+        //     affiliationNumber: affiliationNumber
+        // }
+        await OTPModel.create({ email, secureOtp: secureOtp });
+        // await SchoolModel.create(schoolData);
         return res.status(200).json({ successMsg: 'Admin registered successfully', email });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
@@ -183,16 +180,23 @@ let ForgotPassword = async (req, res, next) => {
     }
 }
 
-async function sendEmail(email, secureOtp) {
+const sendEmail = async (email, secureOtp) => {
     const mailOptions = {
-        from: { name: 'Schooliya', address: sender_email_address },
+        from: {
+            name: 'Schooliya',
+            address: sender_email_address
+        },
         to: email,
         subject: 'Your OTP for Email Verification',
-        html: `<div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
+        text: `Your OTP for Schooliya verification is: ${secureOtp}\n\nIf you didn't request this, please ignore this email.`,
+        html: `<html><body>
+        <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
             <p style="color: #555; font-size: 16px;">
                 We received a request to verify your email address for your Schooliya account. Please use the OTP below to complete your verification:
             </p>
-            <p style="font-size: 22px; color: #000; text-align: center; letter-spacing: 2px; margin: 20px 0;"><strong>${secureOtp}</strong></p>
+            <p style="font-size: 22px; color: #000; text-align: center; letter-spacing: 2px; margin: 20px 0;">
+                <strong>${secureOtp}</strong>
+            </p>
             <p style="color: #555; font-size: 16px;">
                 If you didn’t request this, please ignore this email.
             </p>
@@ -200,15 +204,18 @@ async function sendEmail(email, secureOtp) {
                 Best regards,<br/>
                 The Schooliya Team
             </p>
-        </div>`
+        </div>
+        </body></html>
+        `
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        const result = await transporter.sendMail(mailOptions);
     } catch (error) {
-        res.status(500).json({ errorMsg: 'Error sending email!' });
+        console.error("Failed to send email:", err.message);
     }
-}
+};
+
 
 
 let VerifyOTP = async (req, res, next) => {
