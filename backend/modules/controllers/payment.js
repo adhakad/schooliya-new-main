@@ -270,7 +270,7 @@ async function sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, 
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    res.status(500).json({ errorMsg: 'Error sending email!' });
+    console.error("Failed to send email:", error.message);
   }
 }
 

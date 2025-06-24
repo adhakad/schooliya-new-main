@@ -23,7 +23,7 @@
   </div>
 </mat-toolbar>
 <div [ngClass]="{'top-hamburger-menu' : false==nav}">
-  <mat-toolbar class="hamburger-menu">
+  <mat-toolbar class="hamburger-menu" style="position: absolute !important;z-index: 1;">
     <button mat-menu-item [routerLink]="['/teacher/dashboard']" routerLinkActive="active-link"
       (click)="hamburgerMenu(true)">
       <mat-icon>dashboard</mat-icon>

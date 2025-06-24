@@ -70,7 +70,7 @@ export class PaymentComponent implements OnInit {
   ];
   constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
     this.signupForm = this.fb.group({
-      email: ['', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       mobile: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
@@ -99,7 +99,7 @@ export class PaymentComponent implements OnInit {
       this.getSinglePlans(this.id);
     }
     this.loadRazorpayScript();
-    
+
     setTimeout(() => {
       this.loader = false;
     }, 1000)
@@ -135,9 +135,12 @@ export class PaymentComponent implements OnInit {
     this.adminAuthService.signup(this.signupForm.value).subscribe((res: any) => {
       if (res) {
         this.errorMsg = '';
+        this.successMsg = res.successMsg;
         this.email = res.email;
         this.getOTP = false;
-        this.varifyOTP = true;
+        this.varifyOTP = false;
+        this.verified = true;
+        this.adminInfo = res.adminInfo;
       }
     }, err => {
       if (err.status == 400 && err.error.verified == false && err.error.paymentMode == true) {
