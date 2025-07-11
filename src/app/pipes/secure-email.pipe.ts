@@ -4,7 +4,6 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'secureEmail'
 })
 export class SecureEmailPipe implements PipeTransform {
-
   transform(value: string): string {
     if (!value) {
       return '';
@@ -14,6 +13,4 @@ export class SecureEmailPipe implements PipeTransform {
     const maskedLocalPart = localPart.slice(0, 2) + '****';  // Starting ke 2 characters ke baad ****
     return `${maskedLocalPart}@${domain}`;
   }
-
-
 }

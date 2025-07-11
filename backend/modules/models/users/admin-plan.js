@@ -8,11 +8,15 @@ const AdminPlanModel = mongoose.model('admin-plan', {
     required: true,
     trim: true
   },
-
   activePlan: {
     type: String,
     required: true,
     trim: true
+  },
+  subscriptionType: {
+    type: String,
+    required: true,
+    trim: true,
   },
   amount: {
     type: Number,

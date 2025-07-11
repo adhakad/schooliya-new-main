@@ -12,6 +12,11 @@ const PlansModel = mongoose.model('plan', {
         required: true,
         trim: true,
     },
+    monthlyTrialPrice: {
+        type: Number,
+        required: true,
+        trim: true,
+    },
     upgradePrice: {
         type: Number,
         required: true,

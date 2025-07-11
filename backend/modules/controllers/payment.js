@@ -56,7 +56,7 @@ let CreatePayment = async (req, res) => {
 };
 
 let ValidatePayment = async (req, res) => {
-  const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, amount, currency, studentLimit, teacherLimit } = req.body;
+  const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan,subscriptionType, amount, currency, studentLimit, teacherLimit } = req.body;
   const adminInfo = { id, email, activePlan, amount, currency };
   let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
   const body = `${orderId}|${paymentId}`;

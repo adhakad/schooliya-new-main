@@ -1,7 +1,6 @@
-import { Component, ElementRef, ViewChild, OnInit, Renderer2, Directive, HostListener, AfterViewInit, NgZone } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, Renderer2, Directive, HostListener, AfterViewInit, NgZone, inject,ViewEncapsulation } from '@angular/core';
 declare var Razorpay: any;
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment/payment.service';
@@ -12,11 +11,12 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.css']
+  styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit {
   signupForm: FormGroup;
   otpForm: FormGroup;
+  schoolDetailForm:FormGroup;
   hide: boolean = true;
   loader: Boolean = true;
   successMsg: String = '';
@@ -26,7 +26,10 @@ export class PaymentComponent implements OnInit {
   paymentCompleted: Boolean = false;
   classInfo: any;
   adminInfo: any;
-  getOTP: Boolean = true;
+  signupStep:number = 1;
+  otpStep:number = 1;
+  schoolDetailStep:number = 1;
+  getOTP:Boolean = false;
   varifyOTP: Boolean = false;
   email: any;
   verified: Boolean = false;
@@ -38,6 +41,7 @@ export class PaymentComponent implements OnInit {
   numberOfStudent: number = 0;
   perStudentIncrementPrice: number = 5;
   studentIncrementRange: number = 50;
+  subscriptionType: any;
   indianStates: string[] = [
     'Andhra Pradesh',
     'Arunachal Pradesh',
@@ -68,18 +72,11 @@ export class PaymentComponent implements OnInit {
     'Uttarakhand',
     'West Bengal'
   ];
+  abc:number = 9340700360;
   constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
+
     this.signupForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
-      name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       mobile: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
-      city: ['', [Validators.required, Validators.maxLength(50)]],
-      state: ['', [Validators.required, Validators.maxLength(50)]],
-      address: ['', [Validators.required, Validators.maxLength(100)]],
-      pinCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
-      schoolName: ['', [Validators.required, Validators.maxLength(50)]],
-      affiliationNumber: ['', [Validators.required, Validators.maxLength(15)]],
     });
     this.otpForm = this.fb.group({
       email: [''],
@@ -91,10 +88,23 @@ export class PaymentComponent implements OnInit {
       digit5: ['', Validators.required],
       digit6: ['', Validators.required]
     });
+    this.schoolDetailForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
+      name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      mobile: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
+      city: ['', [Validators.required, Validators.maxLength(50)]],
+      state: ['', [Validators.required, Validators.maxLength(50)]],
+      address: ['', [Validators.required, Validators.maxLength(100)]],
+      pinCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+      schoolName: ['', [Validators.required, Validators.maxLength(50)]],
+      affiliationNumber: ['', [Validators.required, Validators.maxLength(15)]],
+    });
   }
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.subscriptionType = this.activatedRoute.snapshot.paramMap.get('subscription-type');
     if (this.id) {
       this.getSinglePlans(this.id);
     }
@@ -120,7 +130,22 @@ export class PaymentComponent implements OnInit {
   getSinglePlans(id: any) {
     this.plansService.getSinglePlans(id).subscribe((res: any) => {
       if (res) {
-        let price = parseInt(res.price);
+        let price = 0;
+
+        switch (this.subscriptionType) {
+          case 'annual':
+            price = parseInt(res.price);
+            break;
+          case 'one-month-trial':
+            price = parseInt(res.monthlyTrialPrice);
+            break;
+          case 'free-trial':
+            price = 0;
+            break;
+          default:
+            price = 0; // or handle unknown plan type
+            break;
+        }
         // this.taxes = price * 18 / 100;
         this.taxes = 0;
         this.totalAmount = price + this.taxes;
@@ -135,6 +160,7 @@ export class PaymentComponent implements OnInit {
     this.adminAuthService.signup(this.signupForm.value).subscribe((res: any) => {
       if (res) {
         this.errorMsg = '';
+        this.toastr.success('', res.successMsg);
         this.successMsg = res.successMsg;
         this.email = res.email;
         this.getOTP = false;
@@ -237,8 +263,7 @@ export class PaymentComponent implements OnInit {
       currency: 'INR',
       studentLimit: this.singlePlanInfo.studentLimit,
       teacherLimit: this.singlePlanInfo.teacherLimit,
-
-
+      subscriptionType: this.subscriptionType,
     }
     this.paymentService.validatePayment(paymentData).subscribe(
       (validationResponse: any) => {

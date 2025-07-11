@@ -268,7 +268,7 @@
    display: inline-block;
    vertical-align: baseline;
    margin-left: 12px;
-   background-color: rgb(215, 255, 232);
+   background-color: rgba(215, 255, 232, 0.662);
    color: rgb(0, 142, 66);
    padding: 6px 12px;
    border-radius: 20px;
@@ -342,8 +342,18 @@
 }
 
 .pricing-feature .done {
-   color: #43d47d;
-   font-size: 20px;
+   background-color: #fff;
+   height: 20px;
+   width: 20px;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 5px;
+   border: 1px solid #4cd382a1;
+   font-size: 12px;
+   font-weight: 700;
+   color: #3ad076;
 }
 
 .pricing-feature .module-access p {
@@ -695,7 +705,7 @@
       display: inline-block;
       vertical-align: baseline;
       margin-left: 12px;
-      background-color: rgb(215, 255, 232);
+      background-color: rgba(215, 255, 232, 0.662);
       color: rgb(0, 142, 66);
       padding: 6px 12px;
       border-radius: 20px;
@@ -769,8 +779,18 @@
    }
 
    .pricing-feature .done {
-      color: #43d47d;
-      font-size: 20px;
+      background-color: #fff;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border: 1px solid #4cd382a1;
+      font-size: 12px;
+      font-weight: 700;
+      color: #3ad076;
    }
 
    .pricing-feature .module-access p {
@@ -1112,7 +1132,7 @@
       display: inline-block;
       vertical-align: baseline;
       margin-left: 12px;
-      background-color: rgb(215, 255, 232);
+      background-color: rgba(215, 255, 232, 0.662);
       color: rgb(0, 142, 66);
       padding: 6px 12px;
       border-radius: 20px;
@@ -1186,8 +1206,18 @@
    }
 
    .pricing-feature .done {
-      color: #43d47d;
-      font-size: 20px;
+      background-color: #fff;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border: 1px solid #4cd382a1;
+      font-size: 12px;
+      font-weight: 700;
+      color: #3ad076;
    }
 
    .pricing-feature .module-access p {
@@ -1528,8 +1558,9 @@
       display: inline-block;
       vertical-align: baseline;
       margin-left: 12px;
-      background-color: rgb(215, 255, 232);
+      background-color: rgba(215, 255, 232, 0.662);
       color: rgb(0, 142, 66);
+      ;
       padding: 6px 12px;
       border-radius: 20px;
       height: auto;
@@ -1602,8 +1633,18 @@
    }
 
    .pricing-feature .done {
-      color: #43d47d;
-      font-size: 20px;
+      background-color: #fff;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border: 1px solid #4cd382a1;
+      font-size: 12px;
+      font-weight: 700;
+      color: #3ad076;
    }
 
    .pricing-feature .module-access p {
@@ -1949,7 +1990,7 @@
       display: inline-block;
       vertical-align: baseline;
       margin-left: 12px;
-      background-color: rgb(215, 255, 232);
+      background-color: rgba(215, 255, 232, 0.662);
       color: rgb(0, 142, 66);
       padding: 6px 12px;
       border-radius: 20px;
@@ -2031,8 +2072,18 @@
    }
 
    .pricing-feature .done {
-      color: #43d47d;
-      font-size: 19px;
+      background-color: #fff;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border: 1px solid #4cd382a1;
+      font-size: 12px;
+      font-weight: 700;
+      color: #3ad076;
    }
 
    .pricing-feature .module-access p {

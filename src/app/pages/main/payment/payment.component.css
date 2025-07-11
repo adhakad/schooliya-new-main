@@ -1,28 +1,33 @@
-.flm{
+.flm {
   float: left;
   margin-top: 10px;
 }
-.student-limit .increment-button{
-  border-right:1px solid #d1d1d1;
-  border-top:1px solid #d1d1d1;
-  border-bottom:1px solid #d1d1d1;
+
+.student-limit .increment-button {
+  border-right: 1px solid #d1d1d1;
+  border-top: 1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1;
   border-radius: 0 5px 5px 0;
 }
-.student-limit .decrement-button{
-  border-left:1px solid #d1d1d1;
-  border-top:1px solid #d1d1d1;
-  border-bottom:1px solid #d1d1d1;
+
+.student-limit .decrement-button {
+  border-left: 1px solid #d1d1d1;
+  border-top: 1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1;
   border-radius: 5px 0 0 5px;
 }
-.student-limit .increment-button .mat-icon{
+
+.student-limit .increment-button .mat-icon {
   font-size: 16px;
 }
-.student-limit .decrement-button .mat-icon{
+
+.student-limit .decrement-button .mat-icon {
   font-size: 16px;
 }
-.student-limit button{
-  border-top:1px solid #d1d1d1;
-  border-bottom:1px solid #d1d1d1;
+
+.student-limit button {
+  border-top: 1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1;
   border-radius: 0;
 }
 
@@ -126,11 +131,12 @@
 .cards {
   background-color: #fff;
   height: auto;
-  margin-top: 30px;
+  margin-top: 20px;
   font-family: 'Poppins', sans-serif !important;
-  padding: 40px 30px 40px 30px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
-  border-radius: 5px;
+  padding: 25px 30px 15px 30px;
+  border: 1px solid #d5d0e1af;
+  box-shadow: none;
+  border-radius: 18px;
 }
 
 .cards img {
@@ -159,6 +165,36 @@
   letter-spacing: .5px;
 }
 
+::ng-deep .mat-input-element {
+  margin-top: -1px !important;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-prefix {
+  top: 1px !important;
+}
+
+.prefix-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 9px;
+
+}
+
+.flag-icon {
+  width: 18px !important;
+  height: 12px !important;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.country-code {
+  color: #a7a7ae;
+  font-size: 14px;
+}
 
 @media (min-width: 992px) {
   .error-msg h2 {
@@ -178,6 +214,12 @@
     background: #9f79eb;
     color: #f5f3fb;
     cursor: not-allowed;
+  }
+
+  .otp-input {
+    display: flex;
+    font-family: 'Poppins', sans-serif !important;
+    justify-content: left;
   }
 
   .otp-input input {

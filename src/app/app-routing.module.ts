@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'about', loadChildren: () => import('src/app/pages/main/about/about.module').then((module) => module.AboutModule) },
   { path: 'pricing', loadChildren: () => import('src/app/pages/main/pricing/pricing.module').then((module) => module.PricingModule) },
   { path: 'features', loadChildren: () => import('src/app/pages/main/features/features.module').then((module) => module.FeaturesModule) },
-  { path: 'payment/:id', loadChildren: () => import('src/app/pages/main/payment/payment.module').then((module) => module.PaymentModule) },
+  { path: 'payment/subscription/:subscription-type/:id', loadChildren: () => import('src/app/pages/main/payment/payment.module').then((module) => module.PaymentModule) },
   { path: 'contact', loadChildren: () => import('src/app/pages/main/contact/contact.module').then((module) => module.ContactModule) },
   { path: 'terms-and-conditions', loadChildren: () => import('src/app/pages/main/terms-conditions/terms-conditions.module').then((module) => module.TermsConditionsModule) },
   { path: 'privacy-policy', loadChildren: () => import('src/app/pages/main/privacy-policy/privacy-policy.module').then((module) => module.PrivacyPolicyModule) },

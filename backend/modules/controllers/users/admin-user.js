@@ -9,6 +9,7 @@ const AdminPlanModel = require('../../models/users/admin-plan');
 const SchoolModel = require('../../models/school');
 const PaymentModel = require('../../models/payment');
 const OTPModel = require('../../models/otp');
+const { otpWhatsappMessage } = require('../../services/send-whatsapp-message');
 const smtp_host = SMTP_HOST;
 const smtp_api_key = SMTP_API_KEY;
 const sender_email_address = SENDER_EMAIL_ADDRESS;
@@ -80,67 +81,72 @@ let SignupAdmin = async (req, res, next) => {
         return otp;
     }
     const secureOtp = generateSecureOTP();
-    const { email, password, name, mobile, city, state, address, pinCode, schoolName, affiliationNumber } = req.body;
+    const { mobile } = req.body;
     try {
-        const existingUser = await AdminUserModel.findOne({ email });
-        if (existingUser) {
-            if (!existingUser.verified) {
-                await OTPModel.deleteMany({ email });
-                await OTPModel.create({ email, secureOtp: secureOtp });
-                sendEmail(email, secureOtp);
-                return res.status(400).json({ verified: false, paymentMode: true, email });
-            }
-            if (existingUser.verified) {
-                let adminId = existingUser._id;
-                const existingUserPlan = await AdminPlanModel.findOne({ adminId: adminId });
-                if (!existingUserPlan) {
-                    return res.status(400).json({ verified: true, paymentMode: true, email, adminInfo: existingUser });
-                }
-                if (existingUserPlan) {
-                    if (existingUserPlan.expiryStatus == true) {
-                        return res.status(400).json({ verified: true, paymentMode: true, email, adminInfo: existingUser });
-                    }
-                    return res.status(400).json({ verified: true, paymentMode: false, errorMsg: `Your ${existingUserPlan.activePlan} plan is already active, enjoy your services!` });
-                }
-            }
+        const existingUser = await AdminUserModel.findOne({ mobile });
+        // if (existingUser) {
+        //     if (!existingUser.verified) {
+        //         await OTPModel.deleteMany({ email });
+        //         await OTPModel.create({ email, secureOtp: secureOtp });
+        //         sendEmail(email, secureOtp);
+        //         return res.status(400).json({ verified: false, paymentMode: true, email });
+        //     }
+        //     if (existingUser.verified) {
+        //         let adminId = existingUser._id;
+        //         const existingUserPlan = await AdminPlanModel.findOne({ adminId: adminId });
+        //         if (!existingUserPlan) {
+        //             return res.status(400).json({ verified: true, paymentMode: true, email, adminInfo: existingUser });
+        //         }
+        //         if (existingUserPlan) {
+        //             if (existingUserPlan.expiryStatus == true) {
+        //                 return res.status(400).json({ verified: true, paymentMode: true, email, adminInfo: existingUser });
+        //             }
+        //             return res.status(400).json({ verified: true, paymentMode: false, errorMsg: `Your ${existingUserPlan.activePlan} plan is already active, enjoy your services!` });
+        //         }
+        //     }
 
-        }
+        // }
         // let schoolAffiliationNumber = await SchoolModel.findOne({ affiliationNumber: affiliationNumber });
         // if (schoolAffiliationNumber) {
         //     return res.status(400).json({ errorMsg: 'School affiliation number already exist!' });
         // }
-        let schoolId = 0;
-        let lastIssuedSchoolId = await AdminUserModel.findOne({}).sort({ _id: -1 });
-        if (!lastIssuedSchoolId) {
-            schoolId = 100001 + schoolId;
-        }
-        if (lastIssuedSchoolId) {
-            schoolId = lastIssuedSchoolId.schoolId + 1;
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // let schoolId = 0;
+        // let lastIssuedSchoolId = await AdminUserModel.findOne({}).sort({ _id: -1 });
+        // if (!lastIssuedSchoolId) {
+        //     schoolId = 100001 + schoolId;
+        // }
+        // if (lastIssuedSchoolId) {
+        //     schoolId = lastIssuedSchoolId.schoolId + 1;
+        // }
+        // const hashedPassword = await bcrypt.hash(password, 10);
+        // const userData = {
+        //     email,
+        //     password: hashedPassword,
+        //     name,
+        //     mobile,
+        //     city,
+        //     state,
+        //     address,
+        //     pinCode,
+        //     schoolName,
+        //     affiliationNumber,
+        //     schoolId: schoolId
+        // };
         const userData = {
-            email,
-            password: hashedPassword,
-            name,
             mobile,
-            city,
-            state,
-            address,
-            pinCode,
-            schoolName,
-            affiliationNumber,
-            schoolId: schoolId
+            // schoolId: schoolId
         };
         const createUser = await AdminUserModel.create(userData);
-        sendEmail(email, secureOtp);
+        otpWhatsappMessage(secureOtp, mobile);
+        // sendEmail(mobile, secureOtp);
         // const schoolData = {
         //     adminId: createUser._id,
         //     schoolName: schoolName,
         //     affiliationNumber: affiliationNumber
         // }
-        await OTPModel.create({ email, secureOtp: secureOtp });
+        // await OTPModel.create({ mobile, secureOtp: secureOtp });
         // await SchoolModel.create(schoolData);
-        return res.status(200).json({ successMsg: 'Admin registered successfully', email });
+        return res.status(200).json({ successMsg: 'Admin registered successfully',mobile});
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }

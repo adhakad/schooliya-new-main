@@ -2,8 +2,8 @@
 const mongoose = require('mongoose');
 
 const OTPModel = mongoose.model('otp', {
-    email: {
-        type: String,
+    mobile: {
+        type: Number,
         required: true,
         trim: true,
       },
