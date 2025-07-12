@@ -32,6 +32,7 @@ export class PaymentComponent implements OnInit {
   getOTP:Boolean = false;
   varifyOTP: Boolean = false;
   email: any;
+  otpMobile!:number;
   verified: Boolean = false;
   id: any;
   singlePlanInfo: any;
@@ -72,14 +73,13 @@ export class PaymentComponent implements OnInit {
     'Uttarakhand',
     'West Bengal'
   ];
-  abc:number = 9340700360;
   constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
 
     this.signupForm = this.fb.group({
       mobile: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
     });
     this.otpForm = this.fb.group({
-      email: [''],
+      mobile: [''],
       otp: [''],
       digit1: ['', Validators.required],
       digit2: ['', Validators.required],
@@ -163,6 +163,9 @@ export class PaymentComponent implements OnInit {
         this.toastr.success('', res.successMsg);
         this.successMsg = res.successMsg;
         this.email = res.email;
+        this.otpMobile = res.mobile;
+        this.signupStep = res.signupStep;
+        this.otpStep = res.otpStep;
         this.getOTP = false;
         this.varifyOTP = false;
         this.verified = true;
@@ -194,14 +197,16 @@ export class PaymentComponent implements OnInit {
 
   submitOtp() {
     const otp = `${this.otpForm.value.digit1}${this.otpForm.value.digit2}${this.otpForm.value.digit3}${this.otpForm.value.digit4}${this.otpForm.value.digit5}${this.otpForm.value.digit6}`;
-    this.otpForm.value.email = this.email;
+    this.otpForm.value.mobile = this.otpMobile;
     this.otpForm.value.otp = otp;
-    if (this.otpForm.value.email && this.otpForm.value.otp) {
+    if (this.otpForm.value.mobile && this.otpForm.value.otp) {
       this.adminAuthService.varifyOTP(this.otpForm.value).subscribe((res: any) => {
         if (res) {
           this.errorMsg = '';
           this.getOTP = false;
           this.varifyOTP = false;
+          this.otpStep = res.otpStep;
+          this.schoolDetailStep = res.schoolDetailStep;
           this.verified = res.verified;
           this.successMsg = res.successMsg;
           this.adminInfo = res.adminInfo;

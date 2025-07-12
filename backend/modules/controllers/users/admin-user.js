@@ -144,9 +144,9 @@ let SignupAdmin = async (req, res, next) => {
         //     schoolName: schoolName,
         //     affiliationNumber: affiliationNumber
         // }
-        // await OTPModel.create({ mobile, secureOtp: secureOtp });
+        await OTPModel.create({ mobile, secureOtp: secureOtp });
         // await SchoolModel.create(schoolData);
-        return res.status(200).json({ successMsg: 'Admin registered successfully',mobile});
+        return res.status(200).json({ successMsg: 'Admin registered successfully',mobile,signupStep:2,otpStep:2});
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
@@ -227,13 +227,13 @@ let sendEmail = async (email, secureOtp) => {
 let VerifyOTP = async (req, res, next) => {
 
     try {
-        const email = req.body.email;
+        const mobile = req.body.mobile;
         const userEnteredOTP = parseInt(req.body.otp);
-        const user = await AdminUserModel.findOne({ email: email });
+        const user = await AdminUserModel.findOne({ mobile: mobile });
         if (!user) {
             return res.status(404).json({ errorMsg: "Email does not exist!" });
         }
-        const otp = await OTPModel.findOne({ email: email });
+        const otp = await OTPModel.findOne({ mobile: mobile });
         if (!otp) {
             return res.status(404).json({ errorMsg: "Your OTP has expired!" });
         }
@@ -245,7 +245,7 @@ let VerifyOTP = async (req, res, next) => {
             const objectId = user._id;
             let update = await AdminUserModel.findByIdAndUpdate(objectId, { $set: { verified: true } }, { new: true });
             if (update) {
-                return res.status(200).json({ successMsg: "Congratulations! Your email has been successfully verified. You can now proceed with your payment", verified: true, adminInfo: user });
+                return res.status(200).json({ successMsg: "Congratulations! Your email has been successfully verified. You can now proceed with your payment",otpStep:3,schoolDetailStep:2, verified: true, adminInfo: user });
             }
         }
     } catch (err) {

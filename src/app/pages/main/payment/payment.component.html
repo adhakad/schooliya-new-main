@@ -1,8 +1,8 @@
 <app-header></app-header>
 <div style="background:rgb(243, 241, 250);padding-top: 10vh;">
-    <div class="container-fluid" style="padding-bottom: 20vh;" *ngIf="paymentCompleted==false">
+    <div class="container-fluid" style="padding-bottom: 20vh;">
         <div class="row">
-            <div class="col-lg-10 offset-lg-1" *ngIf="!successMsg">
+            <div class="col-lg-10 offset-lg-1">
                 <div class="row">
                     <div class="col-lg-7">
                         <h2 class="title">Proceed to
@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-lg-7">
                         <div class="cards">
-                            <ng-container *ngIf="signupStep==2">
+                            <ng-container *ngIf="signupStep==1">
                                 <form [formGroup]="signupForm" (ngSubmit)="signup()">
                                     <div class="row" style="padding-bottom: 10px;">
                                         <div class="col-12 card-detail-title">
@@ -52,12 +52,12 @@
                                     </div>
                                 </form>
                             </ng-container>
-                            <ng-container *ngIf="signupStep==1">
+                            <ng-container *ngIf="signupStep==2">
                                 <div class="row" style="padding-bottom: 10px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <button mat-icon-button disabled
-                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #a9ffcb;font-size: 15px;font-weight: 700;color: #35e87c">✓</button>
+                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #6adda1;font-size: 15px;font-weight: 700;color: #50d590;">✓</button>
                                             <h2
                                                 style="color: #382066; margin: 0;font-size:18px;font-weight: 600;letter-spacing: 0;">
                                                 Register</h2>
@@ -67,7 +67,7 @@
                             </ng-container>
                         </div>
                         <div class="cards">
-                            <ng-container *ngIf="otpStep==2">
+                            <ng-container *ngIf="otpStep==1">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -86,7 +86,7 @@
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <button mat-icon-button disabled
-                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #a49bffee;font-size: 15px;font-weight: 700;color: #9a34fff9">2</button>
+                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #a39bfff6;font-size: 15px;font-weight: 700;color: #9a34fff9">2</button>
 
                                             <h2
                                                 style="color: #382066; margin: 0;font-size:18px;font-weight: 600;letter-spacing: 0;">
@@ -94,7 +94,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 mt-2">
-                                        <p>We have sent a code to {{abc | secureMobile}}</p>
+                                        <p>We have sent a code to {{otpMobile | secureMobile}}</p>
                                     </div>
                                     <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
                                         <div class="error-msg">
@@ -129,12 +129,12 @@
                                     </form>
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="otpStep==1">
+                            <ng-container *ngIf="otpStep==3">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <button mat-icon-button disabled
-                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #a9ffcb;font-size: 15px;font-weight: 700;color: #35e87c">✓</button>
+                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #6adda1;font-size: 15px;font-weight: 700;color: #50d590;">✓</button>
                                             <h2
                                                 style="color: #382066; margin: 0;font-size:18px;font-weight: 600;letter-spacing: 0;">
                                                 OTP Verification</h2>
@@ -144,7 +144,7 @@
                             </ng-container>
                         </div>
                         <div class="cards">
-                            <ng-container *ngIf="schoolDetailStep==2">
+                            <ng-container *ngIf="schoolDetailStep==1">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="schoolDetailStep==1">
+                            <ng-container *ngIf="schoolDetailStep==2">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <form [formGroup]="schoolDetailForm" (ngSubmit)="signup()">
                                         <div class="row" style="padding-bottom: 10px;">
@@ -500,7 +500,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-10 offset-lg-1" *ngIf="successMsg && !paymentMode">
+            <!-- <div class="col-lg-10 offset-lg-1" *ngIf="successMsg && !paymentMode">
                 <div class="row">
                     <div class="col-12 col-lg-6 offset-lg-3">
                         <div class="row">
@@ -552,12 +552,27 @@
                                                     </div>
                                                 </ng-container>
 
-                                                <!-- <div class="col-6" style="text-align: left;">
+
+
+
+
+
+
+                                                
+                                                <div class="col-6" style="text-align: left;">
                                                     <h3>Taxes @ 18%</h3>
                                                 </div> -->
                                                 <!-- <div class="col-6" style="text-align: right;">
                                                     <h3>{{taxes | currency:'INR':true}}</h3>
-                                                </div> -->
+                                                </div>
+
+
+
+
+
+
+
+
                                                 <mat-divider></mat-divider>
                                                 <div class="col-12">
                                                     <div class="row" style="padding-top: 15px;">
@@ -658,7 +673,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
 
 
@@ -673,10 +688,6 @@
 
 
 
-
-<!-- <button matButton="elevated" (click)="isLinear = !isLinear" id="toggle-linear">
-  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
-</button> -->
 <div class="spinner-container" *ngIf="loader">
     <div class="spinner-overlay" *ngIf="loader">
         <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
