@@ -249,7 +249,6 @@ body {
   margin: 0;
 }
 
-/* For Firefox */
 .no-arrow[type="number"] {
   -moz-appearance: textfield;
 }
@@ -266,12 +265,9 @@ body {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-image: none !important;
   border-radius: 5px;
-  /* border: 1px solid #43ba7c; */
   top: 12vh !important;
-  /* border-left: 6px solid #43ba7c !important; */
 }
 
-/* Style for the circle and checkmark icon using Unicode */
 .toast-container .ngx-toastr.toast-success::before {
   /* font-family: 'Font Awesome\ 5 Free';
   content: '\f00c'; */
@@ -286,9 +282,41 @@ body {
   border-radius: 50%;
   background-color: #43ba7c;
   color: #fff;
-  /* background-color: #fff;
-  color: #43ba7c;
-  border: 1px solid #43ba7c; */
+  font-size: 12px;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+::ng-deep .toast-container .ngx-toastr.toast-error {
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 6px;
+  padding: 18px 20px 18px 50px;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #474747;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-image: none !important;
+  border-radius: 5px;
+  top: 12vh !important;
+}
+
+.toast-container .ngx-toastr.toast-error::before {
+  /* font-family: 'Font Awesome\ 5 Free'; */
+  /* content: '\f00c'; */
+  content: '✕';
+  font-family: inherit;
+  font-weight: 900;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background-color: #e04859;
+  color: #fff;
   font-size: 12px;
   position: absolute;
   left: 15px;
@@ -302,10 +330,8 @@ body {
 
 ::ng-deep .toast-close-button {
   color: transparent !important;
-  /* क्लोज बटन का रंग */
   opacity: 0.8 !important;
   padding: 0 !important;
-  /* अतिरिक्त पैडिंग हटाएं */
   top: 50%;
 }
 

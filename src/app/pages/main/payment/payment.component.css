@@ -131,7 +131,7 @@
 .cards {
   background-color: #fff;
   height: auto;
-  margin-top: 20px;
+  margin-top: 10px;
   font-family: 'Poppins', sans-serif !important;
   padding: 25px 30px 15px 30px;
   border: 1px solid #d5d0e1af;
@@ -189,6 +189,7 @@
   height: 12px !important;
   object-fit: cover;
   border-radius: 2px;
+  filter: brightness(1.2) saturate(1.1);
 }
 
 .country-code {

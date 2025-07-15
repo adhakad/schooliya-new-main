@@ -1,11 +1,13 @@
-import { Component, ElementRef, ViewChild, OnInit, Renderer2, Directive, HostListener, AfterViewInit, NgZone, inject,ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, Renderer2, Directive, HostListener, AfterViewInit, NgZone, inject, ViewEncapsulation } from '@angular/core';
 declare var Razorpay: any;
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment/payment.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
+import { AdminUserService } from 'src/app/services/admin-user.service';
 import { PlansService } from 'src/app/services/plans.service';
+import { SignupStepEnum, OtpStepEnum, SchoolDetailStepEnum } from 'src/app/enums/payment-registration-steps.enum';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -16,7 +18,10 @@ import { ToastrService } from 'ngx-toastr';
 export class PaymentComponent implements OnInit {
   signupForm: FormGroup;
   otpForm: FormGroup;
-  schoolDetailForm:FormGroup;
+  adminDetailForm: FormGroup;
+  SignupStepEnum = SignupStepEnum;
+  OtpStepEnum = OtpStepEnum;
+  SchoolDetailStepEnum = SchoolDetailStepEnum;
   hide: boolean = true;
   loader: Boolean = true;
   successMsg: String = '';
@@ -26,13 +31,11 @@ export class PaymentComponent implements OnInit {
   paymentCompleted: Boolean = false;
   classInfo: any;
   adminInfo: any;
-  signupStep:number = 1;
-  otpStep:number = 1;
-  schoolDetailStep:number = 1;
-  getOTP:Boolean = false;
-  varifyOTP: Boolean = false;
+  signupStep: SignupStepEnum = SignupStepEnum.STEP_1;
+  otpStep: OtpStepEnum = OtpStepEnum.STEP_1;
+  schoolDetailStep: SchoolDetailStepEnum = SchoolDetailStepEnum.STEP_1;
   email: any;
-  otpMobile!:number;
+  otpMobile!: number;
   verified: Boolean = false;
   id: any;
   singlePlanInfo: any;
@@ -73,7 +76,7 @@ export class PaymentComponent implements OnInit {
     'Uttarakhand',
     'West Bengal'
   ];
-  constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private zone: NgZone, private el: ElementRef, private renderer: Renderer2, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private paymentService: PaymentService, public plansService: PlansService, public adminAuthService: AdminAuthService, private adminUserService: AdminUserService) {
 
     this.signupForm = this.fb.group({
       mobile: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
@@ -88,7 +91,8 @@ export class PaymentComponent implements OnInit {
       digit5: ['', Validators.required],
       digit6: ['', Validators.required]
     });
-    this.schoolDetailForm = this.fb.group({
+    this.adminDetailForm = this.fb.group({
+      _id: [''],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
@@ -164,24 +168,18 @@ export class PaymentComponent implements OnInit {
         this.successMsg = res.successMsg;
         this.email = res.email;
         this.otpMobile = res.mobile;
-        this.signupStep = res.signupStep;
-        this.otpStep = res.otpStep;
-        this.getOTP = false;
-        this.varifyOTP = false;
-        this.verified = true;
+        this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
+        this.otpStep = res.adminInfo.otpStep as OtpStepEnum;
+        this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
         this.adminInfo = res.adminInfo;
       }
     }, err => {
       if (err.status == 400 && err.error.verified == false && err.error.paymentMode == true) {
         this.errorMsg = '';
         this.email = err.error.email;
-        this.getOTP = false;
-        this.varifyOTP = true;
       }
       if (err.status == 400 && err.error.verified == true && err.error.paymentMode == true) {
         this.errorMsg = '';
-        this.getOTP = false;
-        this.varifyOTP = false;
         this.verified = err.error.verified;
         this.successMsg = 'You are already verified';
         this.adminInfo = err.error.adminInfo;
@@ -203,19 +201,33 @@ export class PaymentComponent implements OnInit {
       this.adminAuthService.varifyOTP(this.otpForm.value).subscribe((res: any) => {
         if (res) {
           this.errorMsg = '';
-          this.getOTP = false;
-          this.varifyOTP = false;
-          this.otpStep = res.otpStep;
-          this.schoolDetailStep = res.schoolDetailStep;
-          this.verified = res.verified;
+          this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
+          this.otpStep = res.adminInfo.otpStep as OtpStepEnum;
+          this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
+          this.verified = res.adminInfo.verified;
           this.successMsg = res.successMsg;
           this.adminInfo = res.adminInfo;
+          this.adminDetailForm.patchValue({ mobile: this.otpMobile });
         }
 
       }, err => {
-        this.errorMsg = err.error.errorMsg;
+        this.toastr.error('', err.error.errorMsg);
+        // this.errorMsg = err.error.errorMsg;
       })
     }
+  }
+  adminDetailUpdate() {
+    this.adminDetailForm.value._id = this.adminInfo._id;
+    // if (this.adminDetailForm.valid) {
+    this.adminUserService.updateAdminDetail(this.adminDetailForm.value).subscribe((res: any) => {
+      if (res) {
+        this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
+        this.otpStep = res.adminInfo.otpStep as OtpStepEnum;
+        this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
+        this.verified = res.adminInfo.verified;
+      }
+    })
+    // }
   }
 
   createPayment() {
@@ -232,7 +244,7 @@ export class PaymentComponent implements OnInit {
           currency: response.order.currency,
           name: 'Schooliya',
           description: 'Payment for Your Product',
-          image: '../../../../assets/logo.png',
+          image: '../../../../assets/logo-icon.png',
           prefill: {
             name: this.adminInfo.name,
             email: this.adminInfo.email,
@@ -278,8 +290,6 @@ export class PaymentComponent implements OnInit {
             this.adminAuthService.deleteAllCookies();
             this.step = 2;
             this.paymentCompleted = true;
-            this.getOTP = false;
-            this.varifyOTP = false;
             this.verified = false;
             this.errorMsg = '';
             this.successMsg = validationResponse.successMsg;
@@ -299,6 +309,14 @@ export class PaymentComponent implements OnInit {
         });
       }
     );
+  }
+
+  onEmailInput() {
+    const emailControl = this.adminDetailForm.get('email');
+    const val = emailControl?.value;
+    if (val) {
+      emailControl?.setValue(val.toLowerCase(), { emitEvent: false });  // avoid loop
+    }
   }
 
   @HostListener('input', ['$event']) onInput(event: KeyboardEvent) {

@@ -13,4 +13,8 @@ export class AdminUserService {
   getSingleAdminUser(adminId: any) {
     return this.http.get(`${this.url}/admin-user/${adminId}`);
   }
+  updateAdminDetail(adminDetailData: any) {
+    console.log(adminDetailData)
+      return this.http.put(`${this.url}/admin-detail/${adminDetailData._id}`, adminDetailData);
+    }
 }

@@ -1,18 +1,25 @@
 <app-header></app-header>
-<div style="background:rgb(243, 241, 250);padding-top: 10vh;">
+<div style="background:rgb(243, 241, 250);padding-top: 6vh;">
     <div class="container-fluid" style="padding-bottom: 20vh;">
         <div class="row">
             <div class="col-lg-10 offset-lg-1">
                 <div class="row">
                     <div class="col-lg-7">
-                        <h2 class="title">Proceed to
+                        <h2 class="title"
+                            *ngIf="signupStep!==SignupStepEnum.STEP_0 && otpStep!==OtpStepEnum.STEP_0 && schoolDetailStep!==SchoolDetailStepEnum.STEP_0">
+                            Proceed to
                             You're Online ERP Software Account</h2>
+                        <h2 class="title"
+                            *ngIf="signupStep==SignupStepEnum.STEP_0 && otpStep==OtpStepEnum.STEP_0 && schoolDetailStep==SchoolDetailStepEnum.STEP_0">
+                            Proceed to Payment
+                        </h2>
                     </div>
                     <div class="col-lg-7">
-                        <div class="cards">
-                            <ng-container *ngIf="signupStep==1">
+                        <div class="cards"
+                            *ngIf="signupStep!==SignupStepEnum.STEP_0 && otpStep!==OtpStepEnum.STEP_0 && schoolDetailStep!==SchoolDetailStepEnum.STEP_0">
+                            <ng-container *ngIf="signupStep==SignupStepEnum.STEP_1">
                                 <form [formGroup]="signupForm" (ngSubmit)="signup()">
-                                    <div class="row" style="padding-bottom: 10px;">
+                                    <div class="row" style="padding-bottom: 12px;">
                                         <div class="col-12 card-detail-title">
                                             <div style="display: flex; align-items: center; gap: 10px;">
                                                 <button mat-icon-button disabled
@@ -24,7 +31,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mt-3 pb-3">
+                                    <div class="row mt-3">
                                         <div class="col-12 col-lg-6">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>WhatsApp Mobile Number</mat-label>
@@ -52,12 +59,12 @@
                                     </div>
                                 </form>
                             </ng-container>
-                            <ng-container *ngIf="signupStep==2">
+                            <ng-container *ngIf="signupStep==SignupStepEnum.STEP_2">
                                 <div class="row" style="padding-bottom: 10px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <button mat-icon-button disabled
-                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #6adda1;font-size: 15px;font-weight: 700;color: #50d590;">✓</button>
+                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #4cd890;font-size: 15px;font-weight: 700;color: #4cd890;">✓</button>
                                             <h2
                                                 style="color: #382066; margin: 0;font-size:18px;font-weight: 600;letter-spacing: 0;">
                                                 Register</h2>
@@ -66,8 +73,9 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <div class="cards">
-                            <ng-container *ngIf="otpStep==1">
+                        <div class="cards"
+                            *ngIf="signupStep!==SignupStepEnum.STEP_0 && otpStep!==OtpStepEnum.STEP_0 && schoolDetailStep!==SchoolDetailStepEnum.STEP_0">
+                            <ng-container *ngIf="otpStep==OtpStepEnum.STEP_1">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -81,7 +89,7 @@
                                     </div>
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="otpStep==2">
+                            <ng-container *ngIf="otpStep==OtpStepEnum.STEP_2">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -103,18 +111,18 @@
                                         <div class="row">
                                             <div class="col-12 col-lg-9">
                                                 <div class="otp-input">
-                                                    <input autofocus type="number" formControlName="digit1"
-                                                        maxlength="1" appOtpInput>
-                                                    <input type="number" formControlName="digit2" maxlength="1"
-                                                        appOtpInput>
-                                                    <input type="number" formControlName="digit3" maxlength="1"
-                                                        appOtpInput>
-                                                    <input type="number" formControlName="digit4" maxlength="1"
-                                                        appOtpInput>
-                                                    <input type="number" formControlName="digit5" maxlength="1"
-                                                        appOtpInput>
-                                                    <input type="number" formControlName="digit6" maxlength="1"
-                                                        appOtpInput>
+                                                    <input autofocus type="text" inputmode="numeric" pattern="[0-9]*"
+                                                        maxlength="1" formControlName="digit1" appOtpInput>
+                                                    <input type="text" inputmode="numeric" pattern="[0-9]*"
+                                                        maxlength="1" formControlName="digit2" appOtpInput>
+                                                    <input type="text" inputmode="numeric" pattern="[0-9]*"
+                                                        maxlength="1" formControlName="digit3" appOtpInput>
+                                                    <input type="text" inputmode="numeric" pattern="[0-9]*"
+                                                        maxlength="1" formControlName="digit4" appOtpInput>
+                                                    <input type="text" inputmode="numeric" pattern="[0-9]*"
+                                                        maxlength="1" formControlName="digit5" appOtpInput>
+                                                    <input type="text" inputmode="numeric" pattern="[0-9]*"
+                                                        maxlength="1" formControlName="digit6" appOtpInput>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-lg-3">
@@ -129,12 +137,12 @@
                                     </form>
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="otpStep==3">
+                            <ng-container *ngIf="otpStep==OtpStepEnum.STEP_3">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <button mat-icon-button disabled
-                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #6adda1;font-size: 15px;font-weight: 700;color: #50d590;">✓</button>
+                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #4cd890;font-size: 15px;font-weight: 700;color: #4cd890">✓</button>
                                             <h2
                                                 style="color: #382066; margin: 0;font-size:18px;font-weight: 600;letter-spacing: 0;">
                                                 OTP Verification</h2>
@@ -143,8 +151,9 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <div class="cards">
-                            <ng-container *ngIf="schoolDetailStep==1">
+                        <div class="cards"
+                            *ngIf="signupStep!==SignupStepEnum.STEP_0 && otpStep!==OtpStepEnum.STEP_0 && schoolDetailStep!==SchoolDetailStepEnum.STEP_0">
+                            <ng-container *ngIf="schoolDetailStep==SchoolDetailStepEnum.STEP_1">
                                 <div class="row" style="padding-bottom: 15px;">
                                     <div class="col-12 card-detail-title">
                                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -157,10 +166,10 @@
                                     </div>
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="schoolDetailStep==2">
+                            <ng-container *ngIf="schoolDetailStep==SchoolDetailStepEnum.STEP_2">
                                 <div class="row" style="padding-bottom: 15px;">
-                                    <form [formGroup]="schoolDetailForm" (ngSubmit)="signup()">
-                                        <div class="row" style="padding-bottom: 10px;">
+                                    <form [formGroup]="adminDetailForm" (ngSubmit)="adminDetailUpdate()">
+                                        <div class="row" style="padding-bottom: 12px;">
                                             <div class="col-12 card-detail-title">
                                                 <div style="display: flex; align-items: center; gap: 10px;">
                                                     <button mat-icon-button disabled
@@ -178,11 +187,11 @@
                                                     <mat-label>Mobile</mat-label>
                                                     <input matInput type="number" formControlName="mobile">
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('mobile')?.hasError('required') && schoolDetailForm.get('mobile')?.touched">
+                                                        *ngIf="adminDetailForm.get('mobile')?.hasError('required') && adminDetailForm.get('mobile')?.touched">
                                                         Mobile is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('mobile')?.hasError('pattern') && schoolDetailForm.get('mobile')?.touched">
+                                                        *ngIf="adminDetailForm.get('mobile')?.hasError('pattern') && adminDetailForm.get('mobile')?.touched">
                                                         Please enter a valid mobile (10-digit mobile number starting
                                                         with 6,
                                                         7, 8, or 9)
@@ -200,15 +209,15 @@
                                                         {{hide ? 'visibility_off' : 'visibility'}}
                                                     </mat-icon>
                                                     <mat-hint
-                                                        *ngIf="schoolDetailForm.get('password')?.hasError('required') && schoolDetailForm.get('password')?.touched"
+                                                        *ngIf="adminDetailForm.get('password')?.hasError('required') && adminDetailForm.get('password')?.touched"
                                                         class="form-text text-danger">Password is required.</mat-hint>
                                                     <mat-hint
-                                                        *ngIf="schoolDetailForm.get('password')?.hasError('minlength')"
+                                                        *ngIf="adminDetailForm.get('password')?.hasError('minlength')"
                                                         class="form-text text-danger">
                                                         Password must be at least 6 characters long.
                                                     </mat-hint>
                                                     <mat-hint
-                                                        *ngIf="schoolDetailForm.get('password')?.hasError('maxlength')"
+                                                        *ngIf="adminDetailForm.get('password')?.hasError('maxlength')"
                                                         class="form-text text-danger">
                                                         Password can't be more than 30 characters long.
                                                     </mat-hint>
@@ -219,11 +228,11 @@
                                                     <mat-label>Name</mat-label>
                                                     <input matInput type="text" formControlName="name">
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('name')?.hasError('required') && schoolDetailForm.get('name')?.touched">
+                                                        *ngIf="adminDetailForm.get('name')?.hasError('required') && adminDetailForm.get('name')?.touched">
                                                         Name is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('name')?.hasError('pattern') && schoolDetailForm.get('name')?.touched">
+                                                        *ngIf="adminDetailForm.get('name')?.hasError('pattern') && adminDetailForm.get('name')?.touched">
                                                         Please enter a valid Name (only letters and spaces are allowed)
                                                     </mat-error>
                                                 </mat-form-field>
@@ -231,12 +240,13 @@
                                             <div class="col-12 col-lg-6">
                                                 <mat-form-field appearance="outline">
                                                     <mat-label>Email Address</mat-label>
-                                                    <input matInput type="email" formControlName="email">
+                                                    <input matInput type="email" formControlName="email"
+                                                        (input)="onEmailInput()">
                                                     <mat-hint
-                                                        *ngIf="schoolDetailForm.get('email')?.hasError('required') && schoolDetailForm.get('email')?.touched"
+                                                        *ngIf="adminDetailForm.get('email')?.hasError('required') && adminDetailForm.get('email')?.touched"
                                                         class="form-text text-danger">Email Address is
                                                         required.</mat-hint>
-                                                    <mat-error *ngIf="schoolDetailForm.get('email')?.hasError('email')">
+                                                    <mat-error *ngIf="adminDetailForm.get('email')?.hasError('email')">
                                                         Invalid email format
                                                     </mat-error>
                                                 </mat-form-field>
@@ -250,11 +260,11 @@
                                                         </div>
                                                     </mat-select>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('state')?.hasError('required') && schoolDetailForm.get('state')?.touched">
+                                                        *ngIf="adminDetailForm.get('state')?.hasError('required') && adminDetailForm.get('state')?.touched">
                                                         State is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('state')?.hasError('maxlength')">
+                                                        *ngIf="adminDetailForm.get('state')?.hasError('maxlength')">
                                                         Maximum 50 characters allowed for State
                                                     </mat-error>
                                                 </mat-form-field>
@@ -264,11 +274,11 @@
                                                     <mat-label>City</mat-label>
                                                     <input matInput type="text" formControlName="city">
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('city')?.hasError('required') && schoolDetailForm.get('city')?.touched">
+                                                        *ngIf="adminDetailForm.get('city')?.hasError('required') && adminDetailForm.get('city')?.touched">
                                                         City is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('city')?.hasError('maxlength')">
+                                                        *ngIf="adminDetailForm.get('city')?.hasError('maxlength')">
                                                         Maximum 50 characters allowed for city
                                                     </mat-error>
                                                 </mat-form-field>
@@ -278,11 +288,11 @@
                                                     <mat-label>Address</mat-label>
                                                     <input matInput type="text" formControlName="address">
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('address')?.hasError('required') && schoolDetailForm.get('address')?.touched">
+                                                        *ngIf="adminDetailForm.get('address')?.hasError('required') && adminDetailForm.get('address')?.touched">
                                                         Address is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('address')?.hasError('maxlength')">
+                                                        *ngIf="adminDetailForm.get('address')?.hasError('maxlength')">
                                                         Maximum 100 characters allowed for address
                                                     </mat-error>
                                                 </mat-form-field>
@@ -292,11 +302,11 @@
                                                     <mat-label>Pin Code</mat-label>
                                                     <input matInput type="text" formControlName="pinCode">
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('pinCode')?.hasError('required') && schoolDetailForm.get('pinCode')?.touched">
+                                                        *ngIf="adminDetailForm.get('pinCode')?.hasError('required') && adminDetailForm.get('pinCode')?.touched">
                                                         Pin code is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('pinCode')?.hasError('pattern')">
+                                                        *ngIf="adminDetailForm.get('pinCode')?.hasError('pattern')">
                                                         Invalid postal code format. Use a 6-digit code.
                                                     </mat-error>
                                                 </mat-form-field>
@@ -306,11 +316,11 @@
                                                     <mat-label>School Name</mat-label>
                                                     <input matInput type="text" formControlName="schoolName">
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('schoolName')?.hasError('required') && schoolDetailForm.get('schoolName')?.touched">
+                                                        *ngIf="adminDetailForm.get('schoolName')?.hasError('required') && adminDetailForm.get('schoolName')?.touched">
                                                         School name is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('schoolName')?.hasError('maxlength')">
+                                                        *ngIf="adminDetailForm.get('schoolName')?.hasError('maxlength')">
                                                         Maximum 50 characters allowed for School Name
                                                     </mat-error>
                                                 </mat-form-field>
@@ -320,11 +330,11 @@
                                                     <mat-label>Affiliation Number</mat-label>
                                                     <input matInput type="text" formControlName="affiliationNumber">
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('affiliationNumber')?.hasError('required') && schoolDetailForm.get('affiliationNumber')?.touched">
+                                                        *ngIf="adminDetailForm.get('affiliationNumber')?.hasError('required') && adminDetailForm.get('affiliationNumber')?.touched">
                                                         Affiliation number is required
                                                     </mat-error>
                                                     <mat-error
-                                                        *ngIf="schoolDetailForm.get('affiliationNumber')?.hasError('pattern')">
+                                                        *ngIf="adminDetailForm.get('affiliationNumber')?.hasError('pattern')">
                                                         Maximum 15 characters allowed for affiliation number
                                                     </mat-error>
                                                 </mat-form-field>
@@ -333,11 +343,36 @@
                                         <div class="row">
                                             <div class="col-12 col-lg-3 offset-lg-9">
                                                 <button type="submit" mat-raised-button class="submit-button"
-                                                    [disabled]="!schoolDetailForm.valid"
+                                                    [disabled]="!adminDetailForm.valid"
                                                     style="width: 100% !important;font-size: 16px;margin-top: 10px;letter-spacing: .5px;">Next<mat-icon>arrow_right_alt</mat-icon></button>
                                             </div>
                                         </div>
                                     </form>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div class="cards"
+                            *ngIf="signupStep==SignupStepEnum.STEP_0 && otpStep==OtpStepEnum.STEP_0 && schoolDetailStep==SchoolDetailStepEnum.STEP_0 && verified">
+                            <ng-container *ngIf="schoolDetailStep==SchoolDetailStepEnum.STEP_0">
+                                <div class="row" style="padding-bottom: 20px;">
+                                    <div class="col-12 card-detail-title">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <button mat-icon-button disabled
+                                                style="background-color: #fff;height: 28px;width: 28px;border-radius: 50%;display: flex;align-items: center;justify-content: center;padding: 0;border:1px solid #4cd890;font-size: 15px;font-weight: 700;color: #4cd890;">✓</button>
+                                            <h2
+                                                style="color: #382066; margin: 0;font-size:18px;font-weight: 600;letter-spacing: 0;">
+                                                Billing to</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-bottom: 10px;">
+                                    <div class="col-12 card-detail-title">
+                                        <p style="font-size: 15px;margin-top: -5px !important;">Abhishek Dhakad</p>
+                                        <p style="font-size: 15px;margin-top: -5px !important;">+91 9340700360</p>
+                                        <p style="font-size: 15px;margin-top: -5px !important;">Guna, Madhya Pradesh,
+                                            India</p>
+                                        <p style="font-size: 15px;margin-top: -5px !important;">Guna, 473110</p>
+                                    </div>
                                 </div>
                             </ng-container>
                         </div>
@@ -395,16 +430,17 @@
 
                                                 <!-- <div class="col-6" style="text-align: left;">
                                                     <h3>Taxes @ 18%</h3>
-                                                </div> -->
-                                                <!-- <div class="col-6" style="text-align: right;">
+                                                </div>
+                                                <div class="col-6" style="text-align: right;">
                                                     <h3>{{taxes | currency:'INR':true}}</h3>
                                                 </div> -->
                                                 <mat-divider></mat-divider>
                                                 <div class="col-12">
                                                     <div class="row" style="padding-top: 15px;">
                                                         <div class="col-8" style="text-align: left;">
-                                                            <h2>Total Amount <span style="font-size: 12px;">(Incl.
-                                                                    Taxes)</span></h2>
+                                                            <h2>Total<span
+                                                                    style="font-size: 12px;">&nbsp;&nbsp;(Incl.Taxes)</span>
+                                                            </h2>
                                                         </div>
                                                         <div class="col-4" style="text-align: right;">
                                                             <h2>{{totalAmount | currency:'INR':true}}</h2>
@@ -417,7 +453,9 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <button type="submit" mat-raised-button class="submit-button"
-                                                style="width: 100% !important;font-size: 16px;" disabled="true">Submit
+                                                [disabled]="signupStep!==SignupStepEnum.STEP_0 || otpStep!==OtpStepEnum.STEP_0 || schoolDetailStep!==SchoolDetailStepEnum.STEP_0 || !verified"
+                                                (click)="createPayment()"
+                                                style="width: 100% !important;font-size: 16px;">Submit
                                                 Secure
                                                 Payment</button>
                                         </div>
@@ -499,189 +537,8 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="col-lg-10 offset-lg-1" *ngIf="successMsg && !paymentMode">
-                <div class="row">
-                    <div class="col-12 col-lg-6 offset-lg-3">
-                        <div class="row">
-                            <div class="col-lg-10 offset-lg-2">
-                                <h2 class="title">Proceed to Payment</h2>
-                                <div class="cards-second">
-                                    <div class="row" style="padding-bottom: 20px;">
-                                        <div class="col-12 card-title">
-                                            <h2>Order Summary
-                                            </h2>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="row" style="padding-top: 35px;">
-                                                <div class="col-6" style="text-align: left;">
-                                                    <h3>Your Plan</h3>
-                                                </div>
-                                                <div class="col-6" style="text-align: right;">
-                                                    <h3 style="letter-spacing: .5px;">{{singlePlanInfo?.plans}}</h3>
-                                                </div>
-                                                <ng-container *ngIf="subscriptionType == 'annual'">
-                                                    <div class="col-6" style="text-align: left;">
-                                                        <h3>Subscription</h3>
-                                                    </div>
-                                                    <div class="col-6" style="text-align: right;">
-                                                        <h3>Annual</h3>
-                                                    </div>
-                                                    <div class="col-6" style="text-align: left;">
-                                                        <h3>Annual Pricing</h3>
-                                                    </div>
-                                                    <div class="col-6" style="text-align: right;">
-                                                        <h3>{{singlePlanInfo?.price | currency:'INR':true}}</h3>
-                                                    </div>
-                                                </ng-container>
-                                                <ng-container *ngIf="subscriptionType == 'one-month-trial'">
-                                                    <div class="col-6" style="text-align: left;">
-                                                        <h3>Subscription</h3>
-                                                    </div>
-                                                    <div class="col-6" style="text-align: right;">
-                                                        <h3>1-Month Trial</h3>
-                                                    </div>
-                                                    <div class="col-6" style="text-align: left;">
-                                                        <h3>Trial Pricing</h3>
-                                                    </div>
-                                                    <div class="col-6" style="text-align: right;">
-                                                        <h3>{{totalAmount | currency:'INR':true}} <br><span
-                                                                style="font-size: 12px;">(Will be adjusted on
-                                                                upgrade)</span></h3>
-                                                    </div>
-                                                </ng-container>
-
-
-
-
-
-
-
-                                                
-                                                <div class="col-6" style="text-align: left;">
-                                                    <h3>Taxes @ 18%</h3>
-                                                </div> -->
-                                                <!-- <div class="col-6" style="text-align: right;">
-                                                    <h3>{{taxes | currency:'INR':true}}</h3>
-                                                </div>
-
-
-
-
-
-
-
-
-                                                <mat-divider></mat-divider>
-                                                <div class="col-12">
-                                                    <div class="row" style="padding-top: 15px;">
-                                                        <div class="col-8" style="text-align: left;">
-                                                            <h2>Total Amount <span style="font-size: 12px;">(Incl.
-                                                                    Tax)</span></h2>
-                                                        </div>
-                                                        <div class="col-4" style="text-align: right;">
-                                                            <h2>{{totalAmount | currency:'INR':true}}</h2>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <button type="submit" mat-raised-button class="submit-button"
-                                                [disabled]="paymentCompleted" (click)="createPayment()"
-                                                style="width: 100% !important;font-size: 16px;">Submit
-                                                Secure
-                                                Payment</button>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 15px;">
-                                        <ng-container *ngIf="singlePlanInfo?.plans !=='Plus'">
-                                            <div class="col-5">
-                                                <h3>Student Limit</h3>
-                                            </div>
-                                            <div class="col-7 student-limit" style="text-align: right;">
-                                                <button class="decrement-button"
-                                                    [disabled]="numberOfStudent==singlePlanInfo?.studentLimit"
-                                                    (click)="updateNumber(-studentIncrementRange)"
-                                                    mat-icon-button><mat-icon>remove</mat-icon></button>
-                                                <button class="button" mat-icon-button>{{numberOfStudent}}</button>
-                                                <button class="increment-button"
-                                                    (click)="updateNumber(studentIncrementRange)"
-                                                    mat-icon-button><mat-icon>add</mat-icon></button>
-                                            </div>
-                                        </ng-container>
-                                        <div class="row">
-                                            <div class="col-12"><mat-icon
-                                                    style="color: rgb(41, 167, 113);font-size:21px;display: inline;">lock</mat-icon>
-                                                <h3 style="font-size: 15px;display: inline;margin-left: 10px;">Razorpay
-                                                    Secure
-                                                </h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-9">
-                                            <div class="row">
-                                                <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658384/visa_tnc6fg.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658336/mastercard_yziy3e.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658347/paytm_dvbzj5.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658358/phonepe_bzd1kc.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658302/google-pay_tvncpj.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="col-2">
-                                                    <img src="https://res.cloudinary.com/dzzrracge/image/upload/v1733658370/upi_ao6vls.png"
-                                                        alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-3">
-                                            <p style="margin-top: 8px;"> +15</p>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-lg-12">
-                                        <p style="color: #000;font-size: 15px;margin-top: 10px;">By checking out you
-                                            agree with our
-                                            <span routerLink="/terms-and-conditions"
-                                                style="color: #7b48e2;cursor: pointer;">Terms of Service</span> and
-                                            confirm that
-                                            you have read our <span routerLink="/privacy-policy"
-                                                style="color: #7b48e2;cursor: pointer;">Privacy Policy</span>.
-                                            You can cancel recurring payments at any time.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-
-
-
         </div>
     </div>
-
-
 </div>
 
 

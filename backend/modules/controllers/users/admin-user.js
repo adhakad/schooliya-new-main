@@ -134,6 +134,9 @@ let SignupAdmin = async (req, res, next) => {
         // };
         const userData = {
             mobile,
+            signupStep: 2,
+            otpStep: 2,
+            schoolDetailStep: 1
             // schoolId: schoolId
         };
         const createUser = await AdminUserModel.create(userData);
@@ -146,12 +149,62 @@ let SignupAdmin = async (req, res, next) => {
         // }
         await OTPModel.create({ mobile, secureOtp: secureOtp });
         // await SchoolModel.create(schoolData);
-        return res.status(200).json({ successMsg: 'Admin registered successfully',mobile,signupStep:2,otpStep:2});
+        return res.status(200).json({ successMsg: 'Admin registered successfully', mobile, adminInfo: createUser });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
+let UpdateAdminDetail = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        let {
+            name,
+            email,
+            city,
+            state,
+            address,
+            pinCode,
+            schoolName,
+            affiliationNumber,
+            password
+        } = req.body;
+        let adminUser = await AdminUserModel.findOne({ _id: id });
+        if (!adminUser) {
+            return res.status(404).json({ errorMsg: 'Invailid entry!' });
+        }
+        let schoolAffiliationNumber = await SchoolModel.findOne({ affiliationNumber: affiliationNumber });
+        if (schoolAffiliationNumber) {
+            return res.status(400).json({ errorMsg: 'School affiliation number already exist!' });
+        }
+        let lastIssuedSchool = await AdminUserModel.findOne({}).sort({ _id: -1 });
+        let schoolId = (!lastIssuedSchool || !lastIssuedSchool.schoolId)
+            ? 100001
+            : lastIssuedSchool.schoolId + 1;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        let adminDetailData = {
+            name,
+            email,
+            city,
+            state,
+            address,
+            pinCode,
+            schoolName,
+            affiliationNumber,
+            password: hashedPassword,
+            schoolId: schoolId,
+            schoolDetailStep: 0, signupStep: 0, otpStep: 0
 
+        };
+        const updateSchool = await AdminUserModel.findByIdAndUpdate(id, { $set: adminDetailData }, { new: true });
+        if (updateSchool) {
+            return res.status(200).json({ successMsg: 'School updated successfully', adminInfo: updateSchool });
+        } else {
+            return res.status(404).json('School not found!');
+        }
+    } catch (error) {
+        return res.status(500).json('Internal Server Error!');
+    }
+};
 
 let ForgotPassword = async (req, res, next) => {
     function generateSecureOTP() {
@@ -185,7 +238,40 @@ let ForgotPassword = async (req, res, next) => {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
+let VerifyOTP = async (req, res, next) => {
 
+    try {
+        const mobile = req.body.mobile;
+        const userEnteredOTP = parseInt(req.body.otp);
+        const user = await AdminUserModel.findOne({ mobile: mobile });
+        if (!user) {
+            return res.status(404).json({ errorMsg: "Email does not exist!" });
+        }
+        const otp = await OTPModel.findOne({ mobile: mobile });
+        if (!otp) {
+            return res.status(404).json({ errorMsg: "Your OTP has expired!" });
+        }
+        if (userEnteredOTP !== otp.secureOtp) {
+            return res.status(400).json({ errorMsg: "Invalid OTP!" });
+
+        }
+        if (userEnteredOTP == otp.secureOtp) {
+            const objectId = user._id;
+            const userData = {
+                verified: true,
+                signupStep: 2,
+                otpStep: 3,
+                schoolDetailStep: 2
+            };
+            let updateUser = await AdminUserModel.findByIdAndUpdate(objectId, { $set: userData }, { new: true });
+            if (updateUser) {
+                return res.status(200).json({ successMsg: "Congratulations! Your email has been successfully verified. You can now proceed with your payment", adminInfo: updateUser });
+            }
+        }
+    } catch (err) {
+        return res.status(500).json({ errorMsg: "Internal server error!" });
+    }
+}
 let sendEmail = async (email, secureOtp) => {
     const mailOptions = {
         from: {
@@ -221,37 +307,6 @@ let sendEmail = async (email, secureOtp) => {
         console.error("Failed to send email:", err.message);
     }
 };
-
-
-
-let VerifyOTP = async (req, res, next) => {
-
-    try {
-        const mobile = req.body.mobile;
-        const userEnteredOTP = parseInt(req.body.otp);
-        const user = await AdminUserModel.findOne({ mobile: mobile });
-        if (!user) {
-            return res.status(404).json({ errorMsg: "Email does not exist!" });
-        }
-        const otp = await OTPModel.findOne({ mobile: mobile });
-        if (!otp) {
-            return res.status(404).json({ errorMsg: "Your OTP has expired!" });
-        }
-        if (userEnteredOTP !== otp.secureOtp) {
-            return res.status(400).json({ errorMsg: "Invalid OTP!" });
-
-        }
-        if (userEnteredOTP == otp.secureOtp) {
-            const objectId = user._id;
-            let update = await AdminUserModel.findByIdAndUpdate(objectId, { $set: { verified: true } }, { new: true });
-            if (update) {
-                return res.status(200).json({ successMsg: "Congratulations! Your email has been successfully verified. You can now proceed with your payment",otpStep:3,schoolDetailStep:2, verified: true, adminInfo: user });
-            }
-        }
-    } catch (err) {
-        return res.status(500).json({ errorMsg: "Internal server error!" });
-    }
-}
 
 let ResetPassword = async (req, res, next) => {
     const { email, password } = req.body;
@@ -299,6 +354,7 @@ module.exports = {
     ForgotPassword,
     ResetPassword,
     VerifyOTP,
+    UpdateAdminDetail,
     GetSingleAdminPlan,
     GetSingleAdminUser
 }

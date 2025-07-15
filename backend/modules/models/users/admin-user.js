@@ -57,6 +57,24 @@ const AdminModel = mongoose.model('admin-users', {
         trim: true,
         unique: true
     },
+    signupStep: {
+        type: Number,
+        enum: [0, 2],
+        default: 2,
+        trim: true
+    },
+    otpStep: {
+        type: Number,
+        enum: [0, 2, 3],
+        default: 2,
+        trim: true
+    },
+    schoolDetailStep: {
+        type: Number,
+        enum: [0, 1, 2],
+        default: 0,
+        trim: true
+    },
     // status: {
     //     type: String,
     //     trim: true,
