@@ -16,10 +16,11 @@
                 <div class="row">
                     <div class="col-12 footer-item">
                         <h3 class="mb-4">Useful Links</h3>
-                        <p routerLink="/terms-and-conditions">Terms of service</p>
-                        <p routerLink="/privacy-policy">Privacy policy</p>
-                        <p routerLink="/refund-cancellation-policy">Refund and cancellation</p>
-                        <p routerLink="/contact">Contact Us</p>
+                        <p (click)="openInNewTab('/terms-and-conditions')">Terms of service</p>
+                        <p (click)="openInNewTab('/privacy-policy')" routerLink="">Privacy policy</p>
+                        <p (click)="openInNewTab('/refund-cancellation-policy')" routerLink="">Refund and cancellation
+                        </p>
+                        <p (click)="openInNewTab('/contact')" routerLink="">Contact Us</p>
                     </div>
                 </div>
             </div>
@@ -27,7 +28,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h3 class="mb-4">Contact us</h3>
-                        
+
                         <div class="row">
                             <div class="col-1"><mat-icon>call</mat-icon></div>
                             <div class="col-11">
@@ -47,15 +48,20 @@
                             </div>
                         </div>
                         <div class="row" style="margin-bottom: 20px;">
-                            <div class="col-2" *ngIf="whatsapp"><i class="bi bi-whatsapp" (click)="socialMediaRedirect(whatsapp)"></i></div>
+                            <div class="col-2" *ngIf="whatsapp"><i class="bi bi-whatsapp"
+                                    (click)="socialMediaRedirect(whatsapp)"></i></div>
                             <div class="col-2" *ngIf="!whatsapp"><i class="bi bi-whatsapp"></i></div>
-                            <div class="col-2" *ngIf="facebook"><i class="bi bi-facebook" (click)="socialMediaRedirect(facebook)"></i></div>
+                            <div class="col-2" *ngIf="facebook"><i class="bi bi-facebook"
+                                    (click)="socialMediaRedirect(facebook)"></i></div>
                             <div class="col-2" *ngIf="!facebook"><i class="bi bi-facebook"></i></div>
-                            <div class="col-2" *ngIf="linkedin"><i class="bi bi-linkedin" (click)="socialMediaRedirect(linkedin)"></i></div>
+                            <div class="col-2" *ngIf="linkedin"><i class="bi bi-linkedin"
+                                    (click)="socialMediaRedirect(linkedin)"></i></div>
                             <div class="col-2" *ngIf="!linkedin"><i class="bi bi-linkedin"></i></div>
-                            <div class="col-2" *ngIf="instagram"><i class="bi bi-instagram" (click)="socialMediaRedirect(instagram)"></i></div>
+                            <div class="col-2" *ngIf="instagram"><i class="bi bi-instagram"
+                                    (click)="socialMediaRedirect(instagram)"></i></div>
                             <div class="col-2" *ngIf="!instagram"><i class="bi bi-instagram"></i></div>
-                            <div class="col-2" *ngIf="youtube"><i class="bi bi-youtube" (click)="socialMediaRedirect(youtube)"></i></div>
+                            <div class="col-2" *ngIf="youtube"><i class="bi bi-youtube"
+                                    (click)="socialMediaRedirect(youtube)"></i></div>
                             <div class="col-2" *ngIf="!youtube"><i class="bi bi-youtube"></i></div>
 
                         </div>
@@ -67,7 +73,8 @@
             <mat-divider></mat-divider>
         </div>
         <div class="copyright mt-3 pt-2 pb-3">
-            <p>Product Powered by <img src="../../../assets/logo-light.png" alt="" (click)="softwareCompany(softwareCompanyLink)"></p>
+            <p>Product Powered by <img src="../../../assets/logo-light.png" alt=""
+                    (click)="softwareCompany(softwareCompanyLink)"></p>
         </div>
     </div>
 </div>

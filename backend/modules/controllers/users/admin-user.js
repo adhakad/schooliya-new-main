@@ -3,6 +3,7 @@ const { SMTP_API_KEY, SMTP_HOST, SENDER_EMAIL_ADDRESS } = process.env;
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { nanoid } = require('nanoid');
 const tokenService = require('../../services/admin-token');
 const AdminUserModel = require('../../models/users/admin-user');
 const AdminPlanModel = require('../../models/users/admin-plan');
@@ -76,6 +77,7 @@ let RefreshToken = async (req, res, next) => {
 }
 
 let SignupAdmin = async (req, res, next) => {
+    const stepId = nanoid();
     function generateSecureOTP() {
         const otp = crypto.randomInt(100000, 1000000);
         return otp;
@@ -136,8 +138,8 @@ let SignupAdmin = async (req, res, next) => {
             mobile,
             signupStep: 2,
             otpStep: 2,
-            schoolDetailStep: 1
-            // schoolId: schoolId
+            schoolDetailStep: 1,
+            stepId: stepId
         };
         const createUser = await AdminUserModel.create(userData);
         otpWhatsappMessage(secureOtp, mobile);
@@ -346,6 +348,17 @@ let GetSingleAdminPlan = async (req, res, next) => {
         return res.status(500).json('Internal Server Error!');
     }
 }
+let GetSingleAdminPaymentStepStatus = async (req, res, next) => {
+    try {
+        const singleAdminUser = await AdminUserModel.findOne({ stepId: req.params.stepId });
+        if (!singleAdminUser) {
+            return res.status(404).json({ errorMsg: "Not found!" });
+        }
+        return res.status(200).json({ adminInfo: singleAdminUser });
+    } catch (error) {
+        return res.status(500).json('Internal Server Error!');
+    }
+}
 
 module.exports = {
     LoginAdmin,
@@ -356,5 +369,6 @@ module.exports = {
     VerifyOTP,
     UpdateAdminDetail,
     GetSingleAdminPlan,
-    GetSingleAdminUser
+    GetSingleAdminUser,
+    GetSingleAdminPaymentStepStatus
 }

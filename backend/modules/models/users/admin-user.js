@@ -57,6 +57,11 @@ const AdminModel = mongoose.model('admin-users', {
         trim: true,
         unique: true
     },
+    stepId: {
+        type: String,
+        trim: true,
+        unique: true
+    },
     signupStep: {
         type: Number,
         enum: [0, 2],

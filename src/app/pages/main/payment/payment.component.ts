@@ -7,7 +7,7 @@ import { PaymentService } from 'src/app/services/payment/payment.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { AdminUserService } from 'src/app/services/admin-user.service';
 import { PlansService } from 'src/app/services/plans.service';
-import { SignupStepEnum, OtpStepEnum, SchoolDetailStepEnum } from 'src/app/enums/payment-registration-steps.enum';
+import { SignupStepEnum, OtpStepEnum, SchoolDetailStepEnum, PaymentProcessStepEnum } from 'src/app/enums/payment-registration-steps.enum';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -22,6 +22,7 @@ export class PaymentComponent implements OnInit {
   SignupStepEnum = SignupStepEnum;
   OtpStepEnum = OtpStepEnum;
   SchoolDetailStepEnum = SchoolDetailStepEnum;
+  PaymentProcessStepEnum = PaymentProcessStepEnum;
   hide: boolean = true;
   loader: Boolean = true;
   successMsg: String = '';
@@ -31,17 +32,17 @@ export class PaymentComponent implements OnInit {
   paymentCompleted: Boolean = false;
   classInfo: any;
   adminInfo: any;
+  stepShowing: boolean = false;
   signupStep: SignupStepEnum = SignupStepEnum.STEP_1;
   otpStep: OtpStepEnum = OtpStepEnum.STEP_1;
   schoolDetailStep: SchoolDetailStepEnum = SchoolDetailStepEnum.STEP_1;
-  email: any;
+  paymentProcessStep: PaymentProcessStepEnum = PaymentProcessStepEnum.STEP_1;
   otpMobile!: number;
   verified: Boolean = false;
   id: any;
   singlePlanInfo: any;
   taxes: any;
   totalAmount: any;
-  step: number = 1;
   numberOfStudent: number = 0;
   perStudentIncrementPrice: number = 5;
   studentIncrementRange: number = 50;
@@ -109,15 +110,54 @@ export class PaymentComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.subscriptionType = this.activatedRoute.snapshot.paramMap.get('subscription-type');
+    this.restoreStepData();
     if (this.id) {
       this.getSinglePlans(this.id);
     }
     this.loadRazorpayScript();
-
     setTimeout(() => {
       this.loader = false;
     }, 1000)
   }
+
+  restoreStepData(): void {
+    const savedStepId = localStorage.getItem('pymtFlowStpId');
+    if (savedStepId) {
+      this.getAdminPaymentStepStatus(savedStepId);
+    }else{
+      this.stepShowing = true;
+    }
+  }
+  getAdminPaymentStepStatus(stepId: string): void {
+    this.adminUserService.getAdminPaymentStepStatus(stepId).subscribe(
+      (res: any) => {
+        if (res && res.adminInfo) {
+          this.adminInfo = res.adminInfo; // Set adminInfo from backend
+          this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
+          this.otpStep = res.adminInfo.otpStep as OtpStepEnum;
+          this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
+          this.paymentProcessStep = res.adminInfo.paymentProcessStep as PaymentProcessStepEnum;
+          this.otpMobile = res.adminInfo.mobile; // Assuming mobile is part of adminInfo
+          this.verified = res.adminInfo.verified;
+          this.adminDetailForm.patchValue({ mobile: this.otpMobile });
+          this.stepShowing = true;
+        }
+      },
+      (error) => {
+        console.log(error.error)
+        localStorage.removeItem('pymtFlowStpId');
+        this.signupStep = SignupStepEnum.STEP_1; // Reset to initial state
+        this.otpStep = OtpStepEnum.STEP_1;
+        this.schoolDetailStep = SchoolDetailStepEnum.STEP_1;
+        this.paymentProcessStep = PaymentProcessStepEnum.STEP_1;
+        this.stepShowing = true;
+      }
+    );
+  }
+  updateStepsLocally(stepId: string): void {
+    localStorage.setItem('pymtFlowStpId', stepId);
+  }
+
   updateNumber(value: number): void {
     this.numberOfStudent += value;
     this.totalAmount += value * this.perStudentIncrementPrice;
@@ -165,31 +205,14 @@ export class PaymentComponent implements OnInit {
       if (res) {
         this.errorMsg = '';
         this.toastr.success('', res.successMsg);
-        this.successMsg = res.successMsg;
-        this.email = res.email;
         this.otpMobile = res.mobile;
         this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
         this.otpStep = res.adminInfo.otpStep as OtpStepEnum;
         this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
         this.adminInfo = res.adminInfo;
+        this.updateStepsLocally(res.adminInfo.stepId);
       }
     }, err => {
-      if (err.status == 400 && err.error.verified == false && err.error.paymentMode == true) {
-        this.errorMsg = '';
-        this.email = err.error.email;
-      }
-      if (err.status == 400 && err.error.verified == true && err.error.paymentMode == true) {
-        this.errorMsg = '';
-        this.verified = err.error.verified;
-        this.successMsg = 'You are already verified';
-        this.adminInfo = err.error.adminInfo;
-      }
-      if (err.status == 400 && err.error.verified == true && err.error.paymentMode == false) {
-        this.errorMsg = err.error.errorMsg;
-      }
-      if (err.status == 500) {
-        this.errorMsg = err.error.errorMsg;
-      }
     })
   }
 
@@ -208,26 +231,26 @@ export class PaymentComponent implements OnInit {
           this.successMsg = res.successMsg;
           this.adminInfo = res.adminInfo;
           this.adminDetailForm.patchValue({ mobile: this.otpMobile });
+          this.updateStepsLocally(res.adminInfo.stepId);
         }
 
       }, err => {
         this.toastr.error('', err.error.errorMsg);
-        // this.errorMsg = err.error.errorMsg;
       })
     }
   }
   adminDetailUpdate() {
     this.adminDetailForm.value._id = this.adminInfo._id;
-    // if (this.adminDetailForm.valid) {
     this.adminUserService.updateAdminDetail(this.adminDetailForm.value).subscribe((res: any) => {
       if (res) {
         this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
         this.otpStep = res.adminInfo.otpStep as OtpStepEnum;
         this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
         this.verified = res.adminInfo.verified;
+        this.adminInfo = res.adminInfo;
+        this.updateStepsLocally(res.adminInfo.stepId);
       }
     })
-    // }
   }
 
   createPayment() {
@@ -288,11 +311,12 @@ export class PaymentComponent implements OnInit {
           this.zone.run(() => {
             this.loader = true;
             this.adminAuthService.deleteAllCookies();
-            this.step = 2;
+            this.paymentProcessStep = PaymentProcessStepEnum.STEP_2;
             this.paymentCompleted = true;
             this.verified = false;
             this.errorMsg = '';
             this.successMsg = validationResponse.successMsg;
+            localStorage.removeItem('pymtFlowStpId');
             this.adminAuthService.deleteAllCookies();
             const accessToken = validationResponse.accessToken;
             const refreshToken = validationResponse.refreshToken;
@@ -315,7 +339,7 @@ export class PaymentComponent implements OnInit {
     const emailControl = this.adminDetailForm.get('email');
     const val = emailControl?.value;
     if (val) {
-      emailControl?.setValue(val.toLowerCase(), { emitEvent: false });  // avoid loop
+      emailControl?.setValue(val.toLowerCase(), { emitEvent: false });
     }
   }
 
@@ -339,5 +363,11 @@ export class PaymentComponent implements OnInit {
         previousInput.focus();
       }
     }
+  }
+  openInNewTab(route: string) {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([route])
+    );
+    window.open(url, '_blank');
   }
 }

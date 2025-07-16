@@ -1,8 +1,8 @@
 <app-header></app-header>
-<div style="background:rgb(243, 241, 250);padding-top: 6vh;">
+<div style="background:rgb(243, 241, 250);min-height: 90vh;padding-top: 6vh;">
     <div class="container-fluid" style="padding-bottom: 20vh;">
         <div class="row">
-            <div class="col-lg-10 offset-lg-1">
+            <div class="col-lg-10 offset-lg-1" *ngIf="stepShowing">
                 <div class="row">
                     <div class="col-lg-7">
                         <h2 class="title"
@@ -105,9 +105,6 @@
                                         <p>We have sent a code to {{otpMobile | secureMobile}}</p>
                                     </div>
                                     <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
-                                        <div class="error-msg">
-                                            <h2>{{errorMsg}}</h2>
-                                        </div>
                                         <div class="row">
                                             <div class="col-12 col-lg-9">
                                                 <div class="otp-input">
@@ -352,7 +349,7 @@
                             </ng-container>
                         </div>
                         <div class="cards"
-                            *ngIf="signupStep==SignupStepEnum.STEP_0 && otpStep==OtpStepEnum.STEP_0 && schoolDetailStep==SchoolDetailStepEnum.STEP_0 && verified">
+                            *ngIf="signupStep==SignupStepEnum.STEP_0 && otpStep==OtpStepEnum.STEP_0 && schoolDetailStep==SchoolDetailStepEnum.STEP_0">
                             <ng-container *ngIf="schoolDetailStep==SchoolDetailStepEnum.STEP_0">
                                 <div class="row" style="padding-bottom: 20px;">
                                     <div class="col-12 card-detail-title">
@@ -367,11 +364,14 @@
                                 </div>
                                 <div class="row" style="padding-bottom: 10px;">
                                     <div class="col-12 card-detail-title">
-                                        <p style="font-size: 15px;margin-top: -5px !important;">Abhishek Dhakad</p>
-                                        <p style="font-size: 15px;margin-top: -5px !important;">+91 9340700360</p>
-                                        <p style="font-size: 15px;margin-top: -5px !important;">Guna, Madhya Pradesh,
-                                            India</p>
-                                        <p style="font-size: 15px;margin-top: -5px !important;">Guna, 473110</p>
+                                        <p style="font-size: 15px;margin-top: -5px !important;">{{adminInfo.name}}</p>
+                                        <p style="font-size: 15px;margin-top: -5px !important;">+91 {{adminInfo.mobile}}
+                                        </p>
+                                        <p style="font-size: 15px;margin-top: -5px !important;">{{adminInfo.city}},
+                                            {{adminInfo.state}},
+                                            {{adminInfo.country}}</p>
+                                        <p style="font-size: 15px;margin-top: -5px !important;">{{adminInfo.address}},
+                                            {{adminInfo.pinCode}}</p>
                                     </div>
                                 </div>
                             </ng-container>
@@ -523,10 +523,10 @@
                                     <div class="col-lg-12">
                                         <p style="color: #000;font-size: 15px;margin-top: 10px;">By checking out you
                                             agree with our
-                                            <span routerLink="/terms-and-conditions"
+                                            <span (click)="openInNewTab('/terms-and-conditions')"
                                                 style="color: #7b48e2;cursor: pointer;">Terms of Service</span> and
                                             confirm that
-                                            you have read our <span routerLink="/privacy-policy"
+                                            you have read our <span (click)="openInNewTab('/privacy-policy')"
                                                 style="color: #7b48e2;cursor: pointer;">Privacy Policy</span>.
                                             You can cancel recurring payments at any time.
                                         </p>
