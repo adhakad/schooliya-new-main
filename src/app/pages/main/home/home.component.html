@@ -266,7 +266,7 @@
                                     {{plansInfo[2]?.price}}<span style="font-size: medium;font-weight: 500;"> /
                                         Year</span></h4>
                                 <button class="pricing-button-light" mat-raised-button
-                                    routerLink="/payment/subscription/{{paymentType[0]=='Yearly'}}{{plansInfo[2]?._id}}">Buy Now</button>
+                                    routerLink="/payment/subscription/{{paymentType[0]}}/{{plansInfo[2]?._id}}">Buy Now</button>
                                 <div class="pricing-amount">
                                     <p>₹ {{plansInfo[2]?.price}}/year when you renew</p>
                                 </div>
