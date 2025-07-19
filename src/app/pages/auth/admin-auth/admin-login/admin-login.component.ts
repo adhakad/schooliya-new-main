@@ -14,7 +14,7 @@ export class AdminLoginComponent implements OnInit{
   hide:boolean=true;
   constructor(private fb: FormBuilder,private router:Router,private adminAuthService: AdminAuthService,private teacherAuthService: TeacherAuthService) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
+      mobile: ['', [Validators.required, Validators.pattern('^[6789]\\d{9}$')]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
     })
   }

@@ -9,10 +9,19 @@
             <h2>{{errorMsg}}</h2>
             <form [formGroup]="loginForm" (ngSubmit)="login()">
               <mat-form-field appearance="outline">
-                <mat-label>Email</mat-label>
-                <input matInput type="text" formControlName="email">
-                <mat-hint *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched"
-                  class="form-text text-danger">Email is required.</mat-hint>
+                <mat-label>WhatsApp Mobile Number</mat-label>
+                <span matPrefix class="prefix-content">
+                  <img src="https://flagcdn.com/w40/in.png" alt="India Flag" class="flag-icon" />
+                  <span class="country-code">+91</span>
+                </span>
+                <input matInput type="number" formControlName="mobile">
+                <mat-error *ngIf="loginForm.get('mobile')?.hasError('required') && loginForm.get('mobile')?.touched">
+                  Mobile is required
+                </mat-error>
+                <mat-error *ngIf="loginForm.get('mobile')?.hasError('pattern') && loginForm.get('mobile')?.touched">
+                  Please enter a valid mobile (10-digit mobile number starting with 6,
+                  7, 8, or 9)
+                </mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">

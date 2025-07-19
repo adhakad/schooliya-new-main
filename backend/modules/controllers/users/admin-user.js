@@ -28,8 +28,8 @@ const transporter = nodemailer.createTransport({
 
 let LoginAdmin = async (req, res, next) => {
     try {
-        let { email, password } = req.body;
-        let admin = await AdminUserModel.findOne({ email: email });
+        let { mobile, password } = req.body;
+        let admin = await AdminUserModel.findOne({ mobile: mobile });
         if (!admin) {
             return res.status(404).json({ errorMsg: 'Username or password invalid!' });
         }
@@ -49,12 +49,10 @@ let LoginAdmin = async (req, res, next) => {
         if (!passwordMatch) {
             return res.status(400).json({ errorMsg: 'Username or password invalid!' });
         }
-        const payload = { id: admin._id, email: admin.email };
+        const payload = { id: admin._id, mobile: admin.mobile };
         const accessToken = await tokenService.getAccessToken(payload);
         const refreshToken = await tokenService.getRefreshToken(payload);
         return res.status(200).json({ adminInfo: admin, accessToken, refreshToken });
-        // }
-        // return res.status(400).json({ errorMsg: 'Login error !' })
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
@@ -127,7 +125,7 @@ const SignupAdmin = async (req, res, next) => {
                     mobile,
                     adminInfo: existingUser,
                     verified: false,
-                    infoStaus:true,
+                    infoStaus: true,
                     errorMsg: 'WhatsApp number is already registered. Please verify it using the OTP sent!'
                 });
             }
@@ -140,7 +138,7 @@ const SignupAdmin = async (req, res, next) => {
                     mobile,
                     adminInfo: existingUser,
                     verified: true,
-                    infoStaus:true,
+                    infoStaus: true,
                     errorMsg: 'WhatsApp number already verified. Please fill school details to complete account!'
                 });
             }
@@ -149,13 +147,13 @@ const SignupAdmin = async (req, res, next) => {
                     mobile,
                     adminInfo: existingUser,
                     verified: true,
-                    infoStaus:true,
+                    infoStaus: true,
                     errorMsg: 'School details completed. Please proceed with payment to activate account!'
                 });
             }
 
             return res.status(400).json({
-                errorStaus:true,
+                errorStaus: true,
                 errorMsg: `Your "${existingUserPlan.activePlan}" plan is already active, enjoy your services!`
             });
         }
@@ -170,7 +168,7 @@ const SignupAdmin = async (req, res, next) => {
         });
 
         return res.status(200).json({
-            successStatus:true,
+            successStatus: true,
             successMsg: 'Admin registered successfully. OTP has been sent to your WhatsApp number',
             mobile,
             adminInfo: newUser
@@ -178,7 +176,7 @@ const SignupAdmin = async (req, res, next) => {
 
     } catch (error) {
         return res.status(500).json({
-            errorStaus:true,
+            errorStaus: true,
             errorMsg: 'Something went wrong on the server. Please try again later!'
         });
     }
