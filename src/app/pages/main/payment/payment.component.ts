@@ -139,22 +139,15 @@ export class PaymentComponent implements OnInit, OnDestroy {
     this.otpSendLoading = true;
     this.adminUserService.sendWhatsappOtp(otpMobile).subscribe({
       next: (response) => {
+        this.toastr.success('', response.successMsg);
         this.otpSendLoading = false;
-
-        // **महत्वपूर्ण बदलाव यहाँ:**
-        // यदि बैकएंड ने OTP सफलतापूर्वक भेजा है, तो अगला कूलडाउन 60 सेकंड का होगा।
-        // इसलिए, कूलडाउन को 60 सेकंड से शुरू करें।
         this.cooldownSeconds = 60;
         this.startResendTimer();
       },
       error: (errorRes) => {
         this.otpSendLoading = false;
         if (errorRes.status === 429) {
-          // **महत्वपूर्ण बदलाव यहाँ:**
-          // बैकएंड से प्राप्त remaining cooldown time का उपयोग करें
           this.cooldownSeconds = errorRes.error.cooldownRemaining || 0;
-
-          // यदि कूलडाउन टाइम 0 से अधिक है, तभी टाइमर शुरू करें
           if (this.cooldownSeconds > 0) {
             this.startResendTimer();
           } else {
@@ -278,7 +271,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
   signup() {
     this.adminAuthService.signup(this.signupForm.value).subscribe((res: any) => {
       if (res) {
-        this.toastr.success('', res.successMsg);
         this.otpMobile = res.mobile;
         this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
         this.otpStep = res.adminInfo.otpStep as OtpStepEnum;

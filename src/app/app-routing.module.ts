@@ -16,7 +16,6 @@ const routes: Routes = [
   { path: 'refund-cancellation-policy', loadChildren: () => import('src/app/pages/main/refund-cancellation-policy/refund-cancellation-policy.module').then((module) => module.RefundCancellationPolicyModule) },
   // Admin Routing Section
 
-  { path: 'admin/signup', loadChildren: () => import('src/app/pages/auth/admin-auth/admin-signup/admin-signup.module').then((module) => module.AdminSignupModule) },
   { path: 'admin/login', loadChildren: () => import('src/app/pages/auth/admin-auth/admin-login/admin-login.module').then((module) => module.AdminLoginModule) },
   { path: 'admin/forgot', loadChildren: () => import('src/app/pages/auth/admin-auth/admin-forgot/admin-forgot.module').then((module) => module.AdminForgotModule) },
   { path: 'admin/dashboard', loadChildren: () => import('src/app/pages/admin/dashboard/dashboard.module').then((module) => module.DashboardModule), canActivate: [AdminAuthGuard] },

@@ -235,16 +235,11 @@ let UpdateAdminDetail = async (req, res, next) => {
 };
 
 let ForgotPassword = async (req, res, next) => {
-    function generateSecureOTP() {
-        const otp = crypto.randomInt(100000, 1000000);
-        return otp;
-    }
-    const secureOtp = generateSecureOTP();
     try {
-        const { email } = req.body;
-        const admin = await AdminUserModel.findOne({ email: email });
+        const { mobile } = req.body;
+        const admin = await AdminUserModel.findOne({ mobile: mobile });
         if (!admin) {
-            return res.status(404).json({ errorMsg: 'Email address not found!' });
+            return res.status(404).json({ errorMsg: 'Whatsapp mobile number not found!' });
         }
         if (!admin.verified) {
             return res.status(400).json({ errorMsg: `Your plan purchase process is incomplete. Please complete the purchase process to enjoy Schooliya's services!` });
@@ -257,10 +252,12 @@ let ForgotPassword = async (req, res, next) => {
         if (adminPlan.expiryStatus === true) {
             return res.status(400).json({ errorMsg: `Your ${adminPlan.activePlan} plan has expired. Please purchase your plan to continue enjoying Schooliya's services!` });
         }
-        await OTPModel.deleteMany({ email });
-        const createdOTP = await OTPModel.create({ email, secureOtp: secureOtp });
-        sendEmail(email, secureOtp);
-        return res.status(200).json({ successMsg: 'Forgot password otp send successfully', email: email });
+
+        return res.status(200).json({
+            successStatus: true,
+            successMsg: 'OTP has been sent to your WhatsApp number',
+            mobile,
+        });
 
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
@@ -295,7 +292,7 @@ let SendWhatsAppOtp = async (req, res, next) => {
             if (timeElapsed < ONE_MINUTE) {
                 const timeLeft = Math.ceil((ONE_MINUTE - timeElapsed) / 1000);
                 return res.status(429).json({
-                    message: `Please wait ${timeLeft} seconds before requesting the OTP again`,
+                    errorMsg: `Please wait ${timeLeft} seconds before requesting the OTP again`,
                     cooldownRemaining: timeLeft,
                     mobile: mobile
                 });
@@ -329,13 +326,18 @@ let SendWhatsAppOtp = async (req, res, next) => {
 }
 
 let VerifyOTP = async (req, res, next) => {
-
     try {
         const mobile = req.body.mobile;
+        if (!mobile) {
+            return res.status(404).json({ errorMsg: "Whatsapp number is required!" });
+        }
         const userEnteredOTP = parseInt(req.body.otp);
+        if (!userEnteredOTP) {
+            return res.status(404).json({ errorMsg: "OTP is required!" });
+        }
         const user = await AdminUserModel.findOne({ mobile: mobile });
         if (!user) {
-            return res.status(404).json({ errorMsg: "Email does not exist!" });
+            return res.status(404).json({ errorMsg: "Whatsapp number not found!" });
         }
         const otp = await OTPModel.findOne({ mobile: mobile });
         if (!otp) {
@@ -355,7 +357,7 @@ let VerifyOTP = async (req, res, next) => {
             };
             let updateUser = await AdminUserModel.findByIdAndUpdate(objectId, { $set: userData }, { new: true });
             if (updateUser) {
-                return res.status(200).json({ successMsg: "Congratulations! Your email has been successfully verified. You can now proceed with your payment", adminInfo: updateUser });
+                return res.status(200).json({ successMsg: "OTP has been successfully verified", adminInfo: updateUser });
             }
         }
     } catch (err) {
@@ -399,11 +401,11 @@ let sendEmail = async (email, secureOtp) => {
 };
 
 let ResetPassword = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { mobile, password } = req.body;
     try {
-        const user = await AdminUserModel.findOne({ email: email });
+        const user = await AdminUserModel.findOne({ mobile: mobile });
         if (!user) {
-            return res.status(404).json({ errorMsg: "Email does not exist!" });
+            return res.status(404).json({ errorMsg: "Whatsapp number not foud!" });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const resetAdminUserInfo = {

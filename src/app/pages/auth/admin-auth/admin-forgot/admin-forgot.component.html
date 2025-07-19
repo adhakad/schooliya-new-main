@@ -6,15 +6,22 @@
         <div class="col-12 col-lg-10 offset-lg-1">
           <h3>Forgot Password</h3>
           <div class="col-12">
-            <h2>{{errorMsg}}</h2>
             <form [formGroup]="forgotForm" (ngSubmit)="forgotPassword()" *ngIf="formType=='Forgot'">
               <mat-form-field appearance="outline">
-                <mat-label>Email</mat-label>
-                <input matInput type="text" formControlName="email">
-                <mat-hint *ngIf="forgotForm.get('email')?.hasError('required') && forgotForm.get('email')?.touched"
-                  class="form-text text-danger">Email is required.</mat-hint>
+                <mat-label>WhatsApp Mobile Number</mat-label>
+                <span matPrefix class="prefix-content">
+                  <img src="https://flagcdn.com/w40/in.png" alt="India Flag" class="flag-icon" />
+                  <span class="country-code">+91</span>
+                </span>
+                <input matInput type="number" formControlName="mobile">
+                <mat-error *ngIf="forgotForm.get('mobile')?.hasError('required') && forgotForm.get('mobile')?.touched">
+                  Mobile is required
+                </mat-error>
+                <mat-error *ngIf="forgotForm.get('mobile')?.hasError('pattern') && forgotForm.get('mobile')?.touched">
+                  Please enter a valid mobile (10-digit mobile number starting with 6,
+                  7, 8, or 9)
+                </mat-error>
               </mat-form-field>
-
               <button type="submit" mat-raised-button [disabled]="!forgotForm.valid" class="submit-button">Get
                 OTP</button>
             </form>
@@ -29,32 +36,52 @@
         <div class="row" style="padding-bottom: 20px;">
           <div class="col-12 " style="max-width: auto !important;">
             <div class="col-12 card-title">
-              <h2>Verification
-              </h2>
-              <p>Enter the code sent to your email</p>
-              <p><span>{{email | secureEmail}}</span></p>
+              <h3>OTP Verification
+              </h3>
             </div>
           </div>
         </div>
-        <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
-          <div class="error-msg">
-            <h2>{{errorMsg}}</h2>
+        <div class="row">
+          <div class="col-12 mb-2">
+            <p>We have sent a code to<img src="../../../../assets/whatsapp_green_20240821022250.svg" alt="WhatsApp"
+                width="25" height="25" />{{mobile | secureMobile}}</p>
           </div>
+          <div class="col-12 mt-1 mb-3">
+            <button *ngIf="cooldownSeconds === 0" class="btn"
+              style="width:auto !important;height: auto !important;color: #8C52FF;font-weight: 600;text-decoration: none;display: inline;padding: 0 !important;margin: 0 !important;border: none !important;box-shadow: none !important;"
+              (click)="sendWhatsappOtp(mobile)" [disabled]="otpSendLoading">
+              <span *ngIf="otpSendLoading" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true"></span>
+              Resend OTP
+            </button>
+            <p style="color: #46386196;font-size: 15px;font-weight: 500;display: inline;" *ngIf="cooldownSeconds > 0">
+              {{ formattedCooldown }}</p>
+
+          </div>
+        </div>
+        <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
           <div class="row">
             <div class="col-12 col-lg-9">
               <div class="otp-input">
-                <input autofocus type="number" formControlName="digit1" maxlength="1" appOtpInput>
-                <input type="number" formControlName="digit2" maxlength="1" appOtpInput>
-                <input type="number" formControlName="digit3" maxlength="1" appOtpInput>
-                <input type="number" formControlName="digit4" maxlength="1" appOtpInput>
-                <input type="number" formControlName="digit5" maxlength="1" appOtpInput>
-                <input type="number" formControlName="digit6" maxlength="1" appOtpInput>
+                <input autofocus type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" formControlName="digit1"
+                  appOtpInput>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" formControlName="digit2"
+                  appOtpInput>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" formControlName="digit3"
+                  appOtpInput>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" formControlName="digit4"
+                  appOtpInput>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" formControlName="digit5"
+                  appOtpInput>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" formControlName="digit6"
+                  appOtpInput>
               </div>
             </div>
             <div class="col-12 col-lg-3">
 
               <button type="submit" mat-raised-button class="submit-button" [disabled]="!otpForm.valid"
-                style="width: 100% !important;font-size: 16px;letter-spacing: .5px;">Continue<mat-icon>arrow_right_alt</mat-icon></button>
+                style="width: 100% !important;font-size: 16px; letter-spacing: .5px; display: flex; align-items: center; justify-content: center; gap: 4px;">Next<mat-icon
+                  style="font-size: 18px; position: relative; top: 3.5px;">arrow_forward</mat-icon></button>
 
             </div>
           </div>
@@ -67,7 +94,6 @@
         <div class="col-12 col-lg-10 offset-lg-1">
           <h3>Reset Password</h3>
           <div class="col-12">
-            <h2>{{errorMsg}}</h2>
             <form [formGroup]="resetForm" (ngSubmit)="passwordReset()">
               <mat-form-field appearance="outline">
                 <mat-label>Reset Password</mat-label>
