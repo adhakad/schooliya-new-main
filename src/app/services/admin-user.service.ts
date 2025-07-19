@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 
@@ -18,6 +20,17 @@ export class AdminUserService {
   }
   updateAdminDetail(adminDetailData: any) {
     console.log(adminDetailData)
-      return this.http.put(`${this.url}/admin-detail/${adminDetailData._id}`, adminDetailData);
-    }
+    return this.http.put(`${this.url}/admin-detail/${adminDetailData._id}`, adminDetailData);
+  }
+  sendWhatsappOtp(mobile: number): Observable<any> {
+    return this.http.post(`${this.url}/send-whatsapp-otp`, { mobile }).pipe(
+      tap(response => {
+        console.log('OTP send/resend successful:', response);
+      }),
+      catchError(error => {
+        console.error('Error sending OTP:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

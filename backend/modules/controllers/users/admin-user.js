@@ -76,86 +76,114 @@ let RefreshToken = async (req, res, next) => {
     }
 }
 
-let SignupAdmin = async (req, res, next) => {
+// let SignupAdmin = async (req, res, next) => {
+//     const stepId = nanoid();
+//     const { mobile } = req.body;
+//     try {
+//         const existingUser = await AdminUserModel.findOne({ mobile });
+//         if (existingUser) {
+//             if (!existingUser.verified) {
+//                 return res.status(400).json({ mobile, adminInfo: existingUser, errorMsg: 'This whatsapp number already register , we are sent to otp on your whatsapp number ,please veryfy your mobile via otp' });
+//             }
+//             if (existingUser.verified) {
+//                 let adminId = existingUser._id;
+//                 const existingUserPlan = await AdminPlanModel.findOne({ adminId: adminId });
+//                 if (!existingUserPlan) {
+//                     return res.status(400).json({ mobile, adminInfo: existingUser, errorMsg: 'This whatsapp number already register and verified,please proceed to your payment' });
+//                 }
+//                 if (existingUserPlan) {
+//                     return res.status(400).json({ errorMsg: `Your ${existingUserPlan.activePlan} plan is already active, enjoy your services!` });
+//                 }
+//             }
+
+//         }
+//         const userData = {
+//             mobile,
+//             signupStep: 2,
+//             otpStep: 2,
+//             schoolDetailStep: 1,
+//             stepId: stepId
+//         };
+//         const createUser = await AdminUserModel.create(userData);
+//         return res.status(200).json({ successMsg: 'Admin registered successfully', mobile, adminInfo: createUser });
+//     } catch (error) {
+//         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
+//     }
+// }
+
+const SignupAdmin = async (req, res, next) => {
     const stepId = nanoid();
-    function generateSecureOTP() {
-        const otp = crypto.randomInt(100000, 1000000);
-        return otp;
-    }
-    const secureOtp = generateSecureOTP();
     const { mobile } = req.body;
+
     try {
         const existingUser = await AdminUserModel.findOne({ mobile });
-        // if (existingUser) {
-        //     if (!existingUser.verified) {
-        //         await OTPModel.deleteMany({ email });
-        //         await OTPModel.create({ email, secureOtp: secureOtp });
-        //         sendEmail(email, secureOtp);
-        //         return res.status(400).json({ verified: false, paymentMode: true, email });
-        //     }
-        //     if (existingUser.verified) {
-        //         let adminId = existingUser._id;
-        //         const existingUserPlan = await AdminPlanModel.findOne({ adminId: adminId });
-        //         if (!existingUserPlan) {
-        //             return res.status(400).json({ verified: true, paymentMode: true, email, adminInfo: existingUser });
-        //         }
-        //         if (existingUserPlan) {
-        //             if (existingUserPlan.expiryStatus == true) {
-        //                 return res.status(400).json({ verified: true, paymentMode: true, email, adminInfo: existingUser });
-        //             }
-        //             return res.status(400).json({ verified: true, paymentMode: false, errorMsg: `Your ${existingUserPlan.activePlan} plan is already active, enjoy your services!` });
-        //         }
-        //     }
 
-        // }
-        // let schoolAffiliationNumber = await SchoolModel.findOne({ affiliationNumber: affiliationNumber });
-        // if (schoolAffiliationNumber) {
-        //     return res.status(400).json({ errorMsg: 'School affiliation number already exist!' });
-        // }
-        // let schoolId = 0;
-        // let lastIssuedSchoolId = await AdminUserModel.findOne({}).sort({ _id: -1 });
-        // if (!lastIssuedSchoolId) {
-        //     schoolId = 100001 + schoolId;
-        // }
-        // if (lastIssuedSchoolId) {
-        //     schoolId = lastIssuedSchoolId.schoolId + 1;
-        // }
-        // const hashedPassword = await bcrypt.hash(password, 10);
-        // const userData = {
-        //     email,
-        //     password: hashedPassword,
-        //     name,
-        //     mobile,
-        //     city,
-        //     state,
-        //     address,
-        //     pinCode,
-        //     schoolName,
-        //     affiliationNumber,
-        //     schoolId: schoolId
-        // };
-        const userData = {
+        if (existingUser) {
+            const adminId = existingUser._id;
+
+            // User found but not verified
+            if (!existingUser.verified) {
+                return res.status(400).json({
+                    mobile,
+                    adminInfo: existingUser,
+                    verified: false,
+                    infoStaus:true,
+                    errorMsg: 'WhatsApp number is already registered. Please verify it using the OTP sent!'
+                });
+            }
+
+            // User verified — check plan
+            const existingUserPlan = await AdminPlanModel.findOne({ adminId });
+
+            if (existingUser.signupStep == 2 && existingUser.otpStep == 3 && existingUser.schoolDetailStep == 2 && existingUser.verified) {
+                return res.status(400).json({
+                    mobile,
+                    adminInfo: existingUser,
+                    verified: true,
+                    infoStaus:true,
+                    errorMsg: 'WhatsApp number already verified. Please fill school details to complete account!'
+                });
+            }
+            if (existingUser.signupStep == 0 && existingUser.otpStep == 0 && existingUser.schoolDetailStep == 0 && existingUser.verified && !existingUserPlan) {
+                return res.status(400).json({
+                    mobile,
+                    adminInfo: existingUser,
+                    verified: true,
+                    infoStaus:true,
+                    errorMsg: 'School details completed. Please proceed with payment to activate account!'
+                });
+            }
+
+            return res.status(400).json({
+                errorStaus:true,
+                errorMsg: `Your "${existingUserPlan.activePlan}" plan is already active, enjoy your services!`
+            });
+        }
+
+        // New registration
+        const newUser = await AdminUserModel.create({
             mobile,
             signupStep: 2,
             otpStep: 2,
             schoolDetailStep: 1,
-            stepId: stepId
-        };
-        const createUser = await AdminUserModel.create(userData);
-        otpWhatsappMessage(secureOtp, mobile);
-        // sendEmail(mobile, secureOtp);
-        // const schoolData = {
-        //     adminId: createUser._id,
-        //     schoolName: schoolName,
-        //     affiliationNumber: affiliationNumber
-        // }
-        await OTPModel.create({ mobile, secureOtp: secureOtp });
-        // await SchoolModel.create(schoolData);
-        return res.status(200).json({ successMsg: 'Admin registered successfully', mobile, adminInfo: createUser });
+            stepId
+        });
+
+        return res.status(200).json({
+            successStatus:true,
+            successMsg: 'Admin registered successfully. OTP has been sent to your WhatsApp number',
+            mobile,
+            adminInfo: newUser
+        });
+
     } catch (error) {
-        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
+        return res.status(500).json({
+            errorStaus:true,
+            errorMsg: 'Something went wrong on the server. Please try again later!'
+        });
     }
-}
+};
+
 let UpdateAdminDetail = async (req, res, next) => {
     try {
         const id = req.params.id;
@@ -210,7 +238,7 @@ let UpdateAdminDetail = async (req, res, next) => {
 
 let ForgotPassword = async (req, res, next) => {
     function generateSecureOTP() {
-        const otp = crypto.randomInt(100000, 1000000); // Generates a number between 100000 and 999999
+        const otp = crypto.randomInt(100000, 1000000);
         return otp;
     }
     const secureOtp = generateSecureOTP();
@@ -240,6 +268,68 @@ let ForgotPassword = async (req, res, next) => {
         return res.status(500).json({ errorMsg: 'Internal Server Error!' });
     }
 }
+
+let SendWhatsAppOtp = async (req, res, next) => {
+    function generateSecureOTP() {
+        const otp = crypto.randomInt(100000, 1000000);
+        return otp;
+    }
+    const secureOtp = generateSecureOTP();
+    const { mobile } = req.body;
+
+    try {
+        if (!mobile) {
+            return res.status(400).json({ errorMsg: 'Whatsapp number is required!' });
+        }
+        const existingUser = await AdminUserModel.findOne({ mobile });
+        if (!existingUser) {
+            return res.status(404).json({ errorMsg: 'Whatsapp number not register!' });
+        }
+        let otpDoc = await OTPModel.findOne({ mobile });
+        let otpToSend;
+
+        if (otpDoc) {
+            const now = Date.now();
+            const lastSentTime = otpDoc.lastSentAt.getTime();
+            const timeElapsed = (now - lastSentTime);
+            const ONE_MINUTE = 60 * 1000;
+
+            if (timeElapsed < ONE_MINUTE) {
+                const timeLeft = Math.ceil((ONE_MINUTE - timeElapsed) / 1000);
+                return res.status(429).json({
+                    message: `Please wait ${timeLeft} seconds before requesting the OTP again`,
+                    cooldownRemaining: timeLeft,
+                    mobile: mobile
+                });
+            }
+
+            otpToSend = otpDoc.secureOtp;
+            otpDoc.count = (otpDoc.count || 0) + 1;
+            otpDoc.lastSentAt = Date.now();
+            await otpDoc.save();
+
+        }
+        if (!otpDoc) {
+            otpToSend = secureOtp;
+            await OTPModel.create({
+                mobile,
+                secureOtp: otpToSend,
+                count: 1,
+                lastSentAt: Date.now()
+            });
+        }
+        await otpWhatsappMessage(otpToSend, mobile);
+
+        return res.status(200).json({
+            successMsg: 'Your OTP has been successfully sent to WhatsApp',
+            mobile: mobile
+        });
+
+    } catch (error) {
+        return res.status(500).json({ errorMsg: 'Internal server error!' });
+    }
+}
+
 let VerifyOTP = async (req, res, next) => {
 
     try {
@@ -366,6 +456,7 @@ module.exports = {
     SignupAdmin,
     ForgotPassword,
     ResetPassword,
+    SendWhatsAppOtp,
     VerifyOTP,
     UpdateAdminDetail,
     GetSingleAdminPlan,

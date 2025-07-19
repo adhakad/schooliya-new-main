@@ -1,7 +1,9 @@
-import { Component, ElementRef, ViewChild, OnInit, Renderer2, Directive, HostListener, AfterViewInit, NgZone, inject, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, Renderer2, Directive, HostListener, AfterViewInit, NgZone, inject, ViewEncapsulation, OnDestroy } from '@angular/core';
 declare var Razorpay: any;
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription, timer } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment/payment.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
@@ -15,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent implements OnInit, OnDestroy {
   signupForm: FormGroup;
   otpForm: FormGroup;
   adminDetailForm: FormGroup;
@@ -47,6 +49,15 @@ export class PaymentComponent implements OnInit {
   perStudentIncrementPrice: number = 5;
   studentIncrementRange: number = 50;
   subscriptionType: any;
+  cooldownSeconds: number = 0;
+  formattedCooldown: string = '00'; // डिस्प्ले के लिए फ़ॉर्मेटेड कूलडाउन टाइम
+  timerSubscription: Subscription | undefined;
+  otpSendLoading: boolean = false;
+
+
+
+
+
   indianStates: string[] = [
     'Andhra Pradesh',
     'Arunachal Pradesh',
@@ -120,11 +131,72 @@ export class PaymentComponent implements OnInit {
     }, 1000)
   }
 
+  sendWhatsappOtp(otpMobile: number): void {
+    if (!otpMobile) {
+      return;
+    }
+
+    this.otpSendLoading = true;
+    this.adminUserService.sendWhatsappOtp(otpMobile).subscribe({
+      next: (response) => {
+        this.otpSendLoading = false;
+
+        // **महत्वपूर्ण बदलाव यहाँ:**
+        // यदि बैकएंड ने OTP सफलतापूर्वक भेजा है, तो अगला कूलडाउन 60 सेकंड का होगा।
+        // इसलिए, कूलडाउन को 60 सेकंड से शुरू करें।
+        this.cooldownSeconds = 60;
+        this.startResendTimer();
+      },
+      error: (errorRes) => {
+        this.otpSendLoading = false;
+        if (errorRes.status === 429) {
+          // **महत्वपूर्ण बदलाव यहाँ:**
+          // बैकएंड से प्राप्त remaining cooldown time का उपयोग करें
+          this.cooldownSeconds = errorRes.error.cooldownRemaining || 0;
+
+          // यदि कूलडाउन टाइम 0 से अधिक है, तभी टाइमर शुरू करें
+          if (this.cooldownSeconds > 0) {
+            this.startResendTimer();
+          } else {
+            // यदि कूलडाउन 0 या उससे कम है, तो तुरंत रीसेंड करने की अनुमति दें
+          }
+        } else {
+
+        }
+      }
+    });
+  }
+  startResendTimer(): void {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+
+    if (this.cooldownSeconds > 0) {
+      this.timerSubscription = timer(0, 1000)
+        .pipe(takeWhile(() => this.cooldownSeconds > 0))
+        .subscribe(() => {
+          this.updateFormattedCooldown();
+          this.cooldownSeconds--;
+        });
+    }
+  }
+
+  // **सही किया गया हेल्पर फ़ंक्शन: कूलडाउन सेकंड्स को फ़ॉर्मेट करना**
+  private updateFormattedCooldown(): void {
+    const minutes = Math.floor(this.cooldownSeconds / 60);
+    const seconds = this.cooldownSeconds % 60;
+
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+
+    this.formattedCooldown = `${formattedMinutes}:${formattedSeconds}`;
+  }
+
   restoreStepData(): void {
     const savedStepId = localStorage.getItem('pymtFlowStpId');
     if (savedStepId) {
       this.getAdminPaymentStepStatus(savedStepId);
-    }else{
+    } else {
       this.stepShowing = true;
     }
   }
@@ -132,15 +204,18 @@ export class PaymentComponent implements OnInit {
     this.adminUserService.getAdminPaymentStepStatus(stepId).subscribe(
       (res: any) => {
         if (res && res.adminInfo) {
-          this.adminInfo = res.adminInfo; // Set adminInfo from backend
+          this.adminInfo = res.adminInfo;
           this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
           this.otpStep = res.adminInfo.otpStep as OtpStepEnum;
           this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
           this.paymentProcessStep = res.adminInfo.paymentProcessStep as PaymentProcessStepEnum;
-          this.otpMobile = res.adminInfo.mobile; // Assuming mobile is part of adminInfo
+          this.otpMobile = res.adminInfo.mobile;
           this.verified = res.adminInfo.verified;
           this.adminDetailForm.patchValue({ mobile: this.otpMobile });
           this.stepShowing = true;
+          if (this.signupStep == SignupStepEnum.STEP_2 && this.otpStep == OtpStepEnum.STEP_2) {
+            this.sendWhatsappOtp(res.adminInfo.mobile);
+          }
         }
       },
       (error) => {
@@ -203,7 +278,6 @@ export class PaymentComponent implements OnInit {
   signup() {
     this.adminAuthService.signup(this.signupForm.value).subscribe((res: any) => {
       if (res) {
-        this.errorMsg = '';
         this.toastr.success('', res.successMsg);
         this.otpMobile = res.mobile;
         this.signupStep = res.adminInfo.signupStep as SignupStepEnum;
@@ -211,8 +285,30 @@ export class PaymentComponent implements OnInit {
         this.schoolDetailStep = res.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
         this.adminInfo = res.adminInfo;
         this.updateStepsLocally(res.adminInfo.stepId);
+        if (res.adminInfo.signupStep == SignupStepEnum.STEP_2 && res.adminInfo.otpStep == OtpStepEnum.STEP_2 && res.adminInfo.schoolDetailStep == SchoolDetailStepEnum.STEP_1) {
+          this.sendWhatsappOtp(res.adminInfo.mobile);
+        }
       }
     }, err => {
+      if (err.error.infoStaus) {
+        this.toastr.info('', err.error.errorMsg);
+        this.otpMobile = err.error.mobile;
+        this.signupStep = err.error.adminInfo.signupStep as SignupStepEnum;
+        this.otpStep = err.error.adminInfo.otpStep as OtpStepEnum;
+        this.schoolDetailStep = err.error.adminInfo.schoolDetailStep as SchoolDetailStepEnum;
+        this.adminInfo = err.error.adminInfo;
+        this.verified = err.error.verified;
+        this.updateStepsLocally(err.error.adminInfo.stepId);
+        if (err.error.verified) {
+          this.adminDetailForm.patchValue({ mobile: err.error.adminInfo.mobile });
+        }
+        if (err.error.adminInfo.signupStep == SignupStepEnum.STEP_2 && err.error.adminInfo.otpStep == OtpStepEnum.STEP_2 && err.error.adminInfo.schoolDetailStep == SchoolDetailStepEnum.STEP_1 && !err.error.verified) {
+          this.sendWhatsappOtp(err.error.adminInfo.mobile);
+        }
+      }
+      if (err.error.errorStaus) {
+        this.toastr.error('', err.error.errorMsg);
+      }
     })
   }
 
@@ -281,6 +377,7 @@ export class PaymentComponent implements OnInit {
           handler: this.paymentHandler.bind(this),
         };
         Razorpay.open(options);
+        this.stepShowing = false;
       },
       (error) => {
         this.errorMsg = 'Payment creation failed. Please try again later.';
@@ -369,5 +466,10 @@ export class PaymentComponent implements OnInit {
       this.router.createUrlTree([route])
     );
     window.open(url, '_blank');
+  }
+  ngOnDestroy(): void {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
   }
 }

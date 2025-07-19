@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="col-12 col-lg-3 offset-lg-3"><button type="submit" mat-raised-button
                                                 class="submit-button" [disabled]="!signupForm.valid"
-                                                style="width: 100% !important;font-size: 16px;letter-spacing: .5px;margin-top: 5px;">Next<mat-icon>arrow_right_alt</mat-icon></button>
+                                                style="width: 100% !important;font-size: 16px; letter-spacing: .5px; display: flex; align-items: center; justify-content: center; gap: 4px;">Next<mat-icon style="font-size: 18px; position: relative; top: 3.5px;">arrow_forward</mat-icon></button>
                                         </div>
                                     </div>
                                 </form>
@@ -102,10 +102,22 @@
                                         </div>
                                     </div>
                                     <div class="col-12 mt-4 mb-1">
-                                        <p>We have sent a code to<img src="../../../../assets/whatsapp_green_20240821022250.svg" alt="WhatsApp" width="25" height="25"/>{{otpMobile | secureMobile}}</p>
+                                        <p>We have sent a code to<img
+                                                src="../../../../assets/whatsapp_green_20240821022250.svg"
+                                                alt="WhatsApp" width="25" height="25" />{{otpMobile | secureMobile}}</p>
                                     </div>
-                                    <div class="col-12 mt-1 mb-2">
-                                        <p style="color: #8C52FF;font-weight: 600;">Resend OTP</p>
+                                    <div class="col-12 mt-1 mb-3">
+                                        <button *ngIf="cooldownSeconds === 0" class="btn"
+                                            style="color: #8C52FF;font-weight: 600;text-decoration: none;display: inline;padding: 0 !important;border: none !important;box-shadow: none !important;"
+                                            (click)="sendWhatsappOtp(otpMobile)" [disabled]="otpSendLoading">
+                                            <span *ngIf="otpSendLoading" class="spinner-border spinner-border-sm"
+                                                role="status" aria-hidden="true"></span>
+                                            Resend OTP
+                                        </button>
+                                        <p style="color: #46386196;font-size: 15px;font-weight: 500;display: inline;"
+                                            *ngIf="cooldownSeconds > 0">
+                                            {{ formattedCooldown }}</p>
+
                                     </div>
                                     <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
                                         <div class="row">
@@ -127,9 +139,11 @@
                                             </div>
                                             <div class="col-12 col-lg-3">
 
+                                                
                                                 <button type="submit" mat-raised-button class="submit-button"
                                                     [disabled]="!otpForm.valid"
-                                                    style="width: 100% !important;font-size: 16px;letter-spacing: .5px;">Next<mat-icon>arrow_right_alt</mat-icon></button>
+                                                    style="width: 100% !important;font-size: 16px; letter-spacing: .5px; display: flex; align-items: center; justify-content: center; gap: 4px;">Next<mat-icon style="font-size: 18px; position: relative; top: 3.5px;">arrow_forward</mat-icon></button>
+
 
                                             </div>
                                         </div>
@@ -344,7 +358,7 @@
                                             <div class="col-12 col-lg-3 offset-lg-9">
                                                 <button type="submit" mat-raised-button class="submit-button"
                                                     [disabled]="!adminDetailForm.valid"
-                                                    style="width: 100% !important;font-size: 16px;margin-top: 10px;letter-spacing: .5px;">Next<mat-icon>arrow_right_alt</mat-icon></button>
+                                                    style="width: 100% !important;font-size: 16px; letter-spacing: .5px; display: flex; align-items: center; justify-content: center; gap: 4px;">Next<mat-icon style="font-size: 18px; position: relative; top: 3.5px;">arrow_forward</mat-icon></button>
                                             </div>
                                         </div>
                                     </form>
@@ -544,12 +558,9 @@
     </div>
 </div>
 
-
-
-
-
-<div class="spinner-container" *ngIf="loader">
-    <div class="spinner-overlay" *ngIf="loader">
-        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+<div class="spinner-container" *ngIf="loader || !stepShowing">
+    <div class="spinner-overlay" *ngIf="loader || !stepShowing">
+        <mat-progress-spinner *ngIf="loader || !stepShowing" diameter="65" mode="indeterminate"
+            strokeWidth="3"></mat-progress-spinner>
     </div>
 </div>
