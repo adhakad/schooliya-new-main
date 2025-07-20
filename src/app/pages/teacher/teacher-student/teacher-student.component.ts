@@ -547,23 +547,52 @@ export class TeacherStudentComponent implements OnInit {
       const fields = data[0];
       const dataRows = data.slice(1);
 
-      const mappedData = dataRows.map((row: any) => {
-        const obj: any = {};
-        fields.forEach((field: any, i: number) => {
-          let v = row[i];
+      const formatDateValue = (value: any): string => {
+        if (value instanceof Date && !isNaN(value.getTime())) {
+          const day = String(value.getDate()).padStart(2, '0');
+          const month = String(value.getMonth() + 1).padStart(2, '0');
+          const year = value.getFullYear();
+          return `${day}/${month}/${year}`;
+        }
 
-          if ((field === 'Dob' || field === 'Doa')) {
-            if (typeof v === 'string' && v.includes('/')) {
-              const [d, m, y] = v.split('/');
-              v = `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${y}`;
-            } else if (v instanceof Date || !isNaN(Date.parse(v))) {
-              const date = new Date(v);
-              v = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+        if (typeof value === 'string') {
+          if (value.includes('GMT')) {
+            const dateObj = new Date(value);
+            if (!isNaN(dateObj.getTime())) {
+              const day = String(dateObj.getDate()).padStart(2, '0');
+              const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+              const year = dateObj.getFullYear();
+              return `${month}/${day}/${year}`;
             }
           }
 
-          obj[field] = v;
-        });
+          if (value.includes('/')) {
+            const [d, m, y] = value.split('/');
+            if (d && m && y) {
+              const day = d.padStart(2, '0');
+              const month = m.padStart(2, '0');
+              return `${day}/${month}/${y}`;
+            }
+          }
+        }
+
+        return value;
+      };
+
+      const mappedData = dataRows.map((row: any) => {
+        const obj: any = {};
+
+        for (let i = 0; i < fields.length; i++) {
+          const field = fields[i];
+          let value = row[i];
+
+          if (field === 'Dob' || field === 'Doa') {
+            value = formatDateValue(value);
+          }
+
+          obj[field] = value;
+        }
+
         return obj;
       });
 

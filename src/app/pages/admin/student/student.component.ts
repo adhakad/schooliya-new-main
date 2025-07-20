@@ -526,26 +526,103 @@ export class StudentComponent implements OnInit {
       // Data ke baki ke rows
       const dataRows = data.slice(1);
       // Data ko objects mein map karna
-      const mappedData = dataRows.map((row: any) => {
-        const obj: any = {};
-        fields.forEach((field: any, i: number) => {
-          let v = row[i];
+      // const mappedData = dataRows.map((row: any) => {
+      //   const obj: any = {};
 
-          if ((field === 'Dob' || field === 'Doa')) {
-            if (typeof v === 'string' && v.includes('/')) {
-              const [d, m, y] = v.split('/');
-              v = `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${y}`;
-            } else if (v instanceof Date || !isNaN(Date.parse(v))) {
-              const date = new Date(v);
-              v = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+      //   for (let i = 0; i < fields.length; i++) {
+      //     const field = fields[i];
+      //     let value = row[i];
+
+      //     const isDateField = field === 'Dob' || field === 'Doa';
+
+      //     if (isDateField) {
+      //       // Case 1: value is Date object
+      //       if (value instanceof Date) {
+      //         const day = String(value.getDate()).padStart(2, '0');
+      //         const month = String(value.getMonth() + 1).padStart(2, '0');
+      //         const year = value.getFullYear();
+      //         value = `${day}/${month}/${year}`;
+      //       }
+
+      //       // Case 2: value is stringified date like "Sun Jan 05 2025..."
+      //       else if (typeof value === 'string' && value.includes('GMT')) {
+      //         const dateObj = new Date(value);
+      //         if (!isNaN(dateObj.getTime())) {
+      //           const day = String(dateObj.getDate()).padStart(2, '0');
+      //           const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      //           const year = dateObj.getFullYear();
+      //           value = `${month}/${day}/${year}`;
+      //         }
+      //       }
+
+      //       // Case 3: string like "1/5/2025"
+      //       else if (typeof value === 'string' && value.includes('/')) {
+      //         const parts = value.split('/');
+      //         if (parts.length === 3) {
+      //           const day = parts[0].padStart(2, '0');
+      //           const month = parts[1].padStart(2, '0');
+      //           const year = parts[2];
+      //           value = `${day}/${month}/${year}`;
+      //         }
+      //       }
+      //     }
+
+      //     obj[field] = value;
+      //   }
+
+      //   return obj;
+      // });
+
+
+
+      const formatDateValue = (value: any): string => {
+        if (value instanceof Date && !isNaN(value.getTime())) {
+          const day = String(value.getDate()).padStart(2, '0');
+          const month = String(value.getMonth() + 1).padStart(2, '0');
+          const year = value.getFullYear();
+          return `${day}/${month}/${year}`;
+        }
+
+        if (typeof value === 'string') {
+          if (value.includes('GMT')) {
+            const dateObj = new Date(value);
+            if (!isNaN(dateObj.getTime())) {
+              const day = String(dateObj.getDate()).padStart(2, '0');
+              const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+              const year = dateObj.getFullYear();
+              return `${month}/${day}/${year}`;
             }
           }
 
-          obj[field] = v;
-        });
+          if (value.includes('/')) {
+            const [d, m, y] = value.split('/');
+            if (d && m && y) {
+              const day = d.padStart(2, '0');
+              const month = m.padStart(2, '0');
+              return `${day}/${month}/${y}`;
+            }
+          }
+        }
+
+        return value;
+      };
+
+      const mappedData = dataRows.map((row: any) => {
+        const obj: any = {};
+
+        for (let i = 0; i < fields.length; i++) {
+          const field = fields[i];
+          let value = row[i];
+
+          if (field === 'Dob' || field === 'Doa') {
+            value = formatDateValue(value);
+          }
+
+          obj[field] = value;
+        }
+
         return obj;
       });
-
       function transformKeys(dataArray: any) {
         return dataArray.map((obj: any) => {
           const newObj: any = {};
