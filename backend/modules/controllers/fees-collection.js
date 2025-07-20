@@ -267,7 +267,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     new: true // Return the updated document
                 });
             if (updatedDocument) {
-                await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                // await paymentSuccessWhatsappMessage("5000", "+919340700360");
                 return res.status(200).json(feesData);
             }
         }
@@ -343,7 +343,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true
                     });
                 if (updatedDocument && updated) {
-                    await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                    // await paymentSuccessWhatsappMessage("5000", "+919340700360");
                     return res.status(200).json(feesData);
                 }
             }
@@ -395,7 +395,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true // Return the updated document
                     });
                 if (updatedDocument && deleteDocument) {
-                    await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                    // await paymentSuccessWhatsappMessage("5000", "+919340700360");
                     return res.status(200).json(feesData);
                 }
             }
@@ -442,7 +442,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             );
             if (updatedDocument && updated) {
-                await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                // await paymentSuccessWhatsappMessage("5000", "+919340700360");
                 return res.status(200).json(feesData);
             }
 

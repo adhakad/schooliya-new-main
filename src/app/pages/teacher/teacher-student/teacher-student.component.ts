@@ -760,9 +760,9 @@ export class TeacherStudentComponent implements OnInit {
   allOptions() {
     this.sessions = [{ year: '2023-2024' }, { year: '2024-2025' }, { year: '2025-2026' }, { year: '2026-2027' }, { year: '2027-2028' }, { year: '2028-2029' }, { year: '2029-2030' }];
     this.categorys = [{ category: 'general' }, { category: 'obc' }, { category: 'sc' }, { category: 'st' }, { category: 'ews' }, { category: 'other' }];
-    this.religions = [{ religion: 'hinduism' }, { religion: 'buddhism' }, { religion: 'christanity' }, { religion: 'jainism' }, { religion: 'sikhism' }, { religion: 'aninism / adivasi' }, { religion: 'islam' }, { religion: 'baha i faith ' }, { religion: 'judaism' }, { religion: 'zoroastrianism' }, { religion: 'other' }];
+    this.religions = [{ religion: 'hindu' }, { religion: 'buddhist' }, { religion: 'christian' }, { religion: 'jain' }, { religion: 'sikh' }, { religion: 'animist' }, { religion: 'muslim' }, { religion: 'bahai' }, { religion: 'jewish' }, { religion: 'zoroastrian' }, { religion: 'other' }];
     this.qualifications = [{ qualification: 'doctoral degree' }, { qualification: 'masters degree' }, { qualification: 'graduate diploma' }, { qualification: 'graduate certificate' }, { qualification: 'graduate certificate' }, { qualification: 'bachelor degree' }, { qualification: 'advanced diploma' }, { qualification: 'primary school' }, { qualification: 'high school' }, { qualification: 'higher secondary school' }, { qualification: 'illiterate' }, { qualification: 'other' }];
-    this.occupations = [{ occupation: 'agriculture(farmer)' }, { occupation: 'laborer' }, { occupation: 'self employed' }, { occupation: 'private job' }, { occupation: 'state govt. employee' }, { occupation: 'central govt. employee' }, { occupation: 'military job' }, { occupation: 'para-military job' }, { occupation: 'psu employee' }, { occupation: 'other' }];
+    this.occupations = [{ occupation: 'agriculture(farmer)' }, { occupation: 'labourer' }, { occupation: 'self employed' }, { occupation: 'private job' }, { occupation: 'state govt. employee' }, { occupation: 'central govt. employee' }, { occupation: 'military job' }, { occupation: 'para-military job' }, { occupation: 'psu employee' }, { occupation: 'other' }];
     this.mediums = [{ medium: 'hindi' }, { medium: 'english' }];
   }
 }
