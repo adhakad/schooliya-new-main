@@ -34,13 +34,13 @@ const MSG91_TEMPLATE_NAME = process.env.MSG91_TEMPLATE_NAME || "login_otp"; // a
 const commonWhatsappMessage = async (otp, phone) => {
     try {
         const payload = {
-            integrated_number: "919691568729",
+            integrated_number: MSG91_INTEGRATED_NUMBER,
             content_type: "template",
             payload: {
                 messaging_product: "whatsapp",
                 type: "template",
                 template: {
-                    name: "login_otp",
+                    name: MSG91_TEMPLATE_NAME,
                     language: {
                         code: "en_GB",
                         policy: "deterministic"
@@ -49,10 +49,6 @@ const commonWhatsappMessage = async (otp, phone) => {
                         {
                             to: [`91${phone}`], // phone without +, already prefixed with 91
                             components: {
-                                // header_1: {
-                                //     type: 'image',
-                                //     value: 'https://schooliya.in/assets/logo.png'
-                                // },
                                 body_1: {
                                     type: "text",
                                     value: otp
