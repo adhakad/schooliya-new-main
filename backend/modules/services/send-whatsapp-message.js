@@ -83,11 +83,66 @@ const commonWhatsappMessage = async (otp, phone) => {
         throw new Error('WhatsApp OTP not sent');
     }
 };
+const sendFeesConfirmationMessage = async (phone, bodyValues = []) => {
+    try {
+        const payload = {
+            integrated_number: process.env.MSG91_INTEGRATED_NUMBER, // set in .env
+            content_type: "template",
+            payload: {
+                messaging_product: "whatsapp",
+                type: "template",
+                template: {
+                    name: "fees_confirmation",
+                    language: {
+                        code: "en", // or en_GB if required
+                        policy: "deterministic"
+                    },
+                    // namespace: "bc6d378a_4d7e_4e78_a870_75883411b711",
+                    to_and_components: [
+                        {
+                            to: [`91${phone}`], // 10 digit number without '+'
+                            components: {
+                                ...bodyValues.reduce((acc, val, index) => {
+                                    acc[`body_${index + 1}`] = {
+                                        type: "text",
+                                        value: val
+                                    };
+                                    return acc;
+                                }, {})
+                            }
+                        }
+                    ]
+                }
+            }
+        };
+
+        const headers = {
+            authkey: process.env.MSG91_AUTH_KEY, // set in .env
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        };
+
+        const response = await axios.post(
+            'https://control.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/',
+            payload,
+            { headers }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('MSG91 WhatsApp Error:', error.response?.data || error.message);
+        throw new Error('WhatsApp message not sent');
+    }
+};
 
 const otpWhatsappMessage = async (otp, phone) => {
     return await commonWhatsappMessage(otp, phone);
 };
+const feesConfirmationWhatsappMessage = async (phone, valuesArray) => {
+    return await sendFeesConfirmationMessage(phone, valuesArray);
+};
 
 module.exports = {
-    otpWhatsappMessage
+    otpWhatsappMessage,
+    feesConfirmationWhatsappMessage
 };

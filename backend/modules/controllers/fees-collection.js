@@ -2,8 +2,12 @@
 const FeesCollectionModel = require('../models/fees-collection');
 const FeesStructureModel = require('../models/fees-structure');
 const StudentModel = require('../models/student');
-const { paymentSuccessWhatsappMessage } = require('../services/send-sms');
+const { feesConfirmationWhatsappMessage } = require('../services/send-whatsapp-message');
 const { DateTime } = require('luxon');
+const phone = '9340700360';
+const values = ['Bhagyashree Chohan', 'Nursery', '2000', '01 July 2025', '2025-2026', 'Saraswati Convent Sr. Sec. School', 'pay_123adgasasmas'];
+
+
 
 
 let GetStudentFeesCollectionBySession = async (req, res, next) => {
@@ -267,7 +271,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     new: true // Return the updated document
                 });
             if (updatedDocument) {
-                // await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                await feesConfirmationWhatsappMessage(phone, values);
                 return res.status(200).json(feesData);
             }
         }
@@ -343,7 +347,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true
                     });
                 if (updatedDocument && updated) {
-                    // await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                    await feesConfirmationWhatsappMessage(phone, values);
                     return res.status(200).json(feesData);
                 }
             }
@@ -395,7 +399,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true // Return the updated document
                     });
                 if (updatedDocument && deleteDocument) {
-                    // await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                    await feesConfirmationWhatsappMessage(phone, values);
                     return res.status(200).json(feesData);
                 }
             }
@@ -442,7 +446,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             );
             if (updatedDocument && updated) {
-                // await paymentSuccessWhatsappMessage("5000", "+919340700360");
+                await feesConfirmationWhatsappMessage(phone, values);
                 return res.status(200).json(feesData);
             }
 
