@@ -83,26 +83,31 @@ const commonWhatsappMessage = async (otp, phone) => {
         throw new Error('WhatsApp OTP not sent');
     }
 };
-const sendFeesConfirmationMessage = async (phone, bodyValues = []) => {
+const sendFeesConfirmationWithReceipt = async (phone, valuesArray = [], documentUrl, filename) => {
     try {
         const payload = {
-            integrated_number: process.env.MSG91_INTEGRATED_NUMBER, // set in .env
+            integrated_number: process.env.MSG91_INTEGRATED_NUMBER,
             content_type: "template",
             payload: {
                 messaging_product: "whatsapp",
                 type: "template",
                 template: {
-                    name: "fees_confirmation",
+                    name: "fees_confirmation_with_reciept",
                     language: {
-                        code: "en", // or en_GB if required
+                        code: "en",
                         policy: "deterministic"
                     },
                     // namespace: "bc6d378a_4d7e_4e78_a870_75883411b711",
                     to_and_components: [
                         {
-                            to: [`91${phone}`], // 10 digit number without '+'
+                            to: [`91${phone}`],
                             components: {
-                                ...bodyValues.reduce((acc, val, index) => {
+                                header_1: {
+                                    type: "document",
+                                    filename: filename,
+                                    value: documentUrl
+                                },
+                                ...valuesArray.reduce((acc, val, index) => {
                                     acc[`body_${index + 1}`] = {
                                         type: "text",
                                         value: val
@@ -117,7 +122,7 @@ const sendFeesConfirmationMessage = async (phone, bodyValues = []) => {
         };
 
         const headers = {
-            authkey: process.env.MSG91_AUTH_KEY, // set in .env
+            authkey: process.env.MSG91_AUTH_KEY,
             'Content-Type': 'application/json',
             Accept: 'application/json'
         };
@@ -138,11 +143,11 @@ const sendFeesConfirmationMessage = async (phone, bodyValues = []) => {
 const otpWhatsappMessage = async (otp, phone) => {
     return await commonWhatsappMessage(otp, phone);
 };
-const feesConfirmationWhatsappMessage = async (phone, valuesArray) => {
-    return await sendFeesConfirmationMessage(phone, valuesArray);
+const feesConfirmationWithReceiptMessage = async (phone, valuesArray, documentUrl, filename) => {
+    return await sendFeesConfirmationWithReceipt(phone, valuesArray, documentUrl, filename);
 };
 
 module.exports = {
     otpWhatsappMessage,
-    feesConfirmationWhatsappMessage
+    feesConfirmationWithReceiptMessage
 };

@@ -2,11 +2,26 @@
 const FeesCollectionModel = require('../models/fees-collection');
 const FeesStructureModel = require('../models/fees-structure');
 const StudentModel = require('../models/student');
-const { feesConfirmationWhatsappMessage } = require('../services/send-whatsapp-message');
+const { feesConfirmationWithReceiptMessage } = require('../services/send-whatsapp-message');
 const { DateTime } = require('luxon');
 const phone = '9340700360';
-const values = ['Bhagyashree Chohan', 'Nursery', '2000', '01 July 2025', '2025-2026', 'Saraswati Convent Sr. Sec. School', 'pay_123adgasasmas'];
+const documentUrl = 'https://collection.cloudinary.com/dzzrracge/abe2f49925813b205e07c49ec142dd2d.pdf';
+const filename = 'Receipt_136184.pdf';
 
+const values = [
+    "BhagyaShree Chohan",                            // {{1}} student_name
+    "10,000",                                        // {{2}} paid_amount
+    "2025–2026",                                     // {{3}} session_year
+    "24-07-2025",                                    // {{4}} payment_date
+    "136184",                                        // {{5}} receipt_number
+    "8TH",                                           // {{6}} class_name
+    "1025",                                          // {{7}} admission_number
+    "Bhanvar Singh",                                 // {{8}} father_name
+    "Kamlesh Kumar",                                 // {{9}} mother_name
+    "Green Valley School, Guna, Madhya Pradesh",     // {{10}} school_name
+    "9234567894",                                    // {{11}} school_contact_number
+    "greenvalleyschool@gmail.com"                   // {{12}} school_email_address
+];
 
 
 
@@ -271,7 +286,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     new: true // Return the updated document
                 });
             if (updatedDocument) {
-                await feesConfirmationWhatsappMessage(phone, values);
+                await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
                 return res.status(200).json(feesData);
             }
         }
@@ -347,7 +362,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true
                     });
                 if (updatedDocument && updated) {
-                    await feesConfirmationWhatsappMessage(phone, values);
+                    await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
                     return res.status(200).json(feesData);
                 }
             }
@@ -399,7 +414,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true // Return the updated document
                     });
                 if (updatedDocument && deleteDocument) {
-                    await feesConfirmationWhatsappMessage(phone, values);
+                    await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
                     return res.status(200).json(feesData);
                 }
             }
@@ -446,7 +461,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             );
             if (updatedDocument && updated) {
-                await feesConfirmationWhatsappMessage(phone, values);
+                await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
                 return res.status(200).json(feesData);
             }
 
