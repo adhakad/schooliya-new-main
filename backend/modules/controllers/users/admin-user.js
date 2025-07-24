@@ -10,6 +10,7 @@ const AdminPlanModel = require('../../models/users/admin-plan');
 const SchoolModel = require('../../models/school');
 const PaymentModel = require('../../models/payment');
 const OTPModel = require('../../models/otp');
+const Counter = require('../../models/counter');
 const { otpWhatsappMessage } = require('../../services/send-whatsapp-message');
 const smtp_host = SMTP_HOST;
 const smtp_api_key = SMTP_API_KEY;
@@ -204,11 +205,21 @@ let UpdateAdminDetail = async (req, res, next) => {
         if (schoolAffiliationNumber) {
             return res.status(400).json({ errorMsg: 'School affiliation number already exist!' });
         }
-        let lastIssuedSchool = await AdminUserModel.findOne({}).sort({ _id: -1 });
-        let schoolId = (!lastIssuedSchool || !lastIssuedSchool.schoolId)
-            ? 100001
-            : lastIssuedSchool.schoolId + 1;
+
+        const existingEmail = await AdminUserModel.findOne({ email: email });
+        if (existingEmail) {
+            return res.status(400).json({ errorMsg: 'Email already in use by another admin!' });
+        }
+        const now = new Date();
+        const year = now.getFullYear();
+        const counter = await Counter.findOneAndUpdate(
+            { year },
+            { $inc: { schoolIdCount: 1 } },
+            { new: true, upsert: true }
+        );
+        const schoolId = counter.schoolIdCount;
         const hashedPassword = await bcrypt.hash(password, 10);
+
         let adminDetailData = {
             name,
             email,
@@ -223,7 +234,11 @@ let UpdateAdminDetail = async (req, res, next) => {
             schoolDetailStep: 0, signupStep: 0, otpStep: 0
 
         };
-        const updateSchool = await AdminUserModel.findByIdAndUpdate(id, { $set: adminDetailData }, { new: true });
+        const updateSchool = await AdminUserModel.findByIdAndUpdate(
+            id,
+            { $set: adminDetailData },
+            { new: true }
+        );
         if (updateSchool) {
             return res.status(200).json({ successMsg: 'School updated successfully', adminInfo: updateSchool });
         } else {

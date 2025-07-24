@@ -199,7 +199,7 @@
                                             <div class="col-12 col-lg-6">
                                                 <mat-form-field appearance="outline">
                                                     <mat-label>Mobile</mat-label>
-                                                    <input matInput type="number" formControlName="mobile">
+                                                    <input matInput type="number" formControlName="mobile" readonly style="color: #6d6d6d;">
                                                     <mat-error
                                                         *ngIf="adminDetailForm.get('mobile')?.hasError('required') && adminDetailForm.get('mobile')?.touched">
                                                         Mobile is required
