@@ -83,7 +83,8 @@ const commonWhatsappMessage = async (otp, phone) => {
         throw new Error('WhatsApp OTP not sent');
     }
 };
-const sendFeesConfirmationWithReceipt = async (phone, valuesArray = [], documentUrl, filename) => {
+
+const sendFeesConfirmationWithoutReceipt = async (phone, valuesArray = []) => {
     try {
         const payload = {
             integrated_number: process.env.MSG91_INTEGRATED_NUMBER,
@@ -92,29 +93,22 @@ const sendFeesConfirmationWithReceipt = async (phone, valuesArray = [], document
                 messaging_product: "whatsapp",
                 type: "template",
                 template: {
-                    name: "fees_confirmation_with_reciept",
+                    name: "fee_confirmation_without_reciept",
                     language: {
                         code: "en",
                         policy: "deterministic"
                     },
-                    // namespace: "bc6d378a_4d7e_4e78_a870_75883411b711",
+                    namespace: "bc6d378a_4d7e_4e78_a870_75883411b711",
                     to_and_components: [
                         {
                             to: [`91${phone}`],
-                            components: {
-                                header_1: {
-                                    type: "document",
-                                    filename: filename,
-                                    value: documentUrl
-                                },
-                                ...valuesArray.reduce((acc, val, index) => {
-                                    acc[`body_${index + 1}`] = {
-                                        type: "text",
-                                        value: val
-                                    };
-                                    return acc;
-                                }, {})
-                            }
+                            components: valuesArray.reduce((acc, val, index) => {
+                                acc[`body_${index + 1}`] = {
+                                    type: "text",
+                                    value: val
+                                };
+                                return acc;
+                            }, {})
                         }
                     ]
                 }
@@ -128,7 +122,7 @@ const sendFeesConfirmationWithReceipt = async (phone, valuesArray = [], document
         };
 
         const response = await axios.post(
-            'https://control.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/',
+            'https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/',
             payload,
             { headers }
         );
@@ -143,11 +137,12 @@ const sendFeesConfirmationWithReceipt = async (phone, valuesArray = [], document
 const otpWhatsappMessage = async (otp, phone) => {
     return await commonWhatsappMessage(otp, phone);
 };
-const feesConfirmationWithReceiptMessage = async (phone, valuesArray, documentUrl, filename) => {
-    return await sendFeesConfirmationWithReceipt(phone, valuesArray, documentUrl, filename);
+const feesConfirmationMessage = async (phone, valuesArray) => {
+    return await sendFeesConfirmationWithoutReceipt(phone, valuesArray);
 };
 
 module.exports = {
     otpWhatsappMessage,
-    feesConfirmationWithReceiptMessage
+    feesConfirmationWithReceiptMessage,
+    feesConfirmationMessage
 };

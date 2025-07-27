@@ -2,25 +2,23 @@
 const FeesCollectionModel = require('../models/fees-collection');
 const FeesStructureModel = require('../models/fees-structure');
 const StudentModel = require('../models/student');
-const { feesConfirmationWithReceiptMessage } = require('../services/send-whatsapp-message');
+const { feesConfirmationMessage } = require('../services/send-whatsapp-message');
 const { DateTime } = require('luxon');
 const phone = '9340700360';
-const documentUrl = 'https://collection.cloudinary.com/dzzrracge/abe2f49925813b205e07c49ec142dd2d.pdf';
-const filename = 'Receipt_136184.pdf';
+// const documentUrl = 'https://res.cloudinary.com/dzzrracge/image/upload/v1753517597/download_pu4wez.pdf';
+// const filename = 'Receipt_136184.pdf';
 
 const values = [
-    "BhagyaShree Chohan",                            // {{1}} student_name
-    "10,000",                                        // {{2}} paid_amount
-    "2025–2026",                                     // {{3}} session_year
-    "24-07-2025",                                    // {{4}} payment_date
-    "136184",                                        // {{5}} receipt_number
-    "8TH",                                           // {{6}} class_name
-    "1025",                                          // {{7}} admission_number
-    "Bhanvar Singh",                                 // {{8}} father_name
-    "Kamlesh Kumar",                                 // {{9}} mother_name
     "Green Valley School, Guna, Madhya Pradesh",     // {{10}} school_name
-    "9234567894",                                    // {{11}} school_contact_number
-    "greenvalleyschool@gmail.com"                   // {{12}} school_email_address
+    "2025–2026",                                     // {{2}} academic_year
+    "BhagyaShree Chohan",                            // {{3}} student_name
+    "10,000",                                        // {{4}} received_amount
+    "24-07-2025",                                    // {{5}} date
+    "136184",                                        // {{6}} receipt_no
+    "8TH",                                           // {{7}} class
+    "1025",                                          // {{8}} admission_no
+    "Bhanvar Singh",                                 // {{9}} father_name
+    "Kamlesh Kumar",                                 // {{10}} mother_name
 ];
 
 
@@ -286,7 +284,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     new: true // Return the updated document
                 });
             if (updatedDocument) {
-                await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
+                await feesConfirmationMessage(phone, values)
                 return res.status(200).json(feesData);
             }
         }
@@ -362,7 +360,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true
                     });
                 if (updatedDocument && updated) {
-                    await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
+                    await feesConfirmationMessage(phone, values)
                     return res.status(200).json(feesData);
                 }
             }
@@ -414,7 +412,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true // Return the updated document
                     });
                 if (updatedDocument && deleteDocument) {
-                    await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
+                    await feesConfirmationMessage(phone, values)
                     return res.status(200).json(feesData);
                 }
             }
@@ -461,7 +459,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             );
             if (updatedDocument && updated) {
-                await feesConfirmationWithReceiptMessage(phone, values, documentUrl, filename)
+                await feesConfirmationMessage(phone, values)
                 return res.status(200).json(feesData);
             }
 
