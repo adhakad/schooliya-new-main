@@ -1,29 +1,3 @@
-// 'use strict';
-// const twilio = require('twilio');
-// const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } = process.env;
-// const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-
-// let commonWhatsappMessage = async (message, phone) => {
-//     try {
-//         return await client.messages.create({
-//             body: message,
-//             from: `whatsapp:${TWILIO_PHONE_NUMBER}`,
-//             to: `whatsapp:+91${phone}`
-//         });
-//     }
-//     catch (e) {
-//         console.log(e)
-//     }
-// }
-// let otpWhatsappMessage = async (otp, phone) => {
-//     let msgbody =
-//         `Your one time password OTP is: ${otp}`;
-//     return commonWhatsappMessage(msgbody, phone)
-// };
-
-// module.exports = {
-//     otpWhatsappMessage
-// }
 'use strict';
 const axios = require('axios').default;
 const { MSG91_AUTH_KEY } = process.env;
@@ -134,15 +108,69 @@ const sendFeesConfirmationWithoutReceipt = async (phone, valuesArray = []) => {
     }
 };
 
+
+const sendFeesReminderMessage = async (phone, valuesArray = []) => {
+    try {
+        const payload = {
+            integrated_number: process.env.MSG91_INTEGRATED_NUMBER,
+            content_type: "template",
+            payload: {
+                messaging_product: "whatsapp",
+                type: "template",
+                template: {
+                    name: "fee_reminder",
+                    language: {
+                        code: "en",
+                        policy: "deterministic"
+                    },
+                    namespace: "bc6d378a_4d7e_4e78_a870_75883411b711",
+                    to_and_components: [
+                        {
+                            to: [`91${phone}`],
+                            components: valuesArray.reduce((acc, val, index) => {
+                                acc[`body_${index + 1}`] = {
+                                    type: "text",
+                                    value: val
+                                };
+                                return acc;
+                            }, {})
+                        }
+                    ]
+                }
+            }
+        };
+
+        const headers = {
+            authkey: process.env.MSG91_AUTH_KEY,
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        };
+
+        const response = await axios.post(
+            'https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/',
+            payload,
+            { headers }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('MSG91 WhatsApp Error:', error.response?.data || error.message);
+        throw new Error('WhatsApp message not sent');
+    }
+};
+
 const otpWhatsappMessage = async (otp, phone) => {
     return await commonWhatsappMessage(otp, phone);
 };
 const feesConfirmationMessage = async (phone, valuesArray) => {
     return await sendFeesConfirmationWithoutReceipt(phone, valuesArray);
 };
+const feesReminderMessage = async (phone, valuesArray) => {
+    return await sendFeesReminderMessage(phone, valuesArray);
+};
 
 module.exports = {
     otpWhatsappMessage,
-    feesConfirmationWithReceiptMessage,
-    feesConfirmationMessage
+    feesConfirmationMessage,
+    feesReminderMessage
 };

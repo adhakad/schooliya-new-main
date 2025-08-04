@@ -26,6 +26,7 @@ const routes: Routes = [
   { path: 'admin/transfer-certificate', loadChildren: () => import('src/app/pages/admin/transfer-certificate/transfer-certificate.module').then((module) => module.TransferCertificateModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/fees', loadChildren: () => import('src/app/pages/admin/admin-student-fees/admin-student-fees.module').then((module) => module.AdminStudentFeesModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/fees/structure', loadChildren: () => import('src/app/pages/admin/admin-student-fees-structure/admin-student-fees-structure.module').then((module) => module.AdminStudentFeesStructureModule), canActivate: [AdminAuthGuard] },
+  { path: 'admin/fees/reminder', loadChildren: () => import('src/app/pages/admin/admin-fees-reminder/admin-fees-reminder-routing.module').then((module) => module.AdminFeesReminderRoutingModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/fees/statement/:id', loadChildren: () => import('src/app/pages/admin/admin-student-fees-statement/admin-student-fees-statement.module').then((module) => module.AdminStudentFeesStatementModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/admit-card', loadChildren: () => import('src/app/pages/admin/admin-student-admit-card/admin-student-admit-card.module').then((module) => module.AdminStudentAdmitCardModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/admit-card/structure', loadChildren: () => import('src/app/pages/admin/admin-student-admit-card-structure/admin-student-admit-card-structure.module').then((module) => module.AdminStudentAdmitCardStructureModule), canActivate: [AdminAuthGuard] },
@@ -40,7 +41,6 @@ const routes: Routes = [
   { path: 'admin/class-subject', loadChildren: () => import('src/app/pages/admin/class-subject/class-subject.module').then((module) => module.ClassSubjectModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/upgrade-plan', loadChildren: () => import('src/app/pages/admin/upgrade-plan/upgrade-plan.module').then((module) => module.UpgradePlanModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/upgrade-plan/payment/:id', loadChildren: () => import('src/app/pages/admin/upgrade-plan-payment/upgrade-plan-payment.module').then((module) => module.UpgradePlanPaymentModule), canActivate: [AdminAuthGuard] },
-
 
   { path: 'admin/plans', loadChildren: () => import('src/app/pages/admin/plans/plans.module').then((module) => module.PlansModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/banner', loadChildren: () => import('src/app/pages/admin/banner/banner.module').then((module) => module.BannerModule), canActivate: [AdminAuthGuard] },

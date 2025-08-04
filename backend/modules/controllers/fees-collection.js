@@ -5,8 +5,6 @@ const StudentModel = require('../models/student');
 const { feesConfirmationMessage } = require('../services/send-whatsapp-message');
 const { DateTime } = require('luxon');
 const phone = '9340700360';
-// const documentUrl = 'https://res.cloudinary.com/dzzrracge/image/upload/v1753517597/download_pu4wez.pdf';
-// const filename = 'Receipt_136184.pdf';
 
 const values = [
     "Green Valley School, Guna, Madhya Pradesh",     // {{10}} school_name
@@ -20,7 +18,6 @@ const values = [
     "Bhanvar Singh",                                 // {{9}} father_name
     "Kamlesh Kumar",                                 // {{10}} mother_name
 ];
-
 
 
 let GetStudentFeesCollectionBySession = async (req, res, next) => {
