@@ -109,7 +109,7 @@ const sendFeesConfirmationWithoutReceipt = async (phone, valuesArray = []) => {
 };
 
 
-const sendFeesReminderMessage = async (phone, school_name, father_name, pending_amount, student_name, class_name, last_date) => {
+const sendManualFeeReminderMessage = async (phone, school_name, father_name, pending_amount, student_name, class_name, last_date) => {
     try {
         const payload = {
             integrated_number: process.env.MSG91_INTEGRATED_NUMBER,
@@ -170,8 +170,9 @@ const sendFeesReminderMessage = async (phone, school_name, father_name, pending_
             payload,
             { headers }
         );
-
-        return response.data;
+        const requestId = response.data.request_id;
+        const sentDateTime = response.headers.date;
+        return { requestId, sentDateTime };
     } catch (error) {
         console.error('MSG91 WhatsApp Error:', error.response?.data || error.message);
         throw new Error('WhatsApp message not sent');
@@ -184,12 +185,12 @@ const otpWhatsappMessage = async (otp, phone) => {
 const feesConfirmationMessage = async (phone, valuesArray) => {
     return await sendFeesConfirmationWithoutReceipt(phone, valuesArray);
 };
-const feesReminderMessage = async (phone, school_name, father_name, pending_amount, student_name, class_name, last_date) => {
-    return await sendFeesReminderMessage(phone, school_name, father_name, pending_amount, student_name, class_name, last_date);
+const sendManualFeeReminder = async (phone, school_name, father_name, pending_amount, student_name, class_name, last_date) => {
+    return await sendManualFeeReminderMessage(phone, school_name, father_name, pending_amount, student_name, class_name, last_date);
 };
 
 module.exports = {
     otpWhatsappMessage,
     feesConfirmationMessage,
-    feesReminderMessage
+    sendManualFeeReminder
 };

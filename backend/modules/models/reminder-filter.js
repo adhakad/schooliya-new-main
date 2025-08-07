@@ -1,20 +1,16 @@
 'use strict';
 const mongoose = require('mongoose');
 
-const ReminderModel = mongoose.model('reminder', {
+const ReminderLogsModel = mongoose.model('reminder-filter', {
     adminId: {
         type: String,
         required: true,
         trim: true
     },
-    studentId: {
-        type: String,
+    class: {
+        type: Number,
         required: true,
-        trim: true,
-    },
-    createdBy: {
-        type: String,
-        trim: true,
+        trim: true
     },
     lastReminderSentAt: {
         type: Date,
@@ -26,4 +22,4 @@ const ReminderModel = mongoose.model('reminder', {
     },
 });
 
-module.exports = ReminderModel;
+module.exports = ReminderLogsModel;
