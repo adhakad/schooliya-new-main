@@ -73,107 +73,160 @@
                       <h5 class="modal-title">SEND FEE REMINDER</h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
-                    <form [formGroup]="feeReminderForm" (ngSubmit)="studentAddUpdate()">
+                    <ng-container *ngIf="!filterStatus">
+                      <form [formGroup]="studentFilterForm" (ngSubmit)="studentFilter()">
+                        <div class="modal-body">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-12 col-lg-6">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>Class</mat-label>
+                                  <mat-select matInput formControlName="class">
+                                    <div *ngFor="let classInfo of classInfo">
+                                      <mat-option value="{{classInfo.class}}"
+                                        (click)="chooseClass(classInfo.class)">{{classInfo.class |
+                                        classSuffix}}</mat-option>
+                                    </div>
+                                  </mat-select>
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('class')?.hasError('required') && studentFilterForm.get('class')?.touched">
+                                    Class is required
+                                  </mat-error>
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('class')?.hasError('pattern') && studentFilterForm.get('class')?.touched">
+                                    Please enter a valid class (numeric characters only)
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-12 col-lg-6">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>Minimum Percentage</mat-label>
+                                  <input matInput type="number" formControlName="minPercentage" class="no-arrow">
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('minPercentage')?.hasError('required') && studentFilterForm.get('minPercentage')?.touched">
+                                    Min percentage is required
+                                  </mat-error>
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('minPercentage')?.hasError('pattern') && studentFilterForm.get('minPercentage')?.touched">
+                                    Please enter a valid in min percentage (numeric characters only)
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-12 col-lg-6">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>Last Payment Days</mat-label>
+                                  <input matInput type="number" formControlName="lastPaymentDays" class="no-arrow">
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('lastPaymentDays')?.hasError('required') && studentFilterForm.get('lastPaymentDays')?.touched">
+                                    Last payment days is required
+                                  </mat-error>
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('lastPaymentDays')?.hasError('pattern') && studentFilterForm.get('lastPaymentDays')?.touched">
+                                    Please enter a valid Last payment days (numeric characters only)
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-12 col-lg-6">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>Last Reminder Days</mat-label>
+                                  <input matInput type="number" formControlName="lastReminderDays" class="no-arrow">
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('lastReminderDays')?.hasError('required') && studentFilterForm.get('lastReminderDays')?.touched">
+                                    Last reminder days is required
+                                  </mat-error>
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('lastReminderDays')?.hasError('pattern') && studentFilterForm.get('lastReminderDays')?.touched">
+                                    Please enter a valid Last reminder days (numeric characters only)
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button class="submit-button" mat-raised-button type="submit"
+                            [disabled]="!studentFilterForm.valid">
+                            <mat-icon>filter_list</mat-icon>
+                            Choose Filters
+                          </button>
+                        </div>
+                      </form>
+                    </ng-container>
+
+                    <ng-container *ngIf="filterStatus">
+                      <!-- <form [formGroup]="feeReminderSendForm" (ngSubmit)="feeReminderSend()"> -->
                       <div class="modal-body">
                         <div class="container">
                           <div class="row">
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Class</mat-label>
-                                <mat-select matInput formControlName="class">
-                                  <div *ngFor="let classInfo of classInfo">
-                                    <mat-option value="{{classInfo.class}}"
-                                      (click)="chooseClass(classInfo.class)">{{classInfo.class |
-                                      classSuffix}}</mat-option>
-                                  </div>
-                                </mat-select>
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('class')?.hasError('required') && feeReminderForm.get('class')?.touched">
-                                  Class is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('class')?.hasError('pattern') && feeReminderForm.get('class')?.touched">
-                                  Please enter a valid class (numeric characters only)
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Stream</mat-label>
-                                <mat-select type="text" matInput formControlName="stream">
-                                  <ng-container *ngIf="cls==12 || cls==11">
-                                    <div *ngFor="let subject of streamMainSubject">
-                                      <mat-option value="{{subject}}"
-                                        (click)="chooseStream(subject)">{{subject}}</mat-option>
-                                    </div>
-                                  </ng-container>
-                                  <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
-                                    <div>
-                                      <mat-option value="n/a">N/A</mat-option>
-                                    </div>
-                                  </ng-container>
-                                </mat-select>
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('stream')?.hasError('required') && feeReminderForm.get('stream')?.touched">
-                                  Stream is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('stream')?.hasError('pattern') && feeReminderForm.get('stream')?.touched">
-                                  Please enter a valid Stream (only letters are allowed)
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Minimum Percentage</mat-label>
-                                <input matInput type="number" formControlName="minPercentage" class="no-arrow">
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('minPercentage')?.hasError('required') && feeReminderForm.get('minPercentage')?.touched">
-                                  Min percentage is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('minPercentage')?.hasError('pattern') && feeReminderForm.get('minPercentage')?.touched">
-                                  Please enter a valid in min percentage (numeric characters only)
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Last Payment Days</mat-label>
-                                <input matInput type="number" formControlName="lastPaymentDays" class="no-arrow">
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('lastPaymentDays')?.hasError('required') && feeReminderForm.get('lastPaymentDays')?.touched">
-                                  Last payment days is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('lastPaymentDays')?.hasError('pattern') && feeReminderForm.get('lastPaymentDays')?.touched">
-                                  Please enter a valid Last payment days (numeric characters only)
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Last Reminder Days</mat-label>
-                                <input matInput type="number" formControlName="lastReminderDays" class="no-arrow">
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('lastReminderDays')?.hasError('required') && feeReminderForm.get('lastReminderDays')?.touched">
-                                  Last reminder days is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="feeReminderForm.get('lastReminderDays')?.hasError('pattern') && feeReminderForm.get('lastReminderDays')?.touched">
-                                  Please enter a valid Last reminder days (numeric characters only)
-                                </mat-error>
-                              </mat-form-field>
+                            <div class="col-12">
+                              <div class="table-wrapper" style="max-height: 380px; overflow-y: auto;">
+                                <table class="table table-hover align-middle bg-white">
+                                  <thead class="bg-light">
+                                    <tr class="text-muted">
+                                      <th>
+                                        <mat-checkbox [checked]="isAllSelected"
+                                          (change)="toggleAllSelection($event.checked)">
+                                        </mat-checkbox>
+                                      </th>
+                                      <th>S.No.</th>
+                                      <th>Mobile</th>
+                                      <th>Student Name</th>
+                                      <th>Father Name</th>
+                                      <th>Mother Name</th>
+                                      <th>Due Amount</th>
+                                      <th>Paid Fee</th>
+                                      <th>DOB</th>
+                                      <th>Admission No.</th>
+                                    </tr>
+                                  </thead>
+
+                                  <tbody *ngIf="studentFilterData && studentFilterData.length > 0">
+                                    <tr *ngFor="let s of studentFilterData; let i = index">
+                                      <td>
+                                        <mat-checkbox [checked]="selectedIds.includes(s.studentId)"
+                                          (change)="toggleSelection(s.studentId, $event.checked)"></mat-checkbox>
+                                      </td>
+                                      <td>{{ i + 1 }}</td>
+                                      <td>{{ s.parentsContact }}</td>
+                                      <td>{{ s.name | titlecase }}</td>
+                                      <td>{{ s.fatherName | titlecase }}</td>
+                                      <td>{{ s.motherName | titlecase }}</td>
+                                      <td>{{ s.pendingAmount | currency: 'INR':true }}</td>
+                                      <td>{{ s.paidAmount | currency: 'INR':true }}</td>
+                                      <td>{{ s.dob }}</td>
+                                      <td>{{ s.admissionNo }}</td>
+                                    </tr>
+                                  </tbody>
+
+                                  <tbody *ngIf="studentFilterData.length === 0">
+                                    <tr>
+                                      <td colspan="10" class="text-center text-muted">No students found.</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <div class="modal-footer">
-                        <button class="submit-button" mat-raised-button type="submit"
-                          [disabled]="!feeReminderForm.valid">Submit</button>
+                        <button class="submit-button" mat-raised-button type="button" (click)="feeReminderLaterSend()"
+                          [disabled]="!feeReminderLaterSendForm.valid">
+                          <mat-icon>timer</mat-icon>
+                          Send Later
+                        </button>
+
+                        <button class="submit-success-button" mat-raised-button type="button"
+                          (click)="feeReminderSend()" style="margin-left: 20px;"
+                          [disabled]="!feeReminderSendForm.valid">
+                          <mat-icon>send</mat-icon>
+                          Send Now
+                        </button>
                       </div>
-                    </form>
+                      <!-- </form> -->
+                    </ng-container>
                   </div>
                 </div>
               </div>

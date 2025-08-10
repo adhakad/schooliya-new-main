@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ClassService } from 'src/app/services/class.service';
 import { ReminderService } from 'src/app/services/reminder.service';
@@ -12,51 +12,41 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./admin-fees-reminder.component.css']
 })
 export class AdminFeesReminderComponent implements OnInit {
-  @ViewChild('receipt') receipt!: ElementRef;
   public baseUrl = environment.API_URL;
-  feeReminderForm: FormGroup;
+  studentFilterForm: FormGroup;
+  feeReminderSendForm: FormGroup;
+  feeReminderLaterSendForm: FormGroup;
   showModal: boolean = false;
-  showAdmissionPrintModal: boolean = false;
-  updateMode: boolean = false;
-  deleteMode: boolean = false;
-  deleteById: String = '';
-  errorMsg: String = '';
-  errorCheck: Boolean = false;
-  academicSession!: string;
-  allSession: any = [];
   classInfo: any[] = [];
-  studentInfo: any[] = [];
-  recordLimit: number = 10;
-  filters: any = {};
-  number: number = 0;
-  paginationValues: Subject<any> = new Subject();
-  page: Number = 0;
-
-  sessions: any;
-  categorys: any;
-  religions: any;
-  qualifications: any;
-  occupations: any;
-  stream: string = '';
-  mediums: any;
-  // notApplicable: String = "stream";
-  streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   cls: number = 0;
-  clsFeesStructure: any;
-  schoolInfo: any;
-  admissionrReceiptInfo: any;
-  singleStudentInfo: any;
-  receiptMode: boolean = false;
-  studentFeesCollection: any;
+  filterStatus: boolean = false;
+  studentFilterData: any[] = [];
+  filterStudentCount: number = 0;
+  selectedIds: string[] = [];
+  isAllSelected = false;
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
+
   constructor(private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private reminderService: ReminderService) {
-    this.feeReminderForm = this.fb.group({
+    this.studentFilterForm = this.fb.group({
       _id: [''],
       adminId: [''],
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      stream: ['', Validators.required],
+      minPercentage: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      lastPaymentDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      lastReminderDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
+
+    })
+    this.feeReminderSendForm = this.fb.group({
+      _id: [''],
+      adminId: [''],
+      students: this.fb.array<FormGroup>([])
+    })
+    this.feeReminderLaterSendForm = this.fb.group({
+      _id: [''],
+      adminId: [''],
+      class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       minPercentage: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       lastPaymentDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       lastReminderDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
@@ -72,33 +62,18 @@ export class AdminFeesReminderComponent implements OnInit {
     this.baseURL = new URL(currentURL).origin;
   }
   chooseClass(cls: any) {
-    this.errorCheck = false;
-    this.errorMsg = '';
     this.cls = 0;
-    this.clsFeesStructure = {};
     this.cls = cls;
-    if (cls < 11 && cls !== 0 || cls == 200 || cls == 201 || cls == 202) {
-      this.feeReminderForm.get('stream')?.setValue("n/a");
-      this.stream = '';
-      this.stream = 'stream';
-    }
-  }
-  chooseStream(stream: any) {
-    this.stream = '';
-    this.stream = stream;
   }
 
   closeModal() {
     this.showModal = false;
-    this.stream = '';
     this.cls = 0;
-    this.feeReminderForm.reset();
+    this.studentFilterForm.reset();
   }
   addStudentModel() {
     this.showModal = true;
-    this.deleteMode = false;
-    this.updateMode = false;
-    this.feeReminderForm.reset();
+    this.studentFilterForm.reset();
   }
 
   getClass() {
@@ -115,17 +90,83 @@ export class AdminFeesReminderComponent implements OnInit {
     }, 500)
   }
 
-  studentAddUpdate() {
-    if (this.feeReminderForm.valid) {
-      this.feeReminderForm.value.adminId = this.adminId;
-      this.reminderService.addFeesReminder(this.feeReminderForm.value).subscribe((res: any) => {
-        if (res) {
-          this.successDone(res);
-        }
-      }, err => {
-        this.errorCheck = true;
-        this.errorMsg = err.error;
-      })
+  get studentsArray(): FormArray {
+    return this.feeReminderSendForm.get('students') as FormArray;
+  }
+
+  toggleAllSelection(checked: boolean) {
+    this.isAllSelected = checked;
+    this.selectedIds = [];
+    const arr = this.fb.array<FormGroup>([]); // ✅ correct typing
+
+    if (checked) {
+      this.studentFilterData.forEach(s => {
+        this.selectedIds.push(s.studentId);
+        arr.push(
+          this.fb.group({
+            studentId: [s.studentId]
+          })
+        );
+      });
     }
+
+    this.feeReminderSendForm.setControl('students', arr);
+  }
+
+  toggleSelection(studentId: string, checked: boolean) {
+    if (checked) {
+      if (!this.selectedIds.includes(studentId)) {
+        this.selectedIds.push(studentId);
+        this.studentsArray.push(
+          this.fb.group({
+            studentId: [studentId]
+          })
+        );
+      }
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id !== studentId);
+      const index = this.studentsArray.value.findIndex(
+        (s: any) => s.studentId === studentId
+      );
+      if (index > -1) {
+        this.studentsArray.removeAt(index);
+      }
+    }
+    this.isAllSelected = this.selectedIds.length === this.studentFilterData.length;
+  }
+
+  studentFilter() {
+    if (this.studentFilterForm.valid) {
+      this.studentFilterForm.patchValue({ adminId: this.adminId });
+
+      this.reminderService.studentFilter(this.studentFilterForm.value).subscribe(
+        (res: any) => {
+          if (res) {
+            this.studentFilterData = res.studentFilterData;
+            this.filterStudentCount = res.filterStudentCount;
+            this.filterStatus = res.filterStatus;
+
+            // Default select all
+            const arr = this.fb.array<FormGroup>([]);
+            this.selectedIds = this.studentFilterData.map(s => s.studentId);
+            this.selectedIds.forEach(id =>
+              arr.push(
+                this.fb.group({
+                  studentId: [id]
+                })
+              )
+            );
+            this.feeReminderSendForm.setControl('students', arr);
+            this.isAllSelected = true;
+          }
+        }
+      );
+    }
+  }
+  feeReminderSend() {
+    this.feeReminderSendForm.value.adminId = this.adminId;
+  }
+  feeReminderLaterSend() {
+    this.feeReminderSendForm.value.adminId = this.adminId;
   }
 }

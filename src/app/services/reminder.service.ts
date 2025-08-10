@@ -13,4 +13,7 @@ export class ReminderService {
   addFeesReminder(feesReminderData: any) {
     return this.http.post(this.url, feesReminderData);
   }
+  studentFilter(studentFilterData: any) {
+    return this.http.post(`${this.url}/student-filter`, studentFilterData);
+  }
 }
