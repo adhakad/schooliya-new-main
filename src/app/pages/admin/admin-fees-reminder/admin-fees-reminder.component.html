@@ -71,7 +71,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">SEND FEE REMINDER</h5>
-                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                      <mat-icon matRipple (click)="closeModal()" class="close-icon">close</mat-icon>
                     </div>
                     <ng-container *ngIf="!filterStatus">
                       <form [formGroup]="studentFilterForm" (ngSubmit)="studentFilter()">

@@ -62,6 +62,10 @@ const StudentFilter = async (req, res) => {
 
                 const paidPercentage = Number(((fee.AllPaidFees / fee.AllTotalFees) * 100).toFixed(2));
                 if (paidPercentage >= minPercentage) continue;
+                if (!fee || fee.AllDueFees <= 0 || fee.AllTotalFees === 0) continue;
+            }
+            if (minPercentage == 0) {
+                if (!fee || fee.AllDueFees <= 0) continue;
             }
 
             const lastPay = fee.paymentDate?.[fee.paymentDate.length - 1];

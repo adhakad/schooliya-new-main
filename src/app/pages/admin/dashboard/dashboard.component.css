@@ -113,9 +113,11 @@
     box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
     border-radius: 5px;
   }
+
   ::ng-deep .custom-select-print .mat-select-arrow {
     color: #8C52FF;
   }
+
   ::ng-deep .custom-select-print .mat-form-field-underline {
     display: none;
   }
@@ -262,6 +264,7 @@
     font-family: 'Poppins', sans-serif !important;
     cursor: not-allowed;
   }
+
   .big-container .submit-success-button {
     height: 44px;
     background: #43ba7c !important;
@@ -355,6 +358,10 @@
     top: 0;
     position: sticky;
     z-index: 1;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .modal-header .modal-title {
@@ -649,6 +656,7 @@
     .custom-select .mat-form-field-infix {
       margin-top: -5px;
     }
+
     ::ng-deep .custom-select-print {
       background-color: #fff;
       height: 45px;
@@ -661,18 +669,20 @@
       box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
       border-radius: 5px;
     }
+
     ::ng-deep .custom-select-print .mat-select-arrow {
       color: #8C52FF;
     }
+
     ::ng-deep .custom-select-print .mat-form-field-underline {
       display: none;
     }
-  
+
     ::ng-deep .custom-select-print .mat-form-field-label {
       color: #382066 !important;
       letter-spacing: .5px;
     }
-  
+
     .custom-select-print .mat-form-field-infix {
       margin-top: -5px;
     }
