@@ -100,43 +100,66 @@
                               </div>
                               <div class="col-12 col-lg-6">
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Minimum Percentage</mat-label>
-                                  <input matInput type="number" formControlName="minPercentage" class="no-arrow">
+                                  <mat-label>Payment Below (%)</mat-label>
+                                  <mat-select formControlName="minPercentage">
+                                    <mat-option *ngFor="let percent of [0,10, 20, 30, 40, 50, 60, 70, 80, 90, 100]"
+                                      [value]="percent">
+                                      <span *ngIf="percent==0">No Filter</span>
+                                      <span *ngIf="percent>0">Less Then {{ percent }}% Paid</span>
+                                    </mat-option>
+                                  </mat-select>
                                   <mat-error
                                     *ngIf="studentFilterForm.get('minPercentage')?.hasError('required') && studentFilterForm.get('minPercentage')?.touched">
-                                    Min percentage is required
+                                    Payment below (%) is required
                                   </mat-error>
                                   <mat-error
                                     *ngIf="studentFilterForm.get('minPercentage')?.hasError('pattern') && studentFilterForm.get('minPercentage')?.touched">
-                                    Please enter a valid in min percentage (numeric characters only)
+                                    Please enter a valid in payment below (%) (numeric characters only)
                                   </mat-error>
                                 </mat-form-field>
                               </div>
+
                               <div class="col-12 col-lg-6">
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Last Payment Days</mat-label>
-                                  <input matInput type="number" formControlName="lastPaymentDays" class="no-arrow">
+                                  <mat-label>No Payment Since</mat-label>
+                                  <mat-select formControlName="lastPaymentDays">
+                                    <mat-option
+                                      *ngFor="let day of [0,7, 15, 30, 45, 60, 90,120,150,180,210,240,270,300,330,365 ]"
+                                      [value]="day">
+                                      <span *ngIf="day<1 && day==0">No Filter</span>
+                                      <span *ngIf="day<=60 && day!==0">Last: {{ day }}+ Days</span>
+                                      <span *ngIf="day>60 && day!==365">Last: {{ day/30 }}+ Months</span>
+                                      <span *ngIf="day==365">Last: 12+ Months</span>
+                                    </mat-option>
+                                  </mat-select>
                                   <mat-error
                                     *ngIf="studentFilterForm.get('lastPaymentDays')?.hasError('required') && studentFilterForm.get('lastPaymentDays')?.touched">
-                                    Last payment days is required
+                                    No payment since is required
                                   </mat-error>
                                   <mat-error
                                     *ngIf="studentFilterForm.get('lastPaymentDays')?.hasError('pattern') && studentFilterForm.get('lastPaymentDays')?.touched">
-                                    Please enter a valid Last payment days (numeric characters only)
+                                    Please enter a valid no payment since (numeric characters only)
                                   </mat-error>
                                 </mat-form-field>
                               </div>
+
                               <div class="col-12 col-lg-6">
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Last Reminder Days</mat-label>
-                                  <input matInput type="number" formControlName="lastReminderDays" class="no-arrow">
+                                  <mat-label>Gap Since Last Reminder</mat-label>
+                                  <mat-select formControlName="lastReminderDays">
+                                    <mat-option *ngFor="let reminder of [0,7, 15, 30, 45, 60, 90]" [value]="reminder">
+                                      <span *ngIf="reminder==0">No Filter</span>
+                                      <span *ngIf="reminder>0">{{ reminder }} Day</span>
+
+                                    </mat-option>
+                                  </mat-select>
                                   <mat-error
                                     *ngIf="studentFilterForm.get('lastReminderDays')?.hasError('required') && studentFilterForm.get('lastReminderDays')?.touched">
-                                    Last reminder days is required
+                                    Gap since last reminder is required
                                   </mat-error>
                                   <mat-error
                                     *ngIf="studentFilterForm.get('lastReminderDays')?.hasError('pattern') && studentFilterForm.get('lastReminderDays')?.touched">
-                                    Please enter a valid Last reminder days (numeric characters only)
+                                    Please enter a valid gap since last reminder (numeric characters only)
                                   </mat-error>
                                 </mat-form-field>
                               </div>
@@ -155,7 +178,6 @@
                     </ng-container>
 
                     <ng-container *ngIf="filterStatus">
-                      <!-- <form [formGroup]="feeReminderSendForm" (ngSubmit)="feeReminderSend()"> -->
                       <div class="modal-body">
                         <div class="container">
                           <div class="row">
@@ -192,8 +214,8 @@
                                       <td>{{ s.name | titlecase }}</td>
                                       <td>{{ s.fatherName | titlecase }}</td>
                                       <td>{{ s.motherName | titlecase }}</td>
-                                      <td>{{ s.pendingAmount | currency: 'INR':true }}</td>
-                                      <td>{{ s.paidAmount | currency: 'INR':true }}</td>
+                                      <td>&#8377; {{ s.pendingAmount}}</td>
+                                      <td>&#8377; {{ s.paidAmount}}</td>
                                       <td>{{ s.dob }}</td>
                                       <td>{{ s.admissionNo }}</td>
                                     </tr>
@@ -212,20 +234,17 @@
                       </div>
 
                       <div class="modal-footer">
-                        <button class="submit-button" mat-raised-button type="button" (click)="feeReminderLaterSend()"
-                          [disabled]="!feeReminderLaterSendForm.valid">
+                        <button class="submit-button" mat-raised-button type="button" (click)="feeReminderLaterSend()">
                           <mat-icon>timer</mat-icon>
                           Send Later
                         </button>
 
                         <button class="submit-success-button" mat-raised-button type="button"
-                          (click)="feeReminderSend()" style="margin-left: 20px;"
-                          [disabled]="!feeReminderSendForm.valid">
+                          [disabled]="!selectedIds.length" (click)="feeReminderSend()" style="margin-left: 20px;">
                           <mat-icon>send</mat-icon>
                           Send Now
                         </button>
                       </div>
-                      <!-- </form> -->
                     </ng-container>
                   </div>
                 </div>

@@ -56,7 +56,7 @@ let GetSinglePlansByPlans = async (req, res, next) => {
 let CreatePlans = async (req, res, next) => {
     let upgradePrice = 0;
     const singlePlans = await PlansModel.findOne({}).sort({ _id: -1 });
-    const { plans, price,withoutDiscountPrice,discountPercentage, teacherLimit, studentLimit, perStudentIncrementPrice, studentIncrementRange } = req.body;
+    const { plans, price, withoutDiscountPrice, discountPercentage, teacherLimit, studentLimit, perStudentIncrementPrice, studentIncrementRange, whatsappMessagesLimit } = req.body;
     if (plans == "Standard" || plans == "Pro") {
         upgradePrice = price - singlePlans.price;
     }
@@ -64,12 +64,13 @@ let CreatePlans = async (req, res, next) => {
         plans: plans,
         price: price,
         upgradePrice: upgradePrice,
-        withoutDiscountPrice:withoutDiscountPrice,
-        discountPercentage:discountPercentage,
+        withoutDiscountPrice: withoutDiscountPrice,
+        discountPercentage: discountPercentage,
         teacherLimit: teacherLimit,
         studentLimit: studentLimit,
         perStudentIncrementPrice: perStudentIncrementPrice,
-        studentIncrementRange: studentIncrementRange
+        studentIncrementRange: studentIncrementRange,
+        whatsappMessagesLimit: whatsappMessagesLimit
 
     }
     try {

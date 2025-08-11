@@ -35,7 +35,8 @@ export class PlansComponent implements OnInit {
       teacherLimit: ['', Validators.required],
       studentLimit: ['', Validators.required],
       perStudentIncrementPrice: ['', Validators.required],
-      studentIncrementRange: ['', Validators.required]
+      studentIncrementRange: ['', Validators.required],
+      whatsappMessagesLimit: ['', Validators.required],
     })
   }
 

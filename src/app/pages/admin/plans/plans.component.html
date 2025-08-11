@@ -93,42 +93,55 @@
                         <mat-form-field appearance="outline">
                           <mat-label>Without Discount Price</mat-label>
                           <input matInput type="text" formControlName="withoutDiscountPrice">
-                          <mat-hint *ngIf="!plansForm.get('withoutDiscountPrice')?.valid && plansForm.get('withoutDiscountPrice')?.touched"
+                          <mat-hint
+                            *ngIf="!plansForm.get('withoutDiscountPrice')?.valid && plansForm.get('withoutDiscountPrice')?.touched"
                             class="form-text text-danger">Without discount price is required</mat-hint>
                         </mat-form-field>
                         <mat-form-field appearance="outline">
                           <mat-label>Discount Percentage</mat-label>
                           <input matInput type="text" formControlName="discountPercentage">
-                          <mat-hint *ngIf="!plansForm.get('discountPercentage')?.valid && plansForm.get('discountPercentage')?.touched"
+                          <mat-hint
+                            *ngIf="!plansForm.get('discountPercentage')?.valid && plansForm.get('discountPercentage')?.touched"
                             class="form-text text-danger">Discount percentage is required</mat-hint>
                         </mat-form-field>
                         <mat-form-field appearance="outline">
                           <mat-label>Teacher Limit</mat-label>
                           <input matInput type="text" formControlName="teacherLimit">
-                          <mat-hint *ngIf="!plansForm.get('teacherLimit')?.valid && plansForm.get('teacherLimit')?.touched"
+                          <mat-hint
+                            *ngIf="!plansForm.get('teacherLimit')?.valid && plansForm.get('teacherLimit')?.touched"
                             class="form-text text-danger">Teacher limit is required</mat-hint>
                         </mat-form-field>
                         <mat-form-field appearance="outline">
                           <mat-label>Student Limit</mat-label>
                           <input matInput type="text" formControlName="studentLimit">
-                          <mat-hint *ngIf="!plansForm.get('studentLimit')?.valid && plansForm.get('studentLimit')?.touched"
+                          <mat-hint
+                            *ngIf="!plansForm.get('studentLimit')?.valid && plansForm.get('studentLimit')?.touched"
                             class="form-text text-danger">Student limit is required</mat-hint>
                         </mat-form-field>
 
-                        
-                          <mat-form-field appearance="outline">
-                            <mat-label>Per Student Increment Price</mat-label>
-                            <input matInput type="text" formControlName="perStudentIncrementPrice">
-                            <mat-hint *ngIf="!plansForm.get('perStudentIncrementPrice')?.valid && plansForm.get('perStudentIncrementPrice')?.touched"
-                              class="form-text text-danger">Per student increment price is required</mat-hint>
-                          </mat-form-field>
-                        
+
+                        <mat-form-field appearance="outline">
+                          <mat-label>Per Student Increment Price</mat-label>
+                          <input matInput type="text" formControlName="perStudentIncrementPrice">
+                          <mat-hint
+                            *ngIf="!plansForm.get('perStudentIncrementPrice')?.valid && plansForm.get('perStudentIncrementPrice')?.touched"
+                            class="form-text text-danger">Per student increment price is required</mat-hint>
+                        </mat-form-field>
+
                         <mat-form-field appearance="outline">
                           <mat-label>Student Increment Range</mat-label>
                           <input matInput type="text" formControlName="studentIncrementRange">
-                          <mat-hint *ngIf="!plansForm.get('studentIncrementRange')?.valid && plansForm.get('studentIncrementRange')?.touched"
+                          <mat-hint
+                            *ngIf="!plansForm.get('studentIncrementRange')?.valid && plansForm.get('studentIncrementRange')?.touched"
                             class="form-text text-danger">Student increment range is required</mat-hint>
-                          </mat-form-field>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Whatsapp Messages Limit</mat-label>
+                          <input matInput type="text" formControlName="whatsappMessagesLimit">
+                          <mat-hint
+                            *ngIf="!plansForm.get('whatsappMessagesLimit')?.valid && plansForm.get('whatsappMessagesLimit')?.touched"
+                            class="form-text text-danger">Whatsapp messages limit is required</mat-hint>
+                        </mat-form-field>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" mat-raised-button [disabled]="!plansForm.valid"

@@ -12,9 +12,20 @@ const ReminderLogsModel = mongoose.model('reminder-filter', {
         required: true,
         trim: true
     },
-    lastReminderSentAt: {
-        type: Date,
-        default: Date.now,
+    minPercentage: {
+        type: Number,
+        required: true,
+        trim: true
+    },
+    lastPaymentDays: {
+        type: Number,
+        required: true,
+        trim: true
+    },
+    lastReminderDays: {
+        type: Number,
+        required: true,
+        trim: true
     },
     createdAt: {
         type: Date,

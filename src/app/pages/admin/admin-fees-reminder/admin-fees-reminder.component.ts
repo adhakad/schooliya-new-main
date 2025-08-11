@@ -24,6 +24,7 @@ export class AdminFeesReminderComponent implements OnInit {
   filterStudentCount: number = 0;
   selectedIds: string[] = [];
   isAllSelected = false;
+  allFilters: any;
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
@@ -97,7 +98,7 @@ export class AdminFeesReminderComponent implements OnInit {
   toggleAllSelection(checked: boolean) {
     this.isAllSelected = checked;
     this.selectedIds = [];
-    const arr = this.fb.array<FormGroup>([]); // ✅ correct typing
+    const arr = this.fb.array<FormGroup>([]);
 
     if (checked) {
       this.studentFilterData.forEach(s => {
@@ -145,8 +146,7 @@ export class AdminFeesReminderComponent implements OnInit {
             this.studentFilterData = res.studentFilterData;
             this.filterStudentCount = res.filterStudentCount;
             this.filterStatus = res.filterStatus;
-
-            // Default select all
+            this.allFilters = res.allFilters;
             const arr = this.fb.array<FormGroup>([]);
             this.selectedIds = this.studentFilterData.map(s => s.studentId);
             this.selectedIds.forEach(id =>
@@ -165,8 +165,26 @@ export class AdminFeesReminderComponent implements OnInit {
   }
   feeReminderSend() {
     this.feeReminderSendForm.value.adminId = this.adminId;
+    this.reminderService.sendFeesReminder(this.feeReminderSendForm.value).subscribe(
+      (res: any) => {
+        if (res) {
+          this.successDone(res);
+        }
+      }
+    );
   }
   feeReminderLaterSend() {
-    this.feeReminderSendForm.value.adminId = this.adminId;
+    this.feeReminderLaterSendForm.value.adminId = this.adminId;
+    this.feeReminderLaterSendForm.value.class = this.allFilters.className;
+    this.feeReminderLaterSendForm.value.minPercentage = this.allFilters.minPercentage;
+    this.feeReminderLaterSendForm.value.lastPaymentDays = this.allFilters.lastPaymentDays;
+    this.feeReminderLaterSendForm.value.lastReminderDays = this.allFilters.lastReminderDays;
+    this.reminderService.addFeesReminderFilter(this.feeReminderLaterSendForm.value).subscribe(
+      (res: any) => {
+        if (res) {
+          this.successDone(res);
+        }
+      }
+    );
   }
 }

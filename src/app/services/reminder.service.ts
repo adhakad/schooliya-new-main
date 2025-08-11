@@ -10,8 +10,11 @@ export class ReminderService {
   url = `${environment.API_URL}/v1/reminder`;
   constructor(private http: HttpClient) { }
 
-  addFeesReminder(feesReminderData: any) {
+  sendFeesReminder(feesReminderData: any) {
     return this.http.post(this.url, feesReminderData);
+  }
+  addFeesReminderFilter(allFilterData: any) {
+    return this.http.post(`${this.url}/filter-create`, allFilterData);
   }
   studentFilter(studentFilterData: any) {
     return this.http.post(`${this.url}/student-filter`, studentFilterData);
