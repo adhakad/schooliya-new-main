@@ -24,11 +24,11 @@ export class AdminFeesReminderComponent implements OnInit {
   filterStudentCount: number = 0;
   selectedIds: string[] = [];
   isAllSelected = false;
+  sendLaterChecked: boolean = false;
   allFilters: any;
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
-
   constructor(private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private reminderService: ReminderService) {
     this.studentFilterForm = this.fb.group({
       _id: [''],
@@ -95,34 +95,42 @@ export class AdminFeesReminderComponent implements OnInit {
     return this.feeReminderSendForm.get('students') as FormArray;
   }
 
+  toggleSendLater(checked: boolean) {
+    this.sendLaterChecked = checked;
+    const arr = this.fb.array<FormGroup>([]);
+    if (checked) {
+      // Checkbox checked → deselect all students
+      this.selectedIds = [];
+    } else {
+      // Checkbox unchecked → select all students
+      this.selectedIds = this.studentFilterData.map(s => s.studentId);
+      this.studentFilterData.forEach(s => {
+        arr.push(this.fb.group({ studentId: [s.studentId] }));
+      });
+    }
+    this.feeReminderSendForm.setControl('students', arr);
+    this.isAllSelected = this.selectedIds.length === this.studentFilterData.length;
+  }
+
   toggleAllSelection(checked: boolean) {
     this.isAllSelected = checked;
     this.selectedIds = [];
     const arr = this.fb.array<FormGroup>([]);
-
     if (checked) {
       this.studentFilterData.forEach(s => {
         this.selectedIds.push(s.studentId);
-        arr.push(
-          this.fb.group({
-            studentId: [s.studentId]
-          })
-        );
+        arr.push(this.fb.group({ studentId: [s.studentId] }));
       });
     }
-
     this.feeReminderSendForm.setControl('students', arr);
+    this.sendLaterChecked = false; // reset send later checkbox
   }
 
   toggleSelection(studentId: string, checked: boolean) {
     if (checked) {
       if (!this.selectedIds.includes(studentId)) {
         this.selectedIds.push(studentId);
-        this.studentsArray.push(
-          this.fb.group({
-            studentId: [studentId]
-          })
-        );
+        this.studentsArray.push(this.fb.group({ studentId: [studentId] }));
       }
     } else {
       this.selectedIds = this.selectedIds.filter(id => id !== studentId);
@@ -134,6 +142,7 @@ export class AdminFeesReminderComponent implements OnInit {
       }
     }
     this.isAllSelected = this.selectedIds.length === this.studentFilterData.length;
+    this.sendLaterChecked = false; // reset send later checkbox
   }
 
   studentFilter() {
@@ -168,8 +177,10 @@ export class AdminFeesReminderComponent implements OnInit {
     this.reminderService.sendFeesReminder(this.feeReminderSendForm.value).subscribe(
       (res: any) => {
         if (res) {
-          this.successDone(res);
+          this.successDone(res.message);
         }
+      }, err => {
+        this.toastr.error('', err.error.errorMsg);
       }
     );
   }

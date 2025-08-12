@@ -7,6 +7,7 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const Payment = require('../models/payment');
 const AdminPlan = require('../models/users/admin-plan');
+const WhatsappMessageWallet = require('../models/wallet/whatsapp-message-wallet');
 const Invoice = require('../models/invoice');
 const Counter = require('../models/counter');
 const tokenService = require('../services/admin-token');
@@ -56,7 +57,7 @@ let CreatePayment = async (req, res) => {
 };
 
 let ValidatePayment = async (req, res) => {
-  const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan,subscriptionType, amount, currency, studentLimit, teacherLimit } = req.body;
+  const { payment_id: paymentId, order_id: orderId, signature, email, id, activePlan, subscriptionType, amount, currency, studentLimit, teacherLimit, whatsappMessageLimit } = req.body;
   const adminInfo = { id, email, activePlan, amount, currency };
   let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
   const body = `${orderId}|${paymentId}`;
@@ -115,11 +116,13 @@ let ValidatePayment = async (req, res) => {
           teacherLimit,
           paymentStatus: true,
           expirationDate,
-          expiryStatus: false
+          expiryStatus: false,
+          whatsappMessageLimit
         }
       },
       { upsert: true, new: true }
     );
+    const createWhatsappMessage = await WhatsappMessageWallet.create({ adminId: adminInfo.id, totalWhatsappMessage: whatsappMessageLimit, remainingWhatsappMessage: whatsappMessageLimit });
 
     if (!updatedAdminPlan) {
       return res.status(400).json({ errorMsg: 'Failed to create or update admin plan!' });

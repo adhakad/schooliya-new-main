@@ -4,7 +4,9 @@ const StudentModel = require('../models/student');
 const FeesCollectionModel = require('../models/fees-collection');
 const ReminderLogsModel = require('../models/reminder-logs');
 const ReminderFilterModel = require('../models/reminder-filter');
+const WhatsappMessageWalletModel = require('../models/wallet/whatsapp-message-wallet');
 const { sendManualFeeReminder } = require('../services/send-whatsapp-message');
+const { checkWhatsappLimit, updateWhatsappUsage } = require('../services/whatsapp-message-wallet');
 
 
 const StudentFilter = async (req, res) => {
@@ -137,14 +139,19 @@ const StudentFilterCreate = async (req, res) => {
     }
 };
 
-
 const SendManualFeeReminder = async (req, res) => {
     const now = new Date();
 
     try {
         const { adminId, students } = req.body; // students = array of { studentId }
         const studentIds = students.map(s => s.studentId);
+        const totalMessages = students.length; // 1 student = 1 message
 
+        /** 🔹 Step 1: Check WhatsApp Message Limit */
+        const limitCheck = await checkWhatsappLimit(adminId, totalMessages);
+        if (!limitCheck.isAllowed) {
+            return res.status(400).json({ errorMsg: limitCheck.message });
+        }
         /** 1️⃣ School Info */
         const schoolInfo = await SchoolModel.findOne(
             { adminId },
@@ -193,10 +200,10 @@ const SendManualFeeReminder = async (req, res) => {
                 const { requestId, sentDateTime } = await sendManualFeeReminder(
                     student.parentsContact,
                     `${schoolInfo.schoolName}, ${schoolInfo.city}`,
-                    student.fatherName || "",
-                    feeData.AllDueFees || 0,
-                    student.name || "",
-                    student.class || "",
+                    student.fatherName,
+                    feeData.AllDueFees,
+                    student.name,
+                    student.class,
                     "30-08-2025"
                 );
 
@@ -230,7 +237,14 @@ const SendManualFeeReminder = async (req, res) => {
             await ReminderLogsModel.bulkWrite(reminderUpdates);
         }
 
-        return res.status(200).json({ message: `${sentCount} WhatsApp reminders sent.` });
+        if (sentCount > 0) {
+            await updateWhatsappUsage(adminId, sentCount);
+        }
+        const reminderMessage = sentCount === 1
+            ? `1  student has been successfully sent a whatsapp fee reminder.`
+            : `${sentCount}  students have been successfully sent whatsapp fee reminders.`;
+
+        return res.status(200).json({ message: reminderMessage });
 
     } catch (err) {
         console.error("Error in sending manual fee reminder:", err);

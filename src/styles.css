@@ -165,14 +165,14 @@ body {
 }
 
 ::ng-deep .mat-radio-button {
-  color: #4e4caac1;
+  color: #353546d2;
   font-family: 'Poppins', sans-serif !important;
   margin-right: 20px;
   margin-bottom: 5px;
 }
 
 ::ng-deep .mat-radio-outer-circle {
-  border: 1px solid #4e4caac1;
+  border: 1px solid #353546d2;
   font-family: 'Poppins', sans-serif !important;
 }
 
@@ -193,12 +193,12 @@ body {
 }
 
 .mat-checkbox {
-  color: #4e4caac1;
+  color: #353546d2;
   font-family: 'Poppins', sans-serif !important;
 }
 
 ::ng-deep .mat-checkbox-frame {
-  border-color: #4e4caac1 !important;
+  border-color: #353546d2 !important;
   font-family: 'Poppins', sans-serif !important;
 }
 

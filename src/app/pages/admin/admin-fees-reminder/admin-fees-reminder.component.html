@@ -234,16 +234,25 @@
                       </div>
 
                       <div class="modal-footer">
-                        <button class="submit-button" mat-raised-button type="button" (click)="feeReminderLaterSend()">
-                          <mat-icon>timer</mat-icon>
-                          Send Later
-                        </button>
+                        <mat-checkbox class="mb-2" [checked]="sendLaterChecked"
+                          (change)="toggleSendLater($event.checked)">
+                          Select the checkbox to send later
+                        </mat-checkbox>
+                        <div>
+                          <!-- Send Later -->
+                          <button class="submit-button" mat-raised-button type="button" style="margin-left: 20px;"
+                            [disabled]="!sendLaterChecked" (click)="feeReminderLaterSend()">
+                            <mat-icon>timer</mat-icon>
+                            Send Later
+                          </button>
 
-                        <button class="submit-success-button" mat-raised-button type="button"
-                          [disabled]="!selectedIds.length" (click)="feeReminderSend()" style="margin-left: 20px;">
-                          <mat-icon>send</mat-icon>
-                          Send Now
-                        </button>
+                          <!-- Send Now -->
+                          <button class="submit-success-button" mat-raised-button type="button"
+                            style="margin-left: 20px;" [disabled]="!selectedIds.length" (click)="feeReminderSend()">
+                            <mat-icon>send</mat-icon>
+                            Send Now
+                          </button>
+                        </div>
                       </div>
                     </ng-container>
                   </div>

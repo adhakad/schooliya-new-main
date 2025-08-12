@@ -392,6 +392,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
       currency: 'INR',
       studentLimit: this.singlePlanInfo.studentLimit,
       teacherLimit: this.singlePlanInfo.teacherLimit,
+      whatsappMessageLimit: this.singlePlanInfo.whatsappMessageLimit,
       subscriptionType: this.subscriptionType,
     }
     this.paymentService.validatePayment(paymentData).subscribe(

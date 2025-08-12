@@ -281,7 +281,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     new: true // Return the updated document
                 });
             if (updatedDocument) {
-                await feesConfirmationMessage(phone, values)
+                // await feesConfirmationMessage(phone, values)
                 return res.status(200).json(feesData);
             }
         }
@@ -357,7 +357,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true
                     });
                 if (updatedDocument && updated) {
-                    await feesConfirmationMessage(phone, values)
+                    // await feesConfirmationMessage(phone, values)
                     return res.status(200).json(feesData);
                 }
             }
@@ -409,7 +409,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true // Return the updated document
                     });
                 if (updatedDocument && deleteDocument) {
-                    await feesConfirmationMessage(phone, values)
+                    // await feesConfirmationMessage(phone, values)
                     return res.status(200).json(feesData);
                 }
             }
@@ -456,7 +456,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             );
             if (updatedDocument && updated) {
-                await feesConfirmationMessage(phone, values)
+                // await feesConfirmationMessage(phone, values)
                 return res.status(200).json(feesData);
             }
 

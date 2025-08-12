@@ -47,7 +47,7 @@ const PlansModel = mongoose.model('plan', {
         required: true,
         trim: true,
     },
-    whatsappMessagesLimit: {
+    whatsappMessageLimit: {
         type: Number,
         required: true,
         trim: true,
