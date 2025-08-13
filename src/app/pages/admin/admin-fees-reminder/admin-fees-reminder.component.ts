@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ClassService } from 'src/app/services/class.service';
@@ -17,6 +18,8 @@ export class AdminFeesReminderComponent implements OnInit {
   feeReminderSendForm: FormGroup;
   feeReminderLaterSendForm: FormGroup;
   showModal: boolean = false;
+  showReminderFilterDeleteModal: boolean = false;
+  deleteById: String = '';
   classInfo: any[] = [];
   cls: number = 0;
   filterStatus: boolean = false;
@@ -26,10 +29,12 @@ export class AdminFeesReminderComponent implements OnInit {
   isAllSelected = false;
   sendLaterChecked: boolean = false;
   allFilters: any;
+  reminderFilterList: any[] = [];
+  hideButton: boolean = false;
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
-  constructor(private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private reminderService: ReminderService) {
+  constructor(private router: Router, public activatedRoute: ActivatedRoute, private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private reminderService: ReminderService) {
     this.studentFilterForm = this.fb.group({
       _id: [''],
       adminId: [''],
@@ -59,28 +64,63 @@ export class AdminFeesReminderComponent implements OnInit {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
     this.getClass();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.cls = +params['cls'] || 0;
+      if (this.cls) {
+        this.getAllReminderFilterByClass();
+      } else {
+        this.cls = 0;
+        this.reminderFilterList = [];
+      }
+    });
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
-  chooseClass(cls: any) {
-    this.cls = 0;
+  chooseClass(cls: number) {
     this.cls = cls;
+    this.reminderFilterList = [];
+    this.updateRouteParams();
+    this.getAllReminderFilterByClass();
   }
-
+  updateRouteParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { cls: this.cls || null }, // Reset parameters if cls or stream is null
+      queryParamsHandling: 'merge' // Keep other query params
+    });
+  }
   closeModal() {
     this.showModal = false;
+    this.showReminderFilterDeleteModal = false;
     this.cls = 0;
+    // Forms ko reset karo
     this.studentFilterForm.reset();
+    this.feeReminderSendForm.setControl('students', this.fb.array([]));
+    this.feeReminderLaterSendForm.reset();
+    // State ko reset karo
+    this.selectedIds = [];
+    this.isAllSelected = false;
+    this.sendLaterChecked = false;
+    this.filterStatus = false;
+    this.hideButton = false;
+    this.filterStudentCount = 0;
+    this.studentFilterData = [];
+    this.allFilters = null;
   }
   addStudentModel() {
     this.showModal = true;
     this.studentFilterForm.reset();
   }
-
+  deleteReminderFilterModel(id: String) {
+    this.showReminderFilterDeleteModal = true;
+    // this.updateMode = false;
+    // this.deleteMode = true;
+    this.deleteById = id;
+  }
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
       if (res) {
-        this.classInfo = res;
+        this.classInfo = res.map((item: any) => item.class);
       }
     })
   }
@@ -90,6 +130,19 @@ export class AdminFeesReminderComponent implements OnInit {
       this.toastr.success('', msg);
     }, 500)
   }
+
+  getAllReminderFilterByClass() {
+    let params = {
+      class: this.cls,
+      adminId: this.adminId,
+    }
+    this.reminderService.getAllReminderFilterByClass(params).subscribe((res: any) => {
+      if (res) {
+        this.reminderFilterList = res.reminderFilterList;
+      }
+    })
+  }
+
 
   get studentsArray(): FormArray {
     return this.feeReminderSendForm.get('students') as FormArray;
@@ -168,9 +221,43 @@ export class AdminFeesReminderComponent implements OnInit {
             this.feeReminderSendForm.setControl('students', arr);
             this.isAllSelected = true;
           }
+        }, err => {
+          this.toastr.error('', err.error.errorMsg);
         }
       );
     }
+  }
+  studentFilterBySavedFilter(reminderFilter: any) {
+    this.studentFilterForm.patchValue({ adminId: this.adminId });
+    this.studentFilterForm.patchValue({ class: reminderFilter.class });
+    this.studentFilterForm.patchValue({ minPercentage: reminderFilter.minPercentage });
+    this.studentFilterForm.patchValue({ lastPaymentDays: reminderFilter.lastPaymentDays });
+    this.studentFilterForm.patchValue({ lastReminderDays: reminderFilter.lastReminderDays });
+    this.reminderService.studentFilter(this.studentFilterForm.value).subscribe(
+      (res: any) => {
+        if (res) {
+          this.hideButton = true;
+          this.studentFilterData = res.studentFilterData;
+          this.filterStudentCount = res.filterStudentCount;
+          this.filterStatus = res.filterStatus;
+          this.allFilters = res.allFilters;
+          const arr = this.fb.array<FormGroup>([]);
+          this.selectedIds = this.studentFilterData.map(s => s.studentId);
+          this.selectedIds.forEach(id =>
+            arr.push(
+              this.fb.group({
+                studentId: [id]
+              })
+            )
+          );
+          this.feeReminderSendForm.setControl('students', arr);
+          this.isAllSelected = true;
+          this.showModal = true;
+        }
+      }, err => {
+        this.toastr.error('', err.error.errorMsg);
+      }
+    );
   }
   feeReminderSend() {
     this.feeReminderSendForm.value.adminId = this.adminId;
@@ -193,9 +280,23 @@ export class AdminFeesReminderComponent implements OnInit {
     this.reminderService.addFeesReminderFilter(this.feeReminderLaterSendForm.value).subscribe(
       (res: any) => {
         if (res) {
-          this.successDone(res);
+          this.successDone(res.message);
+          this.getAllReminderFilterByClass();
         }
+      }, err => {
+        this.toastr.error('', err.error.errorMsg);
       }
+    );
+  }
+  reminderFilterDelete(id: String) {
+    this.reminderService.deleteReminderFilter(id).subscribe((res: any) => {
+      if (res) {
+        this.showReminderFilterDeleteModal = false;
+        this.successDone(res.message);
+      }
+    }, err => {
+      this.toastr.error('', err.error.errorMsg);
+    }
     );
   }
 }

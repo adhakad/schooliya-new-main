@@ -18,7 +18,18 @@
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
-                      <div class="col-2 offset-10">
+                      <div class="col-2 offset-8">
+                        <ng-container>
+                          <mat-form-field class="custom-select">
+                            <mat-label *ngIf="cls==0">Class</mat-label>
+                            <mat-select [(ngModel)]="cls" (selectionChange)="chooseClass($event.value)" type="number"
+                              matInput>
+                              <mat-option *ngFor="let cls of classInfo" [value]="cls">{{cls | classSuffix}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </ng-container>
+                      </div>
+                      <div class="col-2">
                         <button class="submit-button" mat-raised-button
                           (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
                       </div>
@@ -50,20 +61,43 @@
               <div class="table-wrapper">
                 <table class="table table-hover align-middle bg-white">
                   <thead class="bg-light">
-                    <!-- <tr class="text-muted">
+                    <tr class="text-muted">
                       <th>S.No.</th>
-                      <th>Fee Reminder</th>
-                      <th>Student</th>
-                      <th>Father Name</th>
-                      <th>Mother Name</th>
                       <th>Class</th>
-                      <th>Stream</th>
-                      <th>Roll Number</th>
-                      <th>Session</th>
-                      <th>Admission By</th>
-                      <th>Admission Letter</th>
-                    </tr> -->
+                      <th>Payment Below (%)</th>
+                      <th>No Payment Since</th>
+                      <th>Gap Since Last Reminder</th>
+                      <!-- <th>Created On</th> -->
+                      <th>Fee Reminder</th>
+                      <th>Remove</th>
+                    </tr>
                   </thead>
+                  <tbody *ngFor="let reminderFilter of reminderFilterList,let i=index">
+                    <tr>
+                      <td>
+                        <p class="mb-0">{{i+1}}</p>
+                      </td>
+                      <td>{{reminderFilter.class | classSuffix}}</td>
+                      <td><span *ngIf="reminderFilter.minPercentage!==0">Less Then {{reminderFilter.minPercentage}}%
+                          Paid</span><span *ngIf="reminderFilter.minPercentage==0">No Filter</span></td>
+                      <td><span *ngIf="reminderFilter.lastPaymentDays!==0">Last {{reminderFilter.lastPaymentDays}}+
+                          Days</span><span
+                          *ngIf="reminderFilter.lastPaymentDays==0">No Filter</span></td>
+                      <td><span *ngIf="reminderFilter.lastReminderDays!==0">{{reminderFilter.lastReminderDays}}
+                          Days</span><span *ngIf="reminderFilter.lastReminderDays==0">No Filter</span></td>
+                      <!-- <td>12 Aug 2025</td> -->
+                      <td>
+                        <button class="submit-success-button" mat-raised-button
+                          (click)="studentFilterBySavedFilter(reminderFilter)">
+                          <i class=" bi bi-send-fill"></i>
+                          To Send
+                        </button>
+                      </td>
+                      <td class="mb-0">
+                        <mat-icon (click)="deleteReminderFilterModel(reminderFilter._id)">delete</mat-icon>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
               <div class="modal fade show" [class.show]="showModal">
@@ -82,9 +116,8 @@
                                 <mat-form-field appearance="outline">
                                   <mat-label>Class</mat-label>
                                   <mat-select matInput formControlName="class">
-                                    <div *ngFor="let classInfo of classInfo">
-                                      <mat-option value="{{classInfo.class}}"
-                                        (click)="chooseClass(classInfo.class)">{{classInfo.class |
+                                    <div *ngFor="let class of classInfo">
+                                      <mat-option value="{{class}}">{{class |
                                         classSuffix}}</mat-option>
                                     </div>
                                   </mat-select>
@@ -184,7 +217,7 @@
                             <div class="col-12">
                               <div class="table-wrapper" style="max-height: 380px; overflow-y: auto;">
                                 <table class="table table-hover align-middle bg-white">
-                                  <thead class="bg-light">
+                                  <thead class="bg-light" *ngIf="studentFilterData.length !== 0">
                                     <tr class="text-muted">
                                       <th>
                                         <mat-checkbox [checked]="isAllSelected"
@@ -196,8 +229,10 @@
                                       <th>Student Name</th>
                                       <th>Father Name</th>
                                       <th>Mother Name</th>
-                                      <th>Due Amount</th>
+                                      <th>Paid Fee In (%)</th>
                                       <th>Paid Fee</th>
+                                      <th>Due Fee</th>
+                                      <th>Total Fee</th>
                                       <th>DOB</th>
                                       <th>Admission No.</th>
                                     </tr>
@@ -214,8 +249,10 @@
                                       <td>{{ s.name | titlecase }}</td>
                                       <td>{{ s.fatherName | titlecase }}</td>
                                       <td>{{ s.motherName | titlecase }}</td>
-                                      <td>&#8377; {{ s.pendingAmount}}</td>
+                                      <td>{{ s.paidPercentage}}%</td>
                                       <td>&#8377; {{ s.paidAmount}}</td>
+                                      <td>&#8377; {{ s.pendingAmount}}</td>
+                                      <td>&#8377; {{ s.totalFees}}</td>
                                       <td>{{ s.dob }}</td>
                                       <td>{{ s.admissionNo }}</td>
                                     </tr>
@@ -223,7 +260,8 @@
 
                                   <tbody *ngIf="studentFilterData.length === 0">
                                     <tr>
-                                      <td colspan="10" class="text-center text-muted">No students found.</td>
+                                      <td colspan="10" class="text-center text-muted">No students match the applied
+                                        filters.</td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -235,21 +273,20 @@
 
                       <div class="modal-footer">
                         <mat-checkbox class="mb-2" [checked]="sendLaterChecked"
-                          (change)="toggleSendLater($event.checked)">
-                          Select the checkbox to send later
+                          (change)="toggleSendLater($event.checked)" *ngIf="!hideButton">
+                          Select the checkbox to save filters
                         </mat-checkbox>
                         <div>
                           <!-- Send Later -->
                           <button class="submit-button" mat-raised-button type="button" style="margin-left: 20px;"
-                            [disabled]="!sendLaterChecked" (click)="feeReminderLaterSend()">
+                            [disabled]="!sendLaterChecked" (click)="feeReminderLaterSend()" *ngIf="!hideButton">
                             <mat-icon>timer</mat-icon>
-                            Send Later
+                            Save Filters
                           </button>
-
                           <!-- Send Now -->
                           <button class="submit-success-button" mat-raised-button type="button"
                             style="margin-left: 20px;" [disabled]="!selectedIds.length" (click)="feeReminderSend()">
-                            <mat-icon>send</mat-icon>
+                            <i class="bi bi-send-fill"></i>
                             Send Now
                           </button>
                         </div>
@@ -258,6 +295,39 @@
                   </div>
                 </div>
               </div>
+
+
+
+
+
+
+              <div class="modal fade show" [class.show]="showReminderFilterDeleteModal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">DELETE REMINDER FILTER</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <div class="modal-body">
+                      <div>
+                        <h4 style="margin-left: 20px;">To delete reminder filter detail, click ok to confirm.</h4>
+                        <div class="modal-footer">
+                          <button class="delete-button" mat-raised-button type="button"
+                            (click)="reminderFilterDelete(deleteById)">Ok</button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+
+
 
 
 

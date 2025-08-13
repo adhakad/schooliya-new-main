@@ -9,6 +9,20 @@ const { sendManualFeeReminder } = require('../services/send-whatsapp-message');
 const { checkWhatsappLimit, updateWhatsappUsage } = require('../services/whatsapp-message-wallet');
 
 
+let GetAllReminderFilterByClass = async (req, res, next) => {
+    let adminId = req.params.id;
+    let className = req.params.class;
+    try {
+
+        const reminderFilter = await ReminderFilterModel.find({ adminId: adminId, class: className });
+        if (!reminderFilter) {
+            return res.status(404).json({ errorMsg: 'Reminder filter not found!' })
+        }
+        return res.status(200).json({ reminderFilterList: reminderFilter });
+    } catch (error) {
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
+    }
+}
 const StudentFilter = async (req, res) => {
     try {
         let {
@@ -24,13 +38,11 @@ const StudentFilter = async (req, res) => {
         if (!schoolInfo) {
             return res.status(404).json({ errorMsg: "School detail not found!" });
         }
+
         const students = await StudentModel.find({ adminId, class: className }).lean();
         if (!students.length) {
-            return res.status(200).json({
-                filterStudentCount: 0,
-                studentFilterData: [],
-                allFilters: { className, minPercentage, lastPaymentDays, lastReminderDays },
-                filterStatus: false
+            return res.status(404).json({
+                errorMsg: "No students found in the selected class."
             });
         }
 
@@ -44,33 +56,31 @@ const StudentFilter = async (req, res) => {
             studentId: { $in: studentIds }
         }).lean();
 
-        // Convert reminder logs to Map for quick lookup
         const reminderMap = new Map();
         reminderLogs.forEach(log => {
             reminderMap.set(log.studentId.toString(), log);
         });
 
-        // Convert fees data to Map for quick lookup
         const feesMap = new Map();
         feesData.forEach(fee => {
             feesMap.set(fee.studentId.toString(), fee);
         });
 
         let studentFilterData = [];
+        let paidPercentage;
         for (const student of students) {
             const fee = feesMap.get(student._id.toString());
+
             if (minPercentage !== 0) {
                 if (!fee || fee.AllDueFees <= 0 || fee.AllTotalFees === 0) continue;
-
-                const paidPercentage = Number(((fee.AllPaidFees / fee.AllTotalFees) * 100).toFixed(2));
+                paidPercentage = Number(((fee.AllPaidFees / fee.AllTotalFees) * 100).toFixed(2));
                 if (paidPercentage >= minPercentage) continue;
-                if (!fee || fee.AllDueFees <= 0 || fee.AllTotalFees === 0) continue;
-            }
-            if (minPercentage == 0) {
+            } else if (minPercentage == 0) {
                 if (!fee || fee.AllDueFees <= 0) continue;
+                paidPercentage = Number(((fee.AllPaidFees / fee.AllTotalFees) * 100).toFixed(2));
             }
 
-            const lastPay = fee.paymentDate?.[fee.paymentDate.length - 1];
+            const lastPay = fee?.paymentDate?.[fee.paymentDate.length - 1];
             if (lastPaymentDays > 0 && lastPay) {
                 const daysSincePay = (now - new Date(lastPay)) / (1000 * 60 * 60 * 24);
                 if (daysSincePay < lastPaymentDays) continue;
@@ -81,6 +91,7 @@ const StudentFilter = async (req, res) => {
                 const daysSinceReminder = (now - new Date(reminder.lastReminderSentAt)) / (1000 * 60 * 60 * 24);
                 if (daysSinceReminder < lastReminderDays) continue;
             }
+
             if (!student.parentsContact) continue;
 
             studentFilterData.push({
@@ -92,23 +103,29 @@ const StudentFilter = async (req, res) => {
                 dob: student.dob,
                 admissionNo: student.admissionNo,
                 parentsContact: student.parentsContact,
+                paidPercentage: paidPercentage,
                 paidAmount: fee.AllPaidFees,
-                pendingAmount: fee.AllDueFees
+                pendingAmount: fee.AllDueFees,
+                totalFees: fee.AllTotalFees
             });
         }
+
+        // 🔹 अब चाहे data खाली हो या भरा, success response देंगे
         return res.status(200).json({
             filterStudentCount: studentFilterData.length,
             studentFilterData,
             allFilters: { className, minPercentage, lastPaymentDays, lastReminderDays },
-            filterStatus: studentFilterData.length > 0
+            filterStatus: true,
+            infoMsg: studentFilterData.length === 0
+                ? "No students match the applied filters"
+                : undefined
         });
 
     } catch (err) {
         console.error('Error in StudentFilter:', err);
-        return res.status(500).json({ message: 'Server Error', error: err.message });
+        return res.status(500).json({ message: 'Server Error', errorMsg: err.message });
     }
 };
-
 
 const StudentFilterCreate = async (req, res) => {
     try {
@@ -133,9 +150,9 @@ const StudentFilterCreate = async (req, res) => {
             lastReminderDays: lastReminderDays
         }
         const createReminderFilter = await ReminderFilterModel.create(allFiltersData);
-        return res.status(200).json('Fee reminder filters created successfully');
+        return res.status(200).json({ message: 'Fee reminder filters created successfully' });
     } catch (err) {
-        return res.status(500).json({ message: 'Server Error', error: err.message });
+        return res.status(500).json({ message: 'Server Error', errorMsg: err.message });
     }
 };
 
@@ -191,7 +208,6 @@ const SendManualFeeReminder = async (req, res) => {
             const feeData = feeMap.get(studentId) || {};
 
             if (!student.parentsContact) {
-                console.warn(`Skipping ${student.name}: No parent contact found.`);
                 continue;
             }
 
@@ -247,8 +263,7 @@ const SendManualFeeReminder = async (req, res) => {
         return res.status(200).json({ message: reminderMessage });
 
     } catch (err) {
-        console.error("Error in sending manual fee reminder:", err);
-        return res.status(500).json({ message: "Server Error", error: err.message });
+        return res.status(500).json({ message: "Server Error", errorMsg: err.message });
     }
 };
 
@@ -264,12 +279,24 @@ async function runWithConcurrencyLimit(tasks, limit) {
     }
     await Promise.all(running);
 }
-
+let DeleteReminderFilter = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const deleteReminderFilter = await ReminderFilterModel.findByIdAndRemove(id);
+        if (deleteReminderFilter) {
+            return res.status(200).json({ message: 'Reminder filter deleted successfully' });
+        }
+    } catch (error) {
+        return res.status(500).json({ errorMsg: 'Internal Server Error!' });
+    }
+}
 
 
 
 module.exports = {
+    GetAllReminderFilterByClass,
     StudentFilter,
     StudentFilterCreate,
-    SendManualFeeReminder
+    SendManualFeeReminder,
+    DeleteReminderFilter,
 }
