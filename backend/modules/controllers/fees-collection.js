@@ -2,6 +2,8 @@
 const FeesCollectionModel = require('../models/fees-collection');
 const FeesStructureModel = require('../models/fees-structure');
 const StudentModel = require('../models/student');
+const { getClassDisplayName } = require('../helpers/format-class-name');
+const { toTitleCase } = require('../helpers/titlecase');
 const { feesConfirmationMessage } = require('../services/send-whatsapp-message');
 const { DateTime } = require('luxon');
 const phone = '9340700360';
@@ -225,6 +227,10 @@ let CreateFeesCollection = async (req, res, next) => {
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
     try {
+        const isStudent = await StudentModel.findOne({ _id: studentId, adminId: adminId });
+        if (!isStudent) {
+            return res.status(404).json(`Student not found!`);
+        }
         const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStructure) {
             return res.status(404).json(`Fees structure not found!`);
@@ -281,7 +287,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     new: true // Return the updated document
                 });
             if (updatedDocument) {
-                // await feesConfirmationMessage(phone, values)
+                await feesConfirmationMessage(phone, values)
                 return res.status(200).json(feesData);
             }
         }
@@ -357,7 +363,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true
                     });
                 if (updatedDocument && updated) {
-                    // await feesConfirmationMessage(phone, values)
+                    await feesConfirmationMessage(phone, values)
                     return res.status(200).json(feesData);
                 }
             }
@@ -409,7 +415,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true // Return the updated document
                     });
                 if (updatedDocument && deleteDocument) {
-                    // await feesConfirmationMessage(phone, values)
+                    await feesConfirmationMessage(phone, values)
                     return res.status(200).json(feesData);
                 }
             }
@@ -456,7 +462,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             );
             if (updatedDocument && updated) {
-                // await feesConfirmationMessage(phone, values)
+                await feesConfirmationMessage(phone, values)
                 return res.status(200).json(feesData);
             }
 

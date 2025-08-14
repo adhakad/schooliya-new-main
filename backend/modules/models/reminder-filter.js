@@ -27,6 +27,11 @@ const ReminderLogsModel = mongoose.model('reminder-filter', {
         required: true,
         trim: true
     },
+    paymentLastDate: {
+        type: String,
+        required: true,
+        trim: true
+    },
     createdAt: {
         type: Date,
         default: Date.now,

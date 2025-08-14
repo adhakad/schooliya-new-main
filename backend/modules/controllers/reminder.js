@@ -1,10 +1,14 @@
 'use strict';
 const SchoolModel = require('../models/school');
 const StudentModel = require('../models/student');
+const FeesStructureModel = require('../models/fees-structure');
 const FeesCollectionModel = require('../models/fees-collection');
 const ReminderLogsModel = require('../models/reminder-logs');
 const ReminderFilterModel = require('../models/reminder-filter');
 const WhatsappMessageWalletModel = require('../models/wallet/whatsapp-message-wallet');
+const { DateTime } = require('luxon');
+const { getClassDisplayName } = require('../helpers/format-class-name');
+const { toTitleCase } = require('../helpers/titlecase');
 const { sendManualFeeReminder } = require('../services/send-whatsapp-message');
 const { checkWhatsappLimit, updateWhatsappUsage } = require('../services/whatsapp-message-wallet');
 
@@ -30,20 +34,41 @@ const StudentFilter = async (req, res) => {
             minPercentage,
             lastPaymentDays,
             lastReminderDays,
-            class: className
+            class: className,
+            paymentLastDate,
         } = req.body;
 
         const now = new Date();
+
+        if (paymentLastDate) {
+            // Regex to match dd/MM/yyyy format strictly
+            const ddmmyyyyPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+
+            if (!ddmmyyyyPattern.test(paymentLastDate)) {
+                // Only run parsing logic if it's NOT already dd/MM/yyyy
+                let parsedDate = DateTime.fromFormat(paymentLastDate, 'dd/MM/yyyy');
+                if (!parsedDate.isValid) {
+                    paymentLastDate = DateTime.fromISO(paymentLastDate).toFormat("dd/MM/yyyy");
+                }
+            }
+        }
         const schoolInfo = await SchoolModel.findOne({ adminId });
         if (!schoolInfo) {
             return res.status(404).json({ errorMsg: "School detail not found!" });
         }
-
         const students = await StudentModel.find({ adminId, class: className }).lean();
         if (!students.length) {
             return res.status(404).json({
                 errorMsg: "No students found in the selected class."
             });
+        }
+        const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className });
+        if (!singleFeesStr) {
+            return res.status(404).json({ errorMsg: 'Fee Structure not found!' });
+        }
+        const singleFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, class: className });
+        if (!singleFeesCollection) {
+            return res.status(404).json({ errorMsg: 'Student fee record not found!' });
         }
 
         const studentIds = students.map(s => s._id);
@@ -106,7 +131,7 @@ const StudentFilter = async (req, res) => {
                 paidPercentage: paidPercentage,
                 paidAmount: fee.AllPaidFees,
                 pendingAmount: fee.AllDueFees,
-                totalFees: fee.AllTotalFees
+                totalFees: fee.AllTotalFees,
             });
         }
 
@@ -114,7 +139,7 @@ const StudentFilter = async (req, res) => {
         return res.status(200).json({
             filterStudentCount: studentFilterData.length,
             studentFilterData,
-            allFilters: { className, minPercentage, lastPaymentDays, lastReminderDays },
+            allFilters: { className, minPercentage, lastPaymentDays, lastReminderDays, paymentLastDate },
             filterStatus: true,
             infoMsg: studentFilterData.length === 0
                 ? "No students match the applied filters"
@@ -134,6 +159,7 @@ const StudentFilterCreate = async (req, res) => {
             minPercentage,
             lastPaymentDays,
             lastReminderDays,
+            paymentLastDate
         } = req.body;
 
         const className = req.body.class;
@@ -142,12 +168,27 @@ const StudentFilterCreate = async (req, res) => {
         if (!schoolInfo) {
             return res.status(404).json({ errorMsg: "School detail not found!" });
         }
+        const students = await StudentModel.find({ adminId, class: className }).lean();
+        if (!students.length) {
+            return res.status(404).json({
+                errorMsg: "No students found in the selected class."
+            });
+        }
+        const singleFeesStr = await FeesStructureModel.findOne({ adminId: adminId, class: className });
+        if (!singleFeesStr) {
+            return res.status(404).json({ errorMsg: 'Fee Structure not found!' });
+        }
+        const singleFeesCollection = await FeesCollectionModel.findOne({ adminId: adminId, class: className });
+        if (!singleFeesCollection) {
+            return res.status(404).json({ errorMsg: 'Student fee record not found!' });
+        }
         const allFiltersData = {
             adminId: adminId,
             class: className,
             minPercentage: minPercentage,
             lastPaymentDays: lastPaymentDays,
-            lastReminderDays: lastReminderDays
+            lastReminderDays: lastReminderDays,
+            paymentLastDate
         }
         const createReminderFilter = await ReminderFilterModel.create(allFiltersData);
         return res.status(200).json({ message: 'Fee reminder filters created successfully' });
@@ -160,7 +201,7 @@ const SendManualFeeReminder = async (req, res) => {
     const now = new Date();
 
     try {
-        const { adminId, students } = req.body; // students = array of { studentId }
+        const { adminId, paymentLastDate, students } = req.body; // students = array of { studentId }
         const studentIds = students.map(s => s.studentId);
         const totalMessages = students.length; // 1 student = 1 message
 
@@ -206,7 +247,9 @@ const SendManualFeeReminder = async (req, res) => {
         for (const student of studentList) {
             const studentId = student._id.toString();
             const feeData = feeMap.get(studentId) || {};
-
+            let className = getClassDisplayName(student.class);
+            let name = toTitleCase(student.name);
+            let fatherName = toTitleCase(student.fatherName);
             if (!student.parentsContact) {
                 continue;
             }
@@ -216,11 +259,11 @@ const SendManualFeeReminder = async (req, res) => {
                 const { requestId, sentDateTime } = await sendManualFeeReminder(
                     student.parentsContact,
                     `${schoolInfo.schoolName}, ${schoolInfo.city}`,
-                    student.fatherName,
+                    fatherName,
                     feeData.AllDueFees,
-                    student.name,
-                    student.class,
-                    "30-08-2025"
+                    name,
+                    className,
+                    paymentLastDate
                 );
 
                 if (requestId) {

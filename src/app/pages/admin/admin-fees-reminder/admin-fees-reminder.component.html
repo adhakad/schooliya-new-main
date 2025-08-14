@@ -81,8 +81,7 @@
                       <td><span *ngIf="reminderFilter.minPercentage!==0">Less Then {{reminderFilter.minPercentage}}%
                           Paid</span><span *ngIf="reminderFilter.minPercentage==0">No Filter</span></td>
                       <td><span *ngIf="reminderFilter.lastPaymentDays!==0">Last {{reminderFilter.lastPaymentDays}}+
-                          Days</span><span
-                          *ngIf="reminderFilter.lastPaymentDays==0">No Filter</span></td>
+                          Days</span><span *ngIf="reminderFilter.lastPaymentDays==0">No Filter</span></td>
                       <td><span *ngIf="reminderFilter.lastReminderDays!==0">{{reminderFilter.lastReminderDays}}
                           Days</span><span *ngIf="reminderFilter.lastReminderDays==0">No Filter</span></td>
                       <!-- <td>12 Aug 2025</td> -->
@@ -100,6 +99,9 @@
                   </tbody>
                 </table>
               </div>
+              <!-- <ng-container *ngIf="reminderFilterList.length==0">
+                <h2 style="text-align: center;margin-top: 150px;color:#39206641;">No Record Found</h2>
+              </ng-container> -->
               <div class="modal fade show" [class.show]="showModal">
                 <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="true">
                   <div class="modal-content">
@@ -193,6 +195,19 @@
                                   <mat-error
                                     *ngIf="studentFilterForm.get('lastReminderDays')?.hasError('pattern') && studentFilterForm.get('lastReminderDays')?.touched">
                                     Please enter a valid gap since last reminder (numeric characters only)
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-12 col-lg-6">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>Payment Last Date (dd/mm/yyyy)</mat-label>
+                                  <input matInput readonly [matDatepicker]="pickers"
+                                    formControlName="paymentLastDate" />
+                                  <mat-datepicker-toggle matSuffix [for]="pickers"></mat-datepicker-toggle>
+                                  <mat-datepicker #pickers></mat-datepicker>
+                                  <mat-error
+                                    *ngIf="studentFilterForm.get('paymentLastDate')?.hasError('required') && studentFilterForm.get('paymentLastDate')?.touched">
+                                    Payment last date is required
                                   </mat-error>
                                 </mat-form-field>
                               </div>

@@ -39,14 +39,15 @@ export class AdminFeesReminderComponent implements OnInit {
       _id: [''],
       adminId: [''],
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      paymentLastDate: ['', [Validators.required]],
       minPercentage: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       lastPaymentDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       lastReminderDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
-
     })
     this.feeReminderSendForm = this.fb.group({
       _id: [''],
       adminId: [''],
+      paymentLastDate: [''],
       students: this.fb.array<FormGroup>([])
     })
     this.feeReminderLaterSendForm = this.fb.group({
@@ -55,8 +56,8 @@ export class AdminFeesReminderComponent implements OnInit {
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       minPercentage: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       lastPaymentDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      lastReminderDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
-
+      lastReminderDays: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      paymentLastDate: [''],
     })
   }
 
@@ -92,7 +93,7 @@ export class AdminFeesReminderComponent implements OnInit {
   closeModal() {
     this.showModal = false;
     this.showReminderFilterDeleteModal = false;
-    this.cls = 0;
+    // this.cls = 0;
     // Forms ko reset karo
     this.studentFilterForm.reset();
     this.feeReminderSendForm.setControl('students', this.fb.array([]));
@@ -104,7 +105,6 @@ export class AdminFeesReminderComponent implements OnInit {
     this.filterStatus = false;
     this.hideButton = false;
     this.filterStudentCount = 0;
-    this.studentFilterData = [];
     this.allFilters = null;
   }
   addStudentModel() {
@@ -126,6 +126,7 @@ export class AdminFeesReminderComponent implements OnInit {
   }
   successDone(msg: any) {
     this.closeModal();
+    this.getAllReminderFilterByClass();
     setTimeout(() => {
       this.toastr.success('', msg);
     }, 500)
@@ -143,7 +144,12 @@ export class AdminFeesReminderComponent implements OnInit {
     })
   }
 
-
+  date(e: any) {
+    var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
+    this.studentFilterForm.get('paymentLastDate')?.setValue(convertDate, {
+      onlyself: true,
+    });
+  }
   get studentsArray(): FormArray {
     return this.feeReminderSendForm.get('students') as FormArray;
   }
@@ -218,6 +224,7 @@ export class AdminFeesReminderComponent implements OnInit {
                 })
               )
             );
+            this.feeReminderSendForm.patchValue({ paymentLastDate: res.allFilters.paymentLastDate });
             this.feeReminderSendForm.setControl('students', arr);
             this.isAllSelected = true;
           }
@@ -233,6 +240,7 @@ export class AdminFeesReminderComponent implements OnInit {
     this.studentFilterForm.patchValue({ minPercentage: reminderFilter.minPercentage });
     this.studentFilterForm.patchValue({ lastPaymentDays: reminderFilter.lastPaymentDays });
     this.studentFilterForm.patchValue({ lastReminderDays: reminderFilter.lastReminderDays });
+    this.studentFilterForm.patchValue({ paymentLastDate: reminderFilter.paymentLastDate });
     this.reminderService.studentFilter(this.studentFilterForm.value).subscribe(
       (res: any) => {
         if (res) {
@@ -250,6 +258,7 @@ export class AdminFeesReminderComponent implements OnInit {
               })
             )
           );
+          this.feeReminderSendForm.patchValue({ paymentLastDate: res.allFilters.paymentLastDate });
           this.feeReminderSendForm.setControl('students', arr);
           this.isAllSelected = true;
           this.showModal = true;
@@ -277,6 +286,7 @@ export class AdminFeesReminderComponent implements OnInit {
     this.feeReminderLaterSendForm.value.minPercentage = this.allFilters.minPercentage;
     this.feeReminderLaterSendForm.value.lastPaymentDays = this.allFilters.lastPaymentDays;
     this.feeReminderLaterSendForm.value.lastReminderDays = this.allFilters.lastReminderDays;
+    this.feeReminderLaterSendForm.value.paymentLastDate = this.allFilters.paymentLastDate;
     this.reminderService.addFeesReminderFilter(this.feeReminderLaterSendForm.value).subscribe(
       (res: any) => {
         if (res) {
