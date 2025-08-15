@@ -3,8 +3,8 @@ const SchoolModel = require('../models/school');
 const StudentModel = require('../models/student');
 const FeesStructureModel = require('../models/fees-structure');
 const FeesCollectionModel = require('../models/fees-collection');
-const ReminderLogsModel = require('../models/reminder-logs');
-const ReminderFilterModel = require('../models/reminder-filter');
+const ReminderLogsModel = require('../models/whatsapp-message/reminder-logs');
+const ReminderFilterModel = require('../models/whatsapp-message/reminder-filter');
 const { DateTime } = require('luxon');
 const { getClassDisplayName } = require('../helpers/format-class-name');
 const { toTitleCase } = require('../helpers/titlecase');
@@ -111,8 +111,8 @@ const StudentFilter = async (req, res) => {
             }
 
             const reminder = reminderMap.get(student._id.toString());
-            if (lastReminderDays > 0 && reminder?.lastReminderSentAt) {
-                const daysSinceReminder = (now - new Date(reminder.lastReminderSentAt)) / (1000 * 60 * 60 * 24);
+            if (lastReminderDays > 0 && reminder?.lastMessageSentAt) {
+                const daysSinceReminder = (now - new Date(reminder.lastMessageSentAt)) / (1000 * 60 * 60 * 24);
                 if (daysSinceReminder < lastReminderDays) continue;
             }
 
@@ -230,7 +230,7 @@ const SendManualFeeReminder = async (req, res) => {
             ),
             ReminderLogsModel.find(
                 { adminId, studentId: { $in: studentIds } },
-                "studentId lastReminderSentAt"
+                "studentId lastMessageSentAt"
             )
         ]);
 
@@ -242,7 +242,7 @@ const SendManualFeeReminder = async (req, res) => {
         const whatsappTasks = [];
         const reminderUpdates = [];
         let sentCount = 0;
-
+        let school_name = toTitleCase(`${schoolInfo.schoolName}, ${schoolInfo.city}, ${schoolInfo.state}`);
         for (const student of studentList) {
             const studentId = student._id.toString();
             const feeData = feeMap.get(studentId) || {};
@@ -257,7 +257,7 @@ const SendManualFeeReminder = async (req, res) => {
             whatsappTasks.push(async () => {
                 const { requestId, sentDateTime } = await sendManualFeeReminder(
                     student.parentsContact,
-                    `${schoolInfo.schoolName}, ${schoolInfo.city}`,
+                    school_name,
                     fatherName,
                     feeData.AllDueFees,
                     name,
@@ -271,7 +271,7 @@ const SendManualFeeReminder = async (req, res) => {
                         updateOne: {
                             filter: { adminId, studentId },
                             update: {
-                                $set: { lastReminderSentAt: now },
+                                $set: { lastMessageSentAt: now },
                                 $push: {
                                     logs: {
                                         requestId,

@@ -59,7 +59,6 @@ const sendOtpWhatsappMessage = async (otp, phone) => {
 };
 
 const sendFeesConfirmationWithoutReceipt = async (phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name) => {
-    console.log(phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name)
     try {
         const payload = {
             integrated_number: process.env.MSG91_INTEGRATED_NUMBER,
@@ -137,7 +136,9 @@ const sendFeesConfirmationWithoutReceipt = async (phone, school_name, academic_y
             { headers }
         );
 
-        return response.data;
+        const requestId = response.data.request_id;
+        const sentDateTime = response.headers.date;
+        return { requestId, sentDateTime };
     } catch (error) {
         console.error('MSG91 WhatsApp Error:', error.response?.data || error.message);
         throw new Error('WhatsApp message not sent');

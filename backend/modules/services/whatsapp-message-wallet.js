@@ -1,5 +1,5 @@
 'use strict';
-const WhatsappMessageWalletModel = require('../models/wallet/whatsapp-message-wallet');
+const WhatsappMessageWalletModel = require('../models/whatsapp-message/message-wallet');
 
 /**
  * Check WhatsApp Message Limit for an Admin
