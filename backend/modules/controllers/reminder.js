@@ -5,7 +5,6 @@ const FeesStructureModel = require('../models/fees-structure');
 const FeesCollectionModel = require('../models/fees-collection');
 const ReminderLogsModel = require('../models/reminder-logs');
 const ReminderFilterModel = require('../models/reminder-filter');
-const WhatsappMessageWalletModel = require('../models/wallet/whatsapp-message-wallet');
 const { DateTime } = require('luxon');
 const { getClassDisplayName } = require('../helpers/format-class-name');
 const { toTitleCase } = require('../helpers/titlecase');

@@ -1,26 +1,18 @@
 'use strict';
+const SchoolModel = require('../models/school');
 const FeesCollectionModel = require('../models/fees-collection');
 const FeesStructureModel = require('../models/fees-structure');
 const StudentModel = require('../models/student');
 const { getClassDisplayName } = require('../helpers/format-class-name');
 const { toTitleCase } = require('../helpers/titlecase');
 const { feesConfirmationMessage } = require('../services/send-whatsapp-message');
+const { checkWhatsappLimit, updateWhatsappUsage } = require('../services/whatsapp-message-wallet');
 const { DateTime } = require('luxon');
-const phone = '9340700360';
-
 const values = [
-    "Green Valley School, Guna, Madhya Pradesh",     // {{10}} school_name
     "2025–2026",                                     // {{2}} academic_year
-    "BhagyaShree Chohan",                            // {{3}} student_name
-    "10,000",                                        // {{4}} received_amount
+    "10,000",                                        // {{4}} feesAmount
     "24-07-2025",                                    // {{5}} date
-    "136184",                                        // {{6}} receipt_no
-    "8TH",                                           // {{7}} class
-    "1025",                                          // {{8}} admission_no
-    "Bhanvar Singh",                                 // {{9}} father_name
-    "Kamlesh Kumar",                                 // {{10}} mother_name
 ];
-
 
 let GetStudentFeesCollectionBySession = async (req, res, next) => {
     let adminId = req.params.adminId;
@@ -226,11 +218,23 @@ let CreateFeesCollection = async (req, res, next) => {
     let receiptNo = Math.floor(Math.random() * 899999 + 100000);
     const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
     const istDateTimeString = currentDateIst.toFormat('dd-MM-yyyy hh:mm:ss a');
+    const date = currentDateIst.toFormat('dd-MM-yyyy');
     try {
+        const schoolInfo = await SchoolModel.findOne({ adminId });
+        if (!schoolInfo) {
+            return res.status(404).json({ errorMsg: "School detail not found!" });
+        }
         const isStudent = await StudentModel.findOne({ _id: studentId, adminId: adminId });
         if (!isStudent) {
             return res.status(404).json(`Student not found!`);
         }
+        let school_name = `${schoolInfo.schoolName}, ${schoolInfo.city}, ${schoolInfo.state}`;
+        let phone = `${isStudent.parentsContact}`;
+        let student_name = toTitleCase(isStudent.name);
+        let father_name = toTitleCase(isStudent.fatherName);
+        let mother_name = toTitleCase(isStudent.fatherName);
+        let admission_no = isStudent.admissionNo;
+        let class_name = getClassDisplayName(className);
         const checkFeesStructure = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStructure) {
             return res.status(404).json(`Fees structure not found!`);
@@ -287,7 +291,7 @@ let CreateFeesCollection = async (req, res, next) => {
                     new: true // Return the updated document
                 });
             if (updatedDocument) {
-                await feesConfirmationMessage(phone, values)
+                await feesConfirmationMessage(phone, school_name, session, student_name, feesAmount, date, receiptNo, class_name, admission_no, father_name, mother_name);
                 return res.status(200).json(feesData);
             }
         }
@@ -363,7 +367,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true
                     });
                 if (updatedDocument && updated) {
-                    await feesConfirmationMessage(phone, values)
+                    await feesConfirmationMessage(phone, school_name, session, student_name, feesAmount, date, receiptNo, class_name, admission_no, father_name, mother_name);
                     return res.status(200).json(feesData);
                 }
             }
@@ -415,7 +419,7 @@ let CreateFeesCollection = async (req, res, next) => {
                         new: true // Return the updated document
                     });
                 if (updatedDocument && deleteDocument) {
-                    await feesConfirmationMessage(phone, values)
+                    await feesConfirmationMessage(phone, school_name, session, student_name, feesAmount, date, receiptNo, class_name, admission_no, father_name, mother_name);
                     return res.status(200).json(feesData);
                 }
             }
@@ -462,7 +466,7 @@ let CreateFeesCollection = async (req, res, next) => {
                 }
             );
             if (updatedDocument && updated) {
-                await feesConfirmationMessage(phone, values)
+                await feesConfirmationMessage(phone, school_name, session, student_name, feesAmount, date, receiptNo, class_name, admission_no, father_name, mother_name);
                 return res.status(200).json(feesData);
             }
 

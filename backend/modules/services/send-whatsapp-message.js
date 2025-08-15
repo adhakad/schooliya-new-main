@@ -5,7 +5,7 @@ const MSG91_INTEGRATED_NUMBER = process.env.MSG91_INTEGRATED_NUMBER; // like "91
 const MSG91_NAMESPACE = process.env.MSG91_NAMESPACE; // from MSG91 template
 const MSG91_TEMPLATE_NAME = process.env.MSG91_TEMPLATE_NAME || "login_otp"; // approved template
 
-const commonWhatsappMessage = async (otp, phone) => {
+const sendOtpWhatsappMessage = async (otp, phone) => {
     try {
         const payload = {
             integrated_number: MSG91_INTEGRATED_NUMBER,
@@ -58,7 +58,8 @@ const commonWhatsappMessage = async (otp, phone) => {
     }
 };
 
-const sendFeesConfirmationWithoutReceipt = async (phone, valuesArray = []) => {
+const sendFeesConfirmationWithoutReceipt = async (phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name) => {
+    console.log(phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name)
     try {
         const payload = {
             integrated_number: process.env.MSG91_INTEGRATED_NUMBER,
@@ -76,13 +77,48 @@ const sendFeesConfirmationWithoutReceipt = async (phone, valuesArray = []) => {
                     to_and_components: [
                         {
                             to: [`91${phone}`],
-                            components: valuesArray.reduce((acc, val, index) => {
-                                acc[`body_${index + 1}`] = {
-                                    type: "text",
-                                    value: val
-                                };
-                                return acc;
-                            }, {})
+                            "components": {
+                                "body_1": {
+                                    "type": "text",
+                                    "value": school_name
+                                },
+                                "body_2": {
+                                    "type": "text",
+                                    "value": academic_year
+                                },
+                                "body_3": {
+                                    "type": "text",
+                                    "value": student_name
+                                },
+                                "body_4": {
+                                    "type": "text",
+                                    "value": received_amount
+                                },
+                                "body_5": {
+                                    "type": "text",
+                                    "value": date
+                                },
+                                "body_6": {
+                                    "type": "text",
+                                    "value": receipt_no
+                                },
+                                "body_7": {
+                                    "type": "text",
+                                    "value": class_name
+                                },
+                                "body_8": {
+                                    "type": "text",
+                                    "value": admission_no
+                                },
+                                "body_9": {
+                                    "type": "text",
+                                    "value": father_name
+                                },
+                                "body_10": {
+                                    "type": "text",
+                                    "value": mother_name
+                                },
+                            }
                         }
                     ]
                 }
@@ -180,10 +216,10 @@ const sendManualFeeReminderMessage = async (phone, school_name, father_name, pen
 };
 
 const otpWhatsappMessage = async (otp, phone) => {
-    return await commonWhatsappMessage(otp, phone);
+    return await sendOtpWhatsappMessage(otp, phone);
 };
-const feesConfirmationMessage = async (phone, valuesArray) => {
-    return await sendFeesConfirmationWithoutReceipt(phone, valuesArray);
+const feesConfirmationMessage = async (phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name) => {
+    return await sendFeesConfirmationWithoutReceipt(phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name);
 };
 const sendManualFeeReminder = async (phone, school_name, father_name, pending_amount, student_name, class_name, last_date) => {
     return await sendManualFeeReminderMessage(phone, school_name, father_name, pending_amount, student_name, class_name, last_date);
