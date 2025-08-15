@@ -47,6 +47,11 @@ const PlansModel = mongoose.model('plan', {
         required: true,
         trim: true,
     },
+    perStudentIncrementWhatsappMessage: {
+        type: Number,
+        required: true,
+        trim: true,
+    },
     whatsappMessageLimit: {
         type: Number,
         required: true,

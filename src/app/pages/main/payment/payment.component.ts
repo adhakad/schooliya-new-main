@@ -48,6 +48,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
   numberOfStudent: number = 0;
   perStudentIncrementPrice: number = 5;
   studentIncrementRange: number = 50;
+  whatsappMessageLimit: number = 0;
+  perStudentIncrementWhatsappMessage: number = 10;
   subscriptionType: any;
   cooldownSeconds: number = 0;
   formattedCooldown: string = '00'; // डिस्प्ले के लिए फ़ॉर्मेटेड कूलडाउन टाइम
@@ -229,6 +231,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   updateNumber(value: number): void {
     this.numberOfStudent += value;
     this.totalAmount += value * this.perStudentIncrementPrice;
+    this.whatsappMessageLimit += value * this.perStudentIncrementWhatsappMessage;
   }
   loadRazorpayScript(): void {
     const script = this.renderer.createElement('script');
@@ -264,6 +267,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.numberOfStudent = res.studentLimit;
         this.perStudentIncrementPrice = res.perStudentIncrementPrice;
         this.studentIncrementRange = res.studentIncrementRange;
+        this.whatsappMessageLimit = res.whatsappMessageLimit;
+        this.perStudentIncrementWhatsappMessage = res.perStudentIncrementWhatsappMessage;
         this.singlePlanInfo = res;
       }
     })
@@ -390,9 +395,9 @@ export class PaymentComponent implements OnInit, OnDestroy {
       activePlan: this.singlePlanInfo.plans,
       amount: this.totalAmount,
       currency: 'INR',
-      studentLimit: this.singlePlanInfo.studentLimit,
+      studentLimit: this.numberOfStudent,
       teacherLimit: this.singlePlanInfo.teacherLimit,
-      whatsappMessageLimit: this.singlePlanInfo.whatsappMessageLimit,
+      whatsappMessageLimit: this.whatsappMessageLimit,
       subscriptionType: this.subscriptionType,
     }
     this.paymentService.validatePayment(paymentData).subscribe(
