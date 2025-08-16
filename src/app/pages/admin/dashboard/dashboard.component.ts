@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as echarts from 'echarts';
 import { AdsService } from 'src/app/services/ads.service';
 
+
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { BannerService } from 'src/app/services/banner.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
@@ -10,6 +11,7 @@ import { StudentService } from 'src/app/services/student.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { ExamResultService } from 'src/app/services/exam-result.service';
 import { IssuedTransferCertificateService } from 'src/app/services/issued-transfer-certificate.service';
+import { MessageWalletService } from 'src/app/services/whatsapp-message/message-wallet.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { TestimonialService } from 'src/app/services/testimonial.service';
 import { TopperService } from 'src/app/services/topper.service';
@@ -27,10 +29,10 @@ export class DashboardComponent implements OnInit {
   bannerCountInfo: any;
   classSubjectCountInfo: any;
   classCountInfo: any;
-  studentCountInfo: any;
-  studyMaterialCountInfo: any;
-  markshhetCountInfo: any;
-  teacherCountInfo: any;
+  studentCountInfo: number = 0;
+  marksheetCountInfo: number = 0;
+  remainingWhatsappMessageCountInfo: number = 0;
+  teacherCountInfo: number = 0;
   transferCertificateCountInfo: any;
   testimonialCountInfo: any;
   topperCountInfo: any;
@@ -43,21 +45,21 @@ export class DashboardComponent implements OnInit {
   allSession: any = [];
   selectedSession: string = '';
   monthlyFeesCollection: any = {};
-  constructor(private adminAuthService: AdminAuthService, private academicSessionService: AcademicSessionService, private examResultService: ExamResultService, private issuedTransferCertificateService: IssuedTransferCertificateService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
-
+  constructor(private adminAuthService: AdminAuthService, private academicSessionService: AcademicSessionService, private examResultService: ExamResultService, private messageWalletService: MessageWalletService, private issuedTransferCertificateService: IssuedTransferCertificateService, private adsService: AdsService, private bannerService: BannerService, private feesService: FeesService, private classSubjectService: ClassSubjectService, private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private teacherService: TeacherService, private testimonialService: TestimonialService, private topperService: TopperService) { }
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
     this.adminId = getAdmin?.id;
-    this.getAcademicSession();;
+    this.getAcademicSession();
     if (this.adminId) {
       this.studentCount();
       this.teacherCount();
       this.marksheetCount();
+      this.remainingWhatsappMessageCount();
       this.transferCertificateCount();
     }
     setTimeout(() => {
       this.loader = false;
-    }, 1000)
+    }, 1000);
   }
   getAcademicSession() {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
@@ -263,7 +265,7 @@ export class DashboardComponent implements OnInit {
 
 
             { value: this.monthlyFeesCollection.January, itemStyle: { color: '#8C52FF' } },
-            { value: this.monthlyFeesCollection.February, itemStyle: { color: '#8C52FF' } }, 
+            { value: this.monthlyFeesCollection.February, itemStyle: { color: '#8C52FF' } },
             { value: this.monthlyFeesCollection.March, itemStyle: { color: '#8C52FF' } },
             { value: this.monthlyFeesCollection.April, itemStyle: { color: '#8C52FF' } },
             { value: this.monthlyFeesCollection.May, itemStyle: { color: '#8C52FF' } },
@@ -433,7 +435,15 @@ export class DashboardComponent implements OnInit {
       adminId: this.adminId
     }
     this.examResultService.geteExamResultCount(params).subscribe((res: any) => {
-      this.markshhetCountInfo = res.countExamResult;
+      this.marksheetCountInfo = res.countExamResult;
+    })
+  }
+  remainingWhatsappMessageCount() {
+    let params = {
+      adminId: this.adminId
+    }
+    this.messageWalletService.getRemainingWhatsappMessageCount(params).subscribe((res: any) => {
+      this.remainingWhatsappMessageCountInfo = res.countRemainingWhatsappMessage;
     })
   }
   transferCertificateCount() {
@@ -444,5 +454,4 @@ export class DashboardComponent implements OnInit {
       this.transferCertificateCountInfo = res.countIssuedTransferCertificate;
     })
   }
-
 }

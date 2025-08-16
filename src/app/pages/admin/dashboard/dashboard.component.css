@@ -29,6 +29,8 @@
     padding-bottom: 10px;
     border: 1px solid #d5d0e1af;
     box-shadow: none;
+    /* border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(140, 82, 255, 0.08); */
     border-radius: 20px;
     margin-top: 10px;
     margin-bottom: 2.5vh;
@@ -526,6 +528,8 @@
       padding-bottom: 10px;
       border: 1px solid #d5d0e1af;
       box-shadow: none;
+      /* border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 32px rgba(140, 82, 255, 0.08); */
       border-radius: 20px;
       margin-top: 40px;
       margin-bottom: 2.5vh;
@@ -713,5 +717,241 @@
 
     .wide-content {
       min-width: 100%;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* Modern card styling */
+  .modern-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 1.6rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #d5d0e1af;
+    box-shadow: none;
+    /* border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(140, 82, 255, 0.08); */
+    overflow: hidden;
+    height: 24vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transform: translateY(0);
+  }
+
+  .modern-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--card-gradient);
+    border-radius: 24px 24px 0 0;
+  }
+
+  /* Card overlay for hover effect */
+  .card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--card-gradient);
+    opacity: 0;
+    transition: all 0.3s ease;
+    border-radius: 24px;
+    z-index: -1;
+  }
+
+  /* Hover effects */
+  .modern-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(140, 82, 255, 0.15);
+    background: rgba(255, 255, 255, 1);
+  }
+
+  .modern-card:hover .card-overlay {
+    opacity: 0.03;
+  }
+
+  .modern-card:hover .card-icon {
+    transform: scale(1.15) rotate(8deg);
+  }
+
+  .modern-card:hover .card-number {
+    transform: scale(1.08);
+  }
+
+  /* Card header */
+  .card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Card icon */
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+    transition: all 0.4s ease;
+    background: var(--card-gradient);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-icon i {
+    font-size: 20px;
+  }
+
+  /* Card title */
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2d3748;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  /* Card content */
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Card number */
+  .card-number {
+    font-size: 18px;
+    font-weight: 800;
+    background: var(--card-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.4s ease;
+    line-height: 1;
+    margin-top: 0;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  /* Card subtitle */
+  .card-subtitle {
+    font-size: 15px;
+    color: #718096;
+    opacity: 0.9;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* Card specific themes */
+  .students-card {
+    --card-gradient: linear-gradient(135deg, #8C52FF 0%, #B084FF 100%);
+  }
+
+  .teachers-card {
+    --card-gradient: linear-gradient(135deg, #FF6B9D 0%, #FFB5D1 100%);
+  }
+
+  .marksheets-card {
+    --card-gradient: linear-gradient(135deg, #4ECDC4 0%, #7FDBDA 100%);
+  }
+
+  .certificates-card {
+    --card-gradient: linear-gradient(135deg, #ffb855 0%, #ffd17d 100%);
+  }
+
+  /* Animation delays for staggered entrance */
+  .modern-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.02);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+      opacity: 0.1;
+    }
+
+    25% {
+      transform: translateY(-20px) translateX(10px) scale(1.1);
+      opacity: 0.2;
+    }
+
+    50% {
+      transform: translateY(-40px) translateX(-5px) scale(0.9);
+      opacity: 0.15;
+    }
+
+    75% {
+      transform: translateY(-20px) translateX(-10px) scale(1.05);
+      opacity: 0.1;
+    }
+  }
+
+  /* Responsive Design */
+  @media (min-width: 992px) {
+    .modern-card {
+      padding: 1.6rem;
+      margin-top: 10px;
+      margin-bottom: 0;
+      height: 24vh;
+    }
+
+    .card-number {
+      font-size: 18px;
+      font-weight: 800;
+      margin-top: 5px;
     }
   }

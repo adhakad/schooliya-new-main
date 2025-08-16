@@ -6,7 +6,6 @@ const StudentModel = require('../models/student');
 const AdminUsersModel = require('../models/users/admin-user');
 const { DateTime } = require('luxon');
 
-
 let countExamResult = async (req, res, next) => {
     let adminId = req.params.adminId;
     let countExamResult  = await ExamResultModel.count({adminId:adminId});
