@@ -868,19 +868,27 @@
 
   /* Card specific themes */
   .students-card {
-    --card-gradient: linear-gradient(135deg, #8C52FF 0%, #B084FF 100%);
+    --card-gradient: linear-gradient(135deg,
+        #8C52FF 0%,
+        #B084FF 100%);
   }
 
   .teachers-card {
-    --card-gradient: linear-gradient(135deg, #FF6B9D 0%, #FFB5D1 100%);
+    --card-gradient: linear-gradient(135deg,
+        #FF6B9D 0%,
+        #FFB5D1 100%);
   }
 
   .marksheets-card {
-    --card-gradient: linear-gradient(135deg, #4ECDC4 0%, #7FDBDA 100%);
+    --card-gradient: linear-gradient(135deg,
+        #4ECDC4 0%,
+        #7FDBDA 100%);
   }
 
   .certificates-card {
-    --card-gradient: linear-gradient(135deg, #ffb855 0%, #ffd17d 100%);
+    --card-gradient: linear-gradient(135deg,
+        #ffb855 0%,
+        #ffd17d 100%);
   }
 
   /* Animation delays for staggered entrance */
