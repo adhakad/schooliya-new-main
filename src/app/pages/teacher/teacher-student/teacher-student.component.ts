@@ -129,17 +129,20 @@ export class TeacherStudentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
-    this.adminId = this.teacherInfo?.adminId;
+    this.setAdminInfo();
     this.getAcademicSession();
-    if (this.teacherInfo) {
-      this.getTeacherById(this.teacherInfo)
-    }
     this.loader = false;
     this.getSchool();
     this.allOptions();
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
+  }
+  setAdminInfo() {
+    this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
+    if (this.teacherInfo?.id) {
+      this.adminId = this.teacherInfo?.adminId;
+      this.getTeacherById(this.teacherInfo)
+    }
   }
   getAcademicSession() {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
@@ -240,6 +243,15 @@ export class TeacherStudentComponent implements OnInit {
     this.studentForm.reset();
     this.classStreamFormValueSet();
     this.studentForm.get('session')?.setValue(this.academicSession);
+    if (this.adminId) {
+      this.studentForm.get('adminId')?.setValue(this.adminId);
+    } else {
+      // Try to get admin info again
+      this.setAdminInfo();
+      if (this.adminId) {
+        this.studentForm.get('adminId')?.setValue(this.adminId);
+      }
+    }
   }
   classStreamFormValueSet() {
     let cls = '';
@@ -442,6 +454,15 @@ export class TeacherStudentComponent implements OnInit {
 
   studentAddUpdate() {
     if (this.studentForm.valid) {
+      if (!this.adminId) {
+        this.setAdminInfo();
+      }
+
+      if (!this.adminId) {
+        this.errorCheck = true;
+        this.errorMsg = 'Admin information not available. Please refresh and try again.';
+        return;
+      }
       this.studentForm.value.adminId = this.adminId;
       this.studentForm.value.class = this.className;
       this.studentForm.value.admissionType = 'Old';

@@ -123,15 +123,21 @@ export class StudentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
-    this.loader = false;
+    this.setAdminInfo();
     this.getSchool();
     this.getAcademicSession();
     this.getClass();
     this.allOptions();
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
+  }
+
+  // Add this method to properly set admin info
+  setAdminInfo() {
+    const getAdmin = this.adminAuthService.getLoggedInAdminInfo();
+    if (getAdmin?.id) {
+      this.adminId = getAdmin.id;
+    }
   }
   getAcademicSession() {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
@@ -219,6 +225,15 @@ export class StudentComponent implements OnInit {
     this.studentForm.reset();
     this.classStreamFormValueSet();
     this.studentForm.get('session')?.setValue(this.academicSession);
+    if (this.adminId) {
+      this.studentForm.get('adminId')?.setValue(this.adminId);
+    } else {
+      // Try to get admin info again
+      this.setAdminInfo();
+      if (this.adminId) {
+        this.studentForm.get('adminId')?.setValue(this.adminId);
+      }
+    }
   }
   classStreamFormValueSet() {
     let cls = '';
@@ -421,10 +436,19 @@ export class StudentComponent implements OnInit {
 
   studentAddUpdate() {
     if (this.studentForm.valid) {
+      if (!this.adminId) {
+        this.setAdminInfo();
+      }
+
+      if (!this.adminId) {
+        this.errorCheck = true;
+        this.errorMsg = 'Admin information not available. Please refresh and try again.';
+        return;
+      }
       this.studentForm.value.adminId = this.adminId;
-      this.studentForm.value.class = this.className;
       this.studentForm.value.admissionType = 'Old';
       this.studentForm.value.createdBy = 'Admin';
+      this.studentForm.value.class = this.className;
 
       const classText = this.studentForm.get('class')?.value;
       const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
@@ -452,7 +476,6 @@ export class StudentComponent implements OnInit {
           this.errorMsg = err.error;
         })
       } else {
-        console.log(this.studentForm.value)
         this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
           if (res) {
             this.successDone(res);

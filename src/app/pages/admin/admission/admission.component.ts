@@ -126,8 +126,7 @@ export class AdmissionComponent implements OnInit {
   }
 
   private getPrintContent(): string {
-    let schoolName = this.schoolInfo.schoolName;
-    let city = this.schoolInfo.city;
+    let schoolLogo = this.schoolInfo.schoolLogo;
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
@@ -158,25 +157,55 @@ export class AdmissionComponent implements OnInit {
     printHtml += '.text-left { text-align: left;}';
     printHtml += 'p {color: #0a0a0a !important;font-size:19px;}'
     printHtml += 'h4 {color: #0a0a0a !important;}'
-    // printHtml += '@media print {';
-    // printHtml += '  body::after {';
-    // printHtml += `    content: "${schoolName}, ${city}";`;
-    // printHtml += '    position: fixed;';
-    // printHtml += '    top: 50%;';
-    // printHtml += '    left: 25%;';
-    // printHtml += '    font-size: 30px;';
-    // printHtml += '    text-transform: uppercase;';
-    // printHtml += '    font-weight: bold;';
-    // printHtml += '    font-family: Arial, sans-serif;';
-    // printHtml += '    text-align: center;';
-    // printHtml += '    color: rgba(50, 48, 65, 0.2);';
-    // printHtml += '    transform:';
-    // printHtml += '    pointer-events: none;';
-    // printHtml += '  }';
-    // printHtml += '}';
+
+    printHtml += '.watermark {';
+    printHtml += '  position: fixed;';
+    printHtml += '  top: 50%;';
+    printHtml += '  left: 50%;';
+    printHtml += '  transform: translate(-50%, -50%) rotate(-45deg);';
+    printHtml += '  opacity: 0.1;';
+    printHtml += '  z-index: 1;';
+    printHtml += '  pointer-events: none;';
+    printHtml += '  width: 300px;';
+    printHtml += '  height: auto;';
+    printHtml += '}';
+
+    printHtml += '.watermark-container {';
+    printHtml += '  position: fixed;';
+    printHtml += '  top: 0;';
+    printHtml += '  left: 0;';
+    printHtml += '  width: 100%;';
+    printHtml += '  height: 100%;';
+    printHtml += '  z-index: 1000;';
+    printHtml += '  pointer-events: none;';
+    printHtml += '}';
+
+    printHtml += '.watermark-logo {';
+    printHtml += '  position: absolute;';
+    printHtml += '  top: 45%;';
+    printHtml += '  left: 50%;';
+    printHtml += '  text-align: center;';
+    printHtml += '  transform: translate(-50%, -50%) rotate(360deg);';
+    printHtml += '  opacity: 0.19;';
+    printHtml += '  width: 45%;';
+    printHtml += '  height: auto;';
+    printHtml += ' max-width: 500px;';
+    printHtml += '}';
+
+    printHtml += '@media print {';
+    printHtml += '  .watermark, .watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }';
+    printHtml += '}';
+
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
+
+    printHtml += '<div class="watermark-container">';
+    if (schoolLogo) {
+      printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
+    }
+    printHtml += '</div>';
+
     const studentElement = document.getElementById(`student`);
     if (studentElement) {
       printHtml += studentElement.outerHTML;

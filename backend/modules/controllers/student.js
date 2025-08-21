@@ -253,6 +253,9 @@ let CreateStudent = async (req, res, next) => {
         session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy
     }
     try {
+        if (!adminId) {
+            return res.status(404).json(`Invalid entry!`);
+        }
         const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
         if (!checkAdminPlan) {
             return res.status(404).json(`Invalid entry!`);

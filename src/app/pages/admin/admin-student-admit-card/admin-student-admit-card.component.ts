@@ -167,196 +167,205 @@ export class AdminStudentAdmitCardComponent implements OnInit {
 
 
   private getPrintOneAdmitCardContent(): string {
-  let schoolName = this.schoolInfo.schoolName;
-  let city = this.schoolInfo.city;
-  let schoolLogo = this.schoolInfo.schoolLogo; // Get the school logo URL
-  
-  let printHtml = '<html>';
-  printHtml += '<head>';
-  printHtml += '<style>';
-  printHtml += '@page { size: A3; margin: 10mm; }';
-  printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }';
-  printHtml += 'div {margin: 0; padding: 0;}';
-  printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}';
-  printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
-  printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
-  printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-  printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
+    let schoolLogo = this.schoolInfo.schoolLogo;
 
-  printHtml += '.address{margin-top: -40px;}';
-  printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
-  printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
-  printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
+    let printHtml = '<html>';
+    printHtml += '<head>';
+    printHtml += '<style>';
+    printHtml += '@page { size: A3; margin: 10mm; }';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }';
+    printHtml += 'div {margin: 0; padding: 0;}';
+    printHtml += '.page-wrapper { position: relative; min-height: 100vh; }';
+    printHtml += '.student-container { position: relative; }';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
+    printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
+    printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
 
-  printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
-  printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
-  printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
-  printHtml += '.custom-table th{height: 35px;text-align: center;border:1px solid #454545;line-height:15px;font-size: 18px;}';
-  printHtml += '.custom-table tr{height: 35px;}';
-  printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
-  printHtml += '.text-bold { font-weight: bold;}';
-  printHtml += '.text-left { text-align: left;}';
-  printHtml += 'p {color: #0a0a0a !important;font-size:20px;}';
-  printHtml += 'h4 {color: #0a0a0a !important;font-size:22px;}';
-  
-  // Add watermark styles
-  printHtml += '.watermark-container {';
-  printHtml += '  position: fixed;';
-  printHtml += '  top: 0;';
-  printHtml += '  left: 0;';
-  printHtml += '  width: 100%;';
-  printHtml += '  height: 100%;';
-  printHtml += '  z-index: 1000;';
-  printHtml += '  pointer-events: none;';
-  printHtml += '}';
-  
-  printHtml += '.watermark-logo {';
-  printHtml += '  position: absolute;';
-  printHtml += '  top: 25%;';
-  printHtml += '  left: 50%;';
-  printHtml += '  transform: translate(-50%, -50%) rotate(360deg);';
-  printHtml += '  opacity: 0.08;';
-  printHtml += '  width: 50%;';
-  printHtml += '  height: auto;';
-  printHtml += '}';
-  
-  
-  // Print specific styles
-  printHtml += '@media print {';
-  printHtml += '  .watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }';
-  printHtml += '}';
-  
-  printHtml += '</style>';
-  printHtml += '</head>';
-  printHtml += '<body>';
-  
-  // Add watermark container
-  printHtml += '<div class="watermark-container">';
-  if (schoolLogo) {
-    printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
-  }
-  printHtml += '</div>';
+    printHtml += '.address{margin-top: -40px;}';
+    printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
-  this.allAdmitCards.forEach((student, index) => {
-    const studentElement = document.getElementById(`student-${student.studentId}`);
-    if (studentElement) {
-      printHtml += studentElement.outerHTML;
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
+    printHtml += '.custom-table th{height: 35px;text-align: center;border:1px solid #454545;line-height:15px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 35px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
+    printHtml += '.text-bold { font-weight: bold;}';
+    printHtml += '.text-left { text-align: left;}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:20px;}';
+    printHtml += 'h4 {color: #0a0a0a !important;font-size:22px;}';
 
-      // Add a page break after each student except the last one
-      if (index < this.allAdmitCards.length - 1) {
-        printHtml += '<div style="page-break-after: always;"></div>';
-      }
-    }
-  });
-  printHtml += '</body></html>';
-  return printHtml;
-}
+    // Updated watermark styles - fixed positioning for each page
+    printHtml += '.watermark-container {';
+    printHtml += ' position: absolute;';
+    printHtml += ' top: 0;';
+    printHtml += ' left: 0;';
+    printHtml += ' width: 100%;';
+    printHtml += ' height: 100vh;';
+    printHtml += ' z-index: 1000;';
+    printHtml += ' pointer-events: none;';
+    printHtml += '}';
 
-private getPrintTwoAdmitCardContent(): string {
-  let schoolName = this.schoolInfo.schoolName;
-  let city = this.schoolInfo.city;
-  let schoolLogo = this.schoolInfo.schoolLogo; // Get the school logo URL
+    printHtml += '.watermark-logo {';
+    printHtml += ' position: absolute;';
+    printHtml += ' top: 30%;';
+    printHtml += ' left: 50%;';
+    printHtml += ' transform: translate(-50%, -50%);';
+    printHtml += ' opacity: 0.02;';
+    printHtml += ' width: 40%;';
+    printHtml += ' height: auto;';
+    printHtml += ' max-width: 500px;';
+    printHtml += '}';
 
-  let printHtml = '<html>';
-  printHtml += '<head>';
-  printHtml += '<style>';
-  printHtml += '@page { size: A3; margin: 10mm; }';
-  printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }';
-  printHtml += 'div {margin: 0; padding: 0;}';
-  printHtml += '.page-wrapper { position: relative; min-height: 100vh; }';
-  printHtml += '.student-container { position: relative; height: 48vh; margin-bottom: 2vh; }';
-  printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}';
-  printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
-  printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
-  printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-  printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
+    printHtml += '@media print {';
+    printHtml += ' .page-wrapper { page-break-after: always; height: 100vh; }';
+    printHtml += ' .page-wrapper:last-child { page-break-after: auto; }';
+    printHtml += ' .watermark-container { ';
+    printHtml += '   -webkit-print-color-adjust: exact !important; ';
+    printHtml += '   color-adjust: exact !important; ';
+    printHtml += '   print-color-adjust: exact !important;';
+    printHtml += '   position: fixed !important;';
+    printHtml += ' }';
+    printHtml += ' .watermark-logo { ';
+    printHtml += '   -webkit-print-color-adjust: exact !important; ';
+    printHtml += '   color-adjust: exact !important; ';
+    printHtml += '   print-color-adjust: exact !important;';
+    printHtml += ' }';
+    printHtml += '}';
 
-  printHtml += '.address{margin-top: -40px;}';
-  printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
-  printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
-  printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
+    printHtml += '</style>';
+    printHtml += '</head>';
+    printHtml += '<body>';
 
-  printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
-  printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
-  printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
-  printHtml += '.custom-table th{height: 35px;text-align: center;border:1px solid #454545;line-height:15px;font-size: 18px;}';
-  printHtml += '.custom-table tr{height: 35px;}';
-  printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
-  printHtml += '.text-bold { font-weight: bold;}';
-  printHtml += '.text-left { text-align: left;}';
-  printHtml += 'p {color: #0a0a0a !important;font-size:18px;}';
-  printHtml += 'h4 {color: #0a0a0a !important;}';
-  
-  // Add watermark styles for individual student containers
-  printHtml += '.watermark-container {';
-  printHtml += '  position: absolute;';
-  printHtml += '  top: 0;';
-  printHtml += '  left: 0;';
-  printHtml += '  width: 100%;';
-  printHtml += '  height: 100%;';
-  printHtml += '  z-index: 1000;';
-  printHtml += '  pointer-events: none;';
-  printHtml += '}';
-  
-  printHtml += '.watermark-logo {';
-  printHtml += '  position: absolute;';
-  printHtml += '  top: 50%;';
-  printHtml += '  left: 50%;';
-  printHtml += '  transform: translate(-50%, -50%);';
-  printHtml += '  opacity: 0.09;';
-  printHtml += '  width: 40%;';
-  printHtml += '  height: auto;';
-  printHtml += '}';
-  
-  // Print specific styles
-  printHtml += '@media print {';
-  printHtml += '  .watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }';
-  printHtml += '}';
-  
-  printHtml += '</style>';
-  printHtml += '</head>';
-  printHtml += '<body>';
-
-  for (let i = 0; i < this.allAdmitCards.length; i += 2) {
-    const student1 = this.allAdmitCards[i];
-    const student2 = i + 1 < this.allAdmitCards.length ? this.allAdmitCards[i + 1] : null;
-
-    // Create page wrapper for both students (one page)
-    printHtml += '<div class="page-wrapper">';
-    
-    // First student container with watermark
-    printHtml += '<div class="student-container">';
-    printHtml += '<div class="watermark-container">';
-    if (schoolLogo) {
-      printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
-    }
-    printHtml += '</div>';
-    printHtml += this.getStudentHtml(student1);
-    printHtml += '</div>';
-    
-    // Second student container with watermark (if exists)
-    if (student2) {
+    this.allAdmitCards.forEach((student, index) => {
+      printHtml += `<div class="page-wrapper" id="page-${index}">`;
       printHtml += '<div class="student-container">';
       printHtml += '<div class="watermark-container">';
       if (schoolLogo) {
         printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
       }
       printHtml += '</div>';
-      printHtml += this.getStudentHtml(student2);
+      const studentElement = document.getElementById(`student-${student.studentId}`);
+      if (studentElement) {
+        printHtml += studentElement.outerHTML;
+      }
       printHtml += '</div>';
-    }
-    
-    printHtml += '</div>'; // Close page wrapper
-    
-    // Add page break after every 2 students (except for the last page)
-    if (i + 2 < this.allAdmitCards.length) {
-      printHtml += '<div style="page-break-after: always;"></div>';
-    }
+      printHtml += '</div>';
+    });
+    printHtml += '</body></html>';
+    return printHtml;
   }
 
-  printHtml += '</body></html>';
-  return printHtml;
-}
+  private getPrintTwoAdmitCardContent(): string {
+    let schoolName = this.schoolInfo.schoolName;
+    let city = this.schoolInfo.city;
+    let schoolLogo = this.schoolInfo.schoolLogo; // Get the school logo URL
+
+    let printHtml = '<html>';
+    printHtml += '<head>';
+    printHtml += '<style>';
+    printHtml += '@page { size: A3; margin: 10mm; }';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }';
+    printHtml += 'div {margin: 0; padding: 0;}';
+    printHtml += '.page-wrapper { position: relative; min-height: 100vh; }';
+    printHtml += '.student-container { position: relative; height: 48vh; margin-bottom: 2vh; }';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}';
+    printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
+    printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
+    printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
+    printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
+
+    printHtml += '.address{margin-top: -40px;}';
+    printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
+    printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
+
+    printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
+    printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
+    printHtml += '.custom-table th{height: 35px;text-align: center;border:1px solid #454545;line-height:15px;font-size: 18px;}';
+    printHtml += '.custom-table tr{height: 35px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
+    printHtml += '.text-bold { font-weight: bold;}';
+    printHtml += '.text-left { text-align: left;}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}';
+    printHtml += 'h4 {color: #0a0a0a !important;}';
+
+    // Add watermark styles for individual student containers
+    printHtml += '.watermark-container {';
+    printHtml += '  position: absolute;';
+    printHtml += '  top: 0;';
+    printHtml += '  left: 0;';
+    printHtml += '  width: 100%;';
+    printHtml += '  height: 100%;';
+    printHtml += '  z-index: 1000;';
+    printHtml += '  pointer-events: none;';
+    printHtml += '}';
+
+    printHtml += '.watermark-logo {';
+    printHtml += '  position: absolute;';
+    printHtml += '  top: 50%;';
+    printHtml += '  left: 50%;';
+    printHtml += '  transform: translate(-50%, -50%);';
+    printHtml += '  opacity: 0.2;';
+    printHtml += '  width: 35%;';
+    printHtml += '  height: auto;';
+    printHtml += ' max-width: 500px;';
+    printHtml += '}';
+
+    // Print specific styles
+    printHtml += '@media print {';
+    printHtml += '  .watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }';
+    printHtml += '}';
+
+    printHtml += '</style>';
+    printHtml += '</head>';
+    printHtml += '<body>';
+
+    for (let i = 0; i < this.allAdmitCards.length; i += 2) {
+      const student1 = this.allAdmitCards[i];
+      const student2 = i + 1 < this.allAdmitCards.length ? this.allAdmitCards[i + 1] : null;
+
+      // Create page wrapper for both students (one page)
+      printHtml += '<div class="page-wrapper">';
+
+      // First student container with watermark
+      printHtml += '<div class="student-container">';
+      printHtml += '<div class="watermark-container">';
+      if (schoolLogo) {
+        printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
+      }
+      printHtml += '</div>';
+      printHtml += this.getStudentHtml(student1);
+      printHtml += '</div>';
+
+      // Second student container with watermark (if exists)
+      if (student2) {
+        printHtml += '<div class="student-container">';
+        printHtml += '<div class="watermark-container">';
+        if (schoolLogo) {
+          printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
+        }
+        printHtml += '</div>';
+        printHtml += this.getStudentHtml(student2);
+        printHtml += '</div>';
+      }
+
+      printHtml += '</div>'; // Close page wrapper
+
+      // Add page break after every 2 students (except for the last page)
+      if (i + 2 < this.allAdmitCards.length) {
+        printHtml += '<div style="page-break-after: always;"></div>';
+      }
+    }
+
+    printHtml += '</body></html>';
+    return printHtml;
+  }
   processData() {
     for (let i = 0; i < this.admitCardStrInfo.examDate.length; i++) {
       const subject = Object.keys(this.admitCardStrInfo.examDate[i])[0];
