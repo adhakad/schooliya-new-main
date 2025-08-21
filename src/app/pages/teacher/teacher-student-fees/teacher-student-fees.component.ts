@@ -39,9 +39,9 @@ export class TeacherStudentFeesComponent implements OnInit {
   number: number = 0;
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
-  cls:number=0;
+  cls: number = 0;
   classInfo: any[] = [];
-  
+
   classSubject: any;
   showBulkFeesModal: boolean = false;
   movies: any[] = [];
@@ -65,8 +65,8 @@ export class TeacherStudentFeesComponent implements OnInit {
   createdBy: String = '';
   baseURL!: string;
   adminId!: string;
-  receiptSession:any;
-  constructor(private fb: FormBuilder, private router:Router, public activatedRoute: ActivatedRoute,private toastr: ToastrService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
+  receiptSession: any;
+  constructor(private fb: FormBuilder, private router: Router, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
       session: [''],
@@ -88,9 +88,9 @@ export class TeacherStudentFeesComponent implements OnInit {
       this.stream = params['stream'] || '';
       if (this.cls) {
         this.getAllStudentFeesCollectionByClass();
-      }else{
-        this.cls=0;
-        this.stream='';
+      } else {
+        this.cls = 0;
+        this.stream = '';
         this.studentList = [];
       }
     });
@@ -98,7 +98,7 @@ export class TeacherStudentFeesComponent implements OnInit {
       this.getTeacherById(this.teacherInfo)
     }
     this.getSchool();
-    
+
   }
   getTeacherById(teacherInfo: any) {
     let params = {
@@ -135,15 +135,15 @@ export class TeacherStudentFeesComponent implements OnInit {
 
 
   private getPrintContent(): string {
-    let schoolName = this.schoolInfo.schoolName;
-    let city = this.schoolInfo.city;
+    let schoolLogo = this.schoolInfo.schoolLogo;
+
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
     printHtml += '@page { size: A3; margin: 10mm; }';
-    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}';
     printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
     printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
@@ -162,25 +162,54 @@ export class TeacherStudentFeesComponent implements OnInit {
     printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}'
-    printHtml += 'h4 {color: #0a0a0a !important;}'
-    // printHtml += '@media print {';
-    // printHtml += '  body::before {';
-    // printHtml += `    content: "${schoolName}, ${city}";`;
-    // printHtml += '    position: fixed;';
-    // printHtml += '    top: 20%;';
-    // printHtml += '    left:10%;';
-    // printHtml += '    font-size: 20px;';
-    // printHtml += '    text-transform: uppercase;';
-    // printHtml += '    font-weight: bold;';
-    // printHtml += '    font-family: Arial, sans-serif;';
-    // printHtml += '    color: rgba(50, 48, 65, 0.108);';
-    // printHtml += '    pointer-events: none;';
-    // printHtml += '  }';
-    // printHtml += '}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}';
+    printHtml += 'h4 {color: #0a0a0a !important;}';
+
+    printHtml += '.watermark {';
+    printHtml += '  position: fixed;';
+    printHtml += '  top: 50%;';
+    printHtml += '  left: 50%;';
+    printHtml += '  transform: translate(-50%, -50%) rotate(-45deg);';
+    printHtml += '  opacity: 0.1;';
+    printHtml += '  z-index: 1;';
+    printHtml += '  pointer-events: none;';
+    printHtml += '  width: 300px;';
+    printHtml += '  height: auto;';
+    printHtml += '}';
+
+    printHtml += '.watermark-container {';
+    printHtml += '  position: fixed;';
+    printHtml += '  top: 0;';
+    printHtml += '  left: 0;';
+    printHtml += '  width: 100%;';
+    printHtml += '  height: 100%;';
+    printHtml += '  z-index: 1000;';
+    printHtml += '  pointer-events: none;';
+    printHtml += '}';
+
+    printHtml += '.watermark-logo {';
+    printHtml += '  position: absolute;';
+    printHtml += '  top: 25%;';
+    printHtml += '  left: 50%;';
+    printHtml += '  text-align: center;';
+    printHtml += '  transform: translate(-50%, -50%) rotate(360deg);';
+    printHtml += '  opacity: 0.19;';
+    printHtml += '  width: 35%;';
+    printHtml += '  height: auto;';
+    printHtml += ' max-width: 500px;';
+    printHtml += '}';
+    printHtml += '@media print {';
+    printHtml += '  .watermark, .watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }';
+    printHtml += '}';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
+
+    printHtml += '<div class="watermark-container">';
+    if (schoolLogo) {
+      printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
+    }
+    printHtml += '</div>';
     const studentElement = document.getElementById(`student`);
     if (studentElement) {
       printHtml += studentElement.outerHTML;
@@ -201,8 +230,8 @@ export class TeacherStudentFeesComponent implements OnInit {
     this.receiptMode = false;
     this.getAllStudentFeesCollectionByClass();
   }
-  
-  chooseClass(cls:number) {
+
+  chooseClass(cls: number) {
     this.cls = cls;
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
@@ -316,13 +345,13 @@ export class TeacherStudentFeesComponent implements OnInit {
             this.receiptInstallment = res;
             if (res.admissionFeesPayable == true) {
               this.clsFeesStructure.feesType = [{ Admission: res.admissionFees }, ...this.clsFeesStructure.feesType];
-              this.toastr.success('','Fee Amount Collected Successfully');
+              this.toastr.success('', 'Fee Amount Collected Successfully');
               this.showModal = false;
               this.showPrintModal = true;
             }
             if (res.admissionFeesPayable == false) {
               this.clsFeesStructure = this.clsFeesStructure;
-              this.toastr.success('','Fee Amount Collected Successfully');
+              this.toastr.success('', 'Fee Amount Collected Successfully');
               this.showModal = false;
               this.showPrintModal = true;
             }

@@ -159,16 +159,27 @@ export class TeacherAdmitCardComponent implements OnInit {
     }
     this.closeModal();
   }
+  private getStudentHtml(student: any): string {
+    const studentElement = document.getElementById(`student-${student.studentId}`);
+    if (studentElement) {
+      return studentElement.outerHTML;
+    }
+    return '';
+  }
+
+
   private getPrintOneAdmitCardContent(): string {
-    let schoolName = this.schoolInfo.schoolName;
-    let city = this.schoolInfo.city;
+    let schoolLogo = this.schoolInfo.schoolLogo;
+
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
     printHtml += '@page { size: A3; margin: 10mm; }';
-    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.page-wrapper { position: relative; min-height: 100vh; }';
+    printHtml += '.student-container { position: relative; }';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}';
     printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
     printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
@@ -187,36 +198,65 @@ export class TeacherAdmitCardComponent implements OnInit {
     printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #0a0a0a !important;font-size:20px;}'
-    printHtml += 'h4 {color: #0a0a0a !important;font-size:22px;}'
-    // printHtml += '@media print {';
-    // printHtml += '  body::before {';
-    // printHtml += `    content: "${schoolName}, ${city}";`;
-    // printHtml += '    position: fixed;';
-    // printHtml += '    top: 20%;';
-    // printHtml += '    left:10%;';
-    // printHtml += '    font-size: 20px;';
-    // printHtml += '    text-transform: uppercase;';
-    // printHtml += '    font-weight: bold;';
-    // printHtml += '    font-family: Arial, sans-serif;';
-    // printHtml += '    color: rgba(50, 48, 65, 0.108);';
-    // printHtml += '    pointer-events: none;';
-    // printHtml += '  }';
-    // printHtml += '}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:20px;}';
+    printHtml += 'h4 {color: #0a0a0a !important;font-size:22px;}';
+
+    // Updated watermark styles - fixed positioning for each page
+    printHtml += '.watermark-container {';
+    printHtml += ' position: absolute;';
+    printHtml += ' top: 0;';
+    printHtml += ' left: 0;';
+    printHtml += ' width: 100%;';
+    printHtml += ' height: 100vh;';
+    printHtml += ' z-index: 1000;';
+    printHtml += ' pointer-events: none;';
+    printHtml += '}';
+
+    printHtml += '.watermark-logo {';
+    printHtml += ' position: absolute;';
+    printHtml += ' top: 30%;';
+    printHtml += ' left: 50%;';
+    printHtml += ' transform: translate(-50%, -50%);';
+    printHtml += ' opacity: 0.02;';
+    printHtml += ' width: 40%;';
+    printHtml += ' height: auto;';
+    printHtml += ' max-width: 500px;';
+    printHtml += '}';
+
+    printHtml += '@media print {';
+    printHtml += ' .page-wrapper { page-break-after: always; height: 100vh; }';
+    printHtml += ' .page-wrapper:last-child { page-break-after: auto; }';
+    printHtml += ' .watermark-container { ';
+    printHtml += '   -webkit-print-color-adjust: exact !important; ';
+    printHtml += '   color-adjust: exact !important; ';
+    printHtml += '   print-color-adjust: exact !important;';
+    printHtml += '   position: fixed !important;';
+    printHtml += ' }';
+    printHtml += ' .watermark-logo { ';
+    printHtml += '   -webkit-print-color-adjust: exact !important; ';
+    printHtml += '   color-adjust: exact !important; ';
+    printHtml += '   print-color-adjust: exact !important;';
+    printHtml += ' }';
+    printHtml += '}';
+
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
 
     this.allAdmitCards.forEach((student, index) => {
+      printHtml += `<div class="page-wrapper" id="page-${index}">`;
+      printHtml += '<div class="student-container">';
+      printHtml += '<div class="watermark-container">';
+      if (schoolLogo) {
+        printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
+      }
+      printHtml += '</div>';
       const studentElement = document.getElementById(`student-${student.studentId}`);
       if (studentElement) {
         printHtml += studentElement.outerHTML;
-
-        // Add a page break after each student except the last one
-        if (index < this.allAdmitCards.length - 1) {
-          printHtml += '<div style="page-break-after: always;"></div>';
-        }
       }
+      printHtml += '</div>';
+      printHtml += '</div>';
     });
     printHtml += '</body></html>';
     return printHtml;
@@ -225,14 +265,17 @@ export class TeacherAdmitCardComponent implements OnInit {
   private getPrintTwoAdmitCardContent(): string {
     let schoolName = this.schoolInfo.schoolName;
     let city = this.schoolInfo.city;
+    let schoolLogo = this.schoolInfo.schoolLogo; // Get the school logo URL
 
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
     printHtml += '@page { size: A3; margin: 10mm; }';
-    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box;}';
+    printHtml += '.page-wrapper { position: relative; min-height: 100vh; }';
+    printHtml += '.student-container { position: relative; height: 48vh; margin-bottom: 2vh; }';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}';
     printHtml += '.table-container {width: 100%;height: auto; background-color: #fff;border: 2px solid #454545; box-sizing: border-box;}';
     printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
@@ -251,54 +294,79 @@ export class TeacherAdmitCardComponent implements OnInit {
     printHtml += '.custom-table td {text-align: center;border:1px solid #454545;font-size: 18px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
-    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}'
-    printHtml += 'h4 {color: #0a0a0a !important;}'
-    // printHtml += '.watermark { position: fixed;font-family: Arial, sans-serif; font-size: 20px; font-weight: bold;text-transform: uppercase;color: rgba(50, 48, 65, 0.042); top: 60%; left:10%; pointer-events: none; z-index: 1; }';
-    // printHtml += '@media print {';
-    // printHtml += '  body::before {';
-    // printHtml += `    content: "${schoolName}, ${city}";`;
-    // printHtml += '    position: fixed;';
-    // printHtml += '    top: 25%;';
-    // printHtml += '    left:10%;';
-    // printHtml += '    font-size: 20px;';
-    // printHtml += '    text-transform: uppercase;';
-    // printHtml += '    font-weight: bold;';
-    // printHtml += '    font-family: Arial, sans-serif;';
-    // printHtml += '    color: rgba(50, 48, 65, 0.108);';
-    // printHtml += '    pointer-events: none;';
-    // printHtml += '  }';
-    // printHtml += '}';
+    printHtml += 'p {color: #0a0a0a !important;font-size:18px;}';
+    printHtml += 'h4 {color: #0a0a0a !important;}';
+
+    // Add watermark styles for individual student containers
+    printHtml += '.watermark-container {';
+    printHtml += '  position: absolute;';
+    printHtml += '  top: 0;';
+    printHtml += '  left: 0;';
+    printHtml += '  width: 100%;';
+    printHtml += '  height: 100%;';
+    printHtml += '  z-index: 1000;';
+    printHtml += '  pointer-events: none;';
+    printHtml += '}';
+
+    printHtml += '.watermark-logo {';
+    printHtml += '  position: absolute;';
+    printHtml += '  top: 50%;';
+    printHtml += '  left: 50%;';
+    printHtml += '  transform: translate(-50%, -50%);';
+    printHtml += '  opacity: 0.2;';
+    printHtml += '  width: 35%;';
+    printHtml += '  height: auto;';
+    printHtml += ' max-width: 500px;';
+    printHtml += '}';
+
+    // Print specific styles
+    printHtml += '@media print {';
+    printHtml += '  .watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }';
+    printHtml += '}';
+
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
-
 
     for (let i = 0; i < this.allAdmitCards.length; i += 2) {
       const student1 = this.allAdmitCards[i];
       const student2 = i + 1 < this.allAdmitCards.length ? this.allAdmitCards[i + 1] : null;
 
-      // printHtml += `<div class="watermark">${schoolName}, ${city}</div>`;
-      // Print details for the first student
-      printHtml += this.getStudentHtml(student1);
+      // Create page wrapper for both students (one page)
+      printHtml += '<div class="page-wrapper">';
 
-      // Add a page break after the first student if there is a second student
+      // First student container with watermark
+      printHtml += '<div class="student-container">';
+      printHtml += '<div class="watermark-container">';
+      if (schoolLogo) {
+        printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
+      }
+      printHtml += '</div>';
+      printHtml += this.getStudentHtml(student1);
+      printHtml += '</div>';
+
+      // Second student container with watermark (if exists)
       if (student2) {
-        printHtml += '<div style="page-break-after: always;"></div>';
-        // Print details for the second student
+        printHtml += '<div class="student-container">';
+        printHtml += '<div class="watermark-container">';
+        if (schoolLogo) {
+          printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
+        }
+        printHtml += '</div>';
         printHtml += this.getStudentHtml(student2);
+        printHtml += '</div>';
+      }
+
+      printHtml += '</div>'; // Close page wrapper
+
+      // Add page break after every 2 students (except for the last page)
+      if (i + 2 < this.allAdmitCards.length) {
+        printHtml += '<div style="page-break-after: always;"></div>';
       }
     }
 
     printHtml += '</body></html>';
     return printHtml;
-  }
-
-  private getStudentHtml(student: any): string {
-    const studentElement = document.getElementById(`student-${student.studentId}`);
-    if (studentElement) {
-      return studentElement.outerHTML;
-    }
-    return '';
   }
 
   processData() {
