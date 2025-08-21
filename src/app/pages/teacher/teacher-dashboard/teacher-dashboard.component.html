@@ -9,36 +9,63 @@
         <div class="chart-main-container">
           <div class="row">
             <div class="col-12 col-lg-3">
-              <div class="listing-card"
-                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#23a8a1e3,#99eaf3e4);cursor: pointer;">
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top: 8%;">Students
-                </h3>
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">{{studentCountInfo}}</h3>
+              <div class="modern-card students-card" routerLink="/teacher/student">
+                <div class="card-header">
+                  <div class="card-icon">
+                    <i class="fas fa-user-graduate"></i>
+                  </div>
+                  <div class="card-title">Students</div>
+                </div>
+                <div class="card-content">
+                  <div class="card-number">{{ studentCountInfo }}</div>
+                  <div class="card-subtitle">Student records</div>
+                </div>
+                <div class="card-overlay"></div>
               </div>
             </div>
             <div class="col-12 col-lg-3">
-              <div class="listing-card"
-                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#7f4ae8d7,#aaa6ffe0);cursor: pointer;">
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top: 8%;">Teachers
-                </h3>
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">{{teacherCountInfo}}</h3>
+              <div class="modern-card teachers-card">
+                <div class="card-header">
+                  <div class="card-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                  </div>
+                  <div class="card-title">Teachers</div>
+                </div>
+                <div class="card-content">
+                  <div class="card-number">{{ teacherCountInfo }}</div>
+                  <div class="card-subtitle">Appointed teachers</div>
+                </div>
+                <div class="card-overlay"></div>
               </div>
             </div>
             <div class="col-12 col-lg-3">
-              <div class="listing-card"
-                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#b0b527e1,#e5f092de);cursor: pointer;">
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top:8%;">
-                  Marksheets</h3>
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">{{markshhetCountInfo}}</h3>
+              <div class="modern-card marksheets-card">
+                <div class="card-header">
+                  <div class="card-icon">
+                    <i class="fab fa-whatsapp"></i>
+                  </div>
+                  <div class="card-title">Whatsapp Messages</div>
+                </div>
+                <div class="card-content">
+                  <div class="card-number">{{remainingWhatsappMessageCountInfo}}</div>
+                  <div class="card-subtitle">Available Messages</div>
+                </div>
+                <div class="card-overlay"></div>
               </div>
             </div>
             <div class="col-12 col-lg-3">
-              <div class="listing-card"
-                style="height: 19vh;border-radius: 10px;background: linear-gradient(to right,#c77f2ddf,#f3bd99e1);cursor: pointer;">
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;margin-top:8%;"> Transfer
-                  Certificates</h3>
-                <h3 style="color: #fff;font-size: 20px;font-weight: 600;text-align: center;">
-                  {{transferCertificateCountInfo}}</h3>
+              <div class="modern-card certificates-card" routerLink="/teacher/marksheet">
+                <div class="card-header">
+                  <div class="card-icon">
+                    <i class="fas fa-file-alt"></i>
+                  </div>
+                  <div class="card-title">Marksheets</div>
+                </div>
+                <div class="card-content">
+                  <div class="card-number">{{ marksheetCountInfo }}</div>
+                  <div class="card-subtitle">Generated reports</div>
+                </div>
+                <div class="card-overlay"></div>
               </div>
             </div>
           </div>

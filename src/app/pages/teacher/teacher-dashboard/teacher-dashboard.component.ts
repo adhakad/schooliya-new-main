@@ -9,6 +9,7 @@ import { StudentService } from 'src/app/services/student.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { ExamResultService } from 'src/app/services/exam-result.service';
 import { IssuedTransferCertificateService } from 'src/app/services/issued-transfer-certificate.service';
+import { MessageWalletService } from 'src/app/services/whatsapp-message/message-wallet.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { TestimonialService } from 'src/app/services/testimonial.service';
 import { TopperService } from 'src/app/services/topper.service';
@@ -25,21 +26,25 @@ export class TeacherDashboardComponent implements OnInit {
 
 
   classCountInfo: any;
-  studentCountInfo: any;
-  markshhetCountInfo: any;
-  teacherCountInfo: any;
+  studentCountInfo: number = 0;
+  marksheetCountInfo: number = 0;
+  remainingWhatsappMessageCountInfo: number = 0;
+  teacherCountInfo: number = 0;
   transferCertificateCountInfo: any;
   loader: Boolean = true;
   adminId!: String;
-  constructor(private classService: ClassService, private studentService: StudentService, private subjectService: SubjectService, private examResultService: ExamResultService, private issuedTransferCertificateService: IssuedTransferCertificateService, private teacherService: TeacherService, private teacherAuthService: TeacherAuthService) { }
+  constructor(private classService: ClassService, private messageWalletService: MessageWalletService, private studentService: StudentService, private subjectService: SubjectService, private examResultService: ExamResultService, private issuedTransferCertificateService: IssuedTransferCertificateService, private teacherService: TeacherService, private teacherAuthService: TeacherAuthService) { }
 
   ngOnInit(): void {
     let getTeacher = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = getTeacher?.adminId;
-    this.studentCount();
-    this.teacherCount();
-    this.marksheetCount();
-    this.transferCertificateCount();
+    if (this.adminId) {
+      this.studentCount();
+      this.teacherCount();
+      this.marksheetCount();
+      this.remainingWhatsappMessageCount();
+      this.transferCertificateCount();
+    }
   }
 
   studentCount() {
@@ -64,7 +69,15 @@ export class TeacherDashboardComponent implements OnInit {
       adminId: this.adminId
     }
     this.examResultService.geteExamResultCount(params).subscribe((res: any) => {
-      this.markshhetCountInfo = res.countExamResult;
+      this.marksheetCountInfo = res.countExamResult;
+    })
+  }
+  remainingWhatsappMessageCount() {
+    let params = {
+      adminId: this.adminId
+    }
+    this.messageWalletService.getRemainingWhatsappMessageCount(params).subscribe((res: any) => {
+      this.remainingWhatsappMessageCountInfo = res.countRemainingWhatsappMessage;
     })
   }
   transferCertificateCount() {
