@@ -1,0 +1,665 @@
+@import'../dashboard/dashboard.component.css';
+@import'../admin-student-fees/admin-student-fees.component.css';
+.sign-table{
+   border: 1px solid transparent;
+  }
+  .custom-modal .modal-dialog {
+   margin-top: 200px;
+ }
+ 
+ .print-model-body {
+   max-height: calc(0vh - 2.3 * 3.5rem);
+   overflow-x: hidden;
+   overflow-y: hidden;
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /* Template Selection Modal Styles */
+.template-modal .modal-dialog {
+  max-width: 900px;
+}
+
+.template-grid {
+  padding: 20px 0;
+}
+
+.template-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  height: 280px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.template-card:hover {
+  border-color: #8C52FF;
+  box-shadow: 0 8px 25px rgba(140, 82, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.template-card.selected {
+  border-color: #8C52FF;
+  background: linear-gradient(135deg, #f3f0ff 0%, #ffffff 100%);
+  box-shadow: 0 10px 30px rgba(140, 82, 255, 0.2);
+}
+
+.template-radio {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.template-preview {
+  margin: 10px 0 20px 0;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-container {
+  width: 200px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Template 1 - Classic Professional */
+.preview-1 {
+  background: #ffffff;
+  border: 3px solid #2c3e50;
+}
+
+.preview-1 .preview-header {
+  background: #2c3e50;
+  color: white;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-1 .preview-logo {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.preview-1 .preview-title {
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.preview-1 .preview-content {
+  padding: 10px;
+  background: #f8f9fa;
+}
+
+/* Template 2 - Modern Gradient */
+.preview-2 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.preview-2 .preview-header {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-2 .preview-logo {
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.preview-2 .preview-title {
+  font-size: 10px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.preview-2 .preview-content {
+  padding: 10px;
+  background: rgba(255,255,255,0.95);
+}
+
+/* Template 3 - Minimalist Clean */
+.preview-3 {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+.preview-3 .preview-header {
+  background: #f5f5f5;
+  color: #333;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-3 .preview-logo {
+  width: 20px;
+  height: 20px;
+  background: #2196F3;
+  border-radius: 3px;
+  margin-right: 8px;
+}
+
+.preview-3 .preview-title {
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.preview-3 .preview-content {
+  padding: 10px;
+  background: white;
+}
+
+/* Template 4 - Premium Executive */
+.preview-4 {
+  background: linear-gradient(145deg, #f0f0f0, #ffffff);
+  border: 3px solid #b8860b;
+}
+
+.preview-4 .preview-header {
+  background: linear-gradient(145deg, #b8860b, #daa520);
+  color: white;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-4 .preview-logo {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 2px solid #b8860b;
+  border-radius: 3px;
+  margin-right: 8px;
+}
+
+.preview-4 .preview-title {
+  font-size: 10px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.preview-4 .preview-content {
+  padding: 10px;
+  background: linear-gradient(145deg, #fff, #f8f8f8);
+}
+
+/* Preview Lines */
+.preview-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.preview-line {
+  height: 8px;
+  border-radius: 2px;
+}
+
+.preview-line.short {
+  width: 60%;
+  background: #ddd;
+}
+
+.preview-line.medium {
+  width: 80%;
+  background: #ccc;
+}
+
+.preview-line.long {
+  width: 100%;
+  background: #bbb;
+}
+
+.template-info {
+  text-align: center;
+}
+
+.template-info h6 {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.template-info p {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+}
+
+/* Template Badge */
+.template-badge {
+  background: linear-gradient(45deg, #8C52FF, #a855f7);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 10px;
+  display: inline-block;
+}
+
+/* Template-specific styles for print preview */
+.template-1 .table-container {
+  border: 3px solid #2c3e50;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.template-1 .school-name h3 {
+  color: #2c3e50 !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.template-1 .title-lable p {
+  color: #e74c3c !important;
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.template-1 .custom-table th {
+  background: #34495e !important;
+  color: white !important;
+}
+
+.template-2 .table-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.template-2 .school-name h3 {
+  color: white !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.template-2 .address p {
+  color: rgba(255,255,255,0.9) !important;
+}
+
+.template-2 .title-lable p {
+  color: #ffd700 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.template-2 .info-table {
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  margin: 15px;
+}
+
+.template-2 .custom-table {
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+}
+
+.template-2 .custom-table th {
+  background: linear-gradient(45deg, #4facfe, #00f2fe) !important;
+  color: white !important;
+}
+
+.template-3 .table-container {
+  border: 1px solid #e0e0e0;
+  background: #ffffff;
+}
+
+.template-3 .school-name h3 {
+  color: #333 !important;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.template-3 .address p {
+  color: #666 !important;
+  font-weight: 300;
+}
+
+.template-3 .title-lable p {
+  color: #2196F3 !important;
+  font-weight: 400;
+}
+
+.template-3 .custom-table th {
+  background: #f5f5f5 !important;
+  color: #333 !important;
+  font-weight: 500;
+}
+
+.template-4 .table-container {
+  background: linear-gradient(145deg, #f0f0f0, #ffffff);
+  border: 3px solid #b8860b;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.template-4 .logo {
+  border: 3px solid #b8860b;
+  border-radius: 8px;
+  padding: 5px;
+  background: white;
+}
+
+.template-4 .school-name h3 {
+  color: #b8860b !important;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.template-4 .address p {
+  color: #8b4513 !important;
+  font-weight: 500;
+}
+
+.template-4 .title-lable p {
+  color: #8b0000 !important;
+  text-transform: uppercase;
+}
+
+.template-4 .info-table {
+  background: linear-gradient(145deg, #fff, #f8f8f8);
+  border: 2px solid #b8860b;
+  border-radius: 8px;
+  margin: 10px;
+}
+
+.template-4 .custom-table {
+  border: 2px solid #b8860b;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #fff, #f9f9f9);
+}
+
+.template-4 .custom-table th {
+  background: linear-gradient(145deg, #b8860b, #daa520) !important;
+  color: white !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Modal Enhancements */
+.custom-modal .modal-dialog {
+  max-width: 95vw;
+}
+
+.print-model-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .template-modal .modal-dialog {
+    max-width: 95vw;
+    margin: 10px;
+  }
+  
+  .template-card {
+    height: 240px;
+    padding: 15px;
+  }
+  
+  .preview-container {
+    width: 150px;
+    height: 90px;
+  }
+  
+  .template-info h6 {
+    font-size: 14px;
+  }
+  
+  .template-info p {
+    font-size: 11px;
+  }
+}
+
+/* Animation Effects */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.template-modal.show {
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.custom-modal.show {
+  animation: fadeInScale 0.3s ease-out;
+}
+
+/* Button Enhancements */
+.btn-primary {
+  background: linear-gradient(45deg, #8C52FF, #a855f7);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #7c3aed, #8b5cf6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(140, 82, 255, 0.3);
+}
+
+.btn-secondary {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+}
+
+/* Print Specific Styles */
+@media print {
+  .template-1 .table-container {
+    border: 3px solid #2c3e50 !important;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  
+  .template-2 .table-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  
+  .template-3 .table-container {
+    border: 1px solid #e0e0e0 !important;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  
+  .template-4 .table-container {
+    background: linear-gradient(145deg, #f0f0f0, #ffffff) !important;
+    border: 3px solid #b8860b !important;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  
+  /* Ensure colors print correctly */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+
+/* Loading States */
+.template-card.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.template-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #8C52FF;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Enhanced Modal Headers */
+.modal-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 2px solid #e9ecef;
+  padding: 20px;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-title mat-icon {
+  color: #8C52FF;
+}
+
+/* Footer Enhancements */
+.modal-footer {
+  padding: 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Custom Scrollbar */
+.print-model-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.print-model-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.print-model-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #8C52FF, #a855f7);
+  border-radius: 4px;
+}
+
+.print-model-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #7c3aed, #8b5cf6);
+}
+
+/* Template Selection Grid Improvements */
+.template-grid .row {
+  margin: 0 -10px;
+}
+
+.template-grid .col-md-6 {
+  padding: 0 10px;
+}
+
+/* Hover Effects for Template Previews */
+.template-card:hover .preview-container {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.template-card.selected .preview-container {
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(140, 82, 255, 0.3);
+}
+
+/* Status Indicators */
+.template-status {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.template-status.new {
+  background: linear-gradient(45deg, #10b981, #34d399);
+  color: white;
+}
+
+.template-status.popular {
+  background: linear-gradient(45deg, #f59e0b, #fbbf24);
+  color: white;
+}
+
+.template-status.premium {
+  background: linear-gradient(45deg, #8b5cf6, #a78bfa);
+  color: white;
+}
+
+/* Additional Utility Classes */
+.text-gradient {
+  background: linear-gradient(45deg, #8C52FF, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-soft {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-medium {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-strong {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}

@@ -1,4 +1,3 @@
-// models/AdminPlan.js
 'use strict';
 const mongoose = require('mongoose');
 
@@ -29,10 +28,6 @@ const AdminPlanModel = mongoose.model('admin-plan', {
   },
   planModulesStatus: {
     type: [String],
-    default: []
-  },
-  planModulesStatus: {
-    type: [Boolean],
     default: []
   },
   teacherLimit: {

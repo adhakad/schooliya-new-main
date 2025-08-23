@@ -390,7 +390,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
       payment_id: razorpayPaymentId,
       order_id: razorpayOrderId,
       signature: razorpaySignature,
-      email: this.adminInfo.email,
+      mobile: this.adminInfo.mobile,
       id: this.adminInfo._id,
       activePlan: this.singlePlanInfo.plans,
       amount: this.totalAmount,
