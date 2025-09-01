@@ -8,6 +8,7 @@ const WhatsappMessageWallet = require('../models/whatsapp-message/message-wallet
 const Invoice = require('../models/invoice');
 const Counter = require('../models/counter');
 const tokenService = require('../services/admin-token');
+const { sendPlanPaymentConfirmationMessage } = require('../services/send-whatsapp-message');
 const { KEY_ID, KEY_SECRET, CLOUDINARY_CLOUD_NAMAE } = process.env;
 const key_id = KEY_ID;
 const key_secret = KEY_SECRET;
@@ -41,23 +42,42 @@ let CreatePayment = async (req, res) => {
 };
 
 let ValidatePayment = async (req, res) => {
-  const { payment_id: paymentId, order_id: orderId, signature, mobile, id, activePlan, subscriptionType, amount, currency, studentLimit, teacherLimit, whatsappMessageLimit } = req.body;
+  const {
+    payment_id: paymentId,
+    order_id: orderId,
+    signature,
+    name,
+    mobile,
+    id,
+    activePlan,
+    subscriptionType,
+    amount,
+    currency,
+    studentLimit,
+    teacherLimit,
+    whatsappMessageLimit
+  } = req.body;
+
   const adminInfo = { id, mobile, activePlan, amount, currency };
   let paymentInfo = { paymentId, orderId, adminId: id, activePlan, amount, currency, status: 'success' };
   const body = `${orderId}|${paymentId}`;
 
   try {
+    // 🔐 verify Razorpay signature
     const expectedSignature = crypto.createHmac("sha256", key_secret).update(body).digest("hex");
     if (expectedSignature !== signature) {
-      return res.status(400).json({ errorMsg: 'Invailid signature!' });
+      return res.status(400).json({ errorMsg: 'Invalid signature!' });
     }
 
+    // 💾 save payment
     const newPayment = await Payment.create(paymentInfo);
+
+    // 📅 prepare date & invoice
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    const paymentDate = `${day}/${month}/${year}`
+    const paymentDate = `${day}/${month}/${year}`;
     const datePrefix = `SCH${year}${month}${day}`;
     const counter = await Counter.findOneAndUpdate(
       { year },
@@ -65,35 +85,25 @@ let ValidatePayment = async (req, res) => {
       { new: true, upsert: true }
     );
     const invoiceNumber = `${datePrefix}${counter.count}`;
+
     paymentInfo.invoiceNumber = invoiceNumber;
     const newInvoice = await Invoice.create(paymentInfo);
-    // let expirationDate;
-    // const currentTime = new Date();
-    // const thirtyOneDaysInMillis = 31 * 24 * 60 * 60 * 1000;
 
-    // const existingAdminPlan = await AdminPlan.findOne({ adminId: id });
-    // if (existingAdminPlan) {
-    //   const currentExpirationDate = new Date(existingAdminPlan.expirationDate);
-    //   const oneMonthBeforeExpiration = new Date(currentExpirationDate.getTime() - thirtyOneDaysInMillis);
-
-    //   if (currentTime >= oneMonthBeforeExpiration) {
-    //     expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
-    //   } else {
-    //     const remainingTime = currentExpirationDate - currentTime;
-    //     expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000 + remainingTime);
-    //   }
-    // } else {
-    // expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
-    // }
+    // ⏳ set plan expiry
     let expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
 
-    let whatsappMessageData = { adminId: id, totalWhatsappMessage: whatsappMessageLimit, remainingWhatsappMessage: whatsappMessageLimit };
+    // 💬 setup whatsapp wallet
+    let whatsappMessageData = {
+      adminId: id,
+      totalWhatsappMessage: whatsappMessageLimit,
+      remainingWhatsappMessage: whatsappMessageLimit
+    };
     const updatedAdminPlan = await AdminPlan.findOneAndUpdate(
       { adminId: id },
       {
         $set: {
           activePlan,
-          subscriptionType: subscriptionType,
+          subscriptionType,
           amount,
           currency,
           studentLimit,
@@ -105,22 +115,55 @@ let ValidatePayment = async (req, res) => {
       },
       { upsert: true, new: true }
     );
+
     const createWhatsappMessage = await WhatsappMessageWallet.create(whatsappMessageData);
 
     if (!updatedAdminPlan) {
       return res.status(400).json({ errorMsg: 'Failed to create or update admin plan!' });
     }
+
+    // 🎯 New Subscription transaction type
     const transactionType = 'New Subscription';
-    // sendEmail(email, invoiceNumber, amount, activePlan, paymentDate, transactionType);
+
+    // 🟢 Generate tokens
     const payload = { id, mobile };
     const accessToken = await tokenService.getAccessToken(payload);
     const refreshToken = await tokenService.getRefreshToken(payload);
 
-    return res.status(200).json({ success: true, accessToken, refreshToken, adminInfo, successMsg: 'Payment successfully Received' });
+    // ✅ Prepare WhatsApp message values
+    const phone = mobile;
+    const transaction_message = "Thank you for subscribing to Schooliya! Your account is now active.";
+    const invoice_number = invoiceNumber;
+    const payment_date = paymentDate;
+    const plan_type = activePlan;
+
+    // 📩 Send WhatsApp confirmation
+    sendPlanPaymentConfirmationMessage(
+      phone,
+      name,
+      transaction_message,
+      invoice_number,
+      payment_date,
+      amount,
+      plan_type,
+      transactionType,
+      paymentId
+    );
+
+    return res.status(200).json({
+      success: true,
+      accessToken,
+      refreshToken,
+      adminInfo,
+      successMsg: 'Payment successfully Received'
+    });
+
   } catch (error) {
+    console.error("ValidatePayment error:", error);
     return res.status(500).json({ errorMsg: 'Error validating payment!' });
   }
 };
+
 
 
 let ValidateUpgradePlanPayment = async (req, res) => {

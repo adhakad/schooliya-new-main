@@ -9,11 +9,6 @@ const { toTitleCase } = require('../helpers/titlecase');
 const { feesConfirmationMessage } = require('../services/send-whatsapp-message');
 const { checkWhatsappLimit, updateWhatsappUsage } = require('../services/whatsapp-message-wallet');
 const { DateTime } = require('luxon');
-const values = [
-    "2025–2026",                                     // {{2}} academic_year
-    "10,000",                                        // {{4}} feesAmount
-    "24-07-2025",                                    // {{5}} date
-];
 
 let GetStudentFeesCollectionBySession = async (req, res, next) => {
     let adminId = req.params.adminId;

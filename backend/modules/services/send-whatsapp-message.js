@@ -58,6 +58,86 @@ const sendOtpWhatsappMessage = async (otp, phone) => {
     }
 };
 
+const sendPlanPaymentConfirmation = async (phone, user_name, transaction_message, invoice_number, payment_date, amount, plan_type, transaction_type, payment_id) => {
+    try {
+        const payload = {
+            integrated_number: process.env.MSG91_INTEGRATED_NUMBER,
+            content_type: "template",
+            payload: {
+                messaging_product: "whatsapp",
+                type: "template",
+                template: {
+                    name: "plan_payment_confirmation",
+                    language: {
+                        code: "en",
+                        policy: "deterministic",
+                    },
+                    namespace: "bc6d378a_4d7e_4e78_a870_75883411b711",
+                    to_and_components: [
+                        {
+                            to: [`91${phone}`],
+                            components: {
+                                body_1: {
+                                    type: "text",
+                                    value: user_name,
+                                },
+                                body_2: {
+                                    type: "text",
+                                    value: transaction_message,
+                                },
+                                body_3: {
+                                    type: "text",
+                                    value: invoice_number,
+                                },
+                                body_4: {
+                                    type: "text",
+                                    value: payment_date,
+                                },
+                                body_5: {
+                                    type: "text",
+                                    value: amount,
+                                },
+                                body_6: {
+                                    type: "text",
+                                    value: plan_type,
+                                },
+                                body_7: {
+                                    type: "text",
+                                    value: transaction_type,
+                                },
+                                body_8: {
+                                    type: "text",
+                                    value: payment_id,
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        };
+
+        const headers = {
+            authkey: process.env.MSG91_AUTH_KEY,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        };
+
+        const response = await axios.post(
+            "https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/",
+            payload,
+            { headers }
+        );
+
+        const requestId = response.data.request_id;
+        const sentDateTime = response.headers.date;
+        return { requestId, sentDateTime };
+    } catch (error) {
+        console.error("MSG91 WhatsApp Error:", error.response?.data || error.message);
+        throw new Error("WhatsApp message not sent");
+    }
+};
+
+
 const sendFeesConfirmationWithoutReceipt = async (phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name) => {
     try {
         const payload = {
@@ -219,6 +299,9 @@ const sendManualFeeReminderMessage = async (phone, school_name, father_name, pen
 const otpWhatsappMessage = async (otp, phone) => {
     return await sendOtpWhatsappMessage(otp, phone);
 };
+const sendPlanPaymentConfirmationMessage = async (phone, user_name, transaction_message, invoice_number, payment_date, amount, plan_type, transaction_type, payment_id) => {
+    return await sendPlanPaymentConfirmation(phone, user_name, transaction_message, invoice_number, payment_date, amount, plan_type, transaction_type, payment_id);
+};
 const feesConfirmationMessage = async (phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name) => {
     return await sendFeesConfirmationWithoutReceipt(phone, school_name, academic_year, student_name, received_amount, date, receipt_no, class_name, admission_no, father_name, mother_name);
 };
@@ -228,6 +311,7 @@ const sendManualFeeReminder = async (phone, school_name, father_name, pending_am
 
 module.exports = {
     otpWhatsappMessage,
+    sendPlanPaymentConfirmationMessage,
     feesConfirmationMessage,
     sendManualFeeReminder
 };

@@ -24,7 +24,6 @@ export class AdminIdCardComponent implements OnInit {
   studentInfo: any;
   loader: Boolean = true;
   showModal: Boolean = false;
-  showTemplateModal: Boolean = false;
   admitCardStrInfo: any;
   admitCardStrInfoByStream: any;
   errorCheck: Boolean = false;
@@ -38,40 +37,18 @@ export class AdminIdCardComponent implements OnInit {
   notApplicable: string = "stream";
   streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   selectedValue: number = 0;
-  selectedTemplate: number = 1;
   adminId!: string;
 
-  // Template definitions
-  templates = [
-    {
-      id: 1,
-      name: 'Classic Professional',
-      description: 'Traditional design with clean borders',
-      preview: 'classic-preview.png'
-    },
-    {
-      id: 2,
-      name: 'Modern Gradient',
-      description: 'Contemporary design with gradient header',
-      preview: 'modern-preview.png'
-    },
-    {
-      id: 3,
-      name: 'Minimalist Clean',
-      description: 'Simple and elegant design',
-      preview: 'minimal-preview.png'
-    },
-    {
-      id: 4,
-      name: 'Premium Executive',
-      description: 'High-end design with premium styling',
-      preview: 'premium-preview.png'
-    }
-  ];
-
-  constructor(public activatedRoute: ActivatedRoute, private router: Router, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private admitCardService: AdmitCardService, private printPdfService: PrintPdfService, private admitCardStructureService: AdmitCardStructureService) {
-
-  }
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    private router: Router,
+    private adminAuthService: AdminAuthService,
+    private schoolService: SchoolService,
+    private classService: ClassService,
+    private admitCardService: AdmitCardService,
+    private printPdfService: PrintPdfService,
+    private admitCardStructureService: AdmitCardStructureService
+  ) { }
 
   ngOnInit(): void {
     let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
@@ -107,10 +84,6 @@ export class AdminIdCardComponent implements OnInit {
 
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
-  }
-
-  onTemplateChange(event: MatRadioChange) {
-    this.selectedTemplate = event.value;
   }
 
   chooseClass(cls: number) {
@@ -156,22 +129,9 @@ export class AdminIdCardComponent implements OnInit {
     this.processedData = [];
   }
 
-  closeTemplateModal() {
-    this.showTemplateModal = false;
-  }
-
-  openTemplateSelector() {
-    this.showTemplateModal = true;
-  }
-
   bulkPrint(selectedValue: any) {
     this.selectedValue = selectedValue;
     this.processData();
-    this.openTemplateSelector();
-  }
-
-  confirmPrintWithTemplate() {
-    this.closeTemplateModal();
     this.showModal = true;
   }
 
@@ -203,215 +163,412 @@ export class AdminIdCardComponent implements OnInit {
 
   printStudentData() {
     if (this.selectedValue == 1) {
-      const printContent = this.getPrintTwoAdmitCardContent();
-      this.printPdfService.printContent(printContent);
-    } else {
-      const printContent = this.getPrintOneAdmitCardContent();
+      const printContent = this.getPrintDualIdCardContent();
       this.printPdfService.printContent(printContent);
     }
     this.closeModal();
   }
 
-  private getStudentHtml(student: any): string {
-    const studentElement = document.getElementById(`student-${student.studentId}`);
-    if (studentElement) {
-      return studentElement.outerHTML;
-    }
-    return '';
-  }
-
-  private getTemplateStyles(): string {
-    switch(this.selectedTemplate) {
-      case 1: // Classic Professional
-        return this.getClassicStyles();
-      case 2: // Modern Gradient
-        return this.getModernGradientStyles();
-      case 3: // Minimalist Clean
-        return this.getMinimalistStyles();
-      case 4: // Premium Executive
-        return this.getPremiumStyles();
-      default:
-        return this.getClassicStyles();
-    }
-  }
-
-  private getClassicStyles(): string {
-    return `
-      @page { size: A3; margin: 10mm; }
-      body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; font-family: 'Times New Roman', serif; }
-      .custom-container {overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}
-      .table-container {width: 100%;height: auto; background-color: #fff;border: 3px solid #2c3e50; box-sizing: border-box; border-radius: 10px;}
-      .logo { height: 80px;margin-top:15px;margin-left:10px;}
-      .school-name h3 { color: #2c3e50 !important; font-size: 28px !important;font-weight: bold;margin-top:-125px !important; margin-bottom: 0 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
-      .address p{font-size:16px;margin-top: -15px !important; color: #34495e;}
-      .title-lable p {color: #e74c3c !important;font-size: 24px;font-weight: bold;letter-spacing: 1px; background: linear-gradient(45deg, #e74c3c, #c0392b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-      .info-table {border: 2px solid #34495e; background: #f8f9fa;}
-      .custom-table th{background: #34495e; color: white !important; font-weight: bold;}
-      .custom-table {border: 2px solid #34495e;}
-    `;
-  }
-
-  private getModernGradientStyles(): string {
-    return `
-      @page { size: A3; margin: 10mm; }
-      body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; font-family: 'Arial', sans-serif; }
-      .custom-container {overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}
-      .table-container {width: 100%;height: auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-sizing: border-box; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
-      .logo { height: 80px;margin-top:15px;margin-left:10px; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
-      .school-name h3 { color: white !important; font-size: 30px !important;font-weight: bold;margin-top:-125px !important; margin-bottom: 0 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);}
-      .address p{font-size:16px;margin-top: -15px !important; color: rgba(255,255,255,0.9);}
-      .title-lable p {color: #ffd700 !important;font-size: 26px;font-weight: bold;letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);}
-      .info-table {background: rgba(255,255,255,0.95); border-radius: 8px; margin: 15px;}
-      .custom-table th{background: linear-gradient(45deg, #4facfe, #00f2fe); color: white !important; font-weight: bold;}
-      .custom-table {background: rgba(255,255,255,0.95); border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
-    `;
-  }
-
-  private getMinimalistStyles(): string {
-    return `
-      @page { size: A3; margin: 10mm; }
-      body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; font-family: 'Helvetica Neue', sans-serif; }
-      .custom-container {overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}
-      .table-container {width: 100%;height: auto; background-color: #fff;border: 1px solid #e0e0e0; box-sizing: border-box;}
-      .logo { height: 80px;margin-top:15px;margin-left:10px;}
-      .school-name h3 { color: #333 !important; font-size: 26px !important;font-weight: 300;margin-top:-125px !important; margin-bottom: 0 !important; letter-spacing: 2px;}
-      .address p{font-size:14px;margin-top: -15px !important; color: #666; font-weight: 300;}
-      .title-lable p {color: #2196F3 !important;font-size: 22px;font-weight: 400;letter-spacing: 1px;}
-      .info-table {border: none; border-bottom: 1px solid #e0e0e0;}
-      .custom-table th{background: #f5f5f5; color: #333 !important; font-weight: 500; border: 1px solid #e0e0e0;}
-      .custom-table {border: 1px solid #e0e0e0;}
-      .custom-table td {border: 1px solid #f0f0f0;}
-    `;
-  }
-
-  private getPremiumStyles(): string {
-    return `
-      @page { size: A3; margin: 10mm; }
-      body {width: 100%; height: 100%; margin: 0; padding: 0; position: relative; font-family: 'Georgia', serif; }
-      .custom-container {overflow: auto; width: 100%; height: auto; box-sizing: border-box; position: relative; z-index: 2;}
-      .table-container {width: 100%;height: auto; background: linear-gradient(145deg, #f0f0f0, #ffffff); box-sizing: border-box; border: 3px solid #b8860b; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);}
-      .logo { height: 80px;margin-top:15px;margin-left:10px; border: 3px solid #b8860b; border-radius: 8px; padding: 5px; background: white;}
-      .school-name h3 { color: #b8860b !important; font-size: 32px !important;font-weight: bold;margin-top:-125px !important; margin-bottom: 0 !important; text-shadow: 1px 1px 3px rgba(0,0,0,0.2);}
-      .address p{font-size:16px;margin-top: -15px !important; color: #8b4513; font-weight: 500;}
-      .title-lable p {color: #8b0000 !important;font-size: 28px;font-weight: bold;letter-spacing: 2px; text-transform: uppercase;}
-      .info-table {background: linear-gradient(145deg, #fff, #f8f8f8); border: 2px solid #b8860b; border-radius: 8px; margin: 10px;}
-      .custom-table th{background: linear-gradient(145deg, #b8860b, #daa520); color: white !important; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);}
-      .custom-table {border: 2px solid #b8860b; border-radius: 8px; background: linear-gradient(145deg, #fff, #f9f9f9);}
-    `;
-  }
-
-  private getPrintOneAdmitCardContent(): string {
+  private getPrintDualIdCardContent(): string {
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
-    printHtml += this.getTemplateStyles();
-    printHtml += this.getCommonStyles();
+    // Custom page size: 12x18 inches (304.8mm x 457.2mm)
+    printHtml += '@page { size: 304.8mm 457.2mm; margin: 12.7mm; }';
+    printHtml += 'body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; }';
+    // Grid layout for 25 cards (5x5) - consistent mm units
+    printHtml += '.print-container { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 5mm; width: 100%; height: 100%; padding: 5mm; }';
+    printHtml += this.getIdCardStyles();
+    printHtml += '.dual-id-card-container { display: flex; align-items: center; justify-content: center; break-inside: avoid; }';
+    printHtml += '.page-break { page-break-before: always; }';
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
+    printHtml += '<div class="print-container">';
 
-    for (let i = 0; i < this.allAdmitCards.length; i++) {
-      const student = this.allAdmitCards[i];
-      printHtml += '<div class="page-wrapper">';
-      printHtml += this.getWatermarkHtml();
-      printHtml += this.getStudentHtml(student);
-      printHtml += '</div>';
-      
-      if (i + 1 < this.allAdmitCards.length) {
-        printHtml += '<div style="page-break-after: always;"></div>';
+    this.allAdmitCards.forEach((student, index) => {
+      // Add page break after every 25 cards
+      if (index > 0 && index % 25 === 0) {
+        printHtml += '</div><div class="print-container page-break">';
       }
-    }
 
+      printHtml += `<div class="dual-id-card-container">`;
+      printHtml += this.generateIdCardHtml(student);
+      printHtml += '</div>';
+    });
+
+    printHtml += '</div>';
     printHtml += '</body></html>';
     return printHtml;
   }
 
-  private getPrintTwoAdmitCardContent(): string {
-    let printHtml = '<html>';
-    printHtml += '<head>';
-    printHtml += '<style>';
-    printHtml += this.getTemplateStyles();
-    printHtml += this.getCommonStyles();
-    printHtml += '.student-container { position: relative; height: 48vh; margin-bottom: 2vh; }';
-    printHtml += '</style>';
-    printHtml += '</head>';
-    printHtml += '<body>';
-
-    for (let i = 0; i < this.allAdmitCards.length; i += 2) {
-      const student1 = this.allAdmitCards[i];
-      const student2 = i + 1 < this.allAdmitCards.length ? this.allAdmitCards[i + 1] : null;
-
-      printHtml += '<div class="page-wrapper">';
-      
-      printHtml += '<div class="student-container">';
-      printHtml += this.getWatermarkHtml();
-      printHtml += this.getStudentHtml(student1);
-      printHtml += '</div>';
-
-      if (student2) {
-        printHtml += '<div class="student-container">';
-        printHtml += this.getWatermarkHtml();
-        printHtml += this.getStudentHtml(student2);
-        printHtml += '</div>';
-      }
-
-      printHtml += '</div>';
-
-      if (i + 2 < this.allAdmitCards.length) {
-        printHtml += '<div style="page-break-after: always;"></div>';
-      }
-    }
-
-    printHtml += '</body></html>';
-    return printHtml;
-  }
-
-  private getWatermarkHtml(): string {
-    if (this.schoolInfo?.schoolLogo) {
-      return `
-        <div class="watermark-container">
-          <img src="${this.schoolInfo.schoolLogo}" class="watermark-logo" alt="School Logo Watermark">
+  private generateIdCardHtml(student: any): string {
+    return `
+      <div class="id-card">
+        <!-- Header -->
+        <div class="id-card-header">
+          <div class="id-card-logo-box">
+            <div class="id-card-logo-bg">
+              <img src="${this.schoolInfo?.schoolLogo || '../../../../assets/school-logo.png'}" 
+                   alt="School Logo" class="id-card-logo">
+            </div>
+          </div>
+          <div class="id-card-school-name">
+            <span class="id-card-school-text">GREEN VALLEY SCHOOL</span>
+          </div>
         </div>
-      `;
-    }
-    return '';
+        
+        <!-- Photo -->
+        <div class="id-card-photo-section">
+          <div class="id-card-photo-frame">
+            <div class="id-card-photo-bg">
+              <img src="${student?.photo || '../../../../assets/R.jpeg'}" 
+                   alt="Student Photo" class="id-card-photo">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Info -->
+        <div class="id-card-info">
+          <div class="id-card-student-name">
+            <div class="id-card-student-text">${(student?.name || '').toUpperCase()}</div>
+          </div>
+          
+          <div class="id-card-info-grid">
+            <div class="id-card-info-row">
+              <span class="id-card-info-label">Father Name</span>
+              <span class="id-card-info-separator">:</span>
+              <span class="id-card-info-value">${this.titleCase(student?.fatherName || '')}</span>
+            </div>
+            <div class="id-card-info-row">
+              <span class="id-card-info-label">Date of Birth</span>
+              <span class="id-card-info-separator">:</span>
+              <span class="id-card-info-value">${student?.dob || ''}</span>
+            </div>
+            <div class="id-card-info-row">
+              <span class="id-card-info-label">Mobile</span>
+              <span class="id-card-info-separator">:</span>
+              <span class="id-card-info-value">9234567541</span>
+            </div>
+            <div class="id-card-info-row">
+              <span class="id-card-info-label">Class</span>
+              <span class="id-card-info-separator">:</span>
+              <span class="id-card-info-value">${student?.class}${this.getClassSuffix(student?.class)}${(this.cls == 11 || this.cls == 12) ? ' ' + this.titleCase(student?.stream || '') : ''}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Signature -->
+        <div class="id-card-signature">
+          <img src="${this.schoolInfo?.principalSignature || '../../../../assets/screenshot-1750585576464.png'}" 
+               alt="Principal Signature" class="id-card-signature-img">
+          <span class="id-card-signature-text">PRINCIPAL SIGNATURE</span>
+        </div>
+        
+        <!-- Footer -->
+        <div class="id-card-footer">
+          <span class="id-card-address">
+            ADD - ${(this.schoolInfo?.street).toUpperCase()}, ${(this.schoolInfo?.city).toUpperCase()}-${this.schoolInfo?.pinCode}<br>
+            CONTACT - ${this.schoolInfo?.phoneOne || ''}
+          </span>
+        </div>
+      </div>
+    `;
   }
 
-  private getCommonStyles(): string {
+  private getIdCardStyles(): string {
     return `
-      div {margin: 0; padding: 0;}
-      .page-wrapper { position: relative; min-height: 100vh; }
-      .school-name {display: flex; align-items: center; justify-content: center; text-align: center; }
-      .address{margin-top: -40px; text-align: center;}
-      .title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}
-      .info-table {width:100%;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}
-      .table-container .info-table th, .table-container .info-table td{text-align:left;padding-left:15px;}
-      .custom-table {width: 100%;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}
-      .custom-table th{height: 35px;text-align: center;line-height:15px;font-size: 18px;}
-      .custom-table tr{height: 35px;}
-      .custom-table td {text-align: center;font-size: 18px;}
-      .text-bold { font-weight: bold;}
-      .text-left { text-align: left;}
-      p {font-size:18px;}
-      h4 {color: #0a0a0a !important;}
-      .watermark-container {position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 1000;pointer-events: none;}
-      .watermark-logo {position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);opacity: 0.2;width: 35%;height: auto;max-width: 500px;}
-      @media print {.watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }}
+       .id-card {
+   width: 58.21mm; /* Original size maintained */
+   height: 92.6mm; /* Original size maintained */
+   background: #ffffff;
+   border-radius: 4.23mm; /* 16px */
+   position: relative;
+   overflow: hidden;
+}
+
+.id-card-header {
+   height: 21.17mm; /* 80px */
+   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #4a90e2 100%);
+   display: flex;
+   justify-content: flex-start;
+   gap: 0;
+   padding: 3.18mm 0 0 3.18mm; /* 12px 0 0 12px */
+   border-radius: 4.23mm 4.23mm 50% 50%; /* 16px 16px 50% 50% */
+}
+
+.id-card-logo-box {
+   width: 8.47mm; /* 32px */
+   height: 8.47mm; /* 32px */
+   background: rgba(255, 255, 255, 0.2);
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.id-card-logo-bg {
+   width: 7.94mm; /* 30px */
+   height: 7.94mm; /* 30px */
+   background: #ffffff;
+   border-radius: 1.59mm; /* 6px */
+   padding: 0.53mm; /* 2px */
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 2.12mm; /* 8px */
+   font-weight: 600;
+   color: #2a5298;
+}
+
+.id-card-logo {
+   width: 6.88mm; /* 26px */
+   height: 6.88mm; /* 26px */
+}
+
+.id-card-school-name {
+   color: #ffffff;
+   line-height: 1.2;
+   text-shadow: 0 0.53mm 1.06mm rgba(0, 0, 0, 0.3); /* 0 2px 4px */
+   height: 9.26mm; /* 35px */
+   text-align: center;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   word-wrap: break-word;
+   overflow-wrap: break-word;
+   hyphens: auto;
+   padding-left: 2.12mm; /* 8px */
+   padding-right: 2.12mm; /* 8px */
+}
+
+.id-card-school-text {
+   font-size: 3.18mm; /* 12px */
+   font-weight: 900;
+   letter-spacing: 0.13mm; /* 0.5px */
+   line-height: 4.23mm; /* 16px */
+   word-spacing: 0.53mm; /* 2px */
+   margin-bottom: 0.53mm; /* 2px */
+   display: inline-block;
+}
+
+.id-card-photo-section {
+   position: absolute;
+   top: 14.55mm; /* 55px */
+   left: 50%;
+   transform: translateX(-50%);
+   z-index: 10;
+}
+
+.id-card-photo-frame {
+   width: 23.81mm; /* 90px */
+   height: 23.81mm; /* 90px */
+   border-radius: 50%;
+   background: #f8f9fa;
+   padding: 0.79mm; /* 3px */
+   position: relative;
+}
+
+.id-card-photo-bg {
+   border: 0.53mm solid #2a5298; /* 2px */
+   padding: 0.53mm; /* 2px */
+   border-radius: 50%;
+   overflow: hidden;
+   background: #f8f9fa;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   position: relative;
+}
+
+.id-card-photo {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   border-radius: 50%;
+}
+
+.id-card-info {
+   position: absolute;
+   top: 42mm; /* 145px */
+   left: 4.23mm; /* 16px */
+   right: 4.23mm; /* 16px */
+   color: #2c3e50;
+}
+
+.id-card-student-name {
+   text-align: center;
+   padding-bottom: 1.75mm; /* 2px */
+   margin-bottom: 2.38mm; /* 9px */
+   border-bottom: 0.25mm solid #e3f2fd; /* 2px */
+}
+
+.id-card-student-text {
+   font-size: 2.51mm; /* 9.5px */
+   font-weight: 800;
+   letter-spacing: 0.05mm; /* .2px */
+   color: #2a5298;
+}
+
+.id-card-info-grid {
+   display: grid;
+   gap: 1.5mm; /* 8px */
+}
+
+.id-card-info-row {
+   display: grid;
+   grid-template-columns: 1fr auto 1fr;
+   align-items: center;
+   font-size: 2.38mm; /* 9px */
+   line-height: 1.4;
+}
+
+.id-card-info-label {
+   font-weight: 600;
+   color: #37474f;
+}
+
+.id-card-info-separator {
+   margin: 0 2.12mm; /* 0 8px */
+   color: #90a4ae;
+   font-weight: 500;
+}
+
+.id-card-info-value {
+   color: #37474f;
+   font-weight: 500;
+   text-align: left;
+}
+
+/* Signature */
+.id-card-signature {
+   position: absolute;
+   bottom: 11mm; /* 38px */
+   right: 3.97mm; /* 15px */
+   text-align: center;
+}
+
+.id-card-signature-img {
+   height: 6.61mm; /* 25px */
+   display: block;
+   margin: 0 auto;
+}
+
+.id-card-signature-text {
+   color: #37474f;
+   font-size: 2.12mm; /* 8px */
+   font-weight: 800;
+   opacity: 0.9;
+   letter-spacing: 0.08mm; /* 0.3px */
+   display: block;
+}
+
+/* Footer */
+.id-card-footer {
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   height: 6.75mm; /* 40px */
+   background: linear-gradient(135deg, #2a5298 0%, #4a90e2 100%);
+   border-radius: 50% 50% 0 0;
+   padding: 0.05in 0.1in 0.05in 0.1in;
+   text-align: center;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   word-wrap: break-word;
+   overflow-wrap: break-word;
+   hyphens: auto;
+   color: white;
+}
+
+.id-card-address {
+   font-size: 0.07in;
+   font-weight: 400;
+   opacity: 0.9;
+   letter-spacing: 0.003in;
+   line-height: 0.1in;
+}
+
+      /* Print Specific Styles */
+      @media print {
+        @page {
+          size: 304.8mm 457.2mm !important; /* 12in x 18in */
+          margin: 12.7mm !important; /* 0.5in */
+        }
+        
+        body {
+          -webkit-print-color-adjust: exact !important;
+          color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        
+        .print-container {
+          display: grid !important;
+          grid-template-columns: repeat(5, 1fr) !important;
+          grid-template-rows: repeat(5, 1fr) !important;
+          gap: 5mm !important;
+          width: 279.4mm !important; /* 304.8mm - 25.4mm margin */
+          height: 431.8mm !important; /* 457.2mm - 25.4mm margin */
+          padding: 0 !important;
+        }
+        
+        .dual-id-card-container {
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        
+        .page-break {
+          page-break-before: always !important;
+        }
+        
+        .id-card {
+          border: 1px solid #2a5298 !important;
+        }
+        
+        /* Ensure images print properly */
+        img {
+          -webkit-print-color-adjust: exact !important;
+          color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+      }
     `;
+  }
+  private titleCase(str: string): string {
+    if (!str) return '';
+    return str.toLowerCase().split(' ').map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  }
+
+  private getClassSuffix(cls: number): string {
+    if (!cls) return '';
+    if (cls === 1) return 'st';
+    if (cls === 2) return 'nd';
+    if (cls === 3) return 'rd';
+    return 'th';
   }
 
   processData() {
-    for (let i = 0; i < this.admitCardStrInfo.examDate.length; i++) {
-      const subject = Object.keys(this.admitCardStrInfo.examDate[i])[0];
-      const date = Object.values(this.admitCardStrInfo.examDate[i])[0];
-      const startTime = Object.values(this.admitCardStrInfo.examStartTime[i])[0];
-      const endTime = Object.values(this.admitCardStrInfo.examEndTime[i])[0];
+    this.processedData = [];
+    if (this.admitCardStrInfo && this.admitCardStrInfo.examDate) {
+      for (let i = 0; i < this.admitCardStrInfo.examDate.length; i++) {
+        const subject = Object.keys(this.admitCardStrInfo.examDate[i])[0];
+        const date = Object.values(this.admitCardStrInfo.examDate[i])[0];
+        const startTime = Object.values(this.admitCardStrInfo.examStartTime[i])[0];
+        const endTime = Object.values(this.admitCardStrInfo.examEndTime[i])[0];
 
-      this.processedData.push({
-        subject,
-        date,
-        timing: `${startTime} to ${endTime}`
-      });
+        this.processedData.push({
+          subject,
+          date,
+          timing: `${startTime} to ${endTime}`
+        });
+      }
     }
   }
 
@@ -448,12 +605,15 @@ export class AdminIdCardComponent implements OnInit {
               fatherName: studentInfo.fatherName,
               motherName: studentInfo.motherName,
               rollNumber: studentInfo.rollNumber,
-              admissionNo: studentInfo.admissionNo
+              admissionNo: studentInfo.admissionNo,
+              mobile: studentInfo.mobile,
+              photo: studentInfo.photo
             });
           }
 
           return result;
         }, []);
+
         if (combinedData) {
           this.allAdmitCards = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
         }

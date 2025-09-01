@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'admin/school/detail', loadChildren: () => import('src/app/pages/admin/school/school.module').then((module) => module.SchoolModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/admission', loadChildren: () => import('src/app/pages/admin/admission/admission.module').then((module) => module.AdmissionModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/student', loadChildren: () => import('src/app/pages/admin/student/student.module').then((module) => module.StudentModule), canActivate: [AdminAuthGuard] },
-  // { path: 'admin/id-card', loadChildren: () => import('src/app/pages/admin/admin-id-card/admin-id-card.module').then((module) => module.AdminIdCardModule), canActivate: [AdminAuthGuard] },
+  { path: 'admin/id-card', loadChildren: () => import('src/app/pages/admin/admin-id-card/admin-id-card.module').then((module) => module.AdminIdCardModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/promote-fail', loadChildren: () => import('src/app/pages/admin/promote-fail/promote-fail.module').then((module) => module.PromoteFailModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/transfer-certificate', loadChildren: () => import('src/app/pages/admin/transfer-certificate/transfer-certificate.module').then((module) => module.TransferCertificateModule), canActivate: [AdminAuthGuard] },
   { path: 'admin/fees', loadChildren: () => import('src/app/pages/admin/admin-student-fees/admin-student-fees.module').then((module) => module.AdminStudentFeesModule), canActivate: [AdminAuthGuard] },
