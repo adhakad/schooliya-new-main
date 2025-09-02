@@ -279,27 +279,27 @@ export class AdminIdCardComponent implements OnInit {
   private getIdCardStyles(): string {
     return `
        .id-card {
-   width: 58.21mm; /* Original size maintained */
-   height: 92.6mm; /* Original size maintained */
+   width: 54mm; /* Adjusted from 58.21mm */
+   height: 85.6mm; /* Adjusted from 92.6mm */
    background: #ffffff;
-   border-radius: 4.23mm; /* 16px */
+   border-radius: 3.92mm; /* Adjusted from 4.23mm (ratio: 0.927) */
    position: relative;
    overflow: hidden;
 }
 
 .id-card-header {
-   height: 21.17mm; /* 80px */
+   height: 19.6mm; /* Adjusted from 21.17mm (ratio: 0.927) */
    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #4a90e2 100%);
    display: flex;
    justify-content: flex-start;
    gap: 0;
-   padding: 3.18mm 0 0 3.18mm; /* 12px 0 0 12px */
-   border-radius: 4.23mm 4.23mm 50% 50%; /* 16px 16px 50% 50% */
+   padding: 2.95mm 0 0 2.95mm; /* Adjusted from 3.18mm (ratio: 0.927) */
+   border-radius: 3.92mm 3.92mm 50% 50%; /* Adjusted from 4.23mm */
 }
 
 .id-card-logo-box {
-   width: 8.47mm; /* 32px */
-   height: 8.47mm; /* 32px */
+   width: 7.85mm; /* Adjusted from 8.47mm (ratio: 0.927) */
+   height: 7.85mm; /* Adjusted from 8.47mm */
    background: rgba(255, 255, 255, 0.2);
    border-radius: 50%;
    display: flex;
@@ -308,29 +308,29 @@ export class AdminIdCardComponent implements OnInit {
 }
 
 .id-card-logo-bg {
-   width: 7.94mm; /* 30px */
-   height: 7.94mm; /* 30px */
+   width: 7.36mm; /* Adjusted from 7.94mm (ratio: 0.927) */
+   height: 7.36mm; /* Adjusted from 7.94mm */
    background: #ffffff;
-   border-radius: 1.59mm; /* 6px */
-   padding: 0.53mm; /* 2px */
+   border-radius: 1.47mm; /* Adjusted from 1.59mm (ratio: 0.927) */
+   padding: 0.49mm; /* Adjusted from 0.53mm (ratio: 0.927) */
    display: flex;
    align-items: center;
    justify-content: center;
-   font-size: 2.12mm; /* 8px */
+   font-size: 1.97mm; /* Adjusted from 2.12mm (ratio: 0.927) */
    font-weight: 600;
    color: #2a5298;
 }
 
 .id-card-logo {
-   width: 6.88mm; /* 26px */
-   height: 6.88mm; /* 26px */
+   width: 6.38mm; /* Adjusted from 6.88mm (ratio: 0.927) */
+   height: 6.38mm; /* Adjusted from 6.88mm */
 }
 
 .id-card-school-name {
    color: #ffffff;
    line-height: 1.2;
-   text-shadow: 0 0.53mm 1.06mm rgba(0, 0, 0, 0.3); /* 0 2px 4px */
-   height: 9.26mm; /* 35px */
+   text-shadow: 0 0.49mm 0.98mm rgba(0, 0, 0, 0.3); /* Adjusted from 0.53mm 1.06mm */
+   height: 8.59mm; /* Adjusted from 9.26mm (ratio: 0.927) */
    text-align: center;
    display: flex;
    align-items: center;
@@ -338,40 +338,40 @@ export class AdminIdCardComponent implements OnInit {
    word-wrap: break-word;
    overflow-wrap: break-word;
    hyphens: auto;
-   padding-left: 2.12mm; /* 8px */
-   padding-right: 2.12mm; /* 8px */
+   padding-left: 1.97mm; /* Adjusted from 2.12mm (ratio: 0.927) */
+   padding-right: 1.97mm; /* Adjusted from 2.12mm */
 }
 
 .id-card-school-text {
-   font-size: 3.18mm; /* 12px */
+   font-size: 2.95mm; /* Adjusted from 3.18mm (ratio: 0.927) */
    font-weight: 900;
-   letter-spacing: 0.13mm; /* 0.5px */
-   line-height: 4.23mm; /* 16px */
-   word-spacing: 0.53mm; /* 2px */
-   margin-bottom: 0.53mm; /* 2px */
+   letter-spacing: 0.12mm; /* Adjusted from 0.13mm (ratio: 0.927) */
+   line-height: 3.92mm; /* Adjusted from 4.23mm (ratio: 0.927) */
+   word-spacing: 0.49mm; /* Adjusted from 0.53mm (ratio: 0.927) */
+   margin-bottom: 0.49mm; /* Adjusted from 0.53mm (ratio: 0.927) */
    display: inline-block;
 }
 
 .id-card-photo-section {
    position: absolute;
-   top: 14.55mm; /* 55px */
+   top: 13.49mm; /* Adjusted from 14.55mm (ratio: 0.927) */
    left: 50%;
    transform: translateX(-50%);
    z-index: 10;
 }
 
 .id-card-photo-frame {
-   width: 23.81mm; /* 90px */
-   height: 23.81mm; /* 90px */
+   width: 22.07mm; /* Adjusted from 23.81mm (ratio: 0.927) */
+   height: 22.07mm; /* Adjusted from 23.81mm */
    border-radius: 50%;
    background: #f8f9fa;
-   padding: 0.79mm; /* 3px */
+   padding: 0.73mm; /* Adjusted from 0.79mm (ratio: 0.927) */
    position: relative;
 }
 
 .id-card-photo-bg {
-   border: 0.53mm solid #2a5298; /* 2px */
-   padding: 0.53mm; /* 2px */
+   border: 0.49mm solid #2a5298; /* Adjusted from 0.53mm (ratio: 0.927) */
+   padding: 0.49mm; /* Adjusted from 0.53mm */
    border-radius: 50%;
    overflow: hidden;
    background: #f8f9fa;
@@ -390,36 +390,36 @@ export class AdminIdCardComponent implements OnInit {
 
 .id-card-info {
    position: absolute;
-   top: 42mm; /* 145px */
-   left: 4.23mm; /* 16px */
-   right: 4.23mm; /* 16px */
+   top: 38.93mm; /* Adjusted from 42mm (ratio: 0.927) */
+   left: 3.92mm; /* Adjusted from 4.23mm (ratio: 0.927) */
+   right: 3.92mm; /* Adjusted from 4.23mm */
    color: #2c3e50;
 }
 
 .id-card-student-name {
    text-align: center;
-   padding-bottom: 1.75mm; /* 2px */
-   margin-bottom: 2.38mm; /* 9px */
-   border-bottom: 0.25mm solid #e3f2fd; /* 2px */
+   padding-bottom: 1.62mm; /* Adjusted from 1.75mm (ratio: 0.927) */
+   margin-bottom: 2.21mm; /* Adjusted from 2.38mm (ratio: 0.927) */
+   border-bottom: 0.23mm solid #e3f2fd; /* Adjusted from 0.25mm (ratio: 0.927) */
 }
 
 .id-card-student-text {
-   font-size: 2.51mm; /* 9.5px */
+   font-size: 2.33mm; /* Adjusted from 2.51mm (ratio: 0.927) */
    font-weight: 800;
-   letter-spacing: 0.05mm; /* .2px */
+   letter-spacing: 0.046mm; /* Adjusted from 0.05mm (ratio: 0.927) */
    color: #2a5298;
 }
 
 .id-card-info-grid {
    display: grid;
-   gap: 1.5mm; /* 8px */
+   gap: 1.39mm; /* Adjusted from 1.5mm (ratio: 0.927) */
 }
 
 .id-card-info-row {
    display: grid;
    grid-template-columns: 1fr auto 1fr;
    align-items: center;
-   font-size: 2.38mm; /* 9px */
+   font-size: 2.21mm; /* Adjusted from 2.38mm (ratio: 0.927) */
    line-height: 1.4;
 }
 
@@ -429,7 +429,7 @@ export class AdminIdCardComponent implements OnInit {
 }
 
 .id-card-info-separator {
-   margin: 0 2.12mm; /* 0 8px */
+   margin: 0 1.97mm; /* Adjusted from 2.12mm (ratio: 0.927) */
    color: #90a4ae;
    font-weight: 500;
 }
@@ -443,23 +443,23 @@ export class AdminIdCardComponent implements OnInit {
 /* Signature */
 .id-card-signature {
    position: absolute;
-   bottom: 11mm; /* 38px */
-   right: 3.97mm; /* 15px */
+   bottom: 10.2mm; /* Adjusted from 11mm (ratio: 0.927) */
+   right: 3.68mm; /* Adjusted from 3.97mm (ratio: 0.927) */
    text-align: center;
 }
 
 .id-card-signature-img {
-   height: 6.61mm; /* 25px */
+   height: 6.13mm; /* Adjusted from 6.61mm (ratio: 0.927) */
    display: block;
    margin: 0 auto;
 }
 
 .id-card-signature-text {
    color: #37474f;
-   font-size: 2.12mm; /* 8px */
+   font-size: 1.97mm; /* Adjusted from 2.12mm (ratio: 0.927) */
    font-weight: 800;
    opacity: 0.9;
-   letter-spacing: 0.08mm; /* 0.3px */
+   letter-spacing: 0.074mm; /* Adjusted from 0.08mm (ratio: 0.927) */
    display: block;
 }
 
@@ -469,10 +469,10 @@ export class AdminIdCardComponent implements OnInit {
    bottom: 0;
    left: 0;
    right: 0;
-   height: 6.75mm; /* 40px */
+   height: 6.26mm; /* Adjusted from 6.75mm (ratio: 0.927) */
    background: linear-gradient(135deg, #2a5298 0%, #4a90e2 100%);
    border-radius: 50% 50% 0 0;
-   padding: 0.05in 0.1in 0.05in 0.1in;
+   padding: 1.27mm 2.54mm 1.27mm 2.54mm; /* Converted from inches and adjusted */
    text-align: center;
    display: flex;
    align-items: center;
@@ -484,11 +484,11 @@ export class AdminIdCardComponent implements OnInit {
 }
 
 .id-card-address {
-   font-size: 0.07in;
+   font-size: 1.78mm; /* Converted from 0.07in and adjusted */
    font-weight: 400;
    opacity: 0.9;
-   letter-spacing: 0.003in;
-   line-height: 0.1in;
+   letter-spacing: 0.076mm; /* Converted from 0.003in and adjusted */
+   line-height: 2.54mm; /* Converted from 0.1in and adjusted */
 }
 
       /* Print Specific Styles */
@@ -527,7 +527,7 @@ export class AdminIdCardComponent implements OnInit {
         }
         
         .id-card {
-          border: 1px solid #2a5298 !important;
+          border: 1px dashed #2a5298 !important;
         }
         
         /* Ensure images print properly */
