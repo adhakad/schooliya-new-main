@@ -32,7 +32,19 @@ let schoolLogo = multer({
   limits: {
     fileSize: 1024 * 500,
   },
-  fileFilter:filter
+  fileFilter: filter
+})
+let studentImage = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, `${DIR}/student-image/`)
+    },
+    filename: filename
+  }),
+  limits: {
+    fileSize: 1024 * 500,
+  },
+  fileFilter: filter
 })
 let bannerImage = multer({
   storage: multer.diskStorage({
@@ -44,7 +56,7 @@ let bannerImage = multer({
   limits: {
     fileSize: 1024 * 1024 * 5,
   },
-  fileFilter:filter
+  fileFilter: filter
 })
 let subjectImage = multer({
   storage: multer.diskStorage({
@@ -56,7 +68,7 @@ let subjectImage = multer({
   limits: {
     fileSize: 1024 * 1024 * 5,
   },
-  fileFilter:filter
+  fileFilter: filter
 })
 let adsImage = multer({
   storage: multer.diskStorage({
@@ -68,7 +80,7 @@ let adsImage = multer({
   limits: {
     fileSize: 1024 * 1024 * 5,
   },
-  fileFilter:filter
+  fileFilter: filter
 })
 let topperImage = multer({
   storage: multer.diskStorage({
@@ -80,7 +92,7 @@ let topperImage = multer({
   limits: {
     fileSize: 1024 * 1024 * 5,
   },
-  fileFilter:filter
+  fileFilter: filter
 })
 let testimonialImage = multer({
   storage: multer.diskStorage({
@@ -92,14 +104,15 @@ let testimonialImage = multer({
   limits: {
     fileSize: 1024 * 1024 * 5,
   },
-  fileFilter:filter
+  fileFilter: filter
 })
 
 module.exports = {
-  bannerImage:bannerImage,
-  subjectImage:subjectImage,
-  adsImage:adsImage,
-  topperImage:topperImage,
-  testimonialImage:testimonialImage,
-  schoolLogo
+  bannerImage: bannerImage,
+  subjectImage: subjectImage,
+  adsImage: adsImage,
+  topperImage: topperImage,
+  testimonialImage: testimonialImage,
+  schoolLogo,
+  studentImage: studentImage
 }

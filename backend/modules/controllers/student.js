@@ -1,4 +1,6 @@
 'use strict';
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 const StudentModel = require('../models/student');
 const AdminPlan = require('../models/users/admin-plan');
 const FeesStructureModel = require('../models/fees-structure');
@@ -8,6 +10,17 @@ const ExamResultModel = require('../models/exam-result');
 const ClassSubjectModal = require('../models/class-subject');
 const IssuedTransferCertificateModel = require('../models/issued-transfer-certificate');
 const { DateTime } = require('luxon');
+const { CLOUDINARY_CLOUD_NAMAE, CLOUDINARY_CLOUD_API_KEY, CLOUDINARY_CLOUD_API_SECRET } = process.env;
+const cloudinary_cloud_name = CLOUDINARY_CLOUD_NAMAE;
+const cloudinary_cloud_api_key = CLOUDINARY_CLOUD_API_KEY;
+const cloudinary_cloud_api_secret = CLOUDINARY_CLOUD_API_SECRET
+
+cloudinary.config({
+    cloud_name: cloudinary_cloud_name,
+    api_key: cloudinary_cloud_api_key,
+    api_secret: cloudinary_cloud_api_secret,
+    timeout: 60000 // 60s timeout
+})
 
 let countStudent = async (req, res, next) => {
     let adminId = req.params.adminId;
@@ -217,6 +230,14 @@ let GetAllStudentByClass = async (req, res, next) => {
         return res.status(500).json('Internal Server Error!');
     }
 }
+let GetAllStudentByClassWithoutStream = async (req, res, next) => {
+    try {
+        let singleStudent = await StudentModel.find({ adminId: req.params.id, class: req.params.class }, '-status -__v').sort({ _id: -1 });
+        return res.status(200).json(singleStudent);
+    } catch (error) {
+        return res.status(500).json('Internal Server Error!');
+    }
+}
 
 let GetSingleStudent = async (req, res, next) => {
     try {
@@ -249,10 +270,13 @@ let CreateStudent = async (req, res, next) => {
     if (!parsedDate.isValid) {
         dob = DateTime.fromISO(dob).toFormat("dd/MM/yyyy");
     }
-    let studentData = {
-        session, medium, adminId, name, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy
-    }
     try {
+        const result = await cloudinary.uploader.upload(req.file.path);
+        fs.unlinkSync(req.file.path);
+        let studentData = {
+            session, medium, adminId, name, studentImage: result.secure_url,
+            studentImagePublicId: result.public_id, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy
+        }
         if (!adminId) {
             return res.status(404).json(`Invalid entry!`);
         }
@@ -273,34 +297,31 @@ let CreateStudent = async (req, res, next) => {
         if (!checkClassSubject) {
             return res.status(404).json(`Please group subjects according to class and stream!`);
         }
-        if (aadharNumber !== null && aadharNumber !== undefined) {
-            const checkAadharNumber = await StudentModel.findOne({ aadharNumber: aadharNumber });
+        if (aadharNumber != null && aadharNumber !== "" && aadharNumber !== "null" && aadharNumber.trim() !== "") {
+            const checkAadharNumber = await StudentModel.findOne({ aadharNumber: aadharNumber.trim() });
             if (checkAadharNumber) {
-                return res.status(400).json(`Aadhar card number already exist!`);
+                return res.status(400).json({ message: "Aadhar card number already exists!" });
             }
-            studentData.aadharNumber = aadharNumber;
+            studentData.aadharNumber = aadharNumber.trim();
         }
-
-        if (samagraId !== null && samagraId !== undefined) {
-            const checkSamagraId = await StudentModel.findOne({ samagraId: samagraId });
-            if (checkSamagraId) {
-                return res.status(400).json(`Samagra id already exist!`);
+        if (samagraId != null && samagraId !== "" && samagraId !== "null" && samagraId.trim() !== "") {
+            const checkAadharNumber = await StudentModel.findOne({ samagraId: samagraId.trim() });
+            if (checkAadharNumber) {
+                return res.status(400).json({ message: "Aadhar card number already exists!" });
             }
-            studentData.samagraId = samagraId;
-            studentData.extraField = [{ samagraId: samagraId }]
+            studentData.samagraId = samagraId.trim();
         }
-        if (udiseNumber !== null && udiseNumber !== undefined) {
-            const checkUdiseNumber = await StudentModel.findOne({ udiseNumber: udiseNumber });
-            if (checkUdiseNumber) {
-                return res.status(400).json(`UDISE Number already exist!`);
+        if (udiseNumber != null && udiseNumber !== "" && udiseNumber !== "null" && udiseNumber.trim() !== "") {
+            const checkAadharNumber = await StudentModel.findOne({ udiseNumber: udiseNumber.trim() });
+            if (checkAadharNumber) {
+                return res.status(400).json({ message: "Aadhar card number already exists!" });
             }
+            studentData.udiseNumber = udiseNumber.trim();
         }
-
         const checkAdmissionNo = await StudentModel.findOne({ adminId: adminId, admissionNo: admissionNo });
         if (checkAdmissionNo) {
             return res.status(400).json(`Admission no already exist!`);
         }
-
         const checkRollNumber = await StudentModel.findOne({ adminId: adminId, rollNumber: rollNumber, class: className });
         if (checkRollNumber) {
             return res.status(400).json(`Roll number already exist for this class!`);
@@ -350,25 +371,25 @@ let CreateStudent = async (req, res, next) => {
             studentFeesData.studentId = studentId;
             let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
             if (createStudentFeesData) {
-                let studentAdmissionData = {
-                    adminId: adminId,
-                    session: session,
-                    name: createStudent.name,
-                    class: createStudent.class,
-                    stream: stream,
-                    admissionNo: createStudent.admissionNo,
-                    rollNumber: createStudent.rollNumber,
-                    dob: createStudent.dob,
-                    fatherName: createStudent.fatherName,
-                    motherName: createStudent.motherName,
-                    admissionType: admissionType,
-                    admissionFees: createStudentFeesData.admissionFees,
-                    admissionFeesReceiptNo: createStudentFeesData.admissionFeesReceiptNo,
-                    admissionFeesPaymentDate: createStudentFeesData.admissionFeesPaymentDate,
-                    totalFees: createStudentFeesData.totalFees,
-                    paidFees: createStudentFeesData.paidFees,
-                    dueFees: createStudentFeesData.dueFees
-                }
+                // let studentAdmissionData = {
+                //     adminId: adminId,
+                //     session: session,
+                //     name: createStudent.name,
+                //     class: createStudent.class,
+                //     stream: stream,
+                //     admissionNo: createStudent.admissionNo,
+                //     rollNumber: createStudent.rollNumber,
+                //     dob: createStudent.dob,
+                //     fatherName: createStudent.fatherName,
+                //     motherName: createStudent.motherName,
+                //     admissionType: admissionType,
+                //     admissionFees: createStudentFeesData.admissionFees,
+                //     admissionFeesReceiptNo: createStudentFeesData.admissionFeesReceiptNo,
+                //     admissionFeesPaymentDate: createStudentFeesData.admissionFeesPaymentDate,
+                //     totalFees: createStudentFeesData.totalFees,
+                //     paidFees: createStudentFeesData.paidFees,
+                //     dueFees: createStudentFeesData.dueFees
+                // }
                 return res.status(200).json('Student created successfully');
             }
         }
@@ -376,15 +397,6 @@ let CreateStudent = async (req, res, next) => {
         return res.status(500).json('Internal Server Error!');
     }
 }
-
-
-
-
-
-
-
-
-
 
 const CreateBulkStudentRecord = async (req, res, next) => {
     const { bulkStudentRecord, session: selectedSession, class: classNameParam, stream: streamParam, adminId, createdBy } = req.body;
@@ -595,19 +607,69 @@ const CreateBulkStudentRecord = async (req, res, next) => {
     }
 };
 
-let UpdateStudent = async (req, res, next) => {
+let UpdateStudent = async (req, res) => {
     try {
         const id = req.params.id;
-        let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession } = req.body;
-        const studentData = {
-            session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, extraField: [{ samagraId: samagraId }], admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession
+        let studentData = { ...req.body };
+
+        // Duplicate checks
+        if (studentData.aadharNumber) {
+            const exists = await StudentModel.findOne({
+                aadharNumber: studentData.aadharNumber,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return res.status(400).json("Aadhar number already exists!");
+            }
         }
-        const updateStudent = await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
-        return res.status(200).json('Student updated successfully');
+
+        if (studentData.samagraId) {
+            const exists = await StudentModel.findOne({
+                samagraId: studentData.samagraId,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return res.status(400).json("Samagra ID already exists!");
+            }
+        }
+
+        if (studentData.udiseNumber) {
+            const exists = await StudentModel.findOne({
+                udiseNumber: studentData.udiseNumber,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return res.status(400).json("UDISE number already exists!");
+            }
+        }
+
+        // Student exist check
+        const singleStudent = await StudentModel.findById(id);
+        if (!singleStudent) {
+            return res.status(404).json("Student not found!");
+        }
+
+        // Image upload
+        if (req.file && req.file.path) {
+            if (singleStudent.studentImagePublicId) {
+                await cloudinary.uploader.destroy(singleStudent.studentImagePublicId);
+            }
+            const result = await cloudinary.uploader.upload(req.file.path);
+            fs.unlinkSync(req.file.path);
+
+            studentData.studentImage = result.secure_url;
+            studentData.studentImagePublicId = result.public_id;
+        }
+
+        // Update student
+        await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
+
+        return res.status(200).json("Student updated successfully");
     } catch (error) {
-        return res.status(500).json('Internal Server Error!');
+        console.error(error);
+        return res.status(500).json("Internal Server Error!");
     }
-}
+};
 
 let StudentClassPromote = async (req, res, next) => {
     try {
@@ -963,6 +1025,7 @@ module.exports = {
     // GetStudentAdmissionEnquiryPagination,
     GetStudentPaginationByClass,
     GetAllStudentByClass,
+    GetAllStudentByClassWithoutStream,
     GetSingleStudent,
     CreateStudent,
     // CreateStudentAdmissionEnquiry,

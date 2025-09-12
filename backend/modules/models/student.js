@@ -29,6 +29,14 @@ const StudentModel = mongoose.model('student', {
         lowercase: true,
         trim: true
     },
+    studentImage: {
+        type: String,
+        trim: true,
+    },
+    studentImagePublicId: {
+        type: String,
+        trim: true,
+    },
     class: {
         type: Number,
         required: true,

@@ -18,40 +18,22 @@
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
-                      <div class="col-5"></div>
-                      <ng-container *ngIf="cls !==11 && cls !==12">
-                        <div class="col-2"></div>
-                      </ng-container>
+                      <div class="col-7"></div>
                       <div class="col-2">
-                        <ng-container *ngIf="cls && stream && templateStatusCode==200">
+                        <ng-container>
                           <mat-form-field class="custom-select-print">
                             <mat-label style="color:#8C52FF">Print</mat-label>
                             <mat-select matInput>
                               <div>
-                                <mat-option (click)="bulkPrint(0)"
-                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One
+                                <mat-option (click)="bulkPrint(0)">One
                                   student in one page</mat-option>
-                                <mat-option (click)="bulkPrint(1)"
-                                  *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two
+                                <mat-option (click)="bulkPrint(1)">Two
                                   student in one page</mat-option>
                               </div>
                             </mat-select>
                           </mat-form-field>
                         </ng-container>
                       </div>
-
-                      <ng-container *ngIf="cls==11 || cls==12">
-                        <div class="col-2">
-                          <mat-form-field class="custom-select">
-                            <mat-label *ngIf="stream =='' || stream=='stream'">Stream</mat-label>
-                            <mat-select [(ngModel)]="stream" (selectionChange)="filterStream($event.value)" type="text"
-                              matInput>
-                              <mat-option *ngFor="let subject of streamMainSubject"
-                                [value]="subject">{{subject}}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-                      </ng-container>
                       <div class="col-2">
                         <ng-container>
                           <mat-form-field class="custom-select">
@@ -96,29 +78,17 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <ng-container *ngIf="cls==11 || cls==12">
-                    <div class="col-12">
-                      <mat-form-field class="custom-select">
-                        <mat-label *ngIf="stream =='' || stream=='stream'">Stream</mat-label>
-                        <mat-select [(ngModel)]="stream" (selectionChange)="filterStream($event.value)" type="text"
-                          matInput>
-                          <mat-option *ngFor="let subject of streamMainSubject"
-                            [value]="subject">{{subject}}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                  </ng-container>
                   <div class="col-12">
-                    <ng-container *ngIf="cls && stream && templateStatusCode==200">
+                    <ng-container *ngIf="cls && templateStatusCode==200">
                       <mat-form-field class="custom-select-print">
                         <mat-label style="color:#8C52FF">Print</mat-label>
                         <mat-select matInput>
                           <div>
                             <mat-option (click)="bulkPrint(0)"
-                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One
+                              *ngIf="cls && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One
                               student in one page</mat-option>
                             <mat-option (click)="bulkPrint(1)"
-                              *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two
+                              *ngIf="cls && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two
                               student in one page</mat-option>
                           </div>
                         </mat-select>
@@ -143,7 +113,7 @@
             <div class="main-card">
               <div class="table-wrapper">
                 <table class="table table-hover align-middle bg-white"
-                  *ngIf="cls && stream && !errorCheck && statusCode !==404 && statusCode !==500 && templateStatusCode !==404 && templateStatusCode !==500">
+                  *ngIf="cls && !errorCheck && statusCode !==404 && statusCode !==500 && templateStatusCode !==404 && templateStatusCode !==500">
                   <ng-container *ngIf="allAdmitCards && allAdmitCards.length>0">
                     <thead class="bg-light">
                       <tr class="text-muted">
@@ -184,15 +154,15 @@
                 </table>
               </div>
 
-              <div *ngIf="!cls || !stream" style="text-align: center;margin-top: 200px;">
+              <div *ngIf="!cls" style="text-align: center;margin-top: 200px;">
                 <p>Please Choose Class & Stream !</p>
               </div>
               <div
-                *ngIf="cls && stream && errorCheck && statusCode ==404 || statusCode ==500 || templateStatusCode==404 || templateStatusCode==500"
+                *ngIf="cls && errorCheck && statusCode ==404 || statusCode ==500 || templateStatusCode==404 || templateStatusCode==500"
                 style="text-align: center;margin-top: 200px;">
                 <p *ngIf="statusCode ==404 && templateStatusCode==200">ID Card Not Found !</p>
                 <p *ngIf="statusCode ==500 || templateStatusCode==500">Internal Server Error !</p>
-                <p *ngIf="templateStatusCode ==404 && cls && stream">Please Create ID Card Structure !</p>
+                <p *ngIf="templateStatusCode ==404 && cls">Please Create ID Card Structure !</p>
               </div>
 
               <!-- Modal for ID Card Print -->

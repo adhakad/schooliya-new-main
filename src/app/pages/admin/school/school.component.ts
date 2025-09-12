@@ -149,7 +149,6 @@ export class SchoolComponent implements OnInit {
   getBoard() {
     this.boardService.getBoardList().subscribe((res: any) => {
       if (res) {
-        console.log(res)
         this.boardInfo = res;
       }
     });

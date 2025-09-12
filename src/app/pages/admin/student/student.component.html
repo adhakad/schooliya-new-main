@@ -52,8 +52,8 @@
                             <mat-select type="text" matInput>
                               <ng-container *ngIf="cls==12 || cls==11">
                                 <div *ngFor="let subject of streamMainSubject">
-                                  <mat-option (click)="filterStream(subject)"
-                                    value="{{subject}}">{{subject | streamTitleCase}}</mat-option>
+                                  <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject |
+                                    streamTitleCase}}</mat-option>
                                 </div>
                               </ng-container>
                             </mat-select>
@@ -118,7 +118,8 @@
                         <mat-select type="text" matInput>
                           <ng-container *ngIf="cls==12 || cls==11">
                             <div *ngFor="let subject of streamMainSubject">
-                              <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject | streamTitleCase}}</mat-option>
+                              <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject |
+                                streamTitleCase}}</mat-option>
                             </div>
                           </ng-container>
                         </mat-select>
@@ -148,6 +149,7 @@
                   <thead class="bg-light">
                     <tr class="text-muted">
                       <th>S.No.</th>
+                      <th>Image</th>
                       <th>Admission No.</th>
                       <th>Student</th>
                       <th>Father Name</th>
@@ -166,6 +168,9 @@
                     <tr *ngFor="let students of studentInfo,let i=index">
                       <td>
                         <p class="mb-0">{{number*10+i+1-10}}</p>
+                      </td>
+                      <td>
+                        <img src="{{students?.studentImage}}" alt="student image" style="border-radius: 5px;"/>
                       </td>
                       <td>
                         <p class="mb-0">{{students.admissionNo}}</p>
@@ -307,7 +312,8 @@
                                 <mat-label>First Enrolled Class </mat-label>
                                 <mat-select matInput formControlName="admissionClass">
                                   <div *ngFor="let classInfo of classInfo">
-                                    <mat-option value="{{classInfo.class}}">{{classInfo.class  | classSuffix}}</mat-option>
+                                    <mat-option value="{{classInfo.class}}">{{classInfo.class |
+                                      classSuffix}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -360,6 +366,14 @@
                                   *ngIf="studentForm.get('name')?.hasError('pattern') && studentForm.get('name')?.touched">
                                   Please enter a valid Name (only letters and spaces are allowed)
                                 </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Choose Student Image</mat-label>
+                                <ngx-mat-file-input formControlName="studentImage">
+                                  <mat-icon ngxMatFileInputIcon style="color: #8d6dff;">cloud_upload</mat-icon>
+                                </ngx-mat-file-input>
                               </mat-form-field>
                             </div>
                             <div class="col-12 col-lg-6">
@@ -433,7 +447,8 @@
                                 <mat-label>Category</mat-label>
                                 <mat-select type="text" matInput formControlName="category">
                                   <div *ngFor="let category of categorys">
-                                    <mat-option value="{{category.category}}">{{category.category | titlecase}}</mat-option>
+                                    <mat-option value="{{category.category}}">{{category.category |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -447,7 +462,8 @@
                                 <mat-label>Religion</mat-label>
                                 <mat-select type="text" matInput formControlName="religion">
                                   <div *ngFor="let religion of religions">
-                                    <mat-option value="{{religion.religion}}">{{religion.religion | titlecase}}</mat-option>
+                                    <mat-option value="{{religion.religion}}">{{religion.religion |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -547,8 +563,8 @@
                                 <mat-label>Father Qualification</mat-label>
                                 <mat-select type="text" matInput formControlName="fatherQualification">
                                   <div *ngFor="let qualification of qualifications">
-                                    <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
+                                    <mat-option value="{{qualification.qualification}}">{{qualification.qualification |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -560,7 +576,8 @@
                                 <mat-label>Father Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="fatherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -598,8 +615,8 @@
                                 <mat-label>Mother Qualification</mat-label>
                                 <mat-select type="text" matInput formControlName="motherQualification">
                                   <div *ngFor="let qualification of qualifications">
-                                    <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
+                                    <mat-option value="{{qualification.qualification}}">{{qualification.qualification |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -611,7 +628,8 @@
                                 <mat-label>Mother Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="motherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -676,8 +694,8 @@
                             </mat-form-field>
                           </div>
                           <div class="custom-file">
-                            <input #fileInput type="file" name="file" class="form-control file-input" id="inputGroupFile" required
-                              (change)="handleImport($event)"
+                            <input #fileInput type="file" name="file" class="form-control file-input"
+                              id="inputGroupFile" required (change)="handleImport($event)"
                               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                           </div>
                         </div>

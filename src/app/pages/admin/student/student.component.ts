@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { ClassSubjectService } from 'src/app/services/class-subject.service';
+import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -24,6 +25,7 @@ import { ToastrService } from 'ngx-toastr';
 export class StudentComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  public baseUrl = environment.API_URL;
   studentForm: FormGroup;
   excelForm: FormGroup;
   showModal: boolean = false;
@@ -79,6 +81,7 @@ export class StudentComponent implements OnInit {
     202: 'UKG',
     // अन्य क्लासेज़ भी यहाँ मैप करें
   };
+  logoPreview: any = null;  // For showing school logo preview
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
@@ -92,6 +95,7 @@ export class StudentComponent implements OnInit {
       stream: [''],
       rollNumber: ['', [Validators.required, Validators.maxLength(8), Validators.pattern('^[0-9]+$')]],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      studentImage: [''], // School logo file
       dob: ['', Validators.required],
       doa: ['', Validators.required],
       aadharNumber: ['', [Validators.pattern('^\\d{12}$')]],
@@ -217,6 +221,7 @@ export class StudentComponent implements OnInit {
     this.resetFileInput();
     this.studentForm.reset();
     this.excelForm.reset();
+    this.logoPreview = null;
   }
   addStudentModel() {
     this.showModal = true;
@@ -277,6 +282,7 @@ export class StudentComponent implements OnInit {
   }
 
   addStudentInfoViewModel(student: any) {
+    console.log(student)
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
   }
@@ -337,6 +343,9 @@ export class StudentComponent implements OnInit {
     if (this.updateMode) {
       this.studentForm.get('feesConcession')?.disable();
       this.studentForm.get('session')?.disable();  // Disable in edit mode
+    }
+    if (student.studentImage) {
+      this.logoPreview = `${this.baseUrl}/${student.studentImage}`; // Set logo preview
     }
   }
   deleteStudentModel(id: String) {
@@ -433,7 +442,18 @@ export class StudentComponent implements OnInit {
     });
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.studentForm.patchValue({ schoolLogo: file });
 
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.logoPreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
   studentAddUpdate() {
     if (this.studentForm.valid) {
       if (!this.adminId) {

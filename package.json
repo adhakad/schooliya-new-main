@@ -36,6 +36,7 @@
     "highcharts": "^11.4.8",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
+    "joi": "^18.0.1",
     "jquery": "^3.6.0",
     "jspdf": "^2.5.1",
     "ngx-cookie-service": "^14.0.0",

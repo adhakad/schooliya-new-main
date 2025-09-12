@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { MatRadioChange } from '@angular/material/radio';
-import { AdmitCardStructureService } from 'src/app/services/admit-card-structure.service';
 import { AdmitCardService } from 'src/app/services/admit-card.service';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
+import { StudentService } from 'src/app/services/student.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { ClassService } from 'src/app/services/class.service';
 import { environment } from 'src/environments/environment';
@@ -24,7 +24,6 @@ export class AdminIdCardComponent implements OnInit {
   studentInfo: any;
   loader: Boolean = true;
   showModal: Boolean = false;
-  admitCardStrInfo: any;
   admitCardStrInfoByStream: any;
   errorCheck: Boolean = false;
   statusCode: Number = 0;
@@ -47,7 +46,7 @@ export class AdminIdCardComponent implements OnInit {
     private classService: ClassService,
     private admitCardService: AdmitCardService,
     private printPdfService: PrintPdfService,
-    private admitCardStructureService: AdmitCardStructureService
+    private studentService: StudentService
   ) { }
 
   ngOnInit(): void {
@@ -59,11 +58,9 @@ export class AdminIdCardComponent implements OnInit {
       this.cls = +params['cls'] || 0;
       this.stream = params['stream'] || '';
       if (this.cls) {
-        this.getAdmitCardStructureByClass();
-        this.getStudentAdmitCardByClass();
+        this.getStudentByClassWithoutStream();
       } else {
         this.cls = 0;
-        this.stream = '';
         this.processedData = [];
       }
     });
@@ -88,32 +85,9 @@ export class AdminIdCardComponent implements OnInit {
 
   chooseClass(cls: number) {
     this.cls = cls;
-    if (cls !== 11 && cls !== 12) {
-      this.stream = this.notApplicable;
-      this.processedData = [];
-      this.updateRouteParams();
-      this.getAdmitCardStructureByClass();
-      this.getStudentAdmitCardByClass();
-    }
-    if (cls == 11 || cls == 12) {
-      if (this.stream == 'stream') {
-        this.stream = '';
-      }
-      this.processedData = [];
-      this.updateRouteParams();
-      this.getAdmitCardStructureByClass();
-      this.getStudentAdmitCardByClass();
-    }
-  }
-
-  filterStream(stream: any) {
-    this.stream = stream;
-    if (stream && this.cls) {
-      this.processedData = [];
-      this.updateRouteParams();
-      this.getAdmitCardStructureByClass();
-      this.getStudentAdmitCardByClass();
-    }
+    this.processedData = [];
+    this.updateRouteParams();
+    this.getStudentByClassWithoutStream();
   }
 
   updateRouteParams() {
@@ -131,27 +105,9 @@ export class AdminIdCardComponent implements OnInit {
 
   bulkPrint(selectedValue: any) {
     this.selectedValue = selectedValue;
-    this.processData();
     this.showModal = true;
   }
 
-  getAdmitCardStructureByClass() {
-    let params = {
-      cls: this.cls,
-      adminId: this.adminId,
-      stream: this.stream
-    }
-    this.admitCardStructureService.admitCardStructureByClassStream(params).subscribe((res: any) => {
-      if (res) {
-        this.errorCheck = false;
-        this.templateStatusCode = 200;
-        this.admitCardStrInfo = res;
-      }
-    }, err => {
-      this.errorCheck = true;
-      this.templateStatusCode = err.status;
-    })
-  }
 
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
@@ -203,13 +159,14 @@ export class AdminIdCardComponent implements OnInit {
   }
 
   private generateIdCardHtml(student: any): string {
+    console.log(student)
     return `
       <div class="id-card">
         <!-- Header -->
         <div class="id-card-header">
           <div class="id-card-logo-box">
             <div class="id-card-logo-bg">
-              <img src="${this.schoolInfo?.schoolLogo || '../../../../assets/school-logo.png'}" 
+              <img src="${this.schoolInfo?.schoolLogo}" 
                    alt="School Logo" class="id-card-logo">
             </div>
           </div>
@@ -222,7 +179,7 @@ export class AdminIdCardComponent implements OnInit {
         <div class="id-card-photo-section">
           <div class="id-card-photo-frame">
             <div class="id-card-photo-bg">
-              <img src="${student?.photo || '../../../../assets/R.jpeg'}" 
+              <img src='${student?.studentImage}' 
                    alt="Student Photo" class="id-card-photo">
             </div>
           </div>
@@ -269,7 +226,7 @@ export class AdminIdCardComponent implements OnInit {
         <div class="id-card-footer">
           <span class="id-card-address">
             ADD - ${(this.schoolInfo?.street).toUpperCase()}, ${(this.schoolInfo?.city).toUpperCase()}-${this.schoolInfo?.pinCode}<br>
-            CONTACT - ${this.schoolInfo?.phoneOne || ''}
+            CONTACT - ${this.schoolInfo?.phoneOne}
           </span>
         </div>
       </div>
@@ -554,73 +511,83 @@ export class AdminIdCardComponent implements OnInit {
     return 'th';
   }
 
-  processData() {
-    this.processedData = [];
-    if (this.admitCardStrInfo && this.admitCardStrInfo.examDate) {
-      for (let i = 0; i < this.admitCardStrInfo.examDate.length; i++) {
-        const subject = Object.keys(this.admitCardStrInfo.examDate[i])[0];
-        const date = Object.values(this.admitCardStrInfo.examDate[i])[0];
-        const startTime = Object.values(this.admitCardStrInfo.examStartTime[i])[0];
-        const endTime = Object.values(this.admitCardStrInfo.examEndTime[i])[0];
 
-        this.processedData.push({
-          subject,
-          date,
-          timing: `${startTime} to ${endTime}`
-        });
-      }
-    }
-  }
-
-  getStudentAdmitCardByClass() {
+  getStudentByClassWithoutStream() {
     let params = {
-      cls: this.cls,
+      class: this.cls,
       adminId: this.adminId,
-      stream: this.stream
     }
-    this.admitCardService.getAllStudentAdmitCardByClass(params).subscribe((res: any) => {
+    this.studentService.getStudentByClassWithoutStream(params).subscribe((res: any) => {
       if (res) {
-        this.errorCheck = false;
-        this.statusCode = 200;
-        this.admitCardInfo = res.admitCardInfo;
-        this.studentInfo = res.studentInfo;
-        const studentInfoMap = new Map();
-        this.studentInfo.forEach((item: any) => {
-          studentInfoMap.set(item._id, item);
-        });
-
-        const combinedData = this.admitCardInfo.reduce((result: any, admitCard: any) => {
-          const studentInfo = studentInfoMap.get(admitCard.studentId);
-
-          if (studentInfo) {
-            result.push({
-              session: studentInfo.session,
-              studentId: admitCard.studentId,
-              class: admitCard.class,
-              stream: admitCard.stream,
-              examType: admitCard.examType,
-              status: admitCard.status || "",
-              name: studentInfo.name,
-              dob: studentInfo.dob,
-              fatherName: studentInfo.fatherName,
-              motherName: studentInfo.motherName,
-              rollNumber: studentInfo.rollNumber,
-              admissionNo: studentInfo.admissionNo,
-              mobile: studentInfo.mobile,
-              photo: studentInfo.photo
-            });
-          }
-
-          return result;
-        }, []);
-
-        if (combinedData) {
-          this.allAdmitCards = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
-        }
+        this.allAdmitCards = res;
+        // const classMappings: any = {
+        //   200: "Nursery",
+        //   201: "LKG",
+        //   202: "UKG",
+        //   1: "1st",
+        //   2: "2nd",
+        //   3: "3rd",
+        // };
+        // for (let i = 4; i <= 12; i++) {
+        //   classMappings[i] = i + "th";
+        // }
+        // this.studentInfoByClass.forEach((student) => {
+        //   student.class = classMappings[student.class] || "Unknown";
+        //   student.admissionClass = classMappings[student.admissionClass] || "Unknown";
+        // });
       }
-    }, err => {
-      this.errorCheck = true;
-      this.statusCode = err.status;
     })
   }
+
+  // getStudentAdmitCardByClass() {
+  //   let params = {
+  //     cls: this.cls,
+  //     adminId: this.adminId,
+  //     stream: this.stream
+  //   }
+  //   this.admitCardService.getAllStudentAdmitCardByClass(params).subscribe((res: any) => {
+  //     if (res) {
+  //       this.errorCheck = false;
+  //       this.statusCode = 200;
+  //       this.admitCardInfo = res.admitCardInfo;
+  //       this.studentInfo = res.studentInfo;
+  //       const studentInfoMap = new Map();
+  //       this.studentInfo.forEach((item: any) => {
+  //         studentInfoMap.set(item._id, item);
+  //       });
+
+  //       const combinedData = this.admitCardInfo.reduce((result: any, admitCard: any) => {
+  //         const studentInfo = studentInfoMap.get(admitCard.studentId);
+
+  //         if (studentInfo) {
+  //           result.push({
+  //             session: studentInfo.session,
+  //             studentId: admitCard.studentId,
+  //             class: admitCard.class,
+  //             stream: admitCard.stream,
+  //             examType: admitCard.examType,
+  //             status: admitCard.status || "",
+  //             name: studentInfo.name,
+  //             dob: studentInfo.dob,
+  //             fatherName: studentInfo.fatherName,
+  //             motherName: studentInfo.motherName,
+  //             rollNumber: studentInfo.rollNumber,
+  //             admissionNo: studentInfo.admissionNo,
+  //             mobile: studentInfo.mobile,
+  //             photo: studentInfo.photo
+  //           });
+  //         }
+
+  //         return result;
+  //       }, []);
+
+  //       if (combinedData) {
+  //         this.allAdmitCards = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
+  //       }
+  //     }
+  //   }, err => {
+  //     this.errorCheck = true;
+  //     this.statusCode = err.status;
+  //   })
+  // }
 }
