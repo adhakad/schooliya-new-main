@@ -1031,35 +1031,33 @@ let ChangeStatus = async (req, res, next) => {
     }
 }
 
-let DeleteStudent = async (req, res, next) => {
+const DeleteStudent = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const deleteStudent = await StudentModel.findByIdAndRemove(id);
-        if (deleteStudent) {
-            const [deleteAdmitCard, deleteExamResult, deleteFeesCollection] = await Promise.all([
-                AdmitCardModel.deleteOne({ studentId: id }),
-                ExamResultModel.deleteOne({ studentId: id }),
-                FeesCollectionModel.deleteMany({ studentId: id }),
-            ]);
 
-            if (deleteAdmitCard || deleteExamResult || deleteFeesCollection) {
-                return res.status(200).json('Student deleted successfully');
-            }
-            return res.status(200).json('Student deleted successfully');
+        // student find karo with only publicId
+        const student = await StudentModel.findById(id, "studentImagePublicId").lean();
+        if (!student) {
+            return res.status(404).json("Student not found!");
         }
+        // parallel delete sab ek saath
+        await Promise.all([
+            student.studentImagePublicId
+                ? cloudinary.uploader.destroy(student.studentImagePublicId)
+                : Promise.resolve(),
+
+            StudentModel.deleteOne({ _id: id }),
+            AdmitCardModel.deleteOne({ studentId: id }),
+            ExamResultModel.deleteOne({ studentId: id }),
+            FeesCollectionModel.deleteMany({ studentId: id }),
+        ]);
+
+        return res.status(200).json("Student deleted successfully");
     } catch (error) {
-        return res.status(500).json('Internal Server Error!');
+        console.error(error);
+        return res.status(500).json("Internal Server Error!");
     }
-}
-// let DeleteAdmissionEnquiry = async (req, res, next) => {
-//     try {
-//         const id = req.params.id;
-//         const admissionEnquiry = await AdmissionEnquiryModel.findByIdAndRemove(id);
-//         return res.status(200).json('Student Online admission form delete successfully.');
-//     } catch (error) {
-//         return res.status(500).json('Internal Server Error!');
-//     }
-// }
+};
 
 module.exports = {
     countStudent,
@@ -1077,6 +1075,5 @@ module.exports = {
     StudentClassPromote,
     StudentClassFail,
     ChangeStatus,
-    DeleteStudent,
-    // DeleteAdmissionEnquiry
+    DeleteStudent
 }
