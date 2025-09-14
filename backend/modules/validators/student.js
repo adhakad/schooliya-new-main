@@ -33,12 +33,12 @@ const stringOrEmpty = () =>
         .trim()
         .custom((value, helpers) => {
           if (
-            value === "" ||
             value === null ||
             value === undefined ||
+            value === "" ||
             ["null", "undefined"].includes(value.toLowerCase())
           ) {
-            return undefined; // field skip ho jaayegi
+            return undefined;
           }
           return value;
         })
@@ -75,8 +75,8 @@ const createStudentSchema = Joi.object({
   createdBy: Joi.string().trim().required(),
 
   // Optional fields
-  studentImage: stringOrEmpty(),
-  studentImagePublicId: stringOrEmpty(),
+  studentImage: Joi.string().optional().allow(null).empty(""),
+  studentImagePublicId: Joi.string().optional().allow(null).empty(""),
   udiseNumber: numberOrEmpty(),
   aadharNumber: numberOrEmpty(),
   samagraId: numberOrEmpty(),

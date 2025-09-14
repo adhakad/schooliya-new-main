@@ -248,35 +248,62 @@ let GetSingleStudent = async (req, res, next) => {
     }
 }
 
-let CreateStudent = async (req, res, next) => {
+const CreateStudent = async (req, res, next) => {
     let receiptNo = Math.floor(Math.random() * 899999 + 100000);
-    const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
-    const istDateTimeString = currentDateIst.toFormat('dd/MM/yyyy hh:mm:ss a');
-    let { session, medium, adminId, name, rollNumber, admissionClass, aadharNumber, udiseNumber, samagraId, admissionFees, admissionType, stream, admissionNo, dob, doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy } = req.body;
-    let className = req.body.class;
-    if (stream === "stream") {
-        stream = "n/a";
-    }
-    if (admissionType == 'New') {
-        doa = currentDateIst.toFormat('dd/MM/yyyy');
-        admissionClass = className;
-    } else {
-        const parsedDate = DateTime.fromFormat(doa, 'dd/MM/yyyy');
-        if (!parsedDate.isValid) {
-            doa = DateTime.fromISO(doa).toFormat("dd/MM/yyyy");
-        }
-    }
-    const parsedDate = DateTime.fromFormat(dob, 'dd/MM/yyyy');
-    if (!parsedDate.isValid) {
-        dob = DateTime.fromISO(dob).toFormat("dd/MM/yyyy");
-    }
+    const currentDateIst = DateTime.now().setZone("Asia/Kolkata");
+    const istDateTimeString = currentDateIst.toFormat("dd/MM/yyyy hh:mm:ss a");
+
     try {
-        const result = await cloudinary.uploader.upload(req.file.path);
-        fs.unlinkSync(req.file.path);
-        let studentData = {
-            session, medium, adminId, name, studentImage: result.secure_url,
-            studentImagePublicId: result.public_id, rollNumber, admissionType, stream, admissionNo, class: className, admissionClass, dob: dob, doa: doa, gender, category, religion, nationality, bankAccountNo, bankIfscCode, address, lastSchool, fatherName, fatherQualification, fatherOccupation, motherOccupation, parentsContact, familyAnnualIncome, motherName, motherQualification, feesConcession, createdBy
+        let studentData = { ...req.body };
+
+        let {
+            session,
+            adminId,
+            admissionType,
+            stream,
+            class: className,
+            dob,
+            doa,
+            feesConcession,
+            admissionFees,
+            rollNumber,
+            admissionNo,
+        } = studentData;
+
+        // default stream
+        if (stream === "stream") {
+            stream = "n/a";
+            studentData.stream = "n/a";
         }
+
+        // Admission type wise doa
+        if (admissionType === "New") {
+            studentData.doa = currentDateIst.toFormat("dd/MM/yyyy");
+            studentData.admissionClass = className;
+        } else if (doa) {
+            const parsedDate = DateTime.fromFormat(doa, "dd/MM/yyyy");
+            studentData.doa = parsedDate.isValid
+                ? parsedDate.toFormat("dd/MM/yyyy")
+                : DateTime.fromISO(doa).toFormat("dd/MM/yyyy");
+        }
+
+        // DOB format check
+        if (dob) {
+            const parsedDate = DateTime.fromFormat(dob, "dd/MM/yyyy");
+            studentData.dob = parsedDate.isValid
+                ? parsedDate.toFormat("dd/MM/yyyy")
+                : DateTime.fromISO(dob).toFormat("dd/MM/yyyy");
+        }
+
+        // -------- IMAGE UPLOAD --------
+        if (req.file && req.file.path) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            fs.unlinkSync(req.file.path);
+
+            studentData.studentImage = result.secure_url;
+            studentData.studentImagePublicId = result.public_id;
+        }
+
         if (!adminId) {
             return res.status(404).json(`Invalid entry!`);
         }
@@ -297,26 +324,34 @@ let CreateStudent = async (req, res, next) => {
         if (!checkClassSubject) {
             return res.status(404).json(`Please group subjects according to class and stream!`);
         }
-        if (aadharNumber != null && aadharNumber !== "" && aadharNumber !== "null" && aadharNumber.trim() !== "") {
-            const checkAadharNumber = await StudentModel.findOne({ aadharNumber: aadharNumber.trim() });
-            if (checkAadharNumber) {
-                return res.status(400).json({ message: "Aadhar card number already exists!" });
+        if (studentData.aadharNumber) {
+            const exists = await StudentModel.findOne({
+                aadharNumber: studentData.aadharNumber,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return res.status(400).json("Aadhar number already exists!");
             }
-            studentData.aadharNumber = aadharNumber.trim();
         }
-        if (samagraId != null && samagraId !== "" && samagraId !== "null" && samagraId.trim() !== "") {
-            const checkAadharNumber = await StudentModel.findOne({ samagraId: samagraId.trim() });
-            if (checkAadharNumber) {
-                return res.status(400).json({ message: "Aadhar card number already exists!" });
+
+        if (studentData.samagraId) {
+            const exists = await StudentModel.findOne({
+                samagraId: studentData.samagraId,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return res.status(400).json("Samagra ID already exists!");
             }
-            studentData.samagraId = samagraId.trim();
         }
-        if (udiseNumber != null && udiseNumber !== "" && udiseNumber !== "null" && udiseNumber.trim() !== "") {
-            const checkAadharNumber = await StudentModel.findOne({ udiseNumber: udiseNumber.trim() });
-            if (checkAadharNumber) {
-                return res.status(400).json({ message: "Aadhar card number already exists!" });
+
+        if (studentData.udiseNumber) {
+            const exists = await StudentModel.findOne({
+                udiseNumber: studentData.udiseNumber,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return res.status(400).json("UDISE number already exists!");
             }
-            studentData.udiseNumber = udiseNumber.trim();
         }
         const checkAdmissionNo = await StudentModel.findOne({ adminId: adminId, admissionNo: admissionNo });
         if (checkAdmissionNo) {
@@ -371,25 +406,6 @@ let CreateStudent = async (req, res, next) => {
             studentFeesData.studentId = studentId;
             let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
             if (createStudentFeesData) {
-                // let studentAdmissionData = {
-                //     adminId: adminId,
-                //     session: session,
-                //     name: createStudent.name,
-                //     class: createStudent.class,
-                //     stream: stream,
-                //     admissionNo: createStudent.admissionNo,
-                //     rollNumber: createStudent.rollNumber,
-                //     dob: createStudent.dob,
-                //     fatherName: createStudent.fatherName,
-                //     motherName: createStudent.motherName,
-                //     admissionType: admissionType,
-                //     admissionFees: createStudentFeesData.admissionFees,
-                //     admissionFeesReceiptNo: createStudentFeesData.admissionFeesReceiptNo,
-                //     admissionFeesPaymentDate: createStudentFeesData.admissionFeesPaymentDate,
-                //     totalFees: createStudentFeesData.totalFees,
-                //     paidFees: createStudentFeesData.paidFees,
-                //     dueFees: createStudentFeesData.dueFees
-                // }
                 return res.status(200).json('Student created successfully');
             }
         }
@@ -661,8 +677,36 @@ let UpdateStudent = async (req, res) => {
             studentData.studentImagePublicId = result.public_id;
         }
 
-        // Update student
-        await StudentModel.findByIdAndUpdate(id, { $set: studentData }, { new: true });
+        // Prepare update data
+        let updateData = { $set: studentData };
+        let unsetData = {};
+
+        // Fields which should never be auto-removed
+        const protectedFields = new Set([
+            "_id",
+            "adminId",
+            "session",
+            "studentImage",
+            "studentImagePublicId",
+            "feesConcession",
+            "extraField",
+            "status",
+            "createdAt",
+            "createdBy",
+            "__v",
+        ]);
+
+        for (let key of Object.keys(singleStudent._doc)) {
+            if (!protectedFields.has(key) && !(key in studentData)) {
+                unsetData[key] = "";
+            }
+        }
+
+        if (Object.keys(unsetData).length > 0) {
+            updateData.$unset = unsetData;
+        }
+
+        await StudentModel.findByIdAndUpdate(id, updateData, { new: true });
 
         return res.status(200).json("Student updated successfully");
     } catch (error) {
@@ -670,7 +714,6 @@ let UpdateStudent = async (req, res) => {
         return res.status(500).json("Internal Server Error!");
     }
 };
-
 let StudentClassPromote = async (req, res, next) => {
     try {
         const studentId = req.params.id;

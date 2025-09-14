@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 // import { read, utils, writeFile } from 'xlsx';
 import * as ExcelJS from 'exceljs';
 import { Subject } from 'rxjs';
@@ -116,7 +116,7 @@ export class StudentComponent implements OnInit {
       motherQualification: ['', Validators.required],
       motherOccupation: ['', Validators.required],
       parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
-      familyAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      familyAnnualIncome: [Validators.required, Validators.pattern(/^\d+$/)],
       feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: [''],
     })
@@ -469,6 +469,7 @@ export class StudentComponent implements OnInit {
       this.studentForm.value.admissionType = 'Old';
       this.studentForm.value.createdBy = 'Admin';
       this.studentForm.value.class = this.className;
+      this.studentForm.value.familyAnnualIncome = `${this.studentForm.value.familyAnnualIncome}`
 
       const classText = this.studentForm.get('class')?.value;
       const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);

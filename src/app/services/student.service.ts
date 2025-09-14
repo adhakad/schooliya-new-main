@@ -13,7 +13,7 @@ export class StudentService {
 
   private cleanObject(obj: any): any {
     return Object.fromEntries(
-      Object.entries(obj).filter(([_, v]) => v !== null && v !== 'null')
+      Object.entries(obj).filter(([_, v]) => v !== null && v !== 'null' && v !== '' && v !== undefined && v !== "undefined")
     );
   }
 
@@ -30,7 +30,6 @@ export class StudentService {
           formData.append(key, value as any);
         }
       });
-
       return this.http.post(this.url, formData);
     } else {
       return this.http.post(this.url, studentData);
@@ -78,7 +77,6 @@ export class StudentService {
           formData.append(key, value as any);
         }
       });
-
       return this.http.put(`${this.url}/${studentData._id}`, formData);
     } else {
       return this.http.put(`${this.url}/${studentData._id}`, studentData);
