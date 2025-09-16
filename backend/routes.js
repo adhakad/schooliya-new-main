@@ -26,4 +26,5 @@ module.exports = app => {
     app.use('/v1/banner', require('./modules/routes/banner'));
     app.use('/v1/plans', require('./modules/routes/plans'));
     app.use('/v1/board', require('./modules/routes/board'));
+    app.use('/v1/id-card', require('./modules/routes/id-card'));
 };

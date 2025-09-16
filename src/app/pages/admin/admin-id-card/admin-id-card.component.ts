@@ -7,8 +7,10 @@ import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { StudentService } from 'src/app/services/student.service';
 import { SchoolService } from 'src/app/services/school.service';
+import { IdCardService } from 'src/app/services/id-card.service';
 import { ClassService } from 'src/app/services/class.service';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-id-card',
@@ -43,8 +45,9 @@ export class AdminIdCardComponent implements OnInit {
     private router: Router,
     private adminAuthService: AdminAuthService,
     private schoolService: SchoolService,
+    private idCardService: IdCardService,
     private classService: ClassService,
-    private admitCardService: AdmitCardService,
+    private toastr: ToastrService,
     private printPdfService: PrintPdfService,
     private studentService: StudentService
   ) { }
@@ -113,6 +116,13 @@ export class AdminIdCardComponent implements OnInit {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
+      }
+    })
+  }
+  orderIdCard() {
+    this.idCardService.orderIdCard(this.adminId).subscribe((res: any) => {
+      if (res) {
+        this.toastr.success('', res);
       }
     })
   }
