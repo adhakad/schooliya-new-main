@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { read, utils, writeFile } from 'xlsx';
 import * as ExcelJS from 'exceljs';
 import { Subject } from 'rxjs';
@@ -28,6 +28,7 @@ export class StudentComponent implements OnInit {
   public baseUrl = environment.API_URL;
   studentForm: FormGroup;
   excelForm: FormGroup;
+  disabled: boolean = true;
   showModal: boolean = false;
   showBulkImportModal: boolean = false;
   showBulkExportModal: boolean = false;
@@ -222,6 +223,7 @@ export class StudentComponent implements OnInit {
     this.studentForm.reset();
     this.excelForm.reset();
     this.logoPreview = null;
+    this.disabled = true;
   }
   addStudentModel() {
     this.showModal = true;
@@ -455,6 +457,7 @@ export class StudentComponent implements OnInit {
     }
   }
   studentAddUpdate() {
+    this.disabled = false;
     if (this.studentForm.valid) {
       if (!this.adminId) {
         this.setAdminInfo();

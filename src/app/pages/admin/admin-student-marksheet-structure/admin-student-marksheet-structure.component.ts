@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 export class AdminStudentMarksheetStructureComponent implements OnInit, AfterViewInit {
   private isBrowser: boolean = isPlatformBrowser(this.platformId);
   examResultForm: FormGroup;
-  disabled = true;
+  disabled:boolean = true;
   showModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
@@ -138,6 +138,7 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
     this.processedTheoryData = [];
     this.processedPracticalData = [];
     this.examResultForm.reset();
+    this.disabled = true;
   }
   successDone(msg: any) {
     this.closeModal();

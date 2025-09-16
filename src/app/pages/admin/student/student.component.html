@@ -658,7 +658,7 @@
                       </div>
                       <div class="modal-footer" *ngIf="!deleteMode">
                         <button class="submit-button" mat-raised-button type="submit"
-                          [disabled]="!studentForm.valid">Submit</button>
+                          [disabled]="!studentForm.valid || disabled==false">Submit</button>
                       </div>
                       <div *ngIf="deleteMode">
                         <div class="modal-body">

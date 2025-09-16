@@ -385,7 +385,7 @@
 
                       <div class="modal-footer" *ngIf="!deleteMode">
                         <button class="submit-button" mat-raised-button type="submit"
-                          [disabled]="!schoolForm.valid">Submit</button>
+                          [disabled]="!schoolForm.valid || disabled==false">Submit</button>
                       </div>
                       <div *ngIf="deleteMode">
                         <h3 style="margin-left: 20px;">To delete school detail, click ok to confirm.</h3>

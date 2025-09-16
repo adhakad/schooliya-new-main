@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 export class SchoolComponent implements OnInit {
   public baseUrl = environment.API_URL;
   schoolForm: FormGroup;
+  disabled: boolean = true;
   showModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
@@ -101,6 +102,7 @@ export class SchoolComponent implements OnInit {
     this.errorMsg = '';
     this.schoolForm.reset();
     this.logoPreview = null;  // Reset logo preview
+    this.disabled = true;
   }
 
   addSchoolModel() {
@@ -169,6 +171,7 @@ export class SchoolComponent implements OnInit {
 
   // Submit form for adding or updating school
   schoolAddUpdate() {
+    this.disabled = false;
     if (this.schoolForm.valid) {
       this.schoolForm.value.adminId = this.adminId;
 
@@ -212,6 +215,6 @@ export class SchoolComponent implements OnInit {
   }
 
   allOptions() {
-    this.mediums = [{ medium: 'Hindi' }, { medium: 'English'},{medium:'Hindi & English'}]
+    this.mediums = [{ medium: 'Hindi' }, { medium: 'English' }, { medium: 'Hindi & English' }]
   }
 }
