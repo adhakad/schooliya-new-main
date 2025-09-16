@@ -339,6 +339,15 @@
     cursor: pointer;
   }
 
+  table img {
+    border-radius: 5px;
+    width: 55px;
+    height: 55px;
+    padding: 1px;
+    border: 1px solid #382066;
+    border-radius: 50%;
+  }
+
   .table p {
     color: #382066;
   }

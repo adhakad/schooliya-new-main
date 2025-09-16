@@ -108,9 +108,6 @@
                                             <h5 class="modal-title mt-2">{{updateMode?'UPDATE': deleteMode ?
                                                 'DELETE'
                                                 :'ADD'}} EXAM RESULT
-                                                - {{cls | classSuffix | uppercase}} <span
-                                                    *ngIf="cls==11 || cls ==12">{{stream
-                                                    | uppercase}}</span>
                                             </h5>
                                             <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                                         </div>

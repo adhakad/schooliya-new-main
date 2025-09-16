@@ -18,17 +18,15 @@
                   </div>
                   <div class="col-9" style="text-align: right;">
                     <div class="row">
-                      <div class="col-7"></div>
+                      <div class="col-7 offset-1"></div>
                       <div class="col-2">
-                        <ng-container>
+                        <ng-container *ngIf="cls">
                           <mat-form-field class="custom-select-print">
                             <mat-label style="color:#8C52FF">Print</mat-label>
                             <mat-select matInput>
                               <div>
-                                <mat-option (click)="bulkPrint(0)">One
-                                  student in one page</mat-option>
-                                <mat-option (click)="bulkPrint(1)">Two
-                                  student in one page</mat-option>
+                                <mat-option (click)="bulkPrint(1)">Print Id Card</mat-option>
+                                <mat-option (click)="bulkPrint(1)">Order Id Card to Schooliya</mat-option>
                               </div>
                             </mat-select>
                           </mat-form-field>
@@ -45,11 +43,11 @@
                           </mat-form-field>
                         </ng-container>
                       </div>
-                      <div class="col-1">
+                      <!-- <div class="col-1">
                         <button class="btn setting-button" [matMenuTriggerFor]="settings">
                           <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
                         </button>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -63,11 +61,11 @@
                       <span>ID Card</span>
                     </button>
                   </div>
-                  <div class="col-3">
+                  <!-- <div class="col-3">
                     <button class="btn setting-button" [matMenuTriggerFor]="settings">
                       <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
                     </button>
-                  </div>
+                  </div> -->
                   <div class="col-12">
                     <mat-form-field class="custom-select">
                       <mat-label *ngIf="cls==0">Class</mat-label>
@@ -79,17 +77,13 @@
                     </mat-form-field>
                   </div>
                   <div class="col-12">
-                    <ng-container *ngIf="cls && templateStatusCode==200">
+                    <ng-container *ngIf="cls">
                       <mat-form-field class="custom-select-print">
                         <mat-label style="color:#8C52FF">Print</mat-label>
                         <mat-select matInput>
                           <div>
-                            <mat-option (click)="bulkPrint(0)"
-                              *ngIf="cls && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One
-                              student in one page</mat-option>
-                            <mat-option (click)="bulkPrint(1)"
-                              *ngIf="cls && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two
-                              student in one page</mat-option>
+                            <mat-option (click)="bulkPrint(1)">Print Id Card</mat-option>
+                            <mat-option (click)="bulkPrint(1)">Order Id Card to Schooliya</mat-option>
                           </div>
                         </mat-select>
                       </mat-form-field>
@@ -99,12 +93,12 @@
               </div>
             </div>
           </div>
-          <mat-menu #settings="matMenu">
+          <!-- <mat-menu #settings="matMenu">
             <button mat-menu-item routerLink="/admin/admit-card/structure">
               <mat-icon>assignment</mat-icon>
               <span>ID Card Structure</span>
             </button>
-          </mat-menu>
+          </mat-menu> -->
         </div>
 
 
@@ -117,7 +111,8 @@
                   <ng-container *ngIf="allAdmitCards && allAdmitCards.length>0">
                     <thead class="bg-light">
                       <tr class="text-muted">
-                        <th>No.</th>
+                        <th>S.No.</th>
+                        <th>Image</th>
                         <th>Student</th>
                         <th>Roll Number</th>
                         <th>Class</th>
@@ -129,6 +124,11 @@
                       <tr *ngFor="let students of allAdmitCards,let i=index">
                         <td>
                           <p class="mb-0">{{i+1}}</p>
+                        </td>
+                        <td>
+                          <ng-container *ngIf="students.studentImage"><img src="{{students?.studentImage}}"
+                              alt="student image" /></ng-container>
+                          <ng-container *ngIf="!students.studentImage"><img src="" /></ng-container>
                         </td>
                         <td>
                           <p class="mb-0">{{students.name | titlecase}}</p>
@@ -146,7 +146,7 @@
                           <p class="mb-0" *ngIf="students.class !==11 && students.class !==12">N/A</p>
                         </td>
                         <td>
-                          <p class="mb-0">{{students.mobile || 'N/A'}}</p>
+                          <p class="mb-0">{{students.parentsContact || '-'}}</p>
                         </td>
                       </tr>
                     </tbody>
@@ -155,7 +155,7 @@
               </div>
 
               <div *ngIf="!cls" style="text-align: center;margin-top: 200px;">
-                <p>Please Choose Class & Stream !</p>
+                <p>Please Choose Class!</p>
               </div>
               <div
                 *ngIf="cls && errorCheck && statusCode ==404 || statusCode ==500 || templateStatusCode==404 || templateStatusCode==500"
@@ -170,8 +170,7 @@
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">ID CARD PRINT<span *ngIf="cls==12 || cls==11"> - {{stream |
-                          uppercase}}</span></h5>
+                      <h5 class="modal-title">ID CARD PRINT</h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
                     <div class="modal-body print-model-body">

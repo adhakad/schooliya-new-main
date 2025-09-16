@@ -158,6 +158,7 @@
                       <th>Stream</th>
                       <th>Roll Number</th>
                       <th>Session</th>
+                      <th>Contact</th>
                       <th>Created By</th>
                       <th>View</th>
                       <th>Edit</th>
@@ -170,7 +171,9 @@
                         <p class="mb-0">{{number*10+i+1-10}}</p>
                       </td>
                       <td>
-                        <img src="{{students?.studentImage}}" alt="student image" style="border-radius: 5px;"/>
+                        <ng-container *ngIf="students.studentImage"><img src="{{students?.studentImage}}"
+                            alt="student image" /></ng-container>
+                        <ng-container *ngIf="!students.studentImage"><img src="" /></ng-container>
                       </td>
                       <td>
                         <p class="mb-0">{{students.admissionNo}}</p>
@@ -195,6 +198,9 @@
                       </td>
                       <td>
                         <p class="mb-0">{{students.session}}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0">{{students.parentsContact || '-'}}</p>
                       </td>
                       <td>
                         <p class="mb-0">{{students.createdBy | titlecase}}</p>

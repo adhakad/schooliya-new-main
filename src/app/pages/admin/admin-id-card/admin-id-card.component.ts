@@ -159,19 +159,18 @@ export class AdminIdCardComponent implements OnInit {
   }
 
   private generateIdCardHtml(student: any): string {
-    console.log(student)
     return `
       <div class="id-card">
         <!-- Header -->
         <div class="id-card-header">
           <div class="id-card-logo-box">
             <div class="id-card-logo-bg">
-              <img src="${this.schoolInfo?.schoolLogo}" 
+              <img src="${this.schoolInfo.schoolLogo}" 
                    alt="School Logo" class="id-card-logo">
             </div>
           </div>
           <div class="id-card-school-name">
-            <span class="id-card-school-text">GREEN VALLEY SCHOOL</span>
+            <span class="id-card-school-text">${(this.schoolInfo.schoolName).toUpperCase()}</span>
           </div>
         </div>
         
@@ -188,29 +187,29 @@ export class AdminIdCardComponent implements OnInit {
         <!-- Info -->
         <div class="id-card-info">
           <div class="id-card-student-name">
-            <div class="id-card-student-text">${(student?.name || '').toUpperCase()}</div>
+            <div class="id-card-student-text">${(student.name).toUpperCase()}</div>
           </div>
           
           <div class="id-card-info-grid">
             <div class="id-card-info-row">
               <span class="id-card-info-label">Father Name</span>
               <span class="id-card-info-separator">:</span>
-              <span class="id-card-info-value">${this.titleCase(student?.fatherName || '')}</span>
+              <span class="id-card-info-value">${this.titleCase(student.fatherName)}</span>
             </div>
             <div class="id-card-info-row">
               <span class="id-card-info-label">Date of Birth</span>
               <span class="id-card-info-separator">:</span>
-              <span class="id-card-info-value">${student?.dob || ''}</span>
+              <span class="id-card-info-value">${student?.dob}</span>
             </div>
             <div class="id-card-info-row">
               <span class="id-card-info-label">Mobile</span>
               <span class="id-card-info-separator">:</span>
-              <span class="id-card-info-value">9234567541</span>
+              <span class="id-card-info-value">${student?.parentsContact || ''}</span>
             </div>
             <div class="id-card-info-row">
               <span class="id-card-info-label">Class</span>
               <span class="id-card-info-separator">:</span>
-              <span class="id-card-info-value">${student?.class}${this.getClassSuffix(student?.class)}${(this.cls == 11 || this.cls == 12) ? ' ' + this.titleCase(student?.stream || '') : ''}</span>
+              <span class="id-card-info-value">${student?.class}${this.getClassSuffix(student?.class)}}</span>
             </div>
           </div>
         </div>
@@ -449,10 +448,9 @@ export class AdminIdCardComponent implements OnInit {
 }
 
       /* Print Specific Styles */
-      @media print {
-        @page {
+      @page {
           size: 304.8mm 457.2mm !important; /* 12in x 18in */
-          margin: 12.7mm !important; /* 0.5in */
+          margin: 2.5mm !important; /* 0.5in */
         }
         
         body {
@@ -465,9 +463,9 @@ export class AdminIdCardComponent implements OnInit {
           display: grid !important;
           grid-template-columns: repeat(5, 1fr) !important;
           grid-template-rows: repeat(5, 1fr) !important;
-          gap: 5mm !important;
-          width: 279.4mm !important; /* 304.8mm - 25.4mm margin */
-          height: 431.8mm !important; /* 457.2mm - 25.4mm margin */
+          gap: 2.5mm !important;
+          width: 304.8mm !important; /* 304.8mm - 25.4mm margin */
+          height:457.2mm !important; /* 457.2mm - 25.4mm margin */
           padding: 0 !important;
         }
         
