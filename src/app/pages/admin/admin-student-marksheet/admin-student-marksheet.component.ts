@@ -332,7 +332,7 @@ export class AdminStudentMarksheetComponent implements OnInit {
     printHtml += ' top: 45%;';
     printHtml += ' left: 50%;';
     printHtml += ' transform: translate(-50%, -50%);';
-    printHtml += ' opacity: 0.06;';
+    printHtml += ' opacity: 0.08;';
     printHtml += ' width: 40%;';
     printHtml += ' height: auto;';
     printHtml += ' max-width: 500px;';

@@ -209,7 +209,7 @@ export class AdminIdCardComponent implements OnInit {
             <div class="id-card-info-row">
               <span class="id-card-info-label">Class</span>
               <span class="id-card-info-separator">:</span>
-              <span class="id-card-info-value">${student?.class}${this.getClassSuffix(student?.class)}}</span>
+              <span class="id-card-info-value">${student?.class}${this.getClassSuffix(student?.class)}</span>
             </div>
           </div>
         </div>
@@ -245,7 +245,7 @@ export class AdminIdCardComponent implements OnInit {
 
 .id-card-header {
    height: 19.6mm; /* Adjusted from 21.17mm (ratio: 0.927) */
-   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #4a90e2 100%);
+   background: linear-gradient(135deg, #401071ff 0%, #5625b9ff 50%, #a67affff 100%);
    display: flex;
    justify-content: flex-start;
    gap: 0;
@@ -274,7 +274,7 @@ export class AdminIdCardComponent implements OnInit {
    justify-content: center;
    font-size: 1.97mm; /* Adjusted from 2.12mm (ratio: 0.927) */
    font-weight: 600;
-   color: #2a5298;
+   color: #5625b9ff;
 }
 
 .id-card-logo {
@@ -326,7 +326,7 @@ export class AdminIdCardComponent implements OnInit {
 }
 
 .id-card-photo-bg {
-   border: 0.49mm solid #2a5298; /* Adjusted from 0.53mm (ratio: 0.927) */
+   border: 0.49mm solid #5625b9ff; /* Updated to purple theme */
    padding: 0.49mm; /* Adjusted from 0.53mm */
    border-radius: 50%;
    overflow: hidden;
@@ -349,21 +349,21 @@ export class AdminIdCardComponent implements OnInit {
    top: 38.93mm; /* Adjusted from 42mm (ratio: 0.927) */
    left: 3.92mm; /* Adjusted from 4.23mm (ratio: 0.927) */
    right: 3.92mm; /* Adjusted from 4.23mm */
-   color: #2c3e50;
+   color: #302c50ff;
 }
 
 .id-card-student-name {
    text-align: center;
    padding-bottom: 1.62mm; /* Adjusted from 1.75mm (ratio: 0.927) */
    margin-bottom: 2.21mm; /* Adjusted from 2.38mm (ratio: 0.927) */
-   border-bottom: 0.23mm solid #e3f2fd; /* Adjusted from 0.25mm (ratio: 0.927) */
+   border-bottom: 0.23mm solid #e3e4fdff; /* Updated to light purple */
 }
 
 .id-card-student-text {
    font-size: 2.33mm; /* Adjusted from 2.51mm (ratio: 0.927) */
    font-weight: 800;
    letter-spacing: 0.046mm; /* Adjusted from 0.05mm (ratio: 0.927) */
-   color: #2a5298;
+   color: #5021aeff; /* Updated to purple theme */
 }
 
 .id-card-info-grid {
@@ -381,17 +381,17 @@ export class AdminIdCardComponent implements OnInit {
 
 .id-card-info-label {
    font-weight: 600;
-   color: #37474f;
+   color: #373748ff; /* Darker gray for better readability */
 }
 
 .id-card-info-separator {
    margin: 0 1.97mm; /* Adjusted from 2.12mm (ratio: 0.927) */
-   color: #90a4ae;
+   color: #9490aeff; /* Purple-gray for separator */
    font-weight: 500;
 }
 
 .id-card-info-value {
-   color: #37474f;
+   color: #373748ff; /* Darker gray for better readability */
    font-weight: 500;
    text-align: left;
 }
@@ -411,7 +411,7 @@ export class AdminIdCardComponent implements OnInit {
 }
 
 .id-card-signature-text {
-   color: #37474f;
+   color: #373748ff; /* Darker gray for better readability */
    font-size: 1.97mm; /* Adjusted from 2.12mm (ratio: 0.927) */
    font-weight: 800;
    opacity: 0.9;
@@ -426,7 +426,7 @@ export class AdminIdCardComponent implements OnInit {
    left: 0;
    right: 0;
    height: 6.26mm; /* Adjusted from 6.75mm (ratio: 0.927) */
-   background: linear-gradient(135deg, #2a5298 0%, #4a90e2 100%);
+   background: linear-gradient(135deg, #401071ff 0%, #5625b9ff 50%, #a67affff 100%);
    border-radius: 50% 50% 0 0;
    padding: 1.27mm 2.54mm 1.27mm 2.54mm; /* Converted from inches and adjusted */
    text-align: center;
@@ -482,7 +482,7 @@ export class AdminIdCardComponent implements OnInit {
         }
         
         .id-card {
-          border: 1px dashed #2a5298 !important;
+          border: 1px dashed #5625b9ff !important; /* Updated to purple theme */
         }
         
         /* Ensure images print properly */

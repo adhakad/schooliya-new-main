@@ -22,7 +22,9 @@
     </button>
   </div>
   <div class="main-menu col-lg-1" style="text-align: right;margin-right: -150px;">
-    <div style="background: radial-gradient(circle, #fff, #d0cdff);border-radius: 50%;width: 52px;height: 52px;padding: 4px;cursor: pointer;border:1px solid #d5d0e1;" [matMenuTriggerFor]="ourSystemMenu">
+    <div
+      style="background: radial-gradient(circle, #fff, #d0cdff);border-radius: 50%;width: 52px;height: 52px;padding: 4px;cursor: pointer;border:1px solid #d5d0e1;"
+      [matMenuTriggerFor]="ourSystemMenu">
       <img src="{{schoolInfo?.schoolLogo}}" style="position: relative;width: 100%;">
     </div>
   </div>
@@ -36,7 +38,7 @@
       <span>Logout</span>
     </button>
   </mat-menu>
-  
+
 </mat-toolbar>
 <div [ngClass]="{'top-hamburger-menu' : false==nav}">
   <mat-toolbar class="hamburger-menu" style="position: absolute !important;z-index: 1;">
@@ -61,6 +63,16 @@
       <mat-icon>currency_rupee</mat-icon>
       <span>Fees</span>
     </button>
+    <li class="nav-item">
+      <button mat-button class="menu-button" [routerLink]="['/admin/id-card']" routerLinkActive="active-link">
+        <mat-icon>book</mat-icon>
+        <span>Id Card</span>
+      </button>
+    </li>
+    <button mat-menu-item class="menu-button" routerLink="/admin/id-card" routerLinkActive="active-link">
+      <mat-icon>book</mat-icon>
+      <span>Id Card</span>
+    </button>
     <button mat-menu-item class="menu-button" routerLink="/admin/admit-card" routerLinkActive="active-link">
       <mat-icon>assignment</mat-icon>
       <span>Admit Card</span>
@@ -73,8 +85,7 @@
       <mat-icon>person_add</mat-icon>
       <span>Class Promote</span>
     </button>
-    <button mat-menu-item class="menu-button" routerLink="/admin/transfer-certificate"
-      routerLinkActive="active-link">
+    <button mat-menu-item class="menu-button" routerLink="/admin/transfer-certificate" routerLinkActive="active-link">
       <mat-icon>workspace_premium</mat-icon>
       <span>Transfer Certificate</span>
     </button>
