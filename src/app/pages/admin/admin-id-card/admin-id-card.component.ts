@@ -219,7 +219,7 @@ export class AdminIdCardComponent implements OnInit {
             <div class="id-card-info-row">
               <span class="id-card-info-label">Class</span>
               <span class="id-card-info-separator">:</span>
-              <span class="id-card-info-value">${student?.class}${this.getClassSuffix(student?.class)}</span>
+              <span class="id-card-info-value">${this.getClassSuffix(student?.class)}</span>
             </div>
           </div>
         </div>
@@ -513,10 +513,31 @@ export class AdminIdCardComponent implements OnInit {
 
   private getClassSuffix(cls: number): string {
     if (!cls) return '';
-    if (cls === 1) return 'st';
-    if (cls === 2) return 'nd';
-    if (cls === 3) return 'rd';
-    return 'th';
+
+    if (cls >= 4 && cls <= 12) {
+      return `${cls}th`;
+    }
+    if (cls === 1) {
+      return `${cls}st`;
+    }
+    if (cls === 2) {
+      return `${cls}nd`;
+    }
+    if (cls === 3) {
+      return `${cls}rd`;
+    }
+    if (cls === 200) {
+      return 'Nursery';
+    }
+    if (cls === 201) {
+      return 'LKG';
+    }
+    if (cls === 202) {
+      return 'UKG';
+    }
+
+    // ✅ default fallback
+    return `${cls}`;
   }
 
 

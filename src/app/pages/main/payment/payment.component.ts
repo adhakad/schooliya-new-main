@@ -214,7 +214,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        console.log(error.error)
         localStorage.removeItem('pymtFlowStpId');
         this.signupStep = SignupStepEnum.STEP_1; // Reset to initial state
         this.otpStep = OtpStepEnum.STEP_1;

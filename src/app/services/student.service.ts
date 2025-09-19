@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Student } from '../modal/student.modal';
 import { environment } from 'src/environments/environment';
-import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 
 @Injectable({
   providedIn: 'root'

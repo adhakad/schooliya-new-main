@@ -117,7 +117,7 @@ export class StudentComponent implements OnInit {
       motherQualification: ['', Validators.required],
       motherOccupation: ['', Validators.required],
       parentsContact: ['', [Validators.pattern('^[6789]\\d{9}$')]],
-      familyAnnualIncome: [Validators.required, Validators.pattern(/^\d+$/)],
+      familyAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: [''],
     })
@@ -468,28 +468,25 @@ export class StudentComponent implements OnInit {
         this.errorMsg = 'Admin information not available. Please refresh and try again.';
         return;
       }
-      this.studentForm.value.adminId = this.adminId;
-      this.studentForm.value.admissionType = 'Old';
-      this.studentForm.value.createdBy = 'Admin';
-      this.studentForm.value.class = this.className;
-      this.studentForm.value.familyAnnualIncome = `${this.studentForm.value.familyAnnualIncome}`
-
-      const classText = this.studentForm.get('class')?.value;
-      const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
-      if (classValue) {
-        this.studentForm.patchValue({
-          class: classValue
-        });
-      }
+      this.studentForm.get('adminId')?.setValue(this.adminId);
+      this.studentForm.get('admissionType')?.setValue('Old');
+      this.studentForm.get('createdBy')?.setValue('Admin');
+      this.studentForm.get('class')?.setValue(this.className);
+      this.studentForm.get('familyAnnualIncome')?.setValue(String(this.studentForm.value.familyAnnualIncome));
+      // const classText = this.studentForm.get('class')?.value;
+      // const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
+      // if (classValue) {
+      //   this.studentForm.patchValue({
+      //     class: classValue
+      //   });
+      // }
       const dob = new Date(this.studentForm.get('dob')?.value);
       const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
 
       const doa = new Date(this.studentForm.get('doa')?.value);
       const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
-
-
-      this.studentForm.value.dob = formattedDob;
-      this.studentForm.value.doa = formattedDoa;
+      this.studentForm.get('dob')?.setValue(formattedDob);
+      this.studentForm.get('doa')?.setValue(formattedDoa);
       if (this.updateMode) {
         this.studentService.updateStudent(this.studentForm.value).subscribe((res: any) => {
           if (res) {
