@@ -28,7 +28,6 @@ export class StudentComponent implements OnInit {
   public baseUrl = environment.API_URL;
   studentForm: FormGroup;
   excelForm: FormGroup;
-  disabled: boolean = true;
   showModal: boolean = false;
   showBulkImportModal: boolean = false;
   showBulkExportModal: boolean = false;
@@ -50,6 +49,9 @@ export class StudentComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
   selectedValue: number = 0;
+
+  // Add submission state management properties
+  isClick: boolean = false;
 
   sessions: any;
   categorys: any;
@@ -80,9 +82,21 @@ export class StudentComponent implements OnInit {
     200: 'Nursery',
     201: 'LKG',
     202: 'UKG',
-    // अन्य क्लासेज़ भी यहाँ मैप करें
+    1: '1st',
+    2: '2nd', 
+    3: '3rd',
+    4: '4th',
+    5: '5th',
+    6: '6th',
+    7: '7th',
+    8: '8th',
+    9: '9th',
+    10: '10th',
+    11: '11th',
+    12: '12th'
   };
   logoPreview: any = null;  // For showing school logo preview
+
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private printPdfService: PrintPdfService, private schoolService: SchoolService, public ete: ExcelService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private studentService: StudentService) {
     this.studentForm = this.fb.group({
       _id: [''],
@@ -144,6 +158,7 @@ export class StudentComponent implements OnInit {
       this.adminId = getAdmin.id;
     }
   }
+  
   getAcademicSession() {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
       if (res) {
@@ -152,12 +167,13 @@ export class StudentComponent implements OnInit {
       }
     })
   }
+  
   filterSession(selectedSession: any) {
-    this.errorCheck = true;
+    this.errorCheck = false;
     this.errorMsg = '';
     this.selectedSession = selectedSession;
-    // this.getFeesStructureBySession(this.adminId, selectedSession);
   }
+  
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
@@ -165,6 +181,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
+  
   chooseClass(cls: any) {
     this.page = 0;
     this.className = cls;
@@ -182,6 +199,7 @@ export class StudentComponent implements OnInit {
       this.getStudents({ page: 1 });
     }
   }
+  
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
@@ -200,9 +218,11 @@ export class StudentComponent implements OnInit {
       onlyself: true,
     });
   }
+  
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
   }
+  
   closeModal() {
     this.showModal = false;
     this.showBulkImportModal = false;
@@ -215,23 +235,34 @@ export class StudentComponent implements OnInit {
     this.errorMsg = '';
     this.successMsg = '';
     this.classSubject = [];
-    this.promotedClass;
-    this.singleStudentInfo;
-    this.singleStudentTCInfo;
+    this.promotedClass = undefined;
+    this.singleStudentInfo = undefined;
+    this.singleStudentTCInfo = undefined;
     this.admissionType = '';
     this.resetFileInput();
     this.studentForm.reset();
     this.excelForm.reset();
     this.logoPreview = null;
-    this.disabled = true;
+    // Reset all submission states
+    this.isClick = false;
   }
+  
   addStudentModel() {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = false;
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
+    
+    // Reset form completely
     this.studentForm.reset();
+    this.logoPreview = null;
+    
+    // Set default values
     this.classStreamFormValueSet();
     this.studentForm.get('session')?.setValue(this.academicSession);
+    
     if (this.adminId) {
       this.studentForm.get('adminId')?.setValue(this.adminId);
     } else {
@@ -241,7 +272,17 @@ export class StudentComponent implements OnInit {
         this.studentForm.get('adminId')?.setValue(this.adminId);
       }
     }
+
+    // Ensure all form controls are enabled
+    Object.keys(this.studentForm.controls).forEach(key => {
+      this.studentForm.get(key)?.enable();
+    });
+
+    // Reset validation state
+    this.studentForm.markAsUntouched();
+    this.studentForm.updateValueAndValidity();
   }
+  
   classStreamFormValueSet() {
     let cls = '';
     if (this.className == 1) {
@@ -273,13 +314,19 @@ export class StudentComponent implements OnInit {
       this.studentForm.get('stream')?.setValue(this.stream);
     }
   }
+  
   addBulkStudentImportModel() {
     this.showBulkImportModal = true;
     this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
   }
+  
   addBulkStudentExportModel() {
     this.showBulkExportModal = true;
     this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
     this.getStudentByClass(this.className);
   }
 
@@ -288,15 +335,25 @@ export class StudentComponent implements OnInit {
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
   }
+  
   updateStudentModel(student: any) {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = true;
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
+    
     const dobArray = student.dob.split('/');
     const doaArray = student.doa.split('/');
 
     const dobISO = new Date(`${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`);
     const doaISO = new Date(`${doaArray[2]}/${doaArray[1]}/${doaArray[0]}`);
+
+    // First ensure all controls are enabled
+    Object.keys(this.studentForm.controls).forEach(key => {
+      this.studentForm.get(key)?.enable();
+    });
 
     // Patch the form with the student data
     this.studentForm.patchValue({
@@ -335,26 +392,31 @@ export class StudentComponent implements OnInit {
       feesConcession: student.feesConcession,
       createdBy: student.createdBy
     });
+
+    // Handle class mapping if needed
     const classValue = student.class;
     if (classValue && this.classMap[classValue]) {
       this.studentForm.patchValue({
-        class: this.classMap[classValue], // यहाँ क्लास की वैल्यू को टेक्स्ट में बदलकर सेट करें
-
+        class: this.classMap[classValue]
       });
     }
-    if (this.updateMode) {
-      this.studentForm.get('feesConcession')?.disable();
-      this.studentForm.get('session')?.disable();  // Disable in edit mode
-    }
+    
+    // Reset form validation state after patching values
+    this.studentForm.markAsUntouched();
+    this.studentForm.updateValueAndValidity();
+    
     if (student.studentImage) {
-      this.logoPreview = `${this.baseUrl}/${student.studentImage}`; // Set logo preview
+      this.logoPreview = `${this.baseUrl}/${student.studentImage}`;
     }
   }
+  
   deleteStudentModel(id: String) {
     this.showModal = true;
     this.updateMode = false;
     this.deleteMode = true;
     this.deleteById = id;
+    this.errorCheck = false;
+    this.errorMsg = '';
   }
 
   getClass() {
@@ -364,6 +426,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
+  
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
@@ -374,6 +437,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
+  
   successDone(msg: any) {
     this.closeModal();
     this.successMsg = '';
@@ -410,6 +474,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
+  
   getStudents($event: any) {
     this.page = $event.page
     return new Promise((resolve, reject) => {
@@ -447,7 +512,7 @@ export class StudentComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.studentForm.patchValue({ schoolLogo: file });
+      this.studentForm.patchValue({ studentImage: file });
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -456,58 +521,90 @@ export class StudentComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+
+  // Helper method to mark all form fields as touched for validation display
+  private markFormGroupTouched() {
+    Object.keys(this.studentForm.controls).forEach(key => {
+      const control = this.studentForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
   studentAddUpdate() {
-    this.disabled = false;
-    if (this.studentForm.valid) {
-      if (!this.adminId) {
-        this.setAdminInfo();
-      }
+    // Check form validity first
+    if (!this.studentForm.valid) {
+      // Mark all fields as touched to show validation errors
+      this.markFormGroupTouched();
+      this.errorCheck = true;
+      this.errorMsg = 'Please fill all required fields correctly.';
+      return;
+    }
 
-      if (!this.adminId) {
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
+
+    // Reset error state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
+
+    if (!this.adminId) {
+      this.setAdminInfo();
+    }
+
+    if (!this.adminId) {
+      this.errorCheck = true;
+      this.errorMsg = 'Admin information not available. Please refresh and try again.';
+      this.isClick = false;
+      return;
+    }
+
+    // Create a copy of form values to avoid modifying the actual form
+    const formValues = { ...this.studentForm.value };
+    
+    formValues.adminId = this.adminId;
+    formValues.admissionType = 'Old';
+    formValues.createdBy = 'Admin';
+    formValues.class = this.className;
+    formValues.familyAnnualIncome = String(formValues.familyAnnualIncome);
+
+    // Format dates without modifying form controls
+    const dob = new Date(formValues.dob);
+    const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
+
+    const doa = new Date(formValues.doa);
+    const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
+    
+    formValues.dob = formattedDob;
+    formValues.doa = formattedDoa;
+
+    if (this.updateMode) {
+      this.studentService.updateStudent(formValues).subscribe((res: any) => {
+        if (res) {
+          this.isClick = false;
+          this.successDone(res);
+        }
+      }, err => {
         this.errorCheck = true;
-        this.errorMsg = 'Admin information not available. Please refresh and try again.';
-        return;
-      }
-      this.studentForm.get('adminId')?.setValue(this.adminId);
-      this.studentForm.get('admissionType')?.setValue('Old');
-      this.studentForm.get('createdBy')?.setValue('Admin');
-      this.studentForm.get('class')?.setValue(this.className);
-      this.studentForm.get('familyAnnualIncome')?.setValue(String(this.studentForm.value.familyAnnualIncome));
-      // const classText = this.studentForm.get('class')?.value;
-      // const classValue = Object.keys(this.classMap).find(key => this.classMap[key] === classText);
-      // if (classValue) {
-      //   this.studentForm.patchValue({
-      //     class: classValue
-      //   });
-      // }
-      const dob = new Date(this.studentForm.get('dob')?.value);
-      const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
-
-      const doa = new Date(this.studentForm.get('doa')?.value);
-      const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
-      this.studentForm.get('dob')?.setValue(formattedDob);
-      this.studentForm.get('doa')?.setValue(formattedDoa);
-      if (this.updateMode) {
-        this.studentService.updateStudent(this.studentForm.value).subscribe((res: any) => {
-          if (res) {
-            this.successDone(res);
-          }
-        }, err => {
-          this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
-      } else {
-        this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
-          if (res) {
-            this.successDone(res);
-          }
-        }, err => {
-          this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
-      }
+        this.errorMsg = err.error || 'An error occurred while updating student.';
+        this.isClick = false;
+      })
+    } else {
+      this.studentService.addStudent(formValues).subscribe((res: any) => {
+        if (res) {
+          this.isClick = false;
+          this.successDone(res);
+        }
+      }, err => {
+        this.errorCheck = true;
+        this.errorMsg = err.error || 'An error occurred while adding student.';
+        this.isClick = false;
+      })
     }
   }
+
   changeStatus(id: any, statusValue: any) {
     if (id) {
       let params = {
@@ -521,6 +618,7 @@ export class StudentComponent implements OnInit {
       })
     }
   }
+  
   studentDelete(id: String) {
     this.studentService.deleteStudent(id).subscribe((res: any) => {
       if (res) {
@@ -532,6 +630,8 @@ export class StudentComponent implements OnInit {
 
   handleImport(event: any): void {
     const file = event.target.files[0];
+    if (!file) return;
+    
     const fileReader = new FileReader();
     fileReader.onload = (e: any) => {
       const arrayBuffer = e.target.result;
@@ -539,11 +639,13 @@ export class StudentComponent implements OnInit {
     };
     fileReader.readAsArrayBuffer(file);
   }
+  
   resetFileInput(): void {
     if (this.fileInput && this.fileInput.nativeElement) {
       this.fileInput.nativeElement.value = '';
     }
   }
+  
   parseExcel(arrayBuffer: any): void {
     const workbook = new ExcelJS.Workbook();
     workbook.xlsx.load(arrayBuffer).then((workbook) => {
@@ -569,55 +671,6 @@ export class StudentComponent implements OnInit {
       const fields = data[0];
       // Data ke baki ke rows
       const dataRows = data.slice(1);
-      // Data ko objects mein map karna
-      // const mappedData = dataRows.map((row: any) => {
-      //   const obj: any = {};
-
-      //   for (let i = 0; i < fields.length; i++) {
-      //     const field = fields[i];
-      //     let value = row[i];
-
-      //     const isDateField = field === 'Dob' || field === 'Doa';
-
-      //     if (isDateField) {
-      //       // Case 1: value is Date object
-      //       if (value instanceof Date) {
-      //         const day = String(value.getDate()).padStart(2, '0');
-      //         const month = String(value.getMonth() + 1).padStart(2, '0');
-      //         const year = value.getFullYear();
-      //         value = `${day}/${month}/${year}`;
-      //       }
-
-      //       // Case 2: value is stringified date like "Sun Jan 05 2025..."
-      //       else if (typeof value === 'string' && value.includes('GMT')) {
-      //         const dateObj = new Date(value);
-      //         if (!isNaN(dateObj.getTime())) {
-      //           const day = String(dateObj.getDate()).padStart(2, '0');
-      //           const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-      //           const year = dateObj.getFullYear();
-      //           value = `${month}/${day}/${year}`;
-      //         }
-      //       }
-
-      //       // Case 3: string like "1/5/2025"
-      //       else if (typeof value === 'string' && value.includes('/')) {
-      //         const parts = value.split('/');
-      //         if (parts.length === 3) {
-      //           const day = parts[0].padStart(2, '0');
-      //           const month = parts[1].padStart(2, '0');
-      //           const year = parts[2];
-      //           value = `${day}/${month}/${year}`;
-      //         }
-      //       }
-      //     }
-
-      //     obj[field] = value;
-      //   }
-
-      //   return obj;
-      // });
-
-
 
       const formatDateValue = (value: any): string => {
         if (value instanceof Date && !isNaN(value.getTime())) {
@@ -692,9 +745,20 @@ export class StudentComponent implements OnInit {
         this.errorCheck = false;
         this.errorMsg = '';
       }
+    }).catch(err => {
+      this.errorCheck = true;
+      this.errorMsg = 'Error parsing Excel file. Please check the file format.';
     });
   }
+
   addBulkStudentRecord() {
+    // Check if not currently importing and file is chosen
+    if (this.isClick || !this.fileChoose) return;
+
+    this.isClick = true;
+    this.errorCheck = false;
+    this.errorMsg = '';
+
     let studentRecordData = {
       bulkStudentRecord: this.bulkStudentRecord,
       session: this.selectedSession,
@@ -702,128 +766,141 @@ export class StudentComponent implements OnInit {
       stream: this.stream,
       adminId: this.adminId,
       createdBy: 'Admin',
-
     }
+
     if (studentRecordData) {
       this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
         if (res) {
+          this.isClick = false;
           this.successDone(res);
         }
       }, err => {
         this.errorCheck = true;
-        this.errorMsg = err.error;
+        this.errorMsg = err.error || 'An error occurred while importing bulk student records.';
+        this.isClick = false;
       })
     }
   }
 
-
   async exportToExcel() {
-    let className = this.className;
-    if (className == 1) {
-      className = `${this.className}st`;
-    }
-    if (className == 2) {
-      className = `${this.className}nd`;
-    }
-    if (className == 3) {
-      className = `${this.className}rd`;
-    }
-    if (className >= 4 && className <= 12) {
-      className = `${this.className}th`;
-    }
-    if (className == 200) {
-      className = `Nursery`;
-    }
-    if (className == 201) {
-      className = `LKG`;
-    }
-    if (className == 202) {
-      className = `UKG`;
-    }
-    let samagraId = 'samagraId' //dynamic field add testing
-    const header: string[] = [
-      'admissionNo',
-      'name',
-      'fatherName',
-      'motherName',
-      'rollNumber',
-      'medium',
-      'feesConcession',
-      'aadharNumber',
-      samagraId,
-      'dob',
-      'doa',
-      'admissionType',
-      'admissionClass',
-      'gender',
-      'category',
-      'religion',
-      'nationality',
-      'address',
-      'udiseNumber',
-      'bankAccountNo',
-      'bankIfscCode',
-      'fatherQualification',
-      'motherQualification',
-      'fatherOccupation',
-      'motherOccupation',
-      'parentsContact',
-      'familyAnnualIncome',
-    ];
-    function toTitleCase(str: string): string {
-      return str.replace(/\w\S*/g, (txt) =>
-        txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
-      );
-    }
+    // Check if not currently exporting
+    if (this.isClick) return;
 
-    function orderObjectsByHeaders(
-      studentInfoByClass: any[],
-      headers: string[],
-      selectedSession: string
-    ): any[] {
-      const stringFieldsSet = new Set([
-        "name", "fatherName", "motherName", "medium", "admissionType", "gender",
-        "admissionClass", "category", "religion", "nationality", "address",
-        "fatherQualification", "motherQualification", "fatherOccupation", "motherOccupation"
-      ]);
+    this.isClick = true; // Set bulk exporting state
 
-      const categorySet = new Set(["obc", "sc", "st", "ews"]);
+    try {
+      let className = this.className;
+      if (className == 1) {
+        className = `${this.className}st`;
+      }
+      if (className == 2) {
+        className = `${this.className}nd`;
+      }
+      if (className == 3) {
+        className = `${this.className}rd`;
+      }
+      if (className >= 4 && className <= 12) {
+        className = `${this.className}th`;
+      }
+      if (className == 200) {
+        className = `Nursery`;
+      }
+      if (className == 201) {
+        className = `LKG`;
+      }
+      if (className == 202) {
+        className = `UKG`;
+      }
+      let samagraId = 'samagraId' //dynamic field add testing
+      const header: string[] = [
+        'admissionNo',
+        'name',
+        'fatherName',
+        'motherName',
+        'rollNumber',
+        'medium',
+        'feesConcession',
+        'aadharNumber',
+        samagraId,
+        'dob',
+        'doa',
+        'admissionType',
+        'admissionClass',
+        'gender',
+        'category',
+        'religion',
+        'nationality',
+        'address',
+        'udiseNumber',
+        'bankAccountNo',
+        'bankIfscCode',
+        'fatherQualification',
+        'motherQualification',
+        'fatherOccupation',
+        'motherOccupation',
+        'parentsContact',
+        'familyAnnualIncome',
+      ];
+      function toTitleCase(str: string): string {
+        return str.replace(/\w\S*/g, (txt) =>
+          txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
+        );
+      }
 
-      return studentInfoByClass
-        .filter(obj => obj.session === selectedSession)
-        .map(obj => {
-          const result: any = {};
-          for (let i = 0; i < headers.length; i++) {
-            const key = headers[i];
-            let value = obj[key];
+      function orderObjectsByHeaders(
+        studentInfoByClass: any[],
+        headers: string[],
+        selectedSession: string
+      ): any[] {
+        const stringFieldsSet = new Set([
+          "name", "fatherName", "motherName", "medium", "admissionType", "gender",
+          "admissionClass", "category", "religion", "nationality", "address",
+          "fatherQualification", "motherQualification", "fatherOccupation", "motherOccupation"
+        ]);
 
-            if (typeof value === "string" && stringFieldsSet.has(key)) {
-              value =
-                key === "category" && categorySet.has(value.toLowerCase())
-                  ? value.toUpperCase()
-                  : toTitleCase(value);
+        const categorySet = new Set(["obc", "sc", "st", "ews"]);
+
+        return studentInfoByClass
+          .filter(obj => obj.session === selectedSession)
+          .map(obj => {
+            const result: any = {};
+            for (let i = 0; i < headers.length; i++) {
+              const key = headers[i];
+              let value = obj[key];
+
+              if (typeof value === "string" && stringFieldsSet.has(key)) {
+                value =
+                  key === "category" && categorySet.has(value.toLowerCase())
+                    ? value.toUpperCase()
+                    : toTitleCase(value);
+              }
+
+              result[key] = value;
             }
+            return result;
+          });
+      }
 
-            result[key] = value;
-          }
-          return result;
-        });
+      const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
+      const modifiedHeader = header.map(field =>
+        field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
+      );
+
+      let reportData = {
+        title: `${this.schoolInfo?.schoolName}, Student Record Class - ${className}, ${this.selectedSession}`,
+        data: orderedData,
+        headers: modifiedHeader,
+        fileName: `Student Class - ${className}, ${this.selectedSession}, ${this.schoolInfo?.schoolName}`,
+      };
+
+      this.ete.exportExcel(reportData);
+      this.isClick = false; // Reset on success
+      this.successDone("Student Data Exported Successfully");
+    } catch (error) {
+      this.isClick = false; // Reset on error
+      this.errorCheck = true;
+      this.errorMsg = 'Error occurred while exporting data';
     }
-
-    const orderedData = await orderObjectsByHeaders(this.studentInfoByClass, header, this.selectedSession);
-    const modifiedHeader = header.map(field =>
-      field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
-    );
-
-    let reportData = {
-      title: `${this.schoolInfo?.schoolName}, Student Record Class - ${className}, ${this.selectedSession}`,
-      data: orderedData,
-      headers: modifiedHeader,
-      fileName: `Student Class - ${className}, ${this.selectedSession}, ${this.schoolInfo?.schoolName}`,
-    };
-
-    this.ete.exportExcel(reportData);
-    this.successDone("Student Data Exported Successfully");
   }
 
   allOptions() {
