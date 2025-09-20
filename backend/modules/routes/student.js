@@ -18,13 +18,13 @@ router.post('/', (req, res, next) => {
   fileUpload.studentImage.single("studentImage")(req, res, (err) => {
     if (err) {
       if (err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json("Student image under 50KB size limit");
+        return res.status(400).json("Student photo must be under 200KB");
       }
 
       if (err.name === "INVALID_FILE_TYPE") {
         return res
           .status(400)
-          .json("Please upload a valid image in .png, .jpg, or .jpeg format only");
+          .json("Please upload a valid photo in png, jpg, or jpeg format only");
       }
 
       if (err.code === "ENOENT") {
@@ -47,13 +47,13 @@ router.put("/:id", (req, res, next) => {
   fileUpload.studentImage.single("studentImage")(req, res, (err) => {
     if (err) {
       if (err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json("Student image under 50KB size limit");
+        return res.status(400).json("Student photo under 200KB size limit");
       }
 
       if (err.name === "INVALID_FILE_TYPE") {
         return res
           .status(400)
-          .json("Please upload a valid image in .png, .jpg, or .jpeg format only");
+          .json("Please upload a valid photo in .png, .jpg, or .jpeg format only");
       }
 
       if (err.code === "ENOENT") {

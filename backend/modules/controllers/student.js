@@ -253,6 +253,17 @@ const CreateStudent = async (req, res, next) => {
     const currentDateIst = DateTime.now().setZone("Asia/Kolkata");
     const istDateTimeString = currentDateIst.toFormat("dd/MM/yyyy hh:mm:ss a");
 
+    // Helper function to delete uploaded file and return response
+    const handleError = (statusCode, message) => {
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            try {
+                fs.unlinkSync(req.file.path);
+            } catch (unlinkError) {
+            }
+        }
+        return res.status(statusCode).json(message);
+    };
+
     try {
         let studentData = { ...req.body };
 
@@ -295,74 +306,64 @@ const CreateStudent = async (req, res, next) => {
                 : DateTime.fromISO(dob).toFormat("dd/MM/yyyy");
         }
 
-        // -------- IMAGE UPLOAD --------
-        if (req.file && req.file.path) {
-            const result = await cloudinary.uploader.upload(req.file.path);
-            fs.unlinkSync(req.file.path);
-
-            studentData.studentImage = result.secure_url;
-            studentData.studentImagePublicId = result.public_id;
-        }
-
         if (!adminId) {
-            return res.status(404).json(`Invalid entry!`);
+            return handleError(404, `Invalid entry!`);
         }
         const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
         if (!checkAdminPlan) {
-            return res.status(404).json(`Invalid entry!`);
+            return handleError(404, `Invalid entry!`);
         }
         let studentLimit = checkAdminPlan.studentLimit;
         let countStudent = await StudentModel.count({ adminId: adminId });
         if (countStudent == studentLimit || countStudent > studentLimit) {
-            return res.status(400).json(`You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue!`);
+            return handleError(400, `You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue!`);
         }
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
-            return res.status(404).json(`Please create fees structure for session ${session}!`);
+            return handleError(404, `Please create fees structure for session ${session}!`);
         }
         const checkClassSubject = await ClassSubjectModal.findOne({ adminId: adminId, class: className, stream: stream });
         if (!checkClassSubject) {
-            return res.status(404).json(`Please group subjects according to class and stream!`);
+            return handleError(404, `Please group subjects according to class and stream!`);
         }
         if (studentData.aadharNumber) {
             const exists = await StudentModel.findOne({
+                adminId: adminId,
                 aadharNumber: studentData.aadharNumber,
-                _id: { $ne: id },
             });
             if (exists) {
-                return res.status(400).json("Aadhar number already exists!");
+                return handleError(400, "Aadhar number already exists!");
             }
         }
-
         if (studentData.samagraId) {
             const exists = await StudentModel.findOne({
+                adminId: adminId,
                 samagraId: studentData.samagraId,
-                _id: { $ne: id },
             });
             if (exists) {
-                return res.status(400).json("Samagra ID already exists!");
+                return handleError(400, "Samagra ID already exists!");
             }
         }
 
         if (studentData.udiseNumber) {
             const exists = await StudentModel.findOne({
+                adminId: adminId,
                 udiseNumber: studentData.udiseNumber,
-                _id: { $ne: id },
             });
             if (exists) {
-                return res.status(400).json("UDISE number already exists!");
+                return handleError(400, "UDISE number already exists!");
             }
         }
         const checkAdmissionNo = await StudentModel.findOne({ adminId: adminId, admissionNo: admissionNo });
         if (checkAdmissionNo) {
-            return res.status(400).json(`Admission no already exist!`);
+            return handleError(400, `Admission no already exist!`);
         }
         const checkRollNumber = await StudentModel.findOne({ adminId: adminId, rollNumber: rollNumber, class: className });
         if (checkRollNumber) {
-            return res.status(400).json(`Roll number already exist for this class!`);
+            return handleError(400, `Roll number already exist for this class!`);
         }
         if (feesConcession > checkFeesStr.totalFees) {
-            return res.status(400).json(`Concession cannot be greater than the total academic session fee!`);
+            return handleError(400, `Concession cannot be greater than the total academic session fee!`);
         }
         let totalFees = checkFeesStr.totalFees - feesConcession;
         const admissionFee = checkFeesStr.admissionFees;
@@ -405,12 +406,29 @@ const CreateStudent = async (req, res, next) => {
             let studentId = createStudent._id;
             studentFeesData.studentId = studentId;
             let createStudentFeesData = await FeesCollectionModel.create(studentFeesData);
+            if (!createStudentFeesData) {
+                await StudentModel.deleteOne({ _id: studentId });
+                return handleError(400, "Student record could not be created. Please try again!");
+            }
             if (createStudentFeesData) {
+                // -------- IMAGE UPLOAD --------
+                if (req.file && req.file.path) {
+                    const result = await cloudinary.uploader.upload(req.file.path);
+                    fs.unlinkSync(req.file.path);
+
+                    // Update student with image details
+                    await StudentModel.findByIdAndUpdate(studentId, {
+                        studentImage: result.secure_url,
+                        studentImagePublicId: result.public_id
+                    });
+                }
                 return res.status(200).json('Student created successfully');
             }
         }
+
     } catch (error) {
-        return res.status(500).json('Internal Server Error!');
+        // If file was uploaded to local directory but error occurred, delete it
+        return handleError(500, "Internal Server Error!");
     }
 }
 

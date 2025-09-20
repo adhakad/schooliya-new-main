@@ -12,7 +12,7 @@ const filter = (req, file, cb) => {
   ) {
     cb(null, true);
   } else {
-    const error = new Error('Only .png, .jpg and .jpeg format allowed!');
+    const error = new Error('Only png, jpg and jpeg format allowed!');
     error.name = 'INVALID_FILE_TYPE';
     cb(error, false);
   }
@@ -42,7 +42,7 @@ let studentImage = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 500,
+    fileSize: 1024 * 200,
   },
   fileFilter: filter
 })
