@@ -95,8 +95,11 @@
                           Days</span><span *ngIf="reminderFilter.lastReminderDays==0">No Filter</span></td>
                       <!-- <td>12 Aug 2025</td> -->
                       <td>
-                        <button class="submit-success-button" mat-raised-button
+                        <button class="submit-success-button" mat-raised-button [disabled]="isFilterClick"
                           (click)="studentFilterBySavedFilter(reminderFilter)">
+                          <span *ngIf="isFilterClick" class="submitting-content">
+                            <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                          </span>
                           <i class=" bi bi-send-fill"></i>
                           To Send
                         </button>
@@ -233,7 +236,10 @@
 
                         <div class="modal-footer">
                           <button class="submit-button" mat-raised-button type="submit"
-                            [disabled]="!studentFilterForm.valid">
+                            [disabled]="!studentFilterForm.valid || isFilterClick">
+                            <span *ngIf="isFilterClick" class="submitting-content">
+                              <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                            </span>
                             <mat-icon>filter_list</mat-icon>
                             Choose Filters
                           </button>
@@ -308,15 +314,23 @@
                           Select the checkbox to save filters
                         </mat-checkbox>
                         <div>
-                          <!-- Send Later -->
+                          <!-- Save Filters -->
                           <button class="submit-button" mat-raised-button type="button" style="margin-left: 20px;"
-                            [disabled]="!sendLaterChecked" (click)="feeReminderLaterSend()" *ngIf="!hideButton">
+                            [disabled]="!sendLaterChecked || isSaveFiltersClick" (click)="feeReminderLaterSend()"
+                            *ngIf="!hideButton">
+                            <span *ngIf="isSaveFiltersClick" class="submitting-content">
+                              <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                            </span>
                             <mat-icon>timer</mat-icon>
                             Save Filters
                           </button>
                           <!-- Send Now -->
                           <button class="submit-success-button" mat-raised-button type="button"
-                            style="margin-left: 20px;" [disabled]="!selectedIds.length" (click)="feeReminderSend()">
+                            style="margin-left: 20px;" [disabled]="!selectedIds.length || isSendNowClick"
+                            (click)="feeReminderSend()">
+                            <span *ngIf="isSendNowClick" class="submitting-content">
+                              <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                            </span>
                             <i class="bi bi-send-fill"></i>
                             Send Now
                           </button>
@@ -326,11 +340,6 @@
                   </div>
                 </div>
               </div>
-
-
-
-
-
 
               <div class="modal fade show" [class.show]="showReminderFilterDeleteModal">
                 <div class="modal-dialog" role="document">
@@ -343,25 +352,19 @@
                       <div>
                         <h4 style="margin-left: 20px;">To delete reminder filter detail, click ok to confirm.</h4>
                         <div class="modal-footer">
-                          <button class="delete-button" mat-raised-button type="button"
-                            (click)="reminderFilterDelete(deleteById)">Ok</button>
+                          <button class="delete-button" mat-raised-button type="button" [disabled]="isDeleteClick"
+                            (click)="reminderFilterDelete(deleteById)">
+                            <span *ngIf="isDeleteClick" class="submitting-content">
+                              <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                            </span>
+                            Ok
+                          </button>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </div>
               </div>
-
-
-
-
-
-
-
-
-
-
             </div>
           </div>
         </div>

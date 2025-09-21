@@ -439,7 +439,11 @@
     display: none;
   }
 
-
+  .button-loader {
+    display: inline-block;
+    margin-right: 8px;
+    margin-top: 10px;
+  }
 
   ::ng-deep .custom-session-select {
     background-color: #fff;

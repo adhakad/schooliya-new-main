@@ -7,6 +7,7 @@ import { ReminderService } from 'src/app/services/reminder.service';
 import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-admin-fees-reminder',
   templateUrl: './admin-fees-reminder.component.html',
@@ -34,6 +35,13 @@ export class AdminFeesReminderComponent implements OnInit {
   baseURL!: string;
   loader: Boolean = true;
   adminId!: String
+
+  // Add submission state management properties
+  isFilterClick: boolean = false;     // For student filter button
+  isSendNowClick: boolean = false;    // For send now button
+  isSaveFiltersClick: boolean = false; // For save filters button
+  isDeleteClick: boolean = false;     // For delete button
+
   constructor(private router: Router, public activatedRoute: ActivatedRoute, private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private reminderService: ReminderService) {
     this.studentFilterForm = this.fb.group({
       _id: [''],
@@ -77,12 +85,14 @@ export class AdminFeesReminderComponent implements OnInit {
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
+
   chooseClass(cls: number) {
     this.cls = cls;
     this.reminderFilterList = [];
     this.updateRouteParams();
     this.getAllReminderFilterByClass();
   }
+
   updateRouteParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
@@ -90,10 +100,10 @@ export class AdminFeesReminderComponent implements OnInit {
       queryParamsHandling: 'merge' // Keep other query params
     });
   }
+
   closeModal() {
     this.showModal = false;
     this.showReminderFilterDeleteModal = false;
-    // this.cls = 0;
     // Forms ko reset karo
     this.studentFilterForm.reset();
     this.feeReminderSendForm.setControl('students', this.fb.array([]));
@@ -106,17 +116,29 @@ export class AdminFeesReminderComponent implements OnInit {
     this.hideButton = false;
     this.filterStudentCount = 0;
     this.allFilters = null;
+
+    // Reset all submission states
+    this.isFilterClick = false;
+    this.isSendNowClick = false;
+    this.isSaveFiltersClick = false;
+    this.isDeleteClick = false;
   }
+
   addStudentModel() {
     this.showModal = true;
     this.studentFilterForm.reset();
+    // Reset submission states when opening modal
+    this.isFilterClick = false;
+    this.isSendNowClick = false;
+    this.isSaveFiltersClick = false;
   }
+
   deleteReminderFilterModel(id: String) {
     this.showReminderFilterDeleteModal = true;
-    // this.updateMode = false;
-    // this.deleteMode = true;
     this.deleteById = id;
+    this.isDeleteClick = false; // Reset delete state
   }
+
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
       if (res) {
@@ -124,6 +146,7 @@ export class AdminFeesReminderComponent implements OnInit {
       }
     })
   }
+
   successDone(msg: any) {
     this.closeModal();
     this.getAllReminderFilterByClass();
@@ -150,6 +173,7 @@ export class AdminFeesReminderComponent implements OnInit {
       onlyself: true,
     });
   }
+
   get studentsArray(): FormArray {
     return this.feeReminderSendForm.get('students') as FormArray;
   }
@@ -205,42 +229,57 @@ export class AdminFeesReminderComponent implements OnInit {
   }
 
   studentFilter() {
-    if (this.studentFilterForm.valid) {
-      this.studentFilterForm.patchValue({ adminId: this.adminId });
-
-      this.reminderService.studentFilter(this.studentFilterForm.value).subscribe(
-        (res: any) => {
-          if (res) {
-            this.studentFilterData = res.studentFilterData;
-            this.filterStudentCount = res.filterStudentCount;
-            this.filterStatus = res.filterStatus;
-            this.allFilters = res.allFilters;
-            const arr = this.fb.array<FormGroup>([]);
-            this.selectedIds = this.studentFilterData.map(s => s.studentId);
-            this.selectedIds.forEach(id =>
-              arr.push(
-                this.fb.group({
-                  studentId: [id]
-                })
-              )
-            );
-            this.feeReminderSendForm.patchValue({ paymentLastDate: res.allFilters.paymentLastDate });
-            this.feeReminderSendForm.setControl('students', arr);
-            this.isAllSelected = true;
-          }
-        }, err => {
-          this.toastr.error('', err.error.errorMsg);
-        }
-      );
+    // Check if form is valid and not already submitting
+    if (!this.studentFilterForm.valid || this.isFilterClick) {
+      return;
     }
+
+    this.isFilterClick = true; // Set loading state
+    this.studentFilterForm.patchValue({ adminId: this.adminId });
+
+    this.reminderService.studentFilter(this.studentFilterForm.value).subscribe(
+      (res: any) => {
+        if (res) {
+          this.studentFilterData = res.studentFilterData;
+          this.filterStudentCount = res.filterStudentCount;
+          this.filterStatus = res.filterStatus;
+          this.allFilters = res.allFilters;
+          const arr = this.fb.array<FormGroup>([]);
+          this.selectedIds = this.studentFilterData.map(s => s.studentId);
+          this.selectedIds.forEach(id =>
+            arr.push(
+              this.fb.group({
+                studentId: [id]
+              })
+            )
+          );
+          this.feeReminderSendForm.patchValue({ paymentLastDate: res.allFilters.paymentLastDate });
+          this.feeReminderSendForm.setControl('students', arr);
+          this.isAllSelected = true;
+        }
+        this.isFilterClick = false; // Reset loading state
+      }, 
+      err => {
+        this.toastr.error('', err.error.errorMsg);
+        this.isFilterClick = false; // Reset loading state on error
+      }
+    );
   }
+
   studentFilterBySavedFilter(reminderFilter: any) {
+    // Check if not already processing
+    if (this.isFilterClick) {
+      return;
+    }
+
+    this.isFilterClick = true; // Set loading state
     this.studentFilterForm.patchValue({ adminId: this.adminId });
     this.studentFilterForm.patchValue({ class: reminderFilter.class });
     this.studentFilterForm.patchValue({ minPercentage: reminderFilter.minPercentage });
     this.studentFilterForm.patchValue({ lastPaymentDays: reminderFilter.lastPaymentDays });
     this.studentFilterForm.patchValue({ lastReminderDays: reminderFilter.lastReminderDays });
     this.studentFilterForm.patchValue({ paymentLastDate: reminderFilter.paymentLastDate });
+    
     this.reminderService.studentFilter(this.studentFilterForm.value).subscribe(
       (res: any) => {
         if (res) {
@@ -263,50 +302,85 @@ export class AdminFeesReminderComponent implements OnInit {
           this.isAllSelected = true;
           this.showModal = true;
         }
-      }, err => {
+        this.isFilterClick = false; // Reset loading state
+      }, 
+      err => {
         this.toastr.error('', err.error.errorMsg);
+        this.isFilterClick = false; // Reset loading state on error
       }
     );
   }
+
   feeReminderSend() {
+    // Check if not already sending and has selected students
+    if (this.isSendNowClick || !this.selectedIds.length) {
+      return;
+    }
+
+    this.isSendNowClick = true; // Set loading state
     this.feeReminderSendForm.value.adminId = this.adminId;
+    
     this.reminderService.sendFeesReminder(this.feeReminderSendForm.value).subscribe(
       (res: any) => {
         if (res) {
+          this.isSendNowClick = false; // Reset loading state
           this.successDone(res.message);
         }
-      }, err => {
+      }, 
+      err => {
         this.toastr.error('', err.error.errorMsg);
+        this.isSendNowClick = false; // Reset loading state on error
       }
     );
   }
+
   feeReminderLaterSend() {
+    // Check if not already saving and send later is checked
+    if (this.isSaveFiltersClick || !this.sendLaterChecked) {
+      return;
+    }
+
+    this.isSaveFiltersClick = true; // Set loading state
     this.feeReminderLaterSendForm.value.adminId = this.adminId;
     this.feeReminderLaterSendForm.value.class = this.allFilters.className;
     this.feeReminderLaterSendForm.value.minPercentage = this.allFilters.minPercentage;
     this.feeReminderLaterSendForm.value.lastPaymentDays = this.allFilters.lastPaymentDays;
     this.feeReminderLaterSendForm.value.lastReminderDays = this.allFilters.lastReminderDays;
     this.feeReminderLaterSendForm.value.paymentLastDate = this.allFilters.paymentLastDate;
+    
     this.reminderService.addFeesReminderFilter(this.feeReminderLaterSendForm.value).subscribe(
       (res: any) => {
         if (res) {
+          this.isSaveFiltersClick = false; // Reset loading state
           this.successDone(res.message);
           this.getAllReminderFilterByClass();
         }
-      }, err => {
+      }, 
+      err => {
         this.toastr.error('', err.error.errorMsg);
+        this.isSaveFiltersClick = false; // Reset loading state on error
       }
     );
   }
+
   reminderFilterDelete(id: String) {
+    // Check if not already deleting
+    if (this.isDeleteClick) {
+      return;
+    }
+
+    this.isDeleteClick = true; // Set loading state
+    
     this.reminderService.deleteReminderFilter(id).subscribe((res: any) => {
       if (res) {
+        this.isDeleteClick = false; // Reset loading state
         this.showReminderFilterDeleteModal = false;
         this.successDone(res.message);
       }
-    }, err => {
+    }, 
+    err => {
       this.toastr.error('', err.error.errorMsg);
-    }
-    );
+      this.isDeleteClick = false; // Reset loading state on error
+    });
   }
 }
