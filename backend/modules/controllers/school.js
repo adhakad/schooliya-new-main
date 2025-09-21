@@ -45,17 +45,23 @@ let GetSingleSchool = async (req, res, next) => {
     }
 }
 
-let CreateSchool = async (req, res, next) => {
-    const { adminId, schoolName, affiliationNumber, schoolCode, foundedYear, board, medium, street, city, district, state, country, pinCode, phoneOne, phoneSecond, email } = req.body;
+const CreateSchool = async (req, res, next) => {
+    // Helper function to delete uploaded file and return response
+    const handleError = (statusCode, message) => {
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            try {
+                fs.unlinkSync(req.file.path);
+            } catch (unlinkError) {
+                // Silent fail for file cleanup
+            }
+        }
+        return res.status(statusCode).json(message);
+    };
 
     try {
-        const result = await cloudinary.uploader.upload(req.file.path);
-        fs.unlinkSync(req.file.path);
-        let schoolData = {
+        const {
             adminId,
             schoolName,
-            schoolLogo: result.secure_url,
-            schoolLogoPublicId: result.public_id,
             affiliationNumber,
             schoolCode,
             foundedYear,
@@ -68,19 +74,83 @@ let CreateSchool = async (req, res, next) => {
             country,
             pinCode,
             phoneOne,
-            phoneSecond,
+            email
+        } = req.body;
+
+        if (!adminId) {
+            return handleError(404, 'Invalid entry!');
+        }
+
+        const checkAdminPlan = await AdminUserModel.findOne({ _id: adminId });
+        if (!checkAdminPlan) {
+            return handleError(404, 'Invalid entry!');
+        }
+
+        // Check if school already exists for this admin
+        const existingSchool = await SchoolModel.findOne({ adminId: adminId });
+        if (existingSchool) {
+            return handleError(400, 'School already exists for this admin!');
+        }
+
+        let schoolData = {
+            adminId,
+            schoolName,
+            affiliationNumber,
+            schoolCode,
+            foundedYear,
+            board,
+            medium,
+            street,
+            city,
+            district,
+            state,
+            country,
+            pinCode,
+            phoneOne,
             email
         };
+        if (req.body.phoneSecond !== null && req.body.phoneSecond !== 'null') {
+            schoolData.phoneSecond = req.body.phoneSecond;
+        }
+
         const createSchool = await SchoolModel.create(schoolData);
+
         if (createSchool) {
+            let schoolId = createSchool._id;
+
+            // -------- IMAGE UPLOAD --------
+            if (req.file && req.file.path) {
+                const result = await cloudinary.uploader.upload(req.file.path);
+                fs.unlinkSync(req.file.path);
+
+                // Update school with image details
+                await SchoolModel.findByIdAndUpdate(schoolId, {
+                    schoolLogo: result.secure_url,
+                    schoolLogoPublicId: result.public_id
+                });
+            }
+
             return res.status(200).json('School created successfully');
         }
-    } catch (error) {
-        return res.status(500).json('Internal Server Error!');
-    }
-}
 
-let UpdateSchool = async (req, res, next) => {
+    } catch (error) {
+        return handleError(500, 'Internal Server Error!');
+    }
+};
+
+const UpdateSchool = async (req, res, next) => {
+    // Helper function to delete uploaded file and return response
+    const handleError = (statusCode, message) => {
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            try {
+                fs.unlinkSync(req.file.path);
+            } catch (unlinkError) {
+                // Silent fail for file cleanup
+            }
+        }
+        return res.status(statusCode).json(message);
+    };
+
     try {
         const id = req.params.id;
         let {
@@ -98,9 +168,28 @@ let UpdateSchool = async (req, res, next) => {
             country,
             pinCode,
             phoneOne,
-            phoneSecond,
             email
         } = req.body;
+
+        if (!adminId) {
+            return handleError(404, 'Invalid entry!');
+        }
+
+        const checkAdminPlan = await AdminUserModel.findOne({ _id: adminId });
+        if (!checkAdminPlan) {
+            return handleError(404, 'Invalid entry!');
+        }
+
+        const singleSchool = await SchoolModel.findById(id);
+        if (!singleSchool) {
+            return handleError(404, 'School not found!');
+        }
+
+        // Check if this school belongs to the admin
+        if (singleSchool.adminId.toString() !== adminId.toString()) {
+            return handleError(403, 'Unauthorized access!');
+        }
+
         let schoolData = {
             adminId,
             schoolName,
@@ -115,35 +204,45 @@ let UpdateSchool = async (req, res, next) => {
             state,
             country,
             pinCode,
-            phoneOne,
             email
         };
-        if (phoneSecond && phoneSecond!== 'null' && phoneSecond.trim()!== '') {
-            schoolData.phoneSecond = phoneSecond;
-        } else {
-            schoolData.phoneSecond = null;
+        if (req.body.phoneSecond !== null && req.body.phoneSecond !== 'null') {
+            schoolData.phoneSecond = req.body.phoneSecond;
         }
-        const singleSchool = await SchoolModel.findById(id);
-        if (!singleSchool) {
-            return res.status(404).json('School not found!');
-        }
+
+        // -------- IMAGE UPLOAD --------
         if (req.file && req.file.path) {
-            if (singleSchool.schoolLogoPublicId) {
-                await cloudinary.uploader.destroy(singleSchool.schoolLogoPublicId);
+            try {
+                // Delete old image from cloudinary if exists
+                if (singleSchool.schoolLogoPublicId) {
+                    await cloudinary.uploader.destroy(singleSchool.schoolLogoPublicId);
+                }
+
+                // Upload new image
+                const result = await cloudinary.uploader.upload(req.file.path);
+                fs.unlinkSync(req.file.path);
+
+                schoolData.schoolLogo = result.secure_url;
+                schoolData.schoolLogoPublicId = result.public_id;
+            } catch (imageError) {
+                return handleError(500, 'Failed to upload image. Please try again!');
             }
-            const result = await cloudinary.uploader.upload(req.file.path);
-            fs.unlinkSync(req.file.path);
-            schoolData.schoolLogo = result.secure_url;
-            schoolData.schoolLogoPublicId = result.public_id;
         }
-        const updateSchool = await SchoolModel.findByIdAndUpdate(id, { $set: schoolData }, { new: true });
+
+        const updateSchool = await SchoolModel.findByIdAndUpdate(
+            id,
+            { $set: schoolData },
+            { new: true }
+        );
+
         if (updateSchool) {
             return res.status(200).json('School updated successfully');
         } else {
-            return res.status(404).json('School not found!');
+            return handleError(404, 'School not found!');
         }
+
     } catch (error) {
-        return res.status(500).json('Internal Server Error!');
+        return handleError(500, 'Internal Server Error!');
     }
 };
 let DeleteSchool = async (req, res, next) => {

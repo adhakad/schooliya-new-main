@@ -27,6 +27,10 @@ export class SchoolComponent implements OnInit {
   loader: Boolean = true;
   adminId!: String;
   logoPreview: any = null;  // For showing school logo preview
+  
+  // Add submission state management property
+  isClick: boolean = false;
+  
   indianStates: string[] = [
     'Andhra Pradesh',
     'Arunachal Pradesh',
@@ -57,6 +61,7 @@ export class SchoolComponent implements OnInit {
     'Uttarakhand',
     'West Bengal'
   ];
+  
   constructor(
     private fb: FormBuilder, private toastr: ToastrService,
     private schoolService: SchoolService,
@@ -100,9 +105,12 @@ export class SchoolComponent implements OnInit {
     this.updateMode = false;
     this.deleteMode = false;
     this.errorMsg = '';
+    this.errorCheck = false;
     this.schoolForm.reset();
     this.logoPreview = null;  // Reset logo preview
     this.disabled = true;
+    // Reset loading state
+    this.isClick = false;
   }
 
   addSchoolModel() {
@@ -110,6 +118,9 @@ export class SchoolComponent implements OnInit {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = false;
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
     this.schoolForm.reset();
   }
 
@@ -117,6 +128,9 @@ export class SchoolComponent implements OnInit {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = true;
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
     this.schoolForm.patchValue(school);
     if (school.schoolLogo) {
       this.logoPreview = `${this.baseUrl}/${school.schoolLogo}`; // Set logo preview
@@ -127,11 +141,12 @@ export class SchoolComponent implements OnInit {
     this.showModal = true;
     this.updateMode = false;
     this.deleteMode = true;
+    this.errorCheck = false;
+    this.errorMsg = '';
     this.deleteById = id;
   }
 
   successDone(msg: any) {
-
     this.getSchool();
     this.closeModal();
     setTimeout(() => {
@@ -148,6 +163,7 @@ export class SchoolComponent implements OnInit {
       }
     });
   }
+  
   getBoard() {
     this.boardService.getBoardList().subscribe((res: any) => {
       if (res) {
@@ -169,48 +185,89 @@ export class SchoolComponent implements OnInit {
     }
   }
 
+  // Helper method to mark all form fields as touched for validation display
+  private markFormGroupTouched() {
+    Object.keys(this.schoolForm.controls).forEach(key => {
+      const control = this.schoolForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
   // Submit form for adding or updating school
   schoolAddUpdate() {
-    this.disabled = false;
-    if (this.schoolForm.valid) {
-      this.schoolForm.value.adminId = this.adminId;
+    // Check form validity first
+    if (!this.schoolForm.valid) {
+      // Mark all fields as touched to show validation errors
+      this.markFormGroupTouched();
+      this.errorCheck = true;
+      this.errorMsg = 'Please fill all required fields correctly.';
+      return;
+    }
 
-      if (this.updateMode) {
-        this.schoolService.updateSchool(this.schoolForm.value).subscribe(
-          (res: any) => {
-            if (res) {
-              this.successDone(res);
-            }
-          },
-          (err) => {
-            this.errorCheck = true;
-            this.errorMsg = err.error;
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
+
+    // Reset error state and set loading state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
+    this.disabled = false;
+
+    this.schoolForm.value.adminId = this.adminId;
+
+    if (this.updateMode) {
+      this.schoolService.updateSchool(this.schoolForm.value).subscribe(
+        (res: any) => {
+          if (res) {
+            this.isClick = false;
+            this.successDone(res);
           }
-        );
-      } else {
-        this.schoolService.addSchool(this.schoolForm.value).subscribe(
-          (res: any) => {
-            if (res) {
-              this.successDone(res);
-            }
-          },
-          (err) => {
-            this.errorCheck = true;
-            this.errorMsg = err.error;
+        },
+        (err) => {
+          this.errorCheck = true;
+          this.errorMsg = err.error || 'An error occurred while updating school.';
+          this.isClick = false;
+        }
+      );
+    } else {
+      this.schoolService.addSchool(this.schoolForm.value).subscribe(
+        (res: any) => {
+          if (res) {
+            this.isClick = false;
+            this.successDone(res);
           }
-        );
-      }
+        },
+        (err) => {
+          this.errorCheck = true;
+          this.errorMsg = err.error || 'An error occurred while adding school.';
+          this.isClick = false;
+        }
+      );
     }
   }
 
   // Delete school
   schoolDelete(id: String) {
+    // Check if already processing delete
+    if (this.isClick) {
+      return;
+    }
+
+    this.isClick = true;
+
     this.schoolService.deleteSchool(id).subscribe((res: any) => {
       if (res) {
+        this.isClick = false;
         this.successDone(res);
         this.schoolInfo = '';
         this.deleteById = '';
       }
+    }, (err) => {
+      this.errorCheck = true;
+      this.errorMsg = err.error || 'An error occurred while deleting school.';
+      this.isClick = false;
     });
   }
 
