@@ -565,7 +565,7 @@ export class StudentComponent implements OnInit {
     const formValues = { ...this.studentForm.value };
     
     formValues.adminId = this.adminId;
-    formValues.admissionType = 'Old';
+    formValues.admissionType = 'old';
     formValues.createdBy = 'Admin';
     formValues.class = this.className;
     formValues.familyAnnualIncome = String(formValues.familyAnnualIncome);

@@ -362,7 +362,7 @@ export class AdmissionComponent implements OnInit {
   studentAddUpdate() {
     if (this.studentForm.valid) {
       this.studentForm.value.adminId = this.adminId;
-      this.studentForm.value.admissionType = 'New';
+      this.studentForm.value.admissionType = 'new';
       this.studentForm.value.createdBy = 'Admin';
       this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
         if (res) {

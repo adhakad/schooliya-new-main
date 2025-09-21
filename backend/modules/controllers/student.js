@@ -62,11 +62,11 @@ let GetStudentPaginationByAdmission = async (req, res, next) => {
     try {
         let limit = (req.body.limit) ? parseInt(req.body.limit) : 10;
         let page = req.body.page || 1;
-        const studentList = await StudentModel.find({ adminId: adminId, admissionType: 'New' }).find(searchObj).sort({ _id: -1 })
+        const studentList = await StudentModel.find({ adminId: adminId, admissionType: 'new' }).find(searchObj).sort({ _id: -1 })
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
-        const countStudent = await StudentModel.count({ adminId: adminId, admissionType: 'New' });
+        const countStudent = await StudentModel.count({ adminId: adminId, admissionType: 'new' });
         let studentData = { countStudent: 0 };
         studentData.studentList = studentList;
         studentData.countStudent = countStudent;
@@ -109,11 +109,11 @@ let GetStudentPaginationByAdmissionAndClass = async (req, res, next) => {
     try {
         let limit = (req.body.limit) ? parseInt(req.body.limit) : 10;
         let page = req.body.page || 1;
-        const studentList = await StudentModel.find({ admissionType: 'New' }).find({ class: className }).find(searchObj).sort({ _id: -1 })
+        const studentList = await StudentModel.find({ admissionType: 'new' }).find({ class: className }).find(searchObj).sort({ _id: -1 })
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
-        const countStudent = await StudentModel.count({ admissionType: 'New' }).find({ class: className });
+        const countStudent = await StudentModel.count({ admissionType: 'new' }).find({ class: className });
         let studentData = { countStudent: 0 };
         studentData.studentList = studentList;
         studentData.countStudent = countStudent;
@@ -288,7 +288,7 @@ const CreateStudent = async (req, res, next) => {
         }
 
         // Admission type wise doa
-        if (admissionType === "New") {
+        if (admissionType === "new") {
             studentData.doa = currentDateIst.toFormat("dd/MM/yyyy");
             studentData.admissionClass = className;
         } else if (doa) {
@@ -370,7 +370,7 @@ const CreateStudent = async (req, res, next) => {
         let admissionFeesPayable = false;
         let paidFees = 0;
         let dueFees = totalFees - paidFees;
-        if (admissionType == 'New') {
+        if (admissionType == 'new') {
             admissionFeesPayable = true;
             admissionFees = admissionFees;
             totalFees = totalFees + admissionFees;
@@ -397,7 +397,7 @@ const CreateStudent = async (req, res, next) => {
             AllPaidFees: paidFees,
             AllDueFees: dueFees,
         }
-        if (admissionType == 'New') {
+        if (admissionType == 'new') {
             studentFeesData.admissionFeesReceiptNo = receiptNo;
             studentFeesData.admissionFeesPaymentDate = istDateTimeString;
         }
@@ -836,7 +836,7 @@ let StudentClassPromote = async (req, res, next) => {
         if (feesConcession > checkFeesStr.totalFees) {
             return res.status(400).json({ errorMsg: `Concession cannot be greater than the total academic session fee!` });
         }
-        const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'Old', feesConcession: feesConcession };
+        const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'old', feesConcession: feesConcession };
         const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });
 
         if (updateStudent) {
@@ -988,7 +988,7 @@ let StudentClassFail = async (req, res, next) => {
         if (feesConcession > checkFeesStr.totalFees) {
             return res.status(400).json({ errorMsg: `Concession cannot be greater than the total academic session fee!` });
         }
-        const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'Old', feesConcession: feesConcession };
+        const studentData = { session: session, rollNumber, class: className, stream, admissionType: 'old', feesConcession: feesConcession };
         const updateStudent = await StudentModel.findByIdAndUpdate(studentId, { $set: studentData }, { new: true });
 
         if (updateStudent) {
