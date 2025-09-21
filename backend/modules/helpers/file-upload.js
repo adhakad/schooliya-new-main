@@ -30,7 +30,7 @@ let schoolLogo = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 500,
+    fileSize: 1024 * 100,
   },
   fileFilter: filter
 })
@@ -42,7 +42,7 @@ let studentImage = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 200,
+    fileSize: 1024 * 100,
   },
   fileFilter: filter
 })
@@ -54,7 +54,7 @@ let bannerImage = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 200,
   },
   fileFilter: filter
 })
@@ -66,7 +66,7 @@ let subjectImage = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 200,
   },
   fileFilter: filter
 })
@@ -78,7 +78,7 @@ let adsImage = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 200,
   },
   fileFilter: filter
 })
@@ -90,7 +90,7 @@ let topperImage = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 200,
   },
   fileFilter: filter
 })
@@ -102,7 +102,7 @@ let testimonialImage = multer({
     filename: filename
   }),
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 200,
   },
   fileFilter: filter
 })

@@ -18,7 +18,7 @@ router.post('/', (req, res, next) => {
   fileUpload.studentImage.single("studentImage")(req, res, (err) => {
     if (err) {
       if (err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json("Student photo must be under 200KB");
+        return res.status(400).json("Student photo must be under 100KB");
       }
 
       if (err.name === "INVALID_FILE_TYPE") {
@@ -47,7 +47,7 @@ router.put("/:id", (req, res, next) => {
   fileUpload.studentImage.single("studentImage")(req, res, (err) => {
     if (err) {
       if (err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json("Student photo under 200KB size limit");
+        return res.status(400).json("Student photo under 100KB size limit");
       }
 
       if (err.name === "INVALID_FILE_TYPE") {

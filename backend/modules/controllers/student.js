@@ -266,13 +266,13 @@ const CreateStudent = async (req, res, next) => {
 
     try {
         let studentData = { ...req.body };
+        let className = parseInt(req.body.class);
 
         let {
             session,
             adminId,
             admissionType,
             stream,
-            class: className,
             dob,
             doa,
             feesConcession,
@@ -641,61 +641,106 @@ const CreateBulkStudentRecord = async (req, res, next) => {
     }
 };
 
-let UpdateStudent = async (req, res) => {
+const UpdateStudent = async (req, res) => {
+    const handleError = (statusCode, message) => {
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            try {
+                fs.unlinkSync(req.file.path);
+            } catch (unlinkError) {
+            }
+        }
+        return res.status(statusCode).json(message);
+    };
     try {
         const id = req.params.id;
         let studentData = { ...req.body };
-
-        // Duplicate checks
-        if (studentData.aadharNumber) {
-            const exists = await StudentModel.findOne({
-                aadharNumber: studentData.aadharNumber,
-                _id: { $ne: id },
-            });
-            if (exists) {
-                return res.status(400).json("Aadhar number already exists!");
-            }
-        }
-
-        if (studentData.samagraId) {
-            const exists = await StudentModel.findOne({
-                samagraId: studentData.samagraId,
-                _id: { $ne: id },
-            });
-            if (exists) {
-                return res.status(400).json("Samagra ID already exists!");
-            }
-        }
-
-        if (studentData.udiseNumber) {
-            const exists = await StudentModel.findOne({
-                udiseNumber: studentData.udiseNumber,
-                _id: { $ne: id },
-            });
-            if (exists) {
-                return res.status(400).json("UDISE number already exists!");
-            }
-        }
+        let className = parseInt(req.body.class);
+        let { adminId, rollNumber, admissionNo } = studentData;
 
         // Student exist check
         const singleStudent = await StudentModel.findById(id);
         if (!singleStudent) {
-            return res.status(404).json("Student not found!");
+            return handleError(404, "Student not found!");
         }
 
-        // Image upload
-        if (req.file && req.file.path) {
-            if (singleStudent.studentImagePublicId) {
-                await cloudinary.uploader.destroy(singleStudent.studentImagePublicId);
+        // Aadhaar check (exclude current student)
+        if (studentData.aadharNumber) {
+            const exists = await StudentModel.findOne({
+                adminId,
+                aadharNumber: studentData.aadharNumber,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return handleError(400, "Aadhar number already exists!");
             }
-            const result = await cloudinary.uploader.upload(req.file.path);
-            fs.unlinkSync(req.file.path);
-
-            studentData.studentImage = result.secure_url;
-            studentData.studentImagePublicId = result.public_id;
         }
 
-        // Prepare update data
+        // Samagra ID check
+        if (studentData.samagraId) {
+            const exists = await StudentModel.findOne({
+                adminId,
+                samagraId: studentData.samagraId,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return handleError(400, "Samagra ID already exists!");
+            }
+        }
+
+        // UDISE number check
+        if (studentData.udiseNumber) {
+            const exists = await StudentModel.findOne({
+                adminId,
+                udiseNumber: studentData.udiseNumber,
+                _id: { $ne: id },
+            });
+            if (exists) {
+                return handleError(400, "UDISE number already exists!");
+            }
+        }
+
+        // Admission No check
+        if (admissionNo) {
+            const checkAdmissionNo = await StudentModel.findOne({
+                adminId,
+                admissionNo,
+                _id: { $ne: id },
+            });
+            if (checkAdmissionNo) {
+                return handleError(400, "Admission number already exists!");
+            }
+        }
+
+        // Roll Number check (unique per class)
+        if (rollNumber) {
+            const checkRollNumber = await StudentModel.findOne({
+                adminId,
+                rollNumber,
+                class: className,
+                _id: { $ne: id },
+            });
+            if (checkRollNumber) {
+                return handleError(400, "Roll number already exists for this class!");
+            }
+        }
+
+        // DOB format check
+        if (studentData.dob) {
+            const parsedDate = DateTime.fromFormat(studentData.dob, "dd/MM/yyyy");
+            studentData.dob = parsedDate.isValid
+                ? parsedDate.toFormat("dd/MM/yyyy")
+                : DateTime.fromISO(studentData.dob).toFormat("dd/MM/yyyy");
+        }
+
+        // DOA format check
+        if (studentData.doa) {
+            const parsedDate = DateTime.fromFormat(studentData.doa, "dd/MM/yyyy");
+            studentData.doa = parsedDate.isValid
+                ? parsedDate.toFormat("dd/MM/yyyy")
+                : DateTime.fromISO(studentData.doa).toFormat("dd/MM/yyyy");
+        }
+
+        // Prepare update data first
         let updateData = { $set: studentData };
         let unsetData = {};
 
@@ -724,12 +769,35 @@ let UpdateStudent = async (req, res) => {
             updateData.$unset = unsetData;
         }
 
-        await StudentModel.findByIdAndUpdate(id, updateData, { new: true });
+        // Update student data first
+        const updatedStudent = await StudentModel.findByIdAndUpdate(id, updateData, { new: true });
+
+        if (!updatedStudent) {
+            return handleError(400, "Student could not be updated. Please try again!");
+        }
+
+        // Image upload only after successful update
+        if (req.file && req.file.path) {
+            // Delete old image from cloudinary if exists
+            if (singleStudent.studentImagePublicId) {
+                await cloudinary.uploader.destroy(singleStudent.studentImagePublicId);
+            }
+
+            const result = await cloudinary.uploader.upload(req.file.path);
+            fs.unlinkSync(req.file.path);
+
+            // Update student with image details
+            await StudentModel.findByIdAndUpdate(id, {
+                studentImage: result.secure_url,
+                studentImagePublicId: result.public_id
+            });
+        }
 
         return res.status(200).json("Student updated successfully");
+
     } catch (error) {
-        console.error(error);
-        return res.status(500).json("Internal Server Error!");
+        // If file was uploaded to local directory but error occurred, delete it
+        return handleError(500, "Internal Server Error!");
     }
 };
 let StudentClassPromote = async (req, res, next) => {

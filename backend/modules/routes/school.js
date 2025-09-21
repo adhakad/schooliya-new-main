@@ -10,11 +10,11 @@ router.post('/', (req, res) => {
   fileUpload.schoolLogo.single('schoolLogo')(req, res, (err) => {
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json('Upload logo under 500KB size limit');
+        return res.status(400).json('School logo must be under 100KB');
       }
 
       if (err.name === 'INVALID_FILE_TYPE') {
-        return res.status(400).json('Please upload a valid image in .png, .jpg, or .jpeg format only');
+        return res.status(400).json('Please upload a valid logo in .png, .jpg, or .jpeg format only');
       }
 
       if (err.code === 'ENOENT') {
@@ -31,12 +31,18 @@ router.put('/:id', (req, res) => {
   fileUpload.schoolLogo.single('schoolLogo')(req, res, (err) => {
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json('Upload logo under 500KB size limit');
+        return res.status(400).json('School logo must be under 100KB');
       }
+
+      if (err.name === 'INVALID_FILE_TYPE') {
+        return res.status(400).json('Please upload a valid logo in .png, .jpg, or .jpeg format only');
+      }
+
       if (err.code === 'ENOENT') {
         return res.status(400).json('File or directory not found. Check upload path.');
       }
-      return res.status(400).json('Error uploading file. Please try again.');
+
+      return res.status(400).json(err.message || 'Error uploading file. Please try again.');
     }
     // Call the controller function to update the school
     UpdateSchool(req, res);
