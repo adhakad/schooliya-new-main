@@ -224,8 +224,13 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="submit-button" mat-raised-button [disabled]="!feesForm.valid"
-                                                type="submit">Submit</button>
+                                            <button class="submit-button" mat-raised-button 
+                                                [disabled]="!feesForm.valid || isClick" type="submit">
+                                                <span *ngIf="isClick" class="submitting-content">
+                                                    <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                </span>
+                                                Submit
+                                            </button>
                                         </div>
                                     </form>
                                     <div *ngIf="deleteMode && !feesMode && !feesTypeMode">
@@ -239,7 +244,12 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button class="delete-button" mat-raised-button type="button"
-                                                (click)="feesStructureDelete(deleteById)">Ok</button>
+                                                [disabled]="isClick" (click)="feesStructureDelete(deleteById)">
+                                                <span *ngIf="isClick" class="submitting-content">
+                                                    <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                </span>
+                                                Ok
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

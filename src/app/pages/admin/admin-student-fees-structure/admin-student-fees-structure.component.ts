@@ -45,6 +45,10 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   academicSession: string = '';
   allSession: any = [];
   selectedSession: string = '';
+  
+  // Add loading state management properties
+  isClick: boolean = false;
+  
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private academicSessionService: AcademicSessionService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private feesStructureService: FeesStructureService) {
     this.feesForm = this.fb.group({
       adminId: [''],
@@ -146,12 +150,16 @@ export class AdminStudentFeesStructureComponent implements OnInit {
   addFeesModel() {
     this.showModal = true;
     this.feesTypeMode = true;
+    // Reset loading states
+    this.isClick = false;
   }
+  
   openFeesStructureModal(singleFessStructure: any) {
     this.singleFessStructure = singleFessStructure;
     this.particularsAdmissionFees = [{ Admission: singleFessStructure.admissionFees }, ...singleFessStructure.feesType];
     this.showFeesStructureModal = true;
   }
+  
   selectFeesStructure() {
     if (this.selectedSession == '') {
       this.errorCheck = true;
@@ -180,7 +188,6 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     controlOne.clear();
     this.feesTypeMode = false;
     this.feesMode = false;
-
   }
 
   closeModal() {
@@ -192,11 +199,16 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     this.particularsAdmissionFees = [];
     this.showFeesStructureModal = false;
     this.feesForm.reset();
+    // Reset loading states
+    this.isClick = false;
   }
+  
   deleteFeesStructureModel(id: String) {
     this.showModal = true;
     this.deleteMode = true;
     this.deleteById = id;
+    // Reset loading states
+    this.isClick = false;
   }
 
   successDone(msg:any) {
@@ -206,7 +218,6 @@ export class AdminStudentFeesStructureComponent implements OnInit {
       this.toastr.success('',msg);
     }, 500)
   }
-
 
   feesType(option: any) {
     const index = this.selectedFeesType.indexOf(option);
@@ -230,39 +241,104 @@ export class AdminStudentFeesStructureComponent implements OnInit {
     })
   }
 
+  // Helper method to mark all form fields as touched for validation display
+  private markFormGroupTouched() {
+    Object.keys(this.feesForm.controls).forEach(key => {
+      const control = this.feesForm.get(key);
+      control?.markAsTouched();
+    });
+    
+    // Also mark nested form controls as touched
+    const typeGroup = this.feesForm.get('type') as FormGroup;
+    if (typeGroup) {
+      Object.keys(typeGroup.controls).forEach(key => {
+        const control = typeGroup.get(key);
+        control?.markAsTouched();
+      });
+    }
+    
+    const feesTypeArray = this.feesForm.get('type.feesType') as FormArray;
+    if (feesTypeArray) {
+      feesTypeArray.controls.forEach(control => {
+        const formGroup = control as FormGroup;
+        Object.keys(formGroup.controls).forEach(key => {
+          const nestedControl = formGroup.get(key);
+          nestedControl?.markAsTouched();
+        });
+      });
+    }
+  }
+
   feesStructureAddUpdate() {
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
+
+    // Validate form
+    if (!this.feesForm.valid) {
+      this.markFormGroupTouched();
+      this.errorCheck = true;
+      this.errorMsg = 'Please fill all required fields correctly.';
+      return;
+    }
+
     this.feesForm.value.adminId = this.adminId;
     this.feesForm.value.session = this.selectedSession;
     this.feesForm.value.totalFees = this.totalFees;
     let feesTypeObj = this.feesForm.value.type.feesType;
-    let containsFeesTypeNull = feesTypeObj.some((item: any) => Object.values(item).includes(null));
+    let containsFeesTypeNull = feesTypeObj.some((item: any) => Object.values(item).includes(null) || Object.values(item).includes(''));
+    
     if (containsFeesTypeNull) {
       this.errorCheck = true;
       this.errorMsg = 'Please fill all fields';
+      return;
     }
-    if (!containsFeesTypeNull) {
-      this.feesStructureService.addFeesStructure(this.feesForm.value).subscribe((res: any) => {
+    
+    // Set loading state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
+
+    this.feesStructureService.addFeesStructure(this.feesForm.value).subscribe(
+      (res: any) => {
         if (res) {
+          this.isClick = false;
           this.successDone(res);
         }
-      }, err => {
+      }, 
+      err => {
         this.errorCheck = true;
-        this.errorMsg = err.error;
-      })
+        this.errorMsg = err.error || 'An error occurred while processing fee structure.';
+        this.isClick = false;
+      }
+    );
+  }
+  
+  feesStructureDelete(id: String) {
+    // Check if already deleting
+    if (this.isClick) {
+      return;
     }
 
-  }
-  feesStructureDelete(id: String) {
-    this.feesStructureService.deleteFeesStructure(id).subscribe((res: any) => {
-      if (res) {
-        this.getFeesStructureBySession(this.adminId, this.selectedSession);
-        this.successDone(res);
-        this.deleteById = '';
-      }
-    }, err => {
-      this.errorCheck = true;
-      this.errorMsg = err.error;
-    })
-  }
+    this.isClick = true;
+    this.errorCheck = false;
+    this.errorMsg = '';
 
+    this.feesStructureService.deleteFeesStructure(id).subscribe(
+      (res: any) => {
+        if (res) {
+          this.isClick = false;
+          this.getFeesStructureBySession(this.adminId, this.selectedSession);
+          this.successDone(res);
+          this.deleteById = '';
+        }
+      }, 
+      err => {
+        this.errorCheck = true;
+        this.errorMsg = err.error || 'An error occurred while deleting fee structure.';
+        this.isClick = false;
+      }
+    );
+  }
 }
