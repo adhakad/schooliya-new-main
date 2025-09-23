@@ -35,6 +35,10 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
   loader: Boolean = true;
   isChecked!: Boolean;
   adminId: string = '';
+  
+  // Add submission state management property
+  isClick: boolean = false;
+  
   availableTemplates = [
     { name: 'T1', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573664/T1_bqzgw1.jpg' },
     { name: 'T2', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573792/T2_gqvlzs.jpg' },
@@ -112,22 +116,34 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
     this.examResultForm.get('templateName')?.setValue(template);
     this.examResultForm.get('templateUrl')?.setValue(templateUrl);
     this.selectedTemplate = template;
+    // Reset loading state
+    this.isClick = false;
+    this.errorCheck = false;
+    this.errorMsg = '';
   }
+
   openExamResultStructureModal(examResult: any) {
     this.examResultInfo = examResult;
   }
+
   deleteMarksheetTemplateModel(id: String) {
     this.showModal = true;
     this.deleteMode = true;
     this.deleteById = id;
+    // Reset loading state
+    this.isClick = false;
+    this.errorCheck = false;
+    this.errorMsg = '';
   }
 
   falseFormValue() {
     this.examResultForm.reset();
   }
+
   falseAllValue() {
     this.falseFormValue();
   }
+
   closeModal() {
     this.falseAllValue();
     this.showModal = false;
@@ -139,7 +155,11 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
     this.processedPracticalData = [];
     this.examResultForm.reset();
     this.disabled = true;
+    // Reset loading state
+    this.isClick = false;
+    this.errorCheck = false;
   }
+
   successDone(msg: any) {
     this.closeModal();
     this.getSingleClassMarksheetTemplateByStream(this.cls);
@@ -147,6 +167,7 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
       this.toastr.success('',msg);
     }, 500)
   }
+
   getSingleClassMarksheetTemplateByStream(cls: any) {
     let params = {
       adminId: this.adminId,
@@ -168,25 +189,47 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
       this.initiateCarousel(); // Initialize carousel on error as well
     })
   }
+
   examResultAddUpdate() {
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
+
+    // Reset error state and set loading state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
     this.disabled = false;
+
     this.examResultForm.value.adminId = this.adminId;
     this.examResultForm.value.class = this.cls;
     this.examResultForm.value.stream = this.stream;
     this.examResultForm.value.createdBy = "Admin"
+    
     this.examResultStructureService.addExamResultStructure(this.examResultForm.value).subscribe((res: any) => {
       if (res) {
+        this.isClick = false;
         this.successDone(res);
       }
     }, err => {
       this.errorCheck = true;
-      this.errorMsg = err.error;
+      this.errorMsg = err.error || 'An error occurred while setting marksheet template.';
+      this.isClick = false;
     })
   }
 
   marksheetTemplateDelete(id: String) {
+    // Check if already processing delete
+    if (this.isClick) {
+      return;
+    }
+
+    this.isClick = true;
+
     this.examResultStructureService.deleteResultStructure(id).subscribe((res: any) => {
       if (res) {
+        this.isClick = false;
         this.disabled = true;
         this.marksheetSelectMode = true;
         this.marksheetTemplate = null; // Clear existing template
@@ -194,7 +237,10 @@ export class AdminStudentMarksheetStructureComponent implements OnInit, AfterVie
         this.successDone(res);
         this.deleteById = '';
       }
+    }, (err) => {
+      this.errorCheck = true;
+      this.errorMsg = err.error || 'An error occurred while deleting marksheet template.';
+      this.isClick = false;
     })
   }
-
 }
