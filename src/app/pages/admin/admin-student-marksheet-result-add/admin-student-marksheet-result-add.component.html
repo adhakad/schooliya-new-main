@@ -419,8 +419,13 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="submit-button" [disabled]="!examResultForm.valid"
-                                                    mat-raised-button type="submit">Submit</button>
+                                                <button class="submit-button" mat-raised-button type="submit"
+                                                    [disabled]="!examResultForm.valid || isClick">
+                                                    <span *ngIf="isClick" class="submitting-content">
+                                                        <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                    </span>
+                                                    Submit
+                                                </button>
                                             </div>
                                         </form>
                                     </div>

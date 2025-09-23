@@ -66,6 +66,10 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   coScholasticGrades: any[] = ['A', 'B', 'C'];
   loader: Boolean = false;
   adminId!: string;
+  
+  // Add submission state management property
+  isClick: boolean = false;
+  
   constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService, private studentService: StudentService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
@@ -107,16 +111,21 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     this.deleteMode = false;
     this.updateMode = false;
     this.examResultForm.reset();
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false; // Reset loading state
     if (rollnumber !== 0) {
       this.selectedRollNumber = rollnumber;
     }
-
   }
   deleteExamResultModel(id: String) {
     this.showModal = true;
     this.updateMode = false;
     this.deleteMode = true;
     this.deleteById = id;
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false; // Reset loading state
   }
 
   falseFormValue() {
@@ -136,7 +145,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     controlSix.clear();
     controlSeven.clear();
     controlEight.clear();
-
   }
   falseAllValue() {
     this.falseFormValue();
@@ -155,9 +163,11 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     this.updateMode = false;
     this.deleteMode = false;
     this.errorMsg = '';
+    this.errorCheck = false;
     this.selectedExam = '';
     this.examResultForm.reset();
     this.showModal = false;
+    this.isClick = false; // Reset loading state
     if (this.stream && this.cls) {
       let params = {
         adminId: this.adminId,
@@ -185,7 +195,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
     }, 500)
   }
 
-
   getStudentExamResultByClassStream(params: any) {
     let param = {
       class: params.cls,
@@ -209,9 +218,7 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
 
             let exams: any = {};
 
-
             let resultDetail = res.examResultInfo == 0 ? this.examResultInfo.find(info => info._id === student._id)?.resultDetail || {} : this.examResultInfo.find(info => info.studentId === student._id)?.resultDetail || {};
-
 
             examType.forEach((exam: any) => {
               exams[exam] = resultDetail[exam] ? "present" : "empty";
@@ -290,7 +297,6 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         this.patchPeriodicTest();
       }
     }
-
 
     if (examFilteredData.scholasticMarks.noteBookMaxMarks) {
       this.noteBookSubjects = examFilteredData.scholasticMarks.noteBookMaxMarks.map((item: any) => {
@@ -457,7 +463,34 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
   toTitleCase(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
+
+  // Helper method to mark all form fields as touched for validation display
+  private markFormGroupTouched() {
+    Object.keys(this.examResultForm.controls).forEach(key => {
+      const control = this.examResultForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
   examResultAddUpdate() {
+    // Check if form is valid first
+    if (!this.examResultForm.valid) {
+      this.markFormGroupTouched();
+      this.errorCheck = true;
+      this.errorMsg = 'Please fill all required fields correctly.';
+      return;
+    }
+
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
+
+    // Reset error state and set loading state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
+
     const examResult = this.examResultForm.value.type;
     const countSubjectsBelowPassingMarks = (passMarks: any[], actualMarks: any[]): number => {
       return passMarks.reduce((count, passMarkSubject, index) => {
@@ -505,16 +538,13 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
         const halfYearlyMarkObject = isHalfYearly ? examResult.halfYearlyMarks.find((halfYearlyMark: any) => halfYearlyMark && halfYearlyMark.hasOwnProperty(subjectName)) : null;
         const halfYearlyMarks = halfYearlyMarkObject ? parseFloat(halfYearlyMarkObject[subjectName]) : 0;
 
-
         const totalMarks = theoryMarks + practicalMarks + periodicTestMarks + noteBookMarks + subjectEnrichmentMarks + projectMarks + halfYearlyMarks;
 
         const theoryMaxMarksObject = this.resultStructureInfo.theoryMaxMarks.find((theoryMaxMarks: any) => theoryMaxMarks && theoryMaxMarks.hasOwnProperty(subjectName));
         const theoryMaxMarks = theoryMaxMarksObject ? parseFloat(theoryMaxMarksObject[subjectName]) : 0;
 
-
         const practicalMaxMarksObject = isPractical && this.resultStructureInfo.practicalMaxMarks ? this.resultStructureInfo.practicalMaxMarks.find((practicalMaxMark: any) => practicalMaxMark && practicalMaxMark.hasOwnProperty(subjectName)) : null;
         const practicalMaxMarks = practicalMaxMarksObject ? parseFloat(practicalMaxMarksObject[subjectName]) : 0;
-
 
         const periodicTestMaxMarksObject = isPeriodicTest && this.resultStructureInfo.periodicTestMaxMarks ? this.resultStructureInfo.periodicTestMaxMarks.find((periodicTestMaxMark: any) => periodicTestMaxMark && periodicTestMaxMark.hasOwnProperty(subjectName)) : null;
         const periodicTestMaxMarks = periodicTestMaxMarksObject ? parseFloat(periodicTestMaxMarksObject[subjectName]) : 0;
@@ -592,36 +622,46 @@ export class AdminStudentMarksheetResultAddComponent implements OnInit {
       resultStatus: resultStatus,
       coScholastic: coScholastic,
     };
-    if (this.examResultForm.valid) {
-      this.examResultForm.value.resultDetail = examResultInfo;
-      this.examResultForm.value.adminId = this.adminId;
-      this.examResultForm.value.rollNumber = this.selectedRollNumber;
-      if (this.updateMode) {
-        this.examResultService.updateExamResult(this.examResultForm.value).subscribe((res: any) => {
+
+    this.examResultForm.value.resultDetail = examResultInfo;
+    this.examResultForm.value.adminId = this.adminId;
+    this.examResultForm.value.rollNumber = this.selectedRollNumber;
+    
+    if (this.updateMode) {
+      this.examResultService.updateExamResult(this.examResultForm.value).subscribe(
+        (res: any) => {
           if (res) {
+            this.isClick = false;
             this.successDone(res);
           }
-        }, err => {
+        },
+        (err) => {
           this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
-      } else {
-        if (this.practicalSubjects.length === 0) {
-          delete this.examResultForm.value.type.practicalMarks;
+          this.errorMsg = err.error || 'An error occurred while updating result.';
+          this.isClick = false;
         }
-        this.examResultForm.value.createdBy = "Admin";
-        // this.examResultForm.value.examType = this.selectedExam;
-        this.examResultForm.value.stream = this.stream;
-        this.examResultForm.value.class = this.cls;
-        this.examResultService.addExamResult(this.examResultForm.value).subscribe((res: any) => {
+      );
+    } else {
+      if (this.practicalSubjects.length === 0) {
+        delete this.examResultForm.value.type.practicalMarks;
+      }
+      this.examResultForm.value.createdBy = "Admin";
+      this.examResultForm.value.stream = this.stream;
+      this.examResultForm.value.class = this.cls;
+      
+      this.examResultService.addExamResult(this.examResultForm.value).subscribe(
+        (res: any) => {
           if (res) {
+            this.isClick = false;
             this.successDone(res);
           }
-        }, err => {
+        },
+        (err) => {
           this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
-      }
+          this.errorMsg = err.error || 'An error occurred while adding result.';
+          this.isClick = false;
+        }
+      );
     }
   }
 }
