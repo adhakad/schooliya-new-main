@@ -12,7 +12,6 @@ import { SchoolService } from 'src/app/services/school.service';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Component({
   selector: 'app-admission',
   templateUrl: './admission.component.html',
@@ -21,14 +20,18 @@ import { ToastrService } from 'ngx-toastr';
 export class AdmissionComponent implements OnInit {
   @ViewChild('receipt') receipt!: ElementRef;
   public baseUrl = environment.API_URL;
+
   studentForm: FormGroup;
   showModal: boolean = false;
   showAdmissionPrintModal: boolean = false;
+  showAdmissionInfoViewModal: boolean = false;
   updateMode: boolean = false;
   deleteMode: boolean = false;
   deleteById: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
+  statusCode: Number = 0;
+
   academicSession!: string;
   allSession: any = [];
   classInfo: any[] = [];
@@ -39,6 +42,9 @@ export class AdmissionComponent implements OnInit {
   paginationValues: Subject<any> = new Subject();
   page: Number = 0;
 
+  // Add submission state management properties
+  isClick: boolean = false;
+
   sessions: any;
   categorys: any;
   religions: any;
@@ -46,19 +52,32 @@ export class AdmissionComponent implements OnInit {
   occupations: any;
   stream: string = '';
   mediums: any;
-  // notApplicable: String = "stream";
   streamMainSubject: any[] = ['mathematics(science)', 'biology(science)', 'history(arts)', 'sociology(arts)', 'political science(arts)', 'accountancy(commerce)', 'economics(commerce)', 'agriculture', 'home science'];
   cls: number = 0;
   clsFeesStructure: any;
   schoolInfo: any;
   admissionrReceiptInfo: any;
-  singleStudentInfo: any;
+  singleAdmissionInfo: any;
   receiptMode: boolean = false;
   studentFeesCollection: any;
   baseURL!: string;
   loader: Boolean = true;
-  adminId!: String
-  constructor(private fb: FormBuilder, private toastr: ToastrService, private adminAuthService: AdminAuthService, private academicSessionService: AcademicSessionService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private classService: ClassService, private studentService: StudentService, private feesStructureService: FeesStructureService, private feesService: FeesService,) {
+  adminId!: String;
+  logoPreview: any = null;
+  serialNo!: number;
+
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private adminAuthService: AdminAuthService,
+    private academicSessionService: AcademicSessionService,
+    private schoolService: SchoolService,
+    private printPdfService: PrintPdfService,
+    private classService: ClassService,
+    private studentService: StudentService,
+    private feesStructureService: FeesStructureService,
+    private feesService: FeesService,
+  ) {
     this.studentForm = this.fb.group({
       _id: [''],
       adminId: [''],
@@ -68,9 +87,12 @@ export class AdmissionComponent implements OnInit {
       admissionFees: ['', Validators.required],
       rollNumber: ['', [Validators.required, Validators.maxLength(8), Validators.pattern('^[0-9]+$')]],
       class: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      admissionClass: [''],
       stream: ['', Validators.required],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
+      studentImage: [''], // Add student image field
       dob: ['', Validators.required],
+      doa: [''],
       aadharNumber: ['', [Validators.pattern('^\\d{12}$')]],
       samagraId: ['', [Validators.pattern('^\\d{9}$')]],
       udiseNumber: ['', [Validators.pattern('^\\d{11}$')]],
@@ -92,13 +114,11 @@ export class AdmissionComponent implements OnInit {
       familyAnnualIncome: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       feesConcession: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       createdBy: [''],
-
     })
   }
 
   ngOnInit(): void {
-    let getAdmin = this.adminAuthService.getLoggedInAdminInfo();
-    this.adminId = getAdmin?.id;
+    this.setAdminInfo();
     this.getSchool(this.adminId);
     this.getClass();
     this.getAcademicSession();
@@ -112,6 +132,15 @@ export class AdmissionComponent implements OnInit {
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
   }
+
+  // Add this method to properly set admin info
+  setAdminInfo() {
+    const getAdmin = this.adminAuthService.getLoggedInAdminInfo();
+    if (getAdmin?.id) {
+      this.adminId = getAdmin.id;
+    }
+  }
+
   getAcademicSession() {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
       if (res) {
@@ -119,6 +148,7 @@ export class AdmissionComponent implements OnInit {
       }
     })
   }
+
   printStudentData() {
     const printContent = this.getPrintContent();
     this.printPdfService.printContent(printContent);
@@ -144,8 +174,6 @@ export class AdmissionComponent implements OnInit {
     printHtml += '.title-lable {text-align: center;margin-top: 0px;margin-bottom: 0;}';
     printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
 
-
-
     printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 1.20vh;margin-bottom: 1vh;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;padding-top:5px;padding-bottom:5px;}';
 
@@ -157,18 +185,6 @@ export class AdmissionComponent implements OnInit {
     printHtml += '.text-left { text-align: left;}';
     printHtml += 'p {color: #0a0a0a !important;font-size:19px;}'
     printHtml += 'h4 {color: #0a0a0a !important;}'
-
-    printHtml += '.watermark {';
-    printHtml += '  position: fixed;';
-    printHtml += '  top: 50%;';
-    printHtml += '  left: 50%;';
-    printHtml += '  transform: translate(-50%, -50%) rotate(-45deg);';
-    printHtml += '  opacity: 0.1;';
-    printHtml += '  z-index: 1;';
-    printHtml += '  pointer-events: none;';
-    printHtml += '  width: 300px;';
-    printHtml += '  height: auto;';
-    printHtml += '}';
 
     printHtml += '.watermark-container {';
     printHtml += '  position: fixed;';
@@ -221,6 +237,7 @@ export class AdmissionComponent implements OnInit {
       }
     })
   }
+
   addPrintModal(student: any) {
     let params = {
       adminId: this.adminId,
@@ -229,10 +246,16 @@ export class AdmissionComponent implements OnInit {
     this.showAdmissionPrintModal = true;
     this.feesService.singleStudentFeesCollectionById(params).subscribe((res: any) => {
       if (res) {
-        this.singleStudentInfo = student;
-        this.singleStudentInfo.admissionFees = res.studentFeesCollection.admissionFees;
+        this.singleAdmissionInfo = student;
+        this.singleAdmissionInfo.admissionFees = res.studentFeesCollection.admissionFees;
       }
     })
+  }
+
+  addAdmissionInfoViewModel(admission: any) {
+    console.log(admission);
+    this.showAdmissionInfoViewModal = true;
+    this.singleAdmissionInfo = admission;
   }
 
   chooseClass(cls: any) {
@@ -250,6 +273,7 @@ export class AdmissionComponent implements OnInit {
       }
     }
   }
+
   chooseStream(stream: any) {
     this.stream = '';
     this.stream = stream;
@@ -257,6 +281,7 @@ export class AdmissionComponent implements OnInit {
       this.feesStructureByClassStream();
     }
   }
+
   feesStructureByClassStream() {
     let params = {
       class: this.cls,
@@ -265,7 +290,7 @@ export class AdmissionComponent implements OnInit {
     }
     this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
       if (res) {
-        this.errorCheck = true;
+        this.errorCheck = false;
         this.errorMsg = '';
         res.feesType = [{ Admission: res.admissionFees }, ...res.feesType];
         this.clsFeesStructure = res;
@@ -289,6 +314,7 @@ export class AdmissionComponent implements OnInit {
   closeModal() {
     this.showModal = false;
     this.showAdmissionPrintModal = false;
+    this.showAdmissionInfoViewModal = false;
     this.updateMode = false;
     this.deleteMode = false;
     this.errorMsg = '';
@@ -296,27 +322,78 @@ export class AdmissionComponent implements OnInit {
     this.cls = 0;
     this.receiptMode = false;
     this.admissionrReceiptInfo = null;
+    this.singleAdmissionInfo = null;
+    this.logoPreview = null;
     this.studentForm.reset();
+    // Reset all submission states
+    this.isClick = false;
   }
+
   addStudentModel() {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = false;
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
+
+    // Reset form completely
     this.studentForm.reset();
+    this.logoPreview = null;
+
     this.studentForm.get('session')?.setValue(this.academicSession);
 
+    if (this.adminId) {
+      this.studentForm.get('adminId')?.setValue(this.adminId);
+    } else {
+      this.setAdminInfo();
+      if (this.adminId) {
+        this.studentForm.get('adminId')?.setValue(this.adminId);
+      }
+    }
+
+    // Ensure all form controls are enabled
+    Object.keys(this.studentForm.controls).forEach(key => {
+      this.studentForm.get(key)?.enable();
+    });
+
+    // Reset validation state
+    this.studentForm.markAsUntouched();
+    this.studentForm.updateValueAndValidity();
   }
+
   updateStudentModel(student: any) {
     this.showModal = true;
     this.deleteMode = false;
     this.updateMode = true;
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = false;
+
+    // First ensure all controls are enabled
+    Object.keys(this.studentForm.controls).forEach(key => {
+      this.studentForm.get(key)?.enable();
+    });
+
+    // Patch the form with the student data
     this.studentForm.patchValue(student);
+
+    // Reset form validation state after patching values
+    this.studentForm.markAsUntouched();
+    this.studentForm.updateValueAndValidity();
+
+    if (student.studentImage) {
+      this.logoPreview = `${this.baseUrl}/${student.studentImage}`;
+    }
   }
+
   deleteStudentModel(id: String) {
     this.showModal = true;
     this.updateMode = false;
     this.deleteMode = true;
     this.deleteById = id;
+    this.errorCheck = false;
+    this.errorMsg = '';
   }
 
   getClass() {
@@ -326,6 +403,7 @@ export class AdmissionComponent implements OnInit {
       }
     })
   }
+
   successDone(msg: any) {
     this.closeModal();
     this.getStudentsByAdmission({ page: this.page });
@@ -350,29 +428,132 @@ export class AdmissionComponent implements OnInit {
 
       this.studentService.studentPaginationByAdmission(params).subscribe((res: any) => {
         if (res) {
+          this.errorCheck = false;
+          this.statusCode = 200;
           this.studentInfo = res.studentList;
+          this.serialNo = res.serialNo;
           this.number = params.page;
           this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countStudent });
           return resolve(true);
         }
+      }, err => {
+        this.errorCheck = true;
+        this.statusCode = err.status;
       });
     });
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.studentForm.patchValue({ studentImage: file });
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.logoPreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Helper method to mark all form fields as touched for validation display
+  private markFormGroupTouched() {
+    Object.keys(this.studentForm.controls).forEach(key => {
+      const control = this.studentForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
   studentAddUpdate() {
-    if (this.studentForm.valid) {
-      this.studentForm.value.adminId = this.adminId;
-      this.studentForm.value.admissionType = 'new';
-      this.studentForm.value.createdBy = 'Admin';
-      this.studentService.addStudent(this.studentForm.value).subscribe((res: any) => {
+    // Check form validity first
+    if (!this.studentForm.valid) {
+      // Mark all fields as touched to show validation errors
+      this.markFormGroupTouched();
+      this.errorCheck = true;
+      this.errorMsg = 'Please fill all required fields correctly.';
+      return;
+    }
+
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
+
+    // Reset error state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
+
+    if (!this.adminId) {
+      this.setAdminInfo();
+    }
+
+    if (!this.adminId) {
+      this.errorCheck = true;
+      this.errorMsg = 'Admin information not available. Please refresh and try again.';
+      this.isClick = false;
+      return;
+    }
+
+    // Create a copy of form values to avoid modifying the actual form
+    const formValues = { ...this.studentForm.value };
+
+    formValues.adminId = this.adminId;
+    formValues.admissionType = 'new';
+    formValues.createdBy = 'Admin';
+    formValues.familyAnnualIncome = String(formValues.familyAnnualIncome);
+    formValues.doa = 'any';
+    const dob = new Date(formValues.dob);
+    const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
+    formValues.dob = formattedDob;
+
+    formValues.admissionClass = Number(200);
+    if (this.updateMode) {
+      this.studentService.updateStudent(formValues).subscribe((res: any) => {
         if (res) {
+          this.isClick = false;
           this.successDone(res);
         }
       }, err => {
         this.errorCheck = true;
-        this.errorMsg = err.error;
+        this.errorMsg = err.error || 'An error occurred while updating admission.';
+        this.isClick = false;
+      })
+    } else {
+      this.studentService.addStudent(formValues).subscribe((res: any) => {
+        if (res) {
+          this.isClick = false;
+          this.successDone(res);
+        }
+      }, err => {
+        this.errorCheck = true;
+        this.errorMsg = err.error || 'An error occurred while adding admission.';
+        this.isClick = false;
       })
     }
+  }
+
+  changeStatus(id: any, statusValue: any) {
+    if (id) {
+      let params = {
+        id: id,
+        statusValue: statusValue,
+      }
+      this.studentService.changeStatus(params).subscribe((res: any) => {
+        if (res) {
+          this.getStudentsByAdmission({ page: this.page });
+        }
+      })
+    }
+  }
+
+  studentDelete(id: String) {
+    this.studentService.deleteStudent(id).subscribe((res: any) => {
+      if (res) {
+        this.successDone(res);
+        this.deleteById = '';
+      }
+    })
   }
 
   allOptions() {

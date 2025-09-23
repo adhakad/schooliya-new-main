@@ -309,23 +309,28 @@ const CreateStudent = async (req, res, next) => {
         if (!adminId) {
             return handleError(404, `Invalid entry!`);
         }
+
         const checkAdminPlan = await AdminPlan.findOne({ adminId: adminId });
         if (!checkAdminPlan) {
             return handleError(404, `Invalid entry!`);
         }
+
         let studentLimit = checkAdminPlan.studentLimit;
         let countStudent = await StudentModel.count({ adminId: adminId });
         if (countStudent == studentLimit || countStudent > studentLimit) {
             return handleError(400, `You have exceeded the ${countStudent} student limit for your current plan. Please increase the limit or upgrade to a higher plan to continue!`);
         }
+
         const checkFeesStr = await FeesStructureModel.findOne({ adminId: adminId, session: session, class: className, stream: stream });
         if (!checkFeesStr) {
             return handleError(404, `Please create fees structure for session ${session}!`);
         }
+
         const checkClassSubject = await ClassSubjectModal.findOne({ adminId: adminId, class: className, stream: stream });
         if (!checkClassSubject) {
             return handleError(404, `Please group subjects according to class and stream!`);
         }
+
         if (studentData.aadharNumber) {
             const exists = await StudentModel.findOne({
                 adminId: adminId,
@@ -335,6 +340,7 @@ const CreateStudent = async (req, res, next) => {
                 return handleError(400, "Aadhar number already exists!");
             }
         }
+
         if (studentData.samagraId) {
             const exists = await StudentModel.findOne({
                 adminId: adminId,
@@ -354,29 +360,38 @@ const CreateStudent = async (req, res, next) => {
                 return handleError(400, "UDISE number already exists!");
             }
         }
+
         const checkAdmissionNo = await StudentModel.findOne({ adminId: adminId, admissionNo: admissionNo });
         if (checkAdmissionNo) {
             return handleError(400, `Admission no already exist!`);
         }
+
         const checkRollNumber = await StudentModel.findOne({ adminId: adminId, rollNumber: rollNumber, class: className });
         if (checkRollNumber) {
             return handleError(400, `Roll number already exist for this class!`);
         }
+
+        // Ensure feesConcession is a number and not greater than totalFees
+        feesConcession = parseFloat(feesConcession);
         if (feesConcession > checkFeesStr.totalFees) {
             return handleError(400, `Concession cannot be greater than the total academic session fee!`);
         }
+
+        // Calculate fees properly
         let totalFees = checkFeesStr.totalFees - feesConcession;
-        const admissionFee = checkFeesStr.admissionFees;
         let admissionFeesPayable = false;
         let paidFees = 0;
-        let dueFees = totalFees - paidFees;
-        if (admissionType == 'new') {
+        let actualAdmissionFees = 0;
+
+        if (admissionType === 'new') {
             admissionFeesPayable = true;
-            admissionFees = admissionFees;
-            totalFees = totalFees + admissionFees;
-            paidFees = admissionFees;
-            dueFees = totalFees - admissionFees;
+            actualAdmissionFees = checkFeesStr.admissionFees; // Get from fees structure
+            totalFees = totalFees + actualAdmissionFees;
+            paidFees = actualAdmissionFees;
         }
+
+        let dueFees = totalFees - paidFees;
+
         let studentFeesData = {
             adminId: adminId,
             session: session,
@@ -386,7 +401,7 @@ const CreateStudent = async (req, res, next) => {
             previousSessionStream: "empty",
             class: parseInt(className),
             stream: stream,
-            admissionFees: admissionFees ? admissionFees : 0,
+            admissionFees: actualAdmissionFees,
             admissionFeesPayable: admissionFeesPayable,
             feesConcession: feesConcession,
             allFeesConcession: feesConcession,
@@ -397,10 +412,12 @@ const CreateStudent = async (req, res, next) => {
             AllPaidFees: paidFees,
             AllDueFees: dueFees,
         }
-        if (admissionType == 'new') {
+
+        if (admissionType === 'new') {
             studentFeesData.admissionFeesReceiptNo = receiptNo;
             studentFeesData.admissionFeesPaymentDate = istDateTimeString;
         }
+
         let createStudent = await StudentModel.create(studentData);
         if (createStudent) {
             let studentId = createStudent._id;
@@ -410,6 +427,7 @@ const CreateStudent = async (req, res, next) => {
                 await StudentModel.deleteOne({ _id: studentId });
                 return handleError(400, "Student record could not be created. Please try again!");
             }
+
             if (createStudentFeesData) {
                 // -------- IMAGE UPLOAD --------
                 if (req.file && req.file.path) {
