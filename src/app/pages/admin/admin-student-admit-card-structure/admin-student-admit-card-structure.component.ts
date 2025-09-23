@@ -34,6 +34,9 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
     loader: Boolean = true;
     adminId!: string;
     editData: any;
+    
+    // Add submission state management property
+    isClick: boolean = false;
 
     constructor(private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private classService: ClassService, private classSubjectService: ClassSubjectService, private admitCardStructureService: AdmitCardStructureService) {
         this.admitcardForm = this.fb.group({
@@ -56,6 +59,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         this.getAdmitCardStructureByClass();
         this.allOptions();
     }
+    
     getClass() {
         this.classService.getClassList().subscribe((res: any) => {
             if (res) {
@@ -63,6 +67,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
             }
         })
     }
+    
     chooseClass(cls: any) {
         this.errorCheck = false;
         this.errorMsg = '';
@@ -85,6 +90,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
             }
         }
     }
+    
     chooseStream(stream: any) {
         this.stream = '';
         this.stream = stream;
@@ -108,6 +114,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         controlThree.clear();
         this.admitcardForm.reset();
     }
+    
     falseAllValue() {
         this.falseFormValue();
         this.classSubject = [];
@@ -152,6 +159,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
             }
         })
     }
+    
     processData(examAdmitCard: any) {
         for (let i = 0; i < examAdmitCard.examDate.length; i++) {
             const subject = Object.keys(examAdmitCard.examDate[i])[0];
@@ -169,18 +177,24 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
 
     addAdmitCardModel() {
         this.showModal = true;
-        this.updateMode = false; // Ensure updateMode is false when adding a new admit card.
+        this.updateMode = false;
         this.editData = null;
+        // Reset loading state
+        this.isClick = false;
     }
+    
     openAdmitCardStructureModal(examAdmitCard: any) {
         this.showAdmitCardStructureModal = true;
         this.admitCardInfo = examAdmitCard;
         this.processData(examAdmitCard);
     }
+    
     deleteAdmitCardStructureModel(id: String) {
         this.showModal = true;
         this.deleteMode = true;
         this.deleteById = id;
+        // Reset loading state
+        this.isClick = false;
     }
 
     closeModal() {
@@ -195,7 +209,10 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         this.admitcardForm.reset();
         this.updateMode = false;
         this.editData = null;
+        // Reset loading state
+        this.isClick = false;
     }
+    
     successDone(msg: any) {
         this.closeModal();
         this.getAdmitCardStructureByClass();
@@ -219,11 +236,13 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
             controlThree.push(this.patchEndTime(x.subject))
         })
     }
+    
     patchExamDate(examDate: any) {
         return this.fb.group({
             [examDate]: ['', Validators.required,],
         })
     }
+    
     patchStartTime(startTime: any) {
         return this.fb.group({
             [startTime]: ['', Validators.required,],
@@ -243,7 +262,48 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         return h * 60 + m;
     }
 
+    // Helper method to mark all form fields as touched for validation display
+    private markFormGroupTouched() {
+        Object.keys(this.admitcardForm.controls).forEach(key => {
+            const control = this.admitcardForm.get(key);
+            control?.markAsTouched();
+            
+            // Handle nested form groups
+            if (control instanceof FormGroup) {
+                Object.keys(control.controls).forEach(nestedKey => {
+                    const nestedControl = control.get(nestedKey);
+                    nestedControl?.markAsTouched();
+                    
+                    // Handle form arrays
+                    if (nestedControl instanceof FormArray) {
+                        nestedControl.controls.forEach((arrayControl) => {
+                            if (arrayControl instanceof FormGroup) {
+                                Object.keys(arrayControl.controls).forEach(arrayKey => {
+                                    arrayControl.get(arrayKey)?.markAsTouched();
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     admitcardAddUpdate() {
+        // Check form validity first
+        if (!this.admitcardForm.valid) {
+            // Mark all fields as touched to show validation errors
+            this.markFormGroupTouched();
+            this.errorCheck = true;
+            this.errorMsg = 'Please fill all required fields correctly.';
+            return;
+        }
+
+        // Check if already submitting
+        if (this.isClick) {
+            return;
+        }
+
         const { startTime, endTime } = this.admitcardForm.value.type;
         for (let i = 0; i < startTime.length; i++) {
             const sub = Object.keys(startTime[i])[0];
@@ -261,6 +321,11 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
             }
         }
 
+        // Reset error state and set loading state
+        this.errorCheck = false;
+        this.errorMsg = '';
+        this.isClick = true;
+
         this.admitcardForm.value.type.examDate = this.admitcardForm.value.type.examDate.map((exam: any) => {
             const subject = Object.keys(exam)[0];
             const dateStr = exam[subject];
@@ -272,27 +337,30 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
             return { [subject]: formattedDate };
         });
         this.admitcardForm.value.adminId = this.adminId;
+        
         if (this.updateMode) {
             this.admitCardStructureService.updateAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
                 if (res) {
+                    this.isClick = false;
                     this.successDone(res);
                 }
             }, err => {
                 this.errorCheck = true;
-                this.errorMsg = err.error;
+                this.errorMsg = err.error || 'An error occurred while updating admit card structure.';
+                this.isClick = false;
             });
         } else {
             this.admitCardStructureService.addAdmitCardStructure(this.admitcardForm.value).subscribe((res: any) => {
                 if (res) {
+                    this.isClick = false;
                     this.successDone(res);
                 }
             }, err => {
                 this.errorCheck = true;
-                this.errorMsg = err.error;
+                this.errorMsg = err.error || 'An error occurred while creating admit card structure.';
+                this.isClick = false;
             });
         }
-        // }
-
     }
 
     onToggleChange(id: any, admitCardPublishStatus: any) {
@@ -311,12 +379,24 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
     }
 
     admitCardStructureDelete(id: String) {
+        // Check if already processing delete
+        if (this.isClick) {
+            return;
+        }
+
+        this.isClick = true;
+
         this.admitCardStructureService.deleteAdmitCardStructure(id).subscribe((res: any) => {
             if (res) {
+                this.isClick = false;
                 this.successDone(res);
                 this.deleteById = '';
             }
-        })
+        }, (err) => {
+            this.errorCheck = true;
+            this.errorMsg = err.error || 'An error occurred while deleting admit card structure.';
+            this.isClick = false;
+        });
     }
 
     editAdmitCardStructureModel(data: any) {
@@ -325,6 +405,9 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         this.editData = data;
         this.cls = data.class;
         this.stream = data.stream;
+        // Reset loading state
+        this.isClick = false;
+        
         if (this.stream == "n/a" || data.stream == "n/a") {
             this.stream = "stream";
         }
@@ -345,16 +428,12 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
         const startTimeControl = this.admitcardForm.get('type.startTime') as FormArray;
         const endTimeControl = this.admitcardForm.get('type.endTime') as FormArray;
 
-        // examDateControl.clear();
-        // startTimeControl.clear();
-        // endTimeControl.clear();
         data.examDate.forEach((item: any) => {
             const formattedItem: any = {};
 
-            // हर key (जैसे hindi, english आदि) को loop करके Date में convert करो
             Object.keys(item).forEach(key => {
                 const dateParts = item[key].split('/');
-                const isoDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`); // YYYY-MM-DD
+                const isoDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
                 formattedItem[key] = isoDate;
             });
 
@@ -367,6 +446,7 @@ export class AdminStudentAdmitCardStructureComponent implements OnInit {
             endTimeControl.push(this.fb.group(item));
         });
     }
+    
     allOptions() {
         this.allExamType = [{ examType: 'Quaterly Exam' }, { examType: 'Half Yearly Exam' }, { examType: 'Yearly Exam' }, { examType: 'Final Exam' }, { examType: 'Pre Board Exam' }, { examType: 'Term 1 Exam' }, { examType: 'Term 2 Exam' }]
     }

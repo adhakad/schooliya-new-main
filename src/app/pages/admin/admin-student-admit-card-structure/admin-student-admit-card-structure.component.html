@@ -86,7 +86,6 @@
                                                     (click)="deleteAdmitCardStructureModel(examAdmitCard._id)">delete</mat-icon>
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -311,8 +310,12 @@
                                             </div>
                                             <div class="modal-footer" *ngIf="!deleteMode && classSubject.length>0">
                                                 <button class="submit-button" mat-raised-button
-                                                    type="submit">{{updateMode ?
-                                                    'Update' : 'Submit'}}</button>
+                                                    type="submit" [disabled]="!admitcardForm.valid || isClick">
+                                                    <span *ngIf="isClick" class="submitting-content">
+                                                        <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                    </span>
+                                                    {{updateMode ? 'Update' : 'Submit'}}
+                                                </button>
                                             </div>
                                             <div *ngIf="deleteMode">
                                                 <div class="modal-body">
@@ -330,7 +333,12 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="delete-button" mat-raised-button type="button"
-                                                        (click)="admitCardStructureDelete(deleteById)">Ok</button>
+                                                        (click)="admitCardStructureDelete(deleteById)" [disabled]="isClick">
+                                                        <span *ngIf="isClick" class="submitting-content">
+                                                            <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                        </span>
+                                                        Ok
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
