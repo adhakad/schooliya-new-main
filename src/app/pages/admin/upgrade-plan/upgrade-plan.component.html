@@ -28,7 +28,9 @@
                                         <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                         <button *ngIf="adminPlanInfo?.activePlan =='Basic'" class="pricing-button-light"
                                             mat-raised-button
-                                            style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon> Currently Active</button>
+                                            style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon
+                                                style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon>
+                                            Currently Active</button>
                                         <button
                                             *ngIf="adminPlanInfo?.activePlan =='Standard' || adminPlanInfo?.activePlan =='Pro'"
                                             class="pricing-button-light" mat-raised-button
@@ -40,49 +42,84 @@
                                         <mat-divider></mat-divider>
                                         <div class="pricing-feature">
                                             <div class="row module-access">
-                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;( Up to
-                                                        {{plansInfo[0]?.studentLimit}} )</span></p>
-                                                <!-- <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
-                                                </p> -->
-                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Up to 3 )</span></p>
+                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;Up to
+                                                        {{plansInfo[0]?.studentLimit}}</span></p>
+                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
+                                                </p>
+                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;Up to 3</span></p>
+                                                <p>Whatsapp
+                                                    Messages<span>&nbsp;&nbsp;&nbsp;{{plansInfo[0]?.whatsappMessageLimit}}</span>
+                                                </p>
                                             </div>
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
                                                     <p><span>Increase Limit Only
                                                             ₹{{plansInfo[0]?.perStudentIncrementPrice}} Per
-                                                            Student</span>
-                                                    </p>
+                                                            Student</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
                                                 </div>
                                                 <div class="col-10">
                                                     <p><span>Student Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Admission Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Fees Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Admit Card Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Marksheet Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Transfer Certificate Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Whatsapp Confirmation Messages</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Whatsapp Reminder Messages</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Id Card Generate</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Subject Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Class Subjects Group Management</span></p>
                                                 </div>
@@ -90,8 +127,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 pricing-card-container">
-                                    <div class="pricing-card">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 card-container">
+                                    <div class="pricing-card border position-relative">
+                                        <div>
+                                            <mat-chip class="most-popular" selected>MOST POPULAR</mat-chip>
+                                        </div>
                                         <div class="pricing-title">
                                             <h2>{{plansInfo[1]?.plans}}</h2>
                                             <p>Level-up with more listing and enhanced features</p>
@@ -107,7 +147,9 @@
                                         <ng-container *ngIf="adminPlanInfo?.activePlan=='Standard'">
                                             <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                             <button class="pricing-button-light" mat-raised-button
-                                                style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon> Currently Active</button>
+                                                style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon
+                                                    style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon>
+                                                Currently Active</button>
                                         </ng-container>
                                         <ng-container *ngIf="adminPlanInfo?.activePlan=='Pro'">
                                             <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
@@ -121,50 +163,85 @@
                                         <mat-divider></mat-divider>
                                         <div class="pricing-feature">
                                             <div class="row module-access">
-                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;( Up to
-                                                        {{plansInfo[1]?.studentLimit}} )</span></p>
-                                                <!-- <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
-                                                </p> -->
-                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Up to 5 )</span></p>
-
+                                                <p>Student Limit<span>&nbsp;&nbsp;&nbsp;Up to
+                                                        {{plansInfo[1]?.studentLimit}}</span></p>
+                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
+                                                </p>
+                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;Up to 5</span></p>
+                                                <p>Whatsapp
+                                                    Messages<span>&nbsp;&nbsp;&nbsp;{{plansInfo[1]?.whatsappMessageLimit}}</span>
+                                                </p>
                                             </div>
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
                                                     <p><span>Increase Limit Only
                                                             ₹{{plansInfo[1]?.perStudentIncrementPrice}} Per
-                                                            Student</span>
-                                                    </p>
+                                                            Student</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Student Management</span></p>
                                                 </div>
 
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Admission Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Fees Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Admit Card Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Marksheet Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Transfer Certificate Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Whatsapp Confirmation Messages</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Whatsapp Reminder Messages</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Id Card Generate</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Subject Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Class Subjects Group Management</span></p>
                                                 </div>
@@ -190,7 +267,9 @@
                                         <ng-container *ngIf="adminPlanInfo?.activePlan=='Pro'">
                                             <h4><span style="font-size:22px;font-weight: 500;">N/A</span></h4>
                                             <button class="pricing-button-light" mat-raised-button
-                                                style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon> Currently Active</button>
+                                                style="background-color:#d4d4db;border: 2px solid #d4d4db;color: #3bba59fe;"><mat-icon
+                                                    style="color:#3bba59fe; font-size:12px;margin-bottom: -10px;">fiber_manual_record</mat-icon>
+                                                Currently Active</button>
                                         </ng-container>
                                         <div class="pricing-amount">
                                             <p>₹ {{plansInfo[2]?.price}}/year when you renew</p>
@@ -199,45 +278,80 @@
                                         <div class="pricing-feature">
                                             <div class="row module-access">
                                                 <p>Student Limit<span>&nbsp;&nbsp;&nbsp; Unlimited</span></p>
-                                                <!-- <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
-                                                </p> -->
-                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;( Up to 10 )</span></p>
-
+                                                <p>Data Entry<span>&nbsp;&nbsp;&nbsp;&nbsp;Free For First Entry</span>
+                                                </p>
+                                                <p>Staff Limit<span>&nbsp;&nbsp;&nbsp;Up to 10</span></p>
+                                                <p>Whatsapp
+                                                    Messages<span>&nbsp;&nbsp;&nbsp;{{plansInfo[2]?.whatsappMessageLimit}}</span>
+                                                </p>
                                             </div>
                                             <div class="row module-list">
                                                 <div class="col-10 offset-1">
-                                                    <p><span>Freedom to Add Students as Needed</span>
-                                                    </p>
+                                                    <p><span>Freedom to Add Students as Needed</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Student Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Admission Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Fees Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Admit Card Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Marksheet Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Transfer Certificate Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Whatsapp Confirmation Messages</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Whatsapp Reminder Messages</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p><span>Id Card Generate</span></p>
+                                                </div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Subject Management</span></p>
                                                 </div>
-                                                <div class="col-2"><button mat-icon-button disabled class="done">✓</button></div>
+                                                <div class="col-2"><button mat-icon-button disabled
+                                                        class="done">✓</button>
+                                                </div>
                                                 <div class="col-10">
                                                     <p><span>Class Subjects Group Management</span></p>
                                                 </div>

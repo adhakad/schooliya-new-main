@@ -253,7 +253,6 @@ export class AdmissionComponent implements OnInit {
   }
 
   addAdmissionInfoViewModel(admission: any) {
-    console.log(admission);
     this.showAdmissionInfoViewModal = true;
     this.singleAdmissionInfo = admission;
   }
@@ -360,40 +359,6 @@ export class AdmissionComponent implements OnInit {
     // Reset validation state
     this.studentForm.markAsUntouched();
     this.studentForm.updateValueAndValidity();
-  }
-
-  updateStudentModel(student: any) {
-    this.showModal = true;
-    this.deleteMode = false;
-    this.updateMode = true;
-    this.errorCheck = false;
-    this.errorMsg = '';
-    this.isClick = false;
-
-    // First ensure all controls are enabled
-    Object.keys(this.studentForm.controls).forEach(key => {
-      this.studentForm.get(key)?.enable();
-    });
-
-    // Patch the form with the student data
-    this.studentForm.patchValue(student);
-
-    // Reset form validation state after patching values
-    this.studentForm.markAsUntouched();
-    this.studentForm.updateValueAndValidity();
-
-    if (student.studentImage) {
-      this.logoPreview = `${this.baseUrl}/${student.studentImage}`;
-    }
-  }
-
-  deleteStudentModel(id: String) {
-    this.showModal = true;
-    this.updateMode = false;
-    this.deleteMode = true;
-    this.deleteById = id;
-    this.errorCheck = false;
-    this.errorMsg = '';
   }
 
   getClass() {
@@ -506,53 +471,16 @@ export class AdmissionComponent implements OnInit {
     const dob = new Date(formValues.dob);
     const formattedDob = `${String(dob.getDate()).padStart(2, '0')}/${String(dob.getMonth() + 1).padStart(2, '0')}/${dob.getFullYear()}`;
     formValues.dob = formattedDob;
-
     formValues.admissionClass = Number(200);
-    if (this.updateMode) {
-      this.studentService.updateStudent(formValues).subscribe((res: any) => {
-        if (res) {
-          this.isClick = false;
-          this.successDone(res);
-        }
-      }, err => {
-        this.errorCheck = true;
-        this.errorMsg = err.error || 'An error occurred while updating admission.';
-        this.isClick = false;
-      })
-    } else {
-      this.studentService.addStudent(formValues).subscribe((res: any) => {
-        if (res) {
-          this.isClick = false;
-          this.successDone(res);
-        }
-      }, err => {
-        this.errorCheck = true;
-        this.errorMsg = err.error || 'An error occurred while adding admission.';
-        this.isClick = false;
-      })
-    }
-  }
-
-  changeStatus(id: any, statusValue: any) {
-    if (id) {
-      let params = {
-        id: id,
-        statusValue: statusValue,
-      }
-      this.studentService.changeStatus(params).subscribe((res: any) => {
-        if (res) {
-          this.getStudentsByAdmission({ page: this.page });
-        }
-      })
-    }
-  }
-
-  studentDelete(id: String) {
-    this.studentService.deleteStudent(id).subscribe((res: any) => {
+    this.studentService.addStudent(formValues).subscribe((res: any) => {
       if (res) {
+        this.isClick = false;
         this.successDone(res);
-        this.deleteById = '';
       }
+    }, err => {
+      this.errorCheck = true;
+      this.errorMsg = err.error || 'An error occurred while adding admission.';
+      this.isClick = false;
     })
   }
 

@@ -63,7 +63,7 @@
                   <thead class="bg-light">
                     <tr class="text-muted">
                       <th>S.No.</th>
-                      <th>Image</th>
+                      <th>Photo</th>
                       <th>Admission No.</th>
                       <th>Student</th>
                       <th>Father Name</th>
@@ -74,8 +74,6 @@
                       <th>Session</th>
                       <th>Admission By</th>
                       <th>View</th>
-                      <th>Edit</th>
-                      <th>Remove</th>
                       <th>Admission Letter</th>
                     </tr>
                   </thead>
@@ -114,16 +112,10 @@
                         <p class="mb-0">{{students.session}}</p>
                       </td>
                       <td>
-                        <p class="mb-0">{{students.createdBy  | titlecase}}</p>
+                        <p class="mb-0">{{students.createdBy | titlecase}}</p>
                       </td>
                       <td class="mb-0">
                         <mat-icon (click)="addAdmissionInfoViewModel(students)">visibility</mat-icon>
-                      </td>
-                      <td class="mb-0">
-                        <mat-icon (click)="updateStudentModel(students)">edit</mat-icon>
-                      </td>
-                      <td class="mb-0">
-                        <mat-icon (click)="deleteStudentModel(students._id)">delete</mat-icon>
                       </td>
                       <td>
                         <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
@@ -148,12 +140,12 @@
                 <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">{{updateMode?'UPDATE': deleteMode ? 'DELETE' :'NEW'}} ADMISSION
+                      <h5 class="modal-title">NEW ADMISSION
                       </h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
                     <form [formGroup]="studentForm" (ngSubmit)="studentAddUpdate()">
-                      <div class="modal-body" *ngIf="!deleteMode">
+                      <div class="modal-body">
                         <div *ngIf="errorCheck">
                           <p class="error-message">{{errorMsg}}</p>
                         </div>
@@ -365,7 +357,8 @@
                                 <mat-label>Category</mat-label>
                                 <mat-select type="text" matInput formControlName="category">
                                   <div *ngFor="let category of categorys">
-                                    <mat-option value="{{category.category}}">{{category.category | titlecase}}</mat-option>
+                                    <mat-option value="{{category.category}}">{{category.category |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -380,7 +373,8 @@
                                 <mat-label>Religion</mat-label>
                                 <mat-select type="text" matInput formControlName="religion">
                                   <div *ngFor="let religion of religions">
-                                    <mat-option value="{{religion.religion}}">{{religion.religion | titlecase}}</mat-option>
+                                    <mat-option value="{{religion.religion}}">{{religion.religion |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -493,8 +487,8 @@
                                 <mat-label>Father Qualification</mat-label>
                                 <mat-select type="text" matInput formControlName="fatherQualification">
                                   <div *ngFor="let qualification of qualifications">
-                                    <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
+                                    <mat-option value="{{qualification.qualification}}">{{qualification.qualification |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -506,7 +500,8 @@
                                 <mat-label>Father Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="fatherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -544,8 +539,8 @@
                                 <mat-label>Mother Qualification</mat-label>
                                 <mat-select type="text" matInput formControlName="motherQualification">
                                   <div *ngFor="let qualification of qualifications">
-                                    <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
+                                    <mat-option value="{{qualification.qualification}}">{{qualification.qualification |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -557,7 +552,8 @@
                                 <mat-label>Mother Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="motherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -579,7 +575,7 @@
                         </div>
                       </div>
 
-                      <div class="modal-footer" *ngIf="!deleteMode">
+                      <div class="modal-footer">
                         <button class="submit-button" mat-raised-button type="submit"
                           [disabled]="!studentForm.valid || isClick">
                           <span *ngIf="isClick" class="submitting-content">
@@ -588,23 +584,10 @@
                           Submit
                         </button>
                       </div>
-                      <div *ngIf="deleteMode">
-                        <div class="modal-body">
-                          <h3>Note : When deleting admission record, all related data such as login information,
-                            fee
-                            records, student details, admit cards, results, etc., will be removed.</h3>
-                        </div>
-                        <div class="modal-footer">
-                          <button class="delete-button" mat-raised-button type="button"
-                            (click)="studentDelete(deleteById)">Ok</button>
-                        </div>
-                      </div>
                     </form>
                   </div>
                 </div>
               </div>
-
-              <!-- Admission Info View Modal -->
               <div class="modal fade show" [class.show]="showAdmissionInfoViewModal">
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                   <div class="modal-content">
@@ -711,8 +694,6 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Print Admission Letter Modal -->
               <div class="modal fade show custom-modal" [class.show]="showAdmissionPrintModal">
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                   <div class="modal-content">
@@ -728,8 +709,7 @@
                               <div class="table-container" style="position: relative;height: 100%;">
                                 <div class="row mt-5">
                                   <div class="col-2">
-                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}"
-                                      alt="school logo">
+                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}" alt="school logo">
                                   </div>
                                   <div class="col-10" style="text-align: center;">
                                     <div class="school-name">

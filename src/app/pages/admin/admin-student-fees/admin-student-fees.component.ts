@@ -61,14 +61,30 @@ export class AdminStudentFeesComponent implements OnInit {
   baseURL!: string;
   adminId!: string;
   receiptSession: any;
-  constructor(private fb: FormBuilder, private router: Router, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
+
+  // Add loading state management properties
+  isClick: boolean = false;
+  collectingStudentId: string = '';
+
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    public activatedRoute: ActivatedRoute, 
+    private toastr: ToastrService, 
+    private adminAuthService: AdminAuthService, 
+    private schoolService: SchoolService, 
+    private classService: ClassService, 
+    private printPdfService: PrintPdfService, 
+    private feesService: FeesService, 
+    private feesStructureService: FeesStructureService
+  ) {
     this.feesForm = this.fb.group({
       adminId: [''],
       session: [''],
       class: [''],
       stream: [''],
       studentId: [''],
-      feesAmount: [''],
+      feesAmount: ['', [Validators.required, Validators.min(1)]],
       createdBy: [''],
     });
   }
@@ -94,20 +110,39 @@ export class AdminStudentFeesComponent implements OnInit {
   formatCurrency(value: any): string {
     value = parseInt(value);
     if (typeof value === 'number') {
-      return '₹ ' + value.toLocaleString(undefined); // No minimumFractionDigits
+      return '₹ ' + value.toLocaleString(undefined);
     }
     return '₹ 0';
   }
+
   formatKey(key: any): string {
     if (typeof key === 'string') {
       return key.toUpperCase();
     }
     return '';
   }
+
   printStudentData() {
-    const printContent = this.getPrintContent();
-    this.printPdfService.printContent(printContent);
-    this.closeModal();
+    // Check if already printing
+    if (this.isClick) {
+      return;
+    }
+
+    this.isClick = true;
+    
+    try {
+      const printContent = this.getPrintContent();
+      this.printPdfService.printContent(printContent);
+      
+      // Add a small delay to show the loading state
+      setTimeout(() => {
+        this.isClick = false;
+        this.closeModal();
+      }, 1000);
+    } catch (error) {
+      this.isClick = false;
+      this.toastr.error('Error occurred while printing', 'Print Error');
+    }
   }
 
   private getPrintContent(): string {
@@ -205,9 +240,13 @@ export class AdminStudentFeesComponent implements OnInit {
     this.paybleInstallment = [0, 0];
     this.receiptInstallment = {};
     this.receiptMode = false;
+    
+    // Reset loading states
+    this.isClick = false;
+    this.collectingStudentId = '';
+    
     this.getAllStudentFeesCollectionByClass();
   }
-
 
   getClass() {
     this.classService.getClassList().subscribe((res: any) => {
@@ -216,6 +255,7 @@ export class AdminStudentFeesComponent implements OnInit {
       }
     })
   }
+
   chooseClass(cls: number) {
     this.cls = cls;
     if (cls !== 11 && cls !== 12) {
@@ -233,6 +273,7 @@ export class AdminStudentFeesComponent implements OnInit {
       this.getAllStudentFeesCollectionByClass();
     }
   }
+
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
@@ -241,13 +282,15 @@ export class AdminStudentFeesComponent implements OnInit {
       this.getAllStudentFeesCollectionByClass();
     }
   }
+
   updateRouteParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
-      queryParamsHandling: 'merge' // Keep other query params
+      queryParams: { cls: this.cls || null, stream: this.stream || null },
+      queryParamsHandling: 'merge'
     });
   }
+
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
@@ -255,18 +298,7 @@ export class AdminStudentFeesComponent implements OnInit {
       }
     })
   }
-  // feesStructureByClass() {
-  //   let params = {
-  //     class: this.cls,
-  //     adminId: this.adminId,
-  //     stream: this.stream
-  //   }
-  //   this.feesStructureService.feesStructureByClassStream(params).subscribe((res: any) => {
-  //     if (res) {
-  //       this.clsFeesStructure = res;
-  //     }
-  //   })
-  // }
+
   getAllStudentFeesCollectionByClass() {
     let params = {
       class: this.cls,
@@ -296,87 +328,90 @@ export class AdminStudentFeesComponent implements OnInit {
       this.payNow = false;
     }
   }
+
   studentFeesPay(student: any) {
+    // Check if already collecting fees for this student
+    if (this.isClick && this.collectingStudentId === student.studentId) {
+      return;
+    }
+
+    this.isClick = true;
+    this.collectingStudentId = student.studentId;
+    
     this.getPayableSingleStudentFeesCollectionById(student);
   }
+
   getPayableSingleStudentFeesCollectionById(student: any) {
-    this.feesService.payableSingleStudentFeesCollectionById(student.studentId).subscribe((res: any) => {
-      if (res) {
-        this.clsFeesStructure = res.singleFeesStr;
-        this.singleStudent = { ...res.studentInfo, ...res.studentFeesCollection };
-        this.showModal = true;
-        this.deleteMode = false;
-        this.updateMode = false;
-        this.feesForm.reset();
+    this.feesService.payableSingleStudentFeesCollectionById(student.studentId).subscribe(
+      (res: any) => {
+        if (res) {
+          this.clsFeesStructure = res.singleFeesStr;
+          this.singleStudent = { ...res.studentInfo, ...res.studentFeesCollection };
+          this.showModal = true;
+          this.deleteMode = false;
+          this.updateMode = false;
+          this.feesForm.reset();
+          this.errorCheck = false;
+          this.errorMsg = '';
+        }
+        this.isClick = false;
+        this.collectingStudentId = '';
+      },
+      (err) => {
+        this.isClick = false;
+        this.collectingStudentId = '';
+        this.toastr.error('Error loading student fees information', 'Error');
       }
-    })
+    );
   }
-  // updateFeesModel(fees: any) {
-  //   this.showModal = true;
-  //   this.deleteMode = false;
-  //   this.updateMode = true;
-  // }
-  // deleteFeesModel(id: String) {
-  //   this.showModal = true;
-  //   this.updateMode = false;
-  //   this.deleteMode = true;
-  //   this.deleteById = id;
-  // }
 
-
-  // getFees($event: any) {
-  //   this.page = $event.page
-  //   return new Promise((resolve, reject) => {
-  //     let params: any = {
-  //       filters: {},
-  //       page: $event.page,
-  //       limit: $event.limit ? $event.limit : this.recordLimit,
-  //       class: this.cls
-  //     };
-  //     this.recordLimit = params.limit;
-  //     if (this.filters.searchText) {
-  //       params["filters"]["searchText"] = this.filters.searchText.trim();
-  //     }
-
-  //     this.feesService.feesPaginationList(params).subscribe((res: any) => {
-  //       if (res) {
-  //         this.feesInfo = res.feesList;
-  //         this.number = params.page;
-  //         this.paginationValues.next({ type: 'page-init', page: params.page, totalTableRecords: res.countFees });
-  //         return resolve(true);
-  //       }
-  //     });
-  //   });
-  // }
+  // Helper method to mark all form fields as touched for validation display
+  private markFormGroupTouched() {
+    Object.keys(this.feesForm.controls).forEach(key => {
+      const control = this.feesForm.get(key);
+      control?.markAsTouched();
+    });
+  }
 
   feesAddUpdate() {
-    if (this.feesForm.valid) {
-      this.feesForm.value.adminId = this.adminId;
-      this.feesForm.value.stream = this.stream;
-      if (this.updateMode) {
-        // this.feesService.updateFees(this.feesForm.value).subscribe((res: any) => {
-        //   if (res) {
-        //     this.closeModal();
-        //     this.successMsg = res;
-        //   }
-        // }, err => {
-        //   this.errorCheck = true;
-        //   this.errorMsg = err.error;
-        // })
-        console.log("this block is comment out");
-      } else {
-        this.feesForm.value.class = this.singleStudent.class;
-        this.feesForm.value.createdBy = "Admin";
-        this.feesForm.value.studentId = this.singleStudent.studentId;
-        this.feesForm.value.session = this.singleStudent.session;
+    // Check form validity first
+    if (!this.feesForm.valid) {
+      this.markFormGroupTouched();
+      this.errorCheck = true;
+      this.errorMsg = 'Please fill all required fields correctly.';
+      return;
+    }
 
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
 
+    // Reset error state and set loading state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
 
-        this.feesService.addFees(this.feesForm.value).subscribe((res: any) => {
+    this.feesForm.value.adminId = this.adminId;
+    this.feesForm.value.stream = this.stream;
+
+    if (this.updateMode) {
+      // Update mode logic would go here
+      console.log("Update mode is commented out");
+      this.isClick = false;
+    } else {
+      this.feesForm.value.class = this.singleStudent.class;
+      this.feesForm.value.createdBy = "Admin";
+      this.feesForm.value.studentId = this.singleStudent.studentId;
+      this.feesForm.value.session = this.singleStudent.session;
+
+      this.feesService.addFees(this.feesForm.value).subscribe(
+        (res: any) => {
           if (res) {
             this.receiptMode = true;
             this.receiptSession = res.session;
             this.receiptInstallment = res;
+            
             if (res.admissionFeesPayable == true) {
               this.clsFeesStructure.feesType = [{ Admission: res.admissionFees }, ...this.clsFeesStructure.feesType];
               this.toastr.success('', 'Fee Amount Collected Successfully');
@@ -385,58 +420,19 @@ export class AdminStudentFeesComponent implements OnInit {
             }
             if (res.admissionFeesPayable == false) {
               this.clsFeesStructure = this.clsFeesStructure;
-              this.toastr.success('', 'Fee Amount Collected Successfully',);
+              this.toastr.success('', 'Fee Amount Collected Successfully');
               this.showModal = false;
               this.showPrintModal = true;
             }
           }
-        }, err => {
+          this.isClick = false;
+        },
+        (err) => {
           this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
-      }
+          this.errorMsg = err.error || 'An error occurred while collecting fees.';
+          this.isClick = false;
+        }
+      );
     }
   }
-
-
-
-  // handleImport($event: any) {
-  //   this.fileChoose = true;
-  //   const files = $event.target.files;
-  //   if (files.length) {
-  //     const file = files[0];
-  //     const reader = new FileReader();
-  //     reader.onload = (event: any) => {
-  //       const wb = read(event.target.fees);
-  //       const sheets = wb.SheetNames;
-
-  //       if (sheets.length) {
-  //         const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-  //         this.movies = rows;
-  //       }
-  //     }
-  //     reader.readAsArrayBuffer(file);
-  //   }
-
-  // }
-
-  // onChange(event: MatRadioChange) {
-  //   this.selectedValue = event.value;
-  // }
-  // addBulkFeesModel() {
-  //   this.showBulkFeesModal = true;
-  // }
-  // addBulkFees() {
-  //   this.feesService.addBulkFees(this.movies).subscribe((res: any) => {
-  //     if (res) {
-  //       this.successMsg = res;
-  //     }
-  //   }, err => {
-  //     this.errorCheck = true;
-  //     this.errorMsg = err.error.errMsg;
-  //     this.existRollnumber = err.error.existRollnumber;
-  //   })
-  // }
-
-
 }

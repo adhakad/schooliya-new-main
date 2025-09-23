@@ -139,7 +139,14 @@
                                             <td>
                                                 <button *ngIf="student.AllPaidFees !== student.AllTotalFees"
                                                     class="submit-button" mat-raised-button
-                                                    (click)="studentFeesPay(student)">Collect</button>
+                                                    (click)="studentFeesPay(student)"
+                                                    [disabled]="isClick && collectingStudentId === student.studentId">
+                                                    <span *ngIf="isClick && collectingStudentId === student.studentId"
+                                                        class="submitting-content">
+                                                        <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                    </span>
+                                                    Collect
+                                                </button>
                                                 <button *ngIf="student.AllPaidFees == student.AllTotalFees"
                                                     class="submit-button" mat-raised-button
                                                     [disabled]="student.AllPaidFees == student.AllTotalFees"
@@ -212,17 +219,29 @@
                                                     <div class="row">
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
-                                                                <mat-label>Enter Fee Amount In
-                                                                    &#8377;</mat-label>
+                                                                <mat-label>Enter Fee Amount In &#8377;</mat-label>
                                                                 <input type="number" formControlName="feesAmount"
                                                                     matInput class="no-arrow" min="1">
+                                                                <mat-error
+                                                                    *ngIf="feesForm.get('feesAmount')?.hasError('required') && feesForm.get('feesAmount')?.touched">
+                                                                    Fee amount is required
+                                                                </mat-error>
+                                                                <mat-error
+                                                                    *ngIf="feesForm.get('feesAmount')?.hasError('min')">
+                                                                    Fee amount must be at least 1
+                                                                </mat-error>
                                                             </mat-form-field>
                                                         </div>
                                                         <div class="col-12 offset-0 offset-lg-0 col-lg-4 mb-3">
                                                             <button class="submit-button" mat-raised-button
-                                                                style="height: 50px !important;padding-top:5px;padding-bottom:10px !important;width: 100% !important;"
-                                                                type="button" (click)="feesAddUpdate()">Collect
-                                                                Now
+                                                                style="height: 50px !important;padding-top:5px;padding-bottom:10px !important;min-width: 100% !important;width: auto !important;"
+                                                                type="button" (click)="feesAddUpdate()"
+                                                                [disabled]="!feesForm.valid || isClick">
+                                                                <span *ngIf="isClick" class="submitting-content">
+                                                                    <mat-spinner diameter="20"
+                                                                        class="button-loader"></mat-spinner>
+                                                                </span>
+                                                                Collect Now
                                                             </button>
                                                         </div>
                                                     </div>
@@ -448,8 +467,13 @@
                                         </div>
 
                                         <div class="modal-footer">
-                                            <button class="submit-button" mat-raised-button
-                                                (click)="printStudentData()">Print</button>
+                                            <button class="submit-button" mat-raised-button (click)="printStudentData()"
+                                                [disabled]="isClick">
+                                                <span *ngIf="isClick" class="submitting-content">
+                                                    <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                </span>
+                                                Print
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -461,9 +485,3 @@
         </div>
     </div>
 </div>
-<!-- <div class="spinner-container" *ngIf="loader">
-            <div class="spinner-overlay" *ngIf="loader">
-                <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
-                    strokeWidth="3"></mat-progress-spinner>
-            </div>
-        </div> -->
