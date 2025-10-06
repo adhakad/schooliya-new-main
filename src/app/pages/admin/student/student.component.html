@@ -672,8 +672,13 @@
                             records, student details, admit cards, results, etc., will be removed.</h3>
                         </div>
                         <div class="modal-footer">
-                          <button class="delete-button" mat-raised-button type="button"
-                            (click)="studentDelete(deleteById)">Ok</button>
+                          <button class="delete-button" mat-raised-button type="button" [disabled]="isClick"
+                            (click)="studentDelete(deleteById)">
+                            <span *ngIf="isClick" class="submitting-content">
+                              <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                            </span>
+                            Ok
+                          </button>
                         </div>
                       </div>
                     </form>

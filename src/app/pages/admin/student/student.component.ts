@@ -83,7 +83,7 @@ export class StudentComponent implements OnInit {
     201: 'LKG',
     202: 'UKG',
     1: '1st',
-    2: '2nd', 
+    2: '2nd',
     3: '3rd',
     4: '4th',
     5: '5th',
@@ -158,7 +158,7 @@ export class StudentComponent implements OnInit {
       this.adminId = getAdmin.id;
     }
   }
-  
+
   getAcademicSession() {
     this.academicSessionService.getAcademicSession().subscribe((res: any) => {
       if (res) {
@@ -167,13 +167,13 @@ export class StudentComponent implements OnInit {
       }
     })
   }
-  
+
   filterSession(selectedSession: any) {
     this.errorCheck = false;
     this.errorMsg = '';
     this.selectedSession = selectedSession;
   }
-  
+
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
@@ -181,7 +181,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
-  
+
   chooseClass(cls: any) {
     this.page = 0;
     this.className = cls;
@@ -199,7 +199,7 @@ export class StudentComponent implements OnInit {
       this.getStudents({ page: 1 });
     }
   }
-  
+
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
@@ -218,11 +218,11 @@ export class StudentComponent implements OnInit {
       onlyself: true,
     });
   }
-  
+
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
   }
-  
+
   closeModal() {
     this.showModal = false;
     this.showBulkImportModal = false;
@@ -246,7 +246,7 @@ export class StudentComponent implements OnInit {
     // Reset all submission states
     this.isClick = false;
   }
-  
+
   addStudentModel() {
     this.showModal = true;
     this.deleteMode = false;
@@ -254,15 +254,15 @@ export class StudentComponent implements OnInit {
     this.errorCheck = false;
     this.errorMsg = '';
     this.isClick = false;
-    
+
     // Reset form completely
     this.studentForm.reset();
     this.logoPreview = null;
-    
+
     // Set default values
     this.classStreamFormValueSet();
     this.studentForm.get('session')?.setValue(this.academicSession);
-    
+
     if (this.adminId) {
       this.studentForm.get('adminId')?.setValue(this.adminId);
     } else {
@@ -282,7 +282,7 @@ export class StudentComponent implements OnInit {
     this.studentForm.markAsUntouched();
     this.studentForm.updateValueAndValidity();
   }
-  
+
   classStreamFormValueSet() {
     let cls = '';
     if (this.className == 1) {
@@ -314,14 +314,14 @@ export class StudentComponent implements OnInit {
       this.studentForm.get('stream')?.setValue(this.stream);
     }
   }
-  
+
   addBulkStudentImportModel() {
     this.showBulkImportModal = true;
     this.errorCheck = false;
     this.errorMsg = '';
     this.isClick = false;
   }
-  
+
   addBulkStudentExportModel() {
     this.showBulkExportModal = true;
     this.errorCheck = false;
@@ -331,11 +331,10 @@ export class StudentComponent implements OnInit {
   }
 
   addStudentInfoViewModel(student: any) {
-    console.log(student)
     this.showStudentInfoViewModal = true;
     this.singleStudentInfo = student;
   }
-  
+
   updateStudentModel(student: any) {
     this.showModal = true;
     this.deleteMode = false;
@@ -343,7 +342,7 @@ export class StudentComponent implements OnInit {
     this.errorCheck = false;
     this.errorMsg = '';
     this.isClick = false;
-    
+
     const dobArray = student.dob.split('/');
     const doaArray = student.doa.split('/');
 
@@ -400,16 +399,16 @@ export class StudentComponent implements OnInit {
         class: this.classMap[classValue]
       });
     }
-    
+
     // Reset form validation state after patching values
     this.studentForm.markAsUntouched();
     this.studentForm.updateValueAndValidity();
-    
+
     if (student.studentImage) {
       this.logoPreview = `${this.baseUrl}/${student.studentImage}`;
     }
   }
-  
+
   deleteStudentModel(id: String) {
     this.showModal = true;
     this.updateMode = false;
@@ -417,6 +416,7 @@ export class StudentComponent implements OnInit {
     this.deleteById = id;
     this.errorCheck = false;
     this.errorMsg = '';
+    this.isClick = false;
   }
 
   getClass() {
@@ -426,7 +426,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
-  
+
   getSingleClassSubjectByStream(params: any) {
     this.classSubjectService.getSingleClassSubjectByStream(params).subscribe((res: any) => {
       if (res) {
@@ -437,7 +437,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
-  
+
   successDone(msg: any) {
     this.closeModal();
     this.successMsg = '';
@@ -474,7 +474,7 @@ export class StudentComponent implements OnInit {
       }
     })
   }
-  
+
   getStudents($event: any) {
     this.page = $event.page
     return new Promise((resolve, reject) => {
@@ -563,9 +563,8 @@ export class StudentComponent implements OnInit {
 
     // Create a copy of form values to avoid modifying the actual form
     const formValues = { ...this.studentForm.value };
-    
+
     formValues.adminId = this.adminId;
-    formValues.admissionType = 'old';
     formValues.createdBy = 'Admin';
     formValues.class = this.className;
     formValues.familyAnnualIncome = String(formValues.familyAnnualIncome);
@@ -576,7 +575,7 @@ export class StudentComponent implements OnInit {
 
     const doa = new Date(formValues.doa);
     const formattedDoa = `${String(doa.getDate()).padStart(2, '0')}/${String(doa.getMonth() + 1).padStart(2, '0')}/${doa.getFullYear()}`;
-    
+
     formValues.dob = formattedDob;
     formValues.doa = formattedDoa;
 
@@ -592,6 +591,7 @@ export class StudentComponent implements OnInit {
         this.isClick = false;
       })
     } else {
+      formValues.admissionType = 'old';
       this.studentService.addStudent(formValues).subscribe((res: any) => {
         if (res) {
           this.isClick = false;
@@ -618,20 +618,32 @@ export class StudentComponent implements OnInit {
       })
     }
   }
-  
+
   studentDelete(id: String) {
+    if (this.isClick) {
+      return;
+    }
+    // Reset error state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
     this.studentService.deleteStudent(id).subscribe((res: any) => {
       if (res) {
+        this.isClick = false;
         this.successDone(res);
         this.deleteById = '';
       }
+    }, err => {
+      this.errorCheck = true;
+      this.errorMsg = err.error || 'An error occurred while deleting student.';
+      this.isClick = false;
     })
   }
 
   handleImport(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
-    
+
     const fileReader = new FileReader();
     fileReader.onload = (e: any) => {
       const arrayBuffer = e.target.result;
@@ -639,13 +651,13 @@ export class StudentComponent implements OnInit {
     };
     fileReader.readAsArrayBuffer(file);
   }
-  
+
   resetFileInput(): void {
     if (this.fileInput && this.fileInput.nativeElement) {
       this.fileInput.nativeElement.value = '';
     }
   }
-  
+
   parseExcel(arrayBuffer: any): void {
     const workbook = new ExcelJS.Workbook();
     workbook.xlsx.load(arrayBuffer).then((workbook) => {
