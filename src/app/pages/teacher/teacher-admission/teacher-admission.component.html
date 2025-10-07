@@ -27,11 +27,6 @@
                           name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
                           (keyup)="getStudentsByAdmission({page : 1, limit : 0})">
                       </div>
-                      <!-- <div class="col-1">
-                        <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                          <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-                        </button>
-                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -45,11 +40,6 @@
                       <span>Admission</span>
                     </button>
                   </div>
-                  <!-- <div class="col-3">
-                    <button class="btn setting-button" [matMenuTriggerFor]="settings">
-                      <mat-icon style="margin-top: 5px;cursor: pointer;">settings</mat-icon>
-                    </button>
-                  </div> -->
                   <div class="col-7">
                     <input type="text" class="form-control" placeholder="Search..." id="searchText" name="searchText"
                       #searchText="ngModel" [(ngModel)]="filters.searchText"
@@ -63,21 +53,17 @@
               </div>
             </div>
           </div>
-          <mat-menu #settings="matMenu">
-            <button mat-menu-item>
-              <mat-icon>article</mat-icon>
-              <span>Admission Form Fields</span>
-            </button>
-          </mat-menu>
         </div>
         <div class="main-container">
           <div class="col-12 col-lg-12 big-container">
             <div class="main-card">
               <div class="table-wrapper">
-                <table class="table table-hover align-middle bg-white">
+                <table class="table table-hover align-middle bg-white"
+                  *ngIf="!errorCheck && statusCode !==404 && statusCode !==500">
                   <thead class="bg-light">
                     <tr class="text-muted">
                       <th>S.No.</th>
+                      <th>Photo</th>
                       <th>Admission No.</th>
                       <th>Student</th>
                       <th>Father Name</th>
@@ -87,6 +73,7 @@
                       <th>Roll Number</th>
                       <th>Session</th>
                       <th>Admission By</th>
+                      <th>View</th>
                       <th>Admission Letter</th>
                     </tr>
                   </thead>
@@ -94,6 +81,11 @@
                     <tr *ngFor="let students of studentInfo,let i=index">
                       <td>
                         <p class="mb-0">{{number*10+i+1-10}}</p>
+                      </td>
+                      <td>
+                        <ng-container *ngIf="students.studentImage"><img src="{{students?.studentImage}}"
+                            alt="student image" /></ng-container>
+                        <ng-container *ngIf="!students.studentImage"><img src="" /></ng-container>
                       </td>
                       <td>
                         <p class="mb-0">{{students.admissionNo}}</p>
@@ -120,7 +112,10 @@
                         <p class="mb-0">{{students.session}}</p>
                       </td>
                       <td>
-                        <p class="mb-0">{{students.createdBy  | titlecase}}</p>
+                        <p class="mb-0">{{students.createdBy | titlecase}}</p>
+                      </td>
+                      <td class="mb-0">
+                        <mat-icon (click)="addAdmissionInfoViewModel(students)">visibility</mat-icon>
                       </td>
                       <td>
                         <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
@@ -131,11 +126,17 @@
                   </tbody>
                 </table>
               </div>
+              <div *ngIf="errorCheck && statusCode ==404 || statusCode ==500"
+                style="text-align: center;margin-top: 200px;">
+                <p *ngIf="statusCode ==404">Admission Not Found !</p>
+                <p *ngIf="statusCode ==500">Internal Server Error !</p>
+              </div>
               <div class="pagination">
                 <app-pagination [paginationValues]="paginationValues" (onChange)="getStudentsByAdmission($event)">
                 </app-pagination>
               </div>
 
+              <!-- CREATE/EDIT MODAL -->
               <div class="modal fade show" [class.show]="showModal">
                 <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode">
                   <div class="modal-content">
@@ -143,7 +144,7 @@
                       <h5 class="modal-title">NEW ADMISSION</h5>
                       <mat-icon matRipple (click)="closeModal()">close</mat-icon>
                     </div>
-                    <form [formGroup]="studentForm" (ngSubmit)="studentAddUpdate()" *ngIf="!deleteMode">
+                    <form [formGroup]="studentForm" (ngSubmit)="studentAddUpdate()">
                       <div class="modal-body">
                         <div *ngIf="errorCheck">
                           <p class="error-message">{{errorMsg}}</p>
@@ -183,8 +184,7 @@
                                 <mat-select matInput formControlName="class">
                                   <div *ngFor="let classInfo of classInfo">
                                     <mat-option value="{{classInfo}}"
-                                      (click)="chooseClass(classInfo)">{{classInfo |
-                                      classSuffix}}</mat-option>
+                                      (click)="chooseClass(classInfo)">{{classInfo | classSuffix}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -216,10 +216,6 @@
                                 <mat-error
                                   *ngIf="studentForm.get('stream')?.hasError('required') && studentForm.get('stream')?.touched">
                                   Stream is required
-                                </mat-error>
-                                <mat-error
-                                  *ngIf="studentForm.get('stream')?.hasError('pattern') && studentForm.get('stream')?.touched">
-                                  Please enter a valid Stream (only letters are allowed)
                                 </mat-error>
                               </mat-form-field>
                             </div>
@@ -299,13 +295,21 @@
                             </div>
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
-                                <mat-label>Date of birth (dd/mm/yyyy)</mat-label>
+                                <mat-label>Upload Student Photo (Upto 100KB)</mat-label>
+                                <ngx-mat-file-input formControlName="studentImage" (change)="onFileSelected($event)">
+                                  <mat-icon ngxMatFileInputIcon style="color: #8d6dff;">cloud_upload</mat-icon>
+                                </ngx-mat-file-input>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Date of Birth (dd/mm/yyyy)</mat-label>
                                 <input type="text" matInput readonly [matDatepicker]="picker" formControlName="dob" />
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                                 <mat-error
                                   *ngIf="studentForm.get('dob')?.hasError('required') && studentForm.get('dob')?.touched">
-                                  Date of Birth is required
+                                  Date of birth is required
                                 </mat-error>
                               </mat-form-field>
                             </div>
@@ -352,7 +356,8 @@
                                 <mat-label>Category</mat-label>
                                 <mat-select type="text" matInput formControlName="category">
                                   <div *ngFor="let category of categorys">
-                                    <mat-option value="{{category.category}}">{{category.category | titlecase}}</mat-option>
+                                    <mat-option value="{{category.category}}">{{category.category |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -367,7 +372,8 @@
                                 <mat-label>Religion</mat-label>
                                 <mat-select type="text" matInput formControlName="religion">
                                   <div *ngFor="let religion of religions">
-                                    <mat-option value="{{religion.religion}}">{{religion.religion | titlecase}}</mat-option>
+                                    <mat-option value="{{religion.religion}}">{{religion.religion |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -480,8 +486,8 @@
                                 <mat-label>Father Qualification</mat-label>
                                 <mat-select type="text" matInput formControlName="fatherQualification">
                                   <div *ngFor="let qualification of qualifications">
-                                    <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
+                                    <mat-option value="{{qualification.qualification}}">{{qualification.qualification |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -493,7 +499,8 @@
                                 <mat-label>Father Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="fatherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -531,8 +538,8 @@
                                 <mat-label>Mother Qualification</mat-label>
                                 <mat-select type="text" matInput formControlName="motherQualification">
                                   <div *ngFor="let qualification of qualifications">
-                                    <mat-option
-                                      value="{{qualification.qualification}}">{{qualification.qualification | titlecase}}</mat-option>
+                                    <mat-option value="{{qualification.qualification}}">{{qualification.qualification |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -544,7 +551,8 @@
                                 <mat-label>Mother Occupation</mat-label>
                                 <mat-select type="text" matInput formControlName="motherOccupation">
                                   <div *ngFor="let occupation of occupations">
-                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation | titlecase}}</mat-option>
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation |
+                                      titlecase}}</mat-option>
                                   </div>
                                 </mat-select>
                                 <mat-error
@@ -566,17 +574,129 @@
                         </div>
                       </div>
 
-                      <div class="modal-footer" *ngIf="!deleteMode">
+                      <div class="modal-footer">
                         <button class="submit-button" mat-raised-button type="submit"
-                          [disabled]="!studentForm.valid">Submit</button>
+                          [disabled]="!studentForm.valid || isClick">
+                          <span *ngIf="isClick" class="submitting-content">
+                            <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                          </span>
+                          Submit
+                        </button>
                       </div>
                     </form>
                   </div>
                 </div>
               </div>
 
+              <!-- VIEW ADMISSION INFO MODAL -->
+              <div class="modal fade show" [class.show]="showAdmissionInfoViewModal">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">ADMISSION DETAIL</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
 
+                    <div class="modal-body">
+                      <div class="container">
+                        <div class="row">
+                          <ng-container *ngIf="singleAdmissionInfo">
+                            <ng-container>
+                              <h3 style="color: #8C52FF;">Admission Info</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <p>Academic Session - {{singleAdmissionInfo.session}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Medium - {{singleAdmissionInfo.medium | titlecase}}</p>
+                            </div>
 
+                            <div class="col-12 col-lg-6">
+                              <p>Admission No. - {{singleAdmissionInfo.admissionNo}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Roll Number - {{singleAdmissionInfo.rollNumber}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Class - {{singleAdmissionInfo.class | classSuffix}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Stream - {{singleAdmissionInfo.stream | streamTitleCase}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Admission Fees - &#8377; {{singleAdmissionInfo.admissionFees}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Fees Concession - &#8377; {{singleAdmissionInfo.feesConcession}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Last School - <span
+                                  *ngIf="singleAdmissionInfo.lastSchool">{{singleAdmissionInfo.lastSchool|
+                                  titlecase}}</span><span *ngIf="!singleAdmissionInfo.lastSchool">N/A</span></p>
+                            </div>
+                            <ng-container>
+                              <h3 style="color: #8C52FF;">Student Info</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <p>Name - {{singleAdmissionInfo.name | titlecase}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Date Of Birth - {{singleAdmissionInfo?.dob}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Aadhar Number - {{singleAdmissionInfo.aadharNumber}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Samagra Id - {{singleAdmissionInfo.samagraId}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Gender - {{singleAdmissionInfo.gender | titlecase}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Category - {{singleAdmissionInfo.category | titlecase}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Religion - {{singleAdmissionInfo.religion | titlecase}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Nationality - {{singleAdmissionInfo.nationality | titlecase}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Address - {{singleAdmissionInfo.address | titlecase}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Bank Account Number - {{singleAdmissionInfo.bankAccountNo}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Bank IFSC Code - {{singleAdmissionInfo.bankIfscCode}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>UDISE Number - {{singleAdmissionInfo.udiseNumber}}</p>
+                            </div>
+                            <ng-container>
+                              <h3 style="color: #8C52FF;">Parents Info</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <p>Father Name - {{singleAdmissionInfo.fatherName | titlecase}}</p>
+                              <p>Father Qualification - {{singleAdmissionInfo.fatherQualification | titlecase}}</p>
+                              <p>Father Occupation - {{singleAdmissionInfo.fatherOccupation | titlecase}}</p>
+                              <p>Family Annual Income - &#8377; {{singleAdmissionInfo.familyAnnualIncome}}</p>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <p>Mother Name - {{singleAdmissionInfo.motherName | titlecase}}</p>
+                              <p>Mother Qualification - {{singleAdmissionInfo.motherQualification | titlecase}}</p>
+                              <p>Mother Occupation - {{singleAdmissionInfo.motherOccupation | titlecase}}</p>
+                              <p>Parents Contact - {{singleAdmissionInfo.parentsContact}}</p>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PRINT ADMISSION LETTER MODAL -->
               <div class="modal fade show custom-modal" [class.show]="showAdmissionPrintModal">
                 <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
                   <div class="modal-content">
@@ -592,8 +712,7 @@
                               <div class="table-container" style="position: relative;height: 100%;">
                                 <div class="row mt-5">
                                   <div class="col-2">
-                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}"
-                                      alt="school logo">
+                                    <img class="logo" src="{{schoolInfo?.schoolLogo}}" alt="school logo">
                                   </div>
                                   <div class="col-10" style="text-align: center;">
                                     <div class="school-name">
@@ -613,7 +732,7 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-12 title-lable">
-                                    <p>ADMISSION LETTER&nbsp;{{singleStudentInfo?.session}}</p>
+                                    <p>ADMISSION LETTER&nbsp;{{singleAdmissionInfo?.session}}</p>
                                   </div>
                                 </div>
                                 <table class="custom-table" style="margin-top:15px;margin-bottom: 10px;border: none;">
@@ -622,98 +741,97 @@
                                       Admission Date&nbsp; :</td>
                                     <td
                                       style="width:12%;padding: 0;text-align: right;border: none;padding-right: 20px;">
-                                      {{singleStudentInfo?.doa}}</td>
+                                      {{singleAdmissionInfo?.doa}}</td>
                                   </tr>
                                 </table>
                                 <table class="custom-table">
                                   <tr>
                                     <td class="text-bold">Admission No. :</td>
-                                    <td>{{singleStudentInfo?.admissionNo}}</td>
+                                    <td>{{singleAdmissionInfo?.admissionNo}}</td>
                                     <td class="text-bold">Roll Number :</td>
-                                    <td>{{singleStudentInfo?.rollNumber}}</td>
+                                    <td>{{singleAdmissionInfo?.rollNumber}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Class :</td>
-                                    <td>{{singleStudentInfo?.class | classSuffix}}</td>
+                                    <td>{{singleAdmissionInfo?.class | classSuffix}}</td>
                                     <td class="text-bold">Stream :</td>
-                                    <td>{{singleStudentInfo?.stream | streamTitleCase}}</td>
+                                    <td>{{singleAdmissionInfo?.stream | streamTitleCase}}</td>
                                   </tr>
                                   <tr style="height: 25px;"></tr>
                                   <tr>
                                     <td class="text-bold">Student Name :</td>
-                                    <td colspan="3">{{singleStudentInfo?.name | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.name | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Date of Birth :</td>
-                                    <td colspan="3">{{singleStudentInfo?.dob}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.dob}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Aadhar Number :</td>
-                                    <td colspan="3">{{singleStudentInfo?.aadharNumber}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.aadharNumber}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Samagra Id :</td>
-                                    <td colspan="3">{{singleStudentInfo?.samagraId}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.samagraId}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Gender :</td>
-                                    <td colspan="3">{{singleStudentInfo?.gender | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.gender | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Category :</td>
-                                    <td colspan="3">{{singleStudentInfo?.category | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.category | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Religion :</td>
-                                    <td colspan="3">{{singleStudentInfo?.religion | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.religion | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Nationality :</td>
-                                    <td colspan="3">{{singleStudentInfo?.nationality | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.nationality | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Medium :</td>
-                                    <td colspan="3">{{singleStudentInfo?.medium | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.medium | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Last School :</td>
-                                    <td colspan="3">{{singleStudentInfo?.lastSchool | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.lastSchool | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Address :</td>
-                                    <td colspan="3">{{singleStudentInfo?.address | titlecase}}</td>
+                                    <td colspan="3">{{singleAdmissionInfo?.address | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Father Name :</td>
-                                    <td>{{singleStudentInfo?.fatherName | titlecase}}</td>
+                                    <td>{{singleAdmissionInfo?.fatherName | titlecase}}</td>
                                     <td class="text-bold">Mother Name :</td>
-                                    <td>{{singleStudentInfo?.motherName | titlecase}}</td>
+                                    <td>{{singleAdmissionInfo?.motherName | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Father Qualification :</td>
-                                    <td>{{singleStudentInfo?.fatherQualification | titlecase}}</td>
+                                    <td>{{singleAdmissionInfo?.fatherQualification | titlecase}}</td>
                                     <td class="text-bold">Mother Qualification :</td>
-                                    <td>{{singleStudentInfo?.motherQualification | titlecase}}</td>
+                                    <td>{{singleAdmissionInfo?.motherQualification | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Father Occupation :</td>
-                                    <td>{{singleStudentInfo?.fatherOccupation | titlecase}}</td>
+                                    <td>{{singleAdmissionInfo?.fatherOccupation | titlecase}}</td>
                                     <td class="text-bold">Mother Occupation :</td>
-                                    <td>{{singleStudentInfo?.motherOccupation | titlecase}}</td>
+                                    <td>{{singleAdmissionInfo?.motherOccupation | titlecase}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Family Annual Income :</td>
-                                    <td>{{singleStudentInfo?.familyAnnualIncome}}</td>
+                                    <td>{{singleAdmissionInfo?.familyAnnualIncome}}</td>
                                     <td class="text-bold">Parents Contact :</td>
-                                    <td>{{singleStudentInfo?.parentsContact}}</td>
+                                    <td>{{singleAdmissionInfo?.parentsContact}}</td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold">Admission Fee :</td>
-                                    <td colspan="3">&#8377; {{singleStudentInfo?.admissionFees}} <span
+                                    <td colspan="3">&#8377; {{singleAdmissionInfo?.admissionFees}} <span
                                         class="text-bold">PAID</span></td>
                                   </tr>
                                 </table>
-
 
                                 <table class="custom-table sign-table"
                                   style="position: absolute;left: 0;bottom: 3vh;z-index: 2;">
