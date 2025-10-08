@@ -36,7 +36,6 @@
                                                                 [value]="subject">{{subject}}</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
-
                                                 </div>
                                             </ng-container>
                                             <div class="col-2">
@@ -50,9 +49,7 @@
                                                                 [value]="cls">{{cls | classSuffix}}</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
-
                                                 </ng-container>
-
                                             </div>
                                             <div class="col-1">
                                                 <button class="btn setting-button" [matMenuTriggerFor]="settings">
@@ -98,7 +95,6 @@
                                                         [value]="subject">{{subject}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
-
                                         </div>
                                     </ng-container>
                                 </div>
@@ -138,13 +134,19 @@
                                             <td>
                                                 <button *ngIf="student.AllPaidFees !== student.AllTotalFees"
                                                     class="submit-button" mat-raised-button
-                                                    (click)="studentFeesPay(student)">Collect</button>
+                                                    (click)="studentFeesPay(student)"
+                                                    [disabled]="isClick && collectingStudentId === student.studentId">
+                                                    <span *ngIf="isClick && collectingStudentId === student.studentId"
+                                                        class="submitting-content">
+                                                        <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                    </span>
+                                                    Collect
+                                                </button>
                                                 <button *ngIf="student.AllPaidFees == student.AllTotalFees"
                                                     class="submit-button" mat-raised-button
                                                     [disabled]="student.AllPaidFees == student.AllTotalFees"
                                                     style="background-color: transparent;color:#252525;">Fee
                                                     Paid</button>
-
                                             </td>
                                             <td>
                                                 <p class="mb-0">{{student.name | titlecase}}</p>
@@ -169,7 +171,6 @@
                                                     style="cursor: pointer;">launch</mat-icon>
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -187,7 +188,6 @@
                                                     <p class="error-message">{{errorMsg}}</p>
                                                 </div>
                                                 <div class="row" style="padding-left: 30px !important;">
-
                                                     <tr class="mt-2">
                                                         <td class="text-bold">Admission No. </td>
                                                         <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.admissionNo}}</td>
@@ -204,23 +204,36 @@
                                                     </tr>
                                                     <tr class="mt-2 mb-5">
                                                         <td class="text-bold">Father Name </td>
-                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp; {{singleStudent.fatherName}}</td>
+                                                        <td>&nbsp;&nbsp;:&nbsp;&nbsp;
+                                                            {{singleStudent.fatherName | titlecase}}</td>
                                                     </tr>
 
                                                     <div class="row">
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
-                                                                <mat-label>Enter Fee Amount In
-                                                                    &#8377;</mat-label>
+                                                                <mat-label>Enter Fee Amount In &#8377;</mat-label>
                                                                 <input type="number" formControlName="feesAmount"
                                                                     matInput class="no-arrow" min="1">
+                                                                <mat-error
+                                                                    *ngIf="feesForm.get('feesAmount')?.hasError('required') && feesForm.get('feesAmount')?.touched">
+                                                                    Fee amount is required
+                                                                </mat-error>
+                                                                <mat-error
+                                                                    *ngIf="feesForm.get('feesAmount')?.hasError('min')">
+                                                                    Fee amount must be at least 1
+                                                                </mat-error>
                                                             </mat-form-field>
                                                         </div>
                                                         <div class="col-12 offset-0 offset-lg-0 col-lg-4 mb-3">
                                                             <button class="submit-button" mat-raised-button
-                                                                style="height: 50px !important;padding-top:5px;padding-bottom:10px !important;width: 100% !important;"
-                                                                type="button" (click)="feesAddUpdate()">Collect
-                                                                Now
+                                                                style="height: 50px !important;padding-top:5px;padding-bottom:10px !important;min-width: 100% !important;width: auto !important;"
+                                                                type="button" (click)="feesAddUpdate()"
+                                                                [disabled]="!feesForm.valid || isClick">
+                                                                <span *ngIf="isClick" class="submitting-content">
+                                                                    <mat-spinner diameter="20"
+                                                                        class="button-loader"></mat-spinner>
+                                                                </span>
+                                                                Collect Now
                                                             </button>
                                                         </div>
                                                     </div>
@@ -249,7 +262,7 @@
                                                                     <div class="col-2">
                                                                         <img class="logo"
                                                                             src="{{schoolInfo?.schoolLogo}}"
-                                                                            alt="schoolo logo">
+                                                                            alt="school logo">
                                                                     </div>
                                                                     <div class="col-10" style="text-align: center;">
                                                                         <div class="school-name">
@@ -400,7 +413,6 @@
                                                                         </td>
                                                                         <td class="text-bold"
                                                                             style="border: none;font-size: 20px;">
-
                                                                             {{formatCurrency(receiptInstallment.paidFees)}}
                                                                         </td>
                                                                     </tr>
@@ -412,7 +424,6 @@
                                                                         </td>
                                                                         <td class="text-bold"
                                                                             style="border: none;font-size: 20px;">
-
                                                                             {{formatCurrency(receiptInstallment.dueFees)}}
                                                                         </td>
                                                                     </tr>
@@ -438,7 +449,6 @@
                                                                     style="margin-bottom:25px;margin-left: 20px;right: 0;">
                                                                 </p>
                                                             </div>
-
                                                         </div>
                                                     </div>
                                                 </ng-container>
@@ -446,8 +456,13 @@
                                         </div>
 
                                         <div class="modal-footer">
-                                            <button class="submit-button" mat-raised-button
-                                                (click)="printStudentData()">Print</button>
+                                            <button class="submit-button" mat-raised-button (click)="printStudentData()"
+                                                [disabled]="isClick">
+                                                <span *ngIf="isClick" class="submitting-content">
+                                                    <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                </span>
+                                                Print
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

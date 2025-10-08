@@ -15,14 +15,12 @@ import { ClassService } from 'src/app/services/class.service';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Component({
   selector: 'app-teacher-student-fees',
   templateUrl: './teacher-student-fees.component.html',
   styleUrls: ['./teacher-student-fees.component.css']
 })
 export class TeacherStudentFeesComponent implements OnInit {
-
   @ViewChild('receipt') receipt!: ElementRef;
   public baseUrl = environment.API_URL;
   feesForm: FormGroup;
@@ -66,23 +64,39 @@ export class TeacherStudentFeesComponent implements OnInit {
   baseURL!: string;
   adminId!: string;
   receiptSession: any;
-  constructor(private fb: FormBuilder, private router: Router, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) {
+
+  // Add loading state management properties
+  isClick: boolean = false;
+  collectingStudentId: string = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    public activatedRoute: ActivatedRoute,
+    private toastr: ToastrService,
+    private teacherAuthService: TeacherAuthService,
+    private teacherService: TeacherService,
+    private schoolService: SchoolService,
+    private classService: ClassService,
+    private printPdfService: PrintPdfService,
+    private feesService: FeesService,
+    private feesStructureService: FeesStructureService
+  ) {
     this.feesForm = this.fb.group({
       adminId: [''],
       session: [''],
       class: [''],
       stream: [''],
       studentId: [''],
-      feesAmount: [''],
+      feesAmount: ['', [Validators.required, Validators.min(1)]],
       createdBy: [''],
     });
   }
 
-
-
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
+    
     this.activatedRoute.queryParams.subscribe((params) => {
       this.cls = +params['cls'] || 0;
       this.stream = params['stream'] || '';
@@ -94,12 +108,13 @@ export class TeacherStudentFeesComponent implements OnInit {
         this.studentList = [];
       }
     });
+    
     if (this.teacherInfo) {
-      this.getTeacherById(this.teacherInfo)
+      this.getTeacherById(this.teacherInfo);
     }
     this.getSchool();
-
   }
+
   getTeacherById(teacherInfo: any) {
     let params = {
       adminId: teacherInfo.adminId,
@@ -110,29 +125,46 @@ export class TeacherStudentFeesComponent implements OnInit {
         this.classInfo = res.feeCollectionPermission.classes;
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
-
     })
   }
 
   formatCurrency(value: any): string {
     value = parseInt(value);
     if (typeof value === 'number') {
-      return '₹ ' + value.toLocaleString(undefined); // No minimumFractionDigits
+      return '₹ ' + value.toLocaleString(undefined);
     }
     return '₹ 0';
   }
+
   formatKey(key: any): string {
     if (typeof key === 'string') {
       return key.toUpperCase();
     }
     return '';
   }
-  printStudentData() {
-    const printContent = this.getPrintContent();
-    this.printPdfService.printContent(printContent);
-    this.closeModal();
-  }
 
+  printStudentData() {
+    // Check if already printing
+    if (this.isClick) {
+      return;
+    }
+
+    this.isClick = true;
+    
+    try {
+      const printContent = this.getPrintContent();
+      this.printPdfService.printContent(printContent);
+      
+      // Add a small delay to show the loading state
+      setTimeout(() => {
+        this.isClick = false;
+        this.closeModal();
+      }, 1000);
+    } catch (error) {
+      this.isClick = false;
+      this.toastr.error('Error occurred while printing', 'Print Error');
+    }
+  }
 
   private getPrintContent(): string {
     let schoolLogo = this.schoolInfo.schoolLogo;
@@ -217,6 +249,7 @@ export class TeacherStudentFeesComponent implements OnInit {
     printHtml += '</body></html>';
     return printHtml;
   }
+
   closeModal() {
     this.showModal = false;
     this.showPrintModal = false;
@@ -228,6 +261,11 @@ export class TeacherStudentFeesComponent implements OnInit {
     this.paybleInstallment = [0, 0];
     this.receiptInstallment = {};
     this.receiptMode = false;
+    
+    // Reset loading states
+    this.isClick = false;
+    this.collectingStudentId = '';
+    
     this.getAllStudentFeesCollectionByClass();
   }
 
@@ -248,6 +286,7 @@ export class TeacherStudentFeesComponent implements OnInit {
       this.getAllStudentFeesCollectionByClass();
     }
   }
+
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
@@ -256,13 +295,15 @@ export class TeacherStudentFeesComponent implements OnInit {
       this.getAllStudentFeesCollectionByClass();
     }
   }
+
   updateRouteParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
-      queryParamsHandling: 'merge' // Keep other query params
+      queryParams: { cls: this.cls || null, stream: this.stream || null },
+      queryParamsHandling: 'merge'
     });
   }
+
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
@@ -270,6 +311,7 @@ export class TeacherStudentFeesComponent implements OnInit {
       }
     })
   }
+
   getAllStudentFeesCollectionByClass() {
     let params = {
       class: this.cls,
@@ -299,50 +341,90 @@ export class TeacherStudentFeesComponent implements OnInit {
       this.payNow = false;
     }
   }
+
   studentFeesPay(student: any) {
+    // Check if already collecting fees for this student
+    if (this.isClick && this.collectingStudentId === student.studentId) {
+      return;
+    }
+
+    this.isClick = true;
+    this.collectingStudentId = student.studentId;
+    
     this.getPayableSingleStudentFeesCollectionById(student);
   }
+
   getPayableSingleStudentFeesCollectionById(student: any) {
-    this.feesService.payableSingleStudentFeesCollectionById(student.studentId).subscribe((res: any) => {
-      if (res) {
-        this.clsFeesStructure = res.singleFeesStr;
-        this.singleStudent = { ...res.studentInfo, ...res.studentFeesCollection };
-        this.showModal = true;
-        this.deleteMode = false;
-        this.updateMode = false;
-        this.feesForm.reset();
+    this.feesService.payableSingleStudentFeesCollectionById(student.studentId).subscribe(
+      (res: any) => {
+        if (res) {
+          this.clsFeesStructure = res.singleFeesStr;
+          this.singleStudent = { ...res.studentInfo, ...res.studentFeesCollection };
+          this.showModal = true;
+          this.deleteMode = false;
+          this.updateMode = false;
+          this.feesForm.reset();
+          this.errorCheck = false;
+          this.errorMsg = '';
+        }
+        this.isClick = false;
+        this.collectingStudentId = '';
+      },
+      (err) => {
+        this.isClick = false;
+        this.collectingStudentId = '';
+        this.toastr.error('Error loading student fees information', 'Error');
       }
-    })
+    );
+  }
+
+  // Helper method to mark all form fields as touched for validation display
+  private markFormGroupTouched() {
+    Object.keys(this.feesForm.controls).forEach(key => {
+      const control = this.feesForm.get(key);
+      control?.markAsTouched();
+    });
   }
 
   feesAddUpdate() {
-    if (this.feesForm.valid) {
-      this.feesForm.value.adminId = this.adminId;
-      this.feesForm.value.stream = this.stream;
-      if (this.updateMode) {
-        // this.feesService.updateFees(this.feesForm.value).subscribe((res: any) => {
-        //   if (res) {
-        //     this.closeModal();
-        //     this.successMsg = res;
-        //   }
-        // }, err => {
-        //   this.errorCheck = true;
-        //   this.errorMsg = err.error;
-        // })
-        console.log("this block is comment out");
-      } else {
-        this.feesForm.value.class = this.singleStudent.class;
-        this.feesForm.value.createdBy = this.createdBy;
-        this.feesForm.value.studentId = this.singleStudent.studentId;
-        this.feesForm.value.session = this.singleStudent.session;
+    // Check form validity first
+    if (!this.feesForm.valid) {
+      this.markFormGroupTouched();
+      this.errorCheck = true;
+      this.errorMsg = 'Please fill all required fields correctly.';
+      return;
+    }
 
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
 
+    // Reset error state and set loading state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
 
-        this.feesService.addFees(this.feesForm.value).subscribe((res: any) => {
+    this.feesForm.value.adminId = this.adminId;
+    this.feesForm.value.stream = this.stream;
+
+    if (this.updateMode) {
+      // Update mode logic would go here
+      console.log("Update mode is commented out");
+      this.isClick = false;
+    } else {
+      this.feesForm.value.class = this.singleStudent.class;
+      this.feesForm.value.createdBy = this.createdBy;
+      this.feesForm.value.studentId = this.singleStudent.studentId;
+      this.feesForm.value.session = this.singleStudent.session;
+
+      this.feesService.addFees(this.feesForm.value).subscribe(
+        (res: any) => {
           if (res) {
             this.receiptMode = true;
             this.receiptSession = res.session;
             this.receiptInstallment = res;
+            
             if (res.admissionFeesPayable == true) {
               this.clsFeesStructure.feesType = [{ Admission: res.admissionFees }, ...this.clsFeesStructure.feesType];
               this.toastr.success('', 'Fee Amount Collected Successfully');
@@ -356,13 +438,14 @@ export class TeacherStudentFeesComponent implements OnInit {
               this.showPrintModal = true;
             }
           }
-        }, err => {
+          this.isClick = false;
+        },
+        (err) => {
           this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
-      }
+          this.errorMsg = err.error || 'An error occurred while collecting fees.';
+          this.isClick = false;
+        }
+      );
     }
   }
-
-
 }
