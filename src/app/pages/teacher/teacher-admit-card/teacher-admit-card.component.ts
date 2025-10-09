@@ -41,83 +41,115 @@ export class TeacherAdmitCardComponent implements OnInit {
   selectedValue: number = 0;
   adminId!: string;
   teacherInfo: any;
-  constructor(public activatedRoute: ActivatedRoute, private router: Router, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private classService: ClassService, private admitCardService: AdmitCardService, private printPdfService: PrintPdfService, private admitCardStructureService: AdmitCardStructureService) { }
+
+  constructor(
+    public activatedRoute: ActivatedRoute, 
+    private router: Router, 
+    private adminAuthService: AdminAuthService, 
+    private teacherAuthService: TeacherAuthService, 
+    private teacherService: TeacherService, 
+    private schoolService: SchoolService, 
+    private classService: ClassService, 
+    private admitCardService: AdmitCardService, 
+    private printPdfService: PrintPdfService, 
+    private admitCardStructureService: AdmitCardStructureService
+  ) { }
+
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
+    
     if (this.teacherInfo) {
-      this.getTeacherById(this.teacherInfo)
+      this.getTeacherById(this.teacherInfo);
     }
+    
     this.getSchool();
+    
     this.activatedRoute.queryParams.subscribe((params) => {
       this.cls = +params['cls'] || 0;
       this.stream = params['stream'] || '';
+      
       if (this.cls) {
         this.getAdmitCardStructureByClass();
         this.getStudentAdmitCardByClass();
       } else {
         this.cls = 0;
         this.stream = '';
-
+        this.processedData = []; // Added to match admin
       }
     });
+    
     var currentURL = window.location.href;
     this.baseURL = new URL(currentURL).origin;
+    
     setTimeout(() => {
       this.loader = false;
-    }, 1000)
+    }, 1000);
   }
+
   onChange(event: MatRadioChange) {
     this.selectedValue = event.value;
   }
+
   chooseClass(cls: number) {
     this.cls = cls;
+    
     if (cls !== 11 && cls !== 12) {
       this.stream = this.notApplicable;
+      this.processedData = []; // Added to match admin
       this.updateRouteParams();
       this.getAdmitCardStructureByClass();
       this.getStudentAdmitCardByClass();
     }
+    
     if (cls == 11 || cls == 12) {
       if (this.stream == 'stream') {
         this.stream = '';
       }
+      this.processedData = []; // Added to match admin
       this.updateRouteParams();
       this.getAdmitCardStructureByClass();
       this.getStudentAdmitCardByClass();
     }
   }
+
   filterStream(stream: any) {
     this.stream = stream;
+    
     if (stream && this.cls) {
+      this.processedData = []; // Added to match admin
       this.updateRouteParams();
       this.getAdmitCardStructureByClass();
       this.getStudentAdmitCardByClass();
     }
   }
+
   updateRouteParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
-      queryParamsHandling: 'merge' // Keep other query params
+      queryParams: { cls: this.cls || null, stream: this.stream || null },
+      queryParamsHandling: 'merge'
     });
   }
+
   getTeacherById(teacherInfo: any) {
     let params = {
       adminId: teacherInfo.adminId,
       teacherUserId: teacherInfo.id,
-    }
+    };
+    
     this.teacherService.getTeacherById(params).subscribe((res: any) => {
       if (res) {
         this.classInfo = res.admitCardPermission.classes;
       }
-
-    })
+    });
   }
+
   closeModal() {
     this.showModal = false;
     this.processedData = [];
   }
+
   bulkPrint(selectedValue: any) {
     this.selectedValue = selectedValue;
     this.processData();
@@ -129,7 +161,8 @@ export class TeacherAdmitCardComponent implements OnInit {
       cls: this.cls,
       adminId: this.adminId,
       stream: this.stream
-    }
+    };
+    
     this.admitCardStructureService.admitCardStructureByClassStream(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
@@ -139,15 +172,17 @@ export class TeacherAdmitCardComponent implements OnInit {
     }, err => {
       this.errorCheck = true;
       this.templateStatusCode = err.status;
-    })
+    });
   }
+
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
       }
-    })
+    });
   }
+
   printStudentData() {
     if (this.selectedValue == 0) {
       const printContent = this.getPrintOneAdmitCardContent();
@@ -159,6 +194,7 @@ export class TeacherAdmitCardComponent implements OnInit {
     }
     this.closeModal();
   }
+
   private getStudentHtml(student: any): string {
     const studentElement = document.getElementById(`student-${student.studentId}`);
     if (studentElement) {
@@ -166,7 +202,6 @@ export class TeacherAdmitCardComponent implements OnInit {
     }
     return '';
   }
-
 
   private getPrintOneAdmitCardContent(): string {
     let schoolLogo = this.schoolInfo.schoolLogo;
@@ -184,12 +219,10 @@ export class TeacherAdmitCardComponent implements OnInit {
     printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
     printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
-
     printHtml += '.address{margin-top: -40px;}';
     printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
     printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
     printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
-
     printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
     printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
@@ -201,7 +234,6 @@ export class TeacherAdmitCardComponent implements OnInit {
     printHtml += 'p {color: #0a0a0a !important;font-size:20px;}';
     printHtml += 'h4 {color: #0a0a0a !important;font-size:22px;}';
 
-    // Updated watermark styles - fixed positioning for each page
     printHtml += '.watermark-container {';
     printHtml += ' position: absolute;';
     printHtml += ' top: 0;';
@@ -258,14 +290,13 @@ export class TeacherAdmitCardComponent implements OnInit {
       printHtml += '</div>';
       printHtml += '</div>';
     });
+    
     printHtml += '</body></html>';
     return printHtml;
   }
 
   private getPrintTwoAdmitCardContent(): string {
-    let schoolName = this.schoolInfo.schoolName;
-    let city = this.schoolInfo.city;
-    let schoolLogo = this.schoolInfo.schoolLogo; // Get the school logo URL
+    let schoolLogo = this.schoolInfo.schoolLogo;
 
     let printHtml = '<html>';
     printHtml += '<head>';
@@ -280,12 +311,10 @@ export class TeacherAdmitCardComponent implements OnInit {
     printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
     printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
-
     printHtml += '.address{margin-top: -40px;}';
     printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
     printHtml += '.title-lable {text-align: center;margin-top: -5px;margin-bottom: 0;}';
     printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
-
     printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: 2px;margin-bottom: 6px;padding-top:12px;padding-bottom:4px;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
     printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
@@ -297,7 +326,6 @@ export class TeacherAdmitCardComponent implements OnInit {
     printHtml += 'p {color: #0a0a0a !important;font-size:18px;}';
     printHtml += 'h4 {color: #0a0a0a !important;}';
 
-    // Add watermark styles for individual student containers
     printHtml += '.watermark-container {';
     printHtml += '  position: absolute;';
     printHtml += '  top: 0;';
@@ -319,7 +347,6 @@ export class TeacherAdmitCardComponent implements OnInit {
     printHtml += ' max-width: 500px;';
     printHtml += '}';
 
-    // Print specific styles
     printHtml += '@media print {';
     printHtml += '  .watermark-container { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }';
     printHtml += '}';
@@ -332,10 +359,8 @@ export class TeacherAdmitCardComponent implements OnInit {
       const student1 = this.allAdmitCards[i];
       const student2 = i + 1 < this.allAdmitCards.length ? this.allAdmitCards[i + 1] : null;
 
-      // Create page wrapper for both students (one page)
       printHtml += '<div class="page-wrapper">';
 
-      // First student container with watermark
       printHtml += '<div class="student-container">';
       printHtml += '<div class="watermark-container">';
       if (schoolLogo) {
@@ -345,7 +370,6 @@ export class TeacherAdmitCardComponent implements OnInit {
       printHtml += this.getStudentHtml(student1);
       printHtml += '</div>';
 
-      // Second student container with watermark (if exists)
       if (student2) {
         printHtml += '<div class="student-container">';
         printHtml += '<div class="watermark-container">';
@@ -357,9 +381,8 @@ export class TeacherAdmitCardComponent implements OnInit {
         printHtml += '</div>';
       }
 
-      printHtml += '</div>'; // Close page wrapper
+      printHtml += '</div>';
 
-      // Add page break after every 2 students (except for the last page)
       if (i + 2 < this.allAdmitCards.length) {
         printHtml += '<div style="page-break-after: always;"></div>';
       }
@@ -389,13 +412,15 @@ export class TeacherAdmitCardComponent implements OnInit {
       cls: this.cls,
       adminId: this.adminId,
       stream: this.stream
-    }
+    };
+    
     this.admitCardService.getAllStudentAdmitCardByClass(params).subscribe((res: any) => {
       if (res) {
         this.errorCheck = false;
         this.statusCode = 200;
         this.admitCardInfo = res.admitCardInfo;
         this.studentInfo = res.studentInfo;
+        
         const studentInfoMap = new Map();
         this.studentInfo.forEach((item: any) => {
           studentInfoMap.set(item._id, item);
@@ -423,6 +448,7 @@ export class TeacherAdmitCardComponent implements OnInit {
 
           return result;
         }, []);
+        
         if (combinedData) {
           this.allAdmitCards = combinedData.sort((a: any, b: any) => a.name.localeCompare(b.name));
         }
@@ -430,20 +456,6 @@ export class TeacherAdmitCardComponent implements OnInit {
     }, err => {
       this.errorCheck = true;
       this.statusCode = err.status;
-    })
+    });
   }
-
-  // changeStatus(id: any, statusValue: any) {
-  //   if (id) {
-  //     let params = {
-  //       id: id,
-  //       statusValue: statusValue,
-  //     }
-  //     this.admitCardService.changeStatus(params).subscribe((res: any) => {
-  //       if (res) {
-  //         this.getStudentAdmitCardByClass(this.cls);
-  //       }
-  //     })
-  //   }
-  // }
 }

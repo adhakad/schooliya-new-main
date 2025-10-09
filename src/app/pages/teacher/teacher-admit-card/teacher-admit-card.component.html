@@ -30,10 +30,10 @@
                               <div>
                                 <mat-option (click)="bulkPrint(0)"
                                   *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One
-                                  student in one page</mat-option>
+                                  Student in One Page</mat-option>
                                 <mat-option (click)="bulkPrint(1)"
                                   *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two
-                                  student in one page</mat-option>
+                                  Student in One Page</mat-option>
                               </div>
                             </mat-select>
                           </mat-form-field>
@@ -116,10 +116,10 @@
                           <div>
                             <mat-option (click)="bulkPrint(0)"
                               *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">One
-                              student in one page</mat-option>
+                              Student in One Page</mat-option>
                             <mat-option (click)="bulkPrint(1)"
                               *ngIf="cls && stream && templateStatusCode==200 && templateStatusCode !==404 && templateStatusCode !==500 && templateStatusCode !==0">Two
-                              student in one page</mat-option>
+                              Student in One Page</mat-option>
                           </div>
                         </mat-select>
                       </mat-form-field>
@@ -169,7 +169,8 @@
                           <p class="mb-0">{{students.class | classSuffix}}</p>
                         </td>
                         <td>
-                          <p class="mb-0" *ngIf="students.class==11 || students.class==12">{{students.stream | streamTitleCase}}
+                          <p class="mb-0" *ngIf="students.class==11 || students.class==12">{{students.stream |
+                            streamTitleCase}}
                           </p>
                           <p class="mb-0" *ngIf="students.class !==11 && students.class !==12">N/A</p>
                         </td>
@@ -464,3 +465,4 @@
       </div> -->
     </div>
   </div>
+</div>
