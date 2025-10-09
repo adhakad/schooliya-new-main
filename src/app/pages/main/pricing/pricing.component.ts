@@ -8,6 +8,7 @@ import { PlansService } from 'src/app/services/plans.service';
 })
 export class PricingComponent implements OnInit {
   plansInfo: any[] = [];
+  paymentType:any[] = ['annual','one-month-trial','free-trial'];
   constructor(private plansService: PlansService,) { }
 
   ngOnInit(): void {

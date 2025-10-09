@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   cls: number = 0;
   loggedInStudentInfo: any;
   no: number = 0;
-  paymentType:any[] = ['annual','one-month-trial','free-trial']
+  paymentType:any[] = ['annual','one-month-trial','free-trial'];
   loadTitle = false;
   loader: Boolean = true;
   schoolInfo: any;
