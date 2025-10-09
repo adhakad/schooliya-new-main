@@ -4,12 +4,9 @@ import { MatRadioChange } from '@angular/material/radio';
 import { FeesStructureService } from 'src/app/services/fees-structure.service';
 import { FeesService } from 'src/app/services/fees.service';
 import { PrintPdfService } from 'src/app/services/print-pdf/print-pdf.service';
-import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
-import { SchoolService } from 'src/app/services/school.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
-import { TeacherService } from 'src/app/services/teacher.service';
+import { SchoolService } from 'src/app/services/school.service';
 import { environment } from 'src/environments/environment';
-
 
 @Component({
   selector: 'app-teacher-student-fees-statement',
@@ -34,34 +31,45 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
   adminId!: string;
   allSessionData: any[] = [];
   selectedValue: string = "1";
-  teacherInfo: any;
-  constructor(public activatedRoute: ActivatedRoute, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private feesService: FeesService, private feesStructureService: FeesStructureService) { }
+
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    private teacherAuthService: TeacherAuthService,
+    private schoolService: SchoolService,
+    private printPdfService: PrintPdfService,
+    private feesService: FeesService,
+    private feesStructureService: FeesStructureService
+  ) { }
 
   ngOnInit(): void {
-    this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
-    this.adminId = this.teacherInfo?.adminId;
+    let getTeacher = this.teacherAuthService.getLoggedInTeacherInfo();
+    this.adminId = getTeacher?.adminId;
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.getSchool();
     if (this.adminId && this.id) {
       this.singleStudentFeesCollectionByStudentId(this.adminId, this.id);
     }
   }
+
   formatCurrency(value: any): string {
     value = parseInt(value);
     if (typeof value === 'number') {
-      return '₹ ' + value.toLocaleString(undefined); // No minimumFractionDigits
+      return '₹ ' + value.toLocaleString(undefined);
     }
     return '₹ 0';
   }
+
   formatKey(key: any): string {
     if (typeof key === 'string') {
       return key.toUpperCase();
     }
     return '';
   }
+
   onChange(event: MatRadioChange) {
     this.singleStudentFeesCollectionByStudentId(this.adminId, event.value);
   }
+
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
@@ -69,12 +77,12 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
       }
     })
   }
+
   printStudentData() {
     const printContent = this.getPrintContent();
     this.printPdfService.printContent(printContent);
     this.closeModal();
   }
-
 
   private getPrintContent(): string {
     let schoolName = this.schoolInfo.schoolName;
@@ -91,12 +99,10 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
     printHtml += '.logo { height: 80px;margin-top:15px;margin-left:10px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
     printHtml += '.school-name h3 { color: #0a0a0a !important; font-size: 26px !important;font-weight: bolder;margin-top:-125px !important; margin-bottom: 0 !important; }';
-
     printHtml += '.address{margin-top: -42px;}';
     printHtml += '.address p{font-size:18px;margin-top: -15px !important;}';
     printHtml += '.title-lable {text-align: center;margin-top: -10px;margin-bottom: 0;}';
     printHtml += '.title-lable p {color: #0a0a0a !important;font-size: 22px;font-weight: bold;letter-spacing: .5px;}';
-
     printHtml += '.info-table {width:100%;color: #0a0a0a !important;border: none;font-size: 18px;margin-top: -8px;margin-bottom: 6px;padding-top:8px;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #0a0a0a !important;text-align:left;padding-left:15px;}';
     printHtml += '.custom-table {width: 100%;color: #0a0a0a !important;border-collapse:collapse;margin-bottom: -8px;display: inline-table;border-radius:5px;}';
@@ -107,7 +113,6 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
     printHtml += '.text-left { text-align: left;}';
     printHtml += 'p {color: #0a0a0a !important;font-size:18px;}'
     printHtml += 'h4 {color: #0a0a0a !important;}'
-
     printHtml += '.watermark {';
     printHtml += '  position: fixed;';
     printHtml += '  top: 50%;';
@@ -119,7 +124,6 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
     printHtml += '  width: 300px;';
     printHtml += '  height: auto;';
     printHtml += '}';
-
     printHtml += '.watermark-container {';
     printHtml += '  position: fixed;';
     printHtml += '  top: 0;';
@@ -129,7 +133,6 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
     printHtml += '  z-index: 1000;';
     printHtml += '  pointer-events: none;';
     printHtml += '}';
-
     printHtml += '.watermark-logo {';
     printHtml += '  position: absolute;';
     printHtml += '  top: 25%;';
@@ -147,7 +150,6 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
     printHtml += '</style>';
     printHtml += '</head>';
     printHtml += '<body>';
-
     printHtml += '<div class="watermark-container">';
     if (schoolLogo) {
       printHtml += `<img src="${schoolLogo}" class="watermark-logo" alt="School Logo Watermark">`;
@@ -163,16 +165,16 @@ export class TeacherStudentFeesStatementComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
-
   }
+
   feeReceipt(singleInstallment: any) {
     const data: any = this.processedData
     const desiredInstallment = singleInstallment;
     this.singleReceiptInstallment = data.filter((item: any) => item.paymentDate === desiredInstallment);
     this.singleReceiptInstallment[0].feesConcession = this.studentFeesCollection.feesConcession;
     this.showModal = true;
-
   }
+
   singleStudentFeesCollectionByStudentId(adminId: any, id: any) {
     let params = {
       adminId: adminId,
