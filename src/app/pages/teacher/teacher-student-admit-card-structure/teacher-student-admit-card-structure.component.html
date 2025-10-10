@@ -86,7 +86,6 @@
                                                     (click)="deleteAdmitCardStructureModel(examAdmitCard._id)">delete</mat-icon>
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -145,26 +144,6 @@
                                                                     Please enter a valid class (numeric characters only)
                                                                 </mat-error>
                                                             </mat-form-field>
-                                                            <!-- <mat-form-field appearance="outline">
-                                                                <mat-label>Class</mat-label>
-                                                                <mat-select matInput formControlName="class">
-                                                                    <div *ngFor="let class of classInfo">
-                                                                        <mat-option value="{{class}}"
-                                                                            (click)="chooseClass(class)">{{class
-                                                                            |
-                                                                            classSuffix}}</mat-option>
-                                                                    </div>
-                                                                </mat-select>
-                                                                <mat-error
-                                                                    *ngIf="admitcardForm.get('class')?.hasError('required') && admitcardForm.get('class')?.touched">
-                                                                    Class is required
-                                                                </mat-error>
-                                                                <mat-error
-                                                                    *ngIf="admitcardForm.get('class')?.hasError('pattern') && admitcardForm.get('class')?.touched">
-                                                                    Please enter a valid class (numeric
-                                                                    characters only)
-                                                                </mat-error>
-                                                            </mat-form-field> -->
                                                         </div>
                                                         <div class="col-12 col-lg-6">
                                                             <mat-form-field appearance="outline">
@@ -331,8 +310,12 @@
                                             </div>
                                             <div class="modal-footer" *ngIf="!deleteMode && classSubject.length>0">
                                                 <button class="submit-button" mat-raised-button
-                                                    type="submit">{{updateMode ?
-                                                    'Update' : 'Submit'}}</button>
+                                                    type="submit" [disabled]="!admitcardForm.valid || isClick">
+                                                    <span *ngIf="isClick" class="submitting-content">
+                                                        <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                    </span>
+                                                    {{updateMode ? 'Update' : 'Submit'}}
+                                                </button>
                                             </div>
                                             <div *ngIf="deleteMode">
                                                 <div class="modal-body">
@@ -350,7 +333,12 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="delete-button" mat-raised-button type="button"
-                                                        (click)="admitCardStructureDelete(deleteById)">Ok</button>
+                                                        (click)="admitCardStructureDelete(deleteById)" [disabled]="isClick">
+                                                        <span *ngIf="isClick" class="submitting-content">
+                                                            <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                        </span>
+                                                        Ok
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
