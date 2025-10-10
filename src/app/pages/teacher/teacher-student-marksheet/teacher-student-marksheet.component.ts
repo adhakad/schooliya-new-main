@@ -57,17 +57,26 @@ export class TeacherStudentMarksheetComponent implements OnInit {
   loader: Boolean = false;
   adminId!: string;
   teacherInfo: any;
-  constructor(public activatedRoute: ActivatedRoute, private router: Router, private toastr: ToastrService, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private schoolService: SchoolService, private printPdfService: PrintPdfService, private examResultService: ExamResultService, private classService: ClassService, private examResultStructureService: ExamResultStructureService) {
-  }
 
-
-
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    private router: Router,
+    private toastr: ToastrService,
+    private adminAuthService: AdminAuthService,
+    private teacherAuthService: TeacherAuthService,
+    private teacherService: TeacherService,
+    private schoolService: SchoolService,
+    private printPdfService: PrintPdfService,
+    private examResultService: ExamResultService,
+    private classService: ClassService,
+    private examResultStructureService: ExamResultStructureService
+  ) {}
 
   ngOnInit(): void {
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
     if (this.teacherInfo) {
-      this.getTeacherById(this.teacherInfo)
+      this.getTeacherById(this.teacherInfo);
     }
     this.activatedRoute.queryParams.subscribe((params) => {
       this.cls = +params['cls'] || 0;
@@ -82,17 +91,17 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     });
     this.getSchool();
   }
+
   getTeacherById(teacherInfo: any) {
     let params = {
       adminId: teacherInfo.adminId,
       teacherUserId: teacherInfo.id,
-    }
+    };
     this.teacherService.getTeacherById(params).subscribe((res: any) => {
       if (res) {
         this.classInfo = res.marksheetPermission.classes;
       }
-
-    })
+    });
   }
 
   chooseClass(cls: number) {
@@ -112,6 +121,7 @@ export class TeacherStudentMarksheetComponent implements OnInit {
       this.getStudentExamResultByClass();
     }
   }
+
   filterStream(stream: any) {
     this.stream = stream;
     if (stream && this.cls) {
@@ -120,31 +130,31 @@ export class TeacherStudentMarksheetComponent implements OnInit {
       this.getStudentExamResultByClass();
     }
   }
+
   updateRouteParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { cls: this.cls || null, stream: this.stream || null }, // Reset parameters if cls or stream is null
-      queryParamsHandling: 'merge' // Keep other query params
+      queryParams: { cls: this.cls || null, stream: this.stream || null },
+      queryParamsHandling: 'merge'
     });
   }
-
 
   getSchool() {
     this.schoolService.getSchool(this.adminId).subscribe((res: any) => {
       if (res) {
         this.schoolInfo = res;
       }
-    })
+    });
   }
+
   deleteMarksheetResultModel(id: String) {
     this.showModal = true;
     this.deleteMode = true;
     this.deleteById = id;
   }
 
-  falseFormValue() {
+  falseFormValue() {}
 
-  }
   falseAllValue() {
     this.falseFormValue();
   }
@@ -164,7 +174,7 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     this.getStudentExamResultByClass();
     setTimeout(() => {
       this.toastr.success('', msg);
-    }, 500)
+    }, 500);
   }
 
   bulkPrint() {
@@ -176,62 +186,81 @@ export class TeacherStudentMarksheetComponent implements OnInit {
       class: this.cls,
       adminId: this.adminId,
       stream: this.stream
-    }
-    this.examResultService.getAllStudentExamResultByClass(params).subscribe((res: any) => {
-      if (res) {
-        this.errorCheck = false;
-        // this.statusCode = 200;
-        this.examResultInfo = res.examResultInfo;
-        this.studentInfo = res.studentInfo;
-        let isDate = res.isDate;
-        let marksheetTemplateStructure = res.marksheetTemplateStructure;
-        const gradeMinMarks = marksheetTemplateStructure.examStructure.term1.gradeMinMarks.map((grade: any) => Object.values(grade)[0]);
-        const gradeMaxMarks = marksheetTemplateStructure.examStructure.term1.gradeMaxMarks.map((grade: any) => Object.values(grade)[0]);
-        const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
-          const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
-            acc[student._id] = student;
-            return acc;
-          }, {});
-          return examResults.map((result: any) => {
-            const student = studentInfoMap[result.studentId];
-            if (marksheetTemplateStructure.templateName == 'T3' || marksheetTemplateStructure.templateName == 'T4' || marksheetTemplateStructure.templateName == 'T5' || marksheetTemplateStructure.templateName == 'T6') {
-              let overallMarksAndGrades = this.calculateAverageMarksAndGrades(result.resultDetail.term1.marks, result.resultDetail.term2.marks, result.resultDetail.term1.totalMaxMarks, result.resultDetail.term1.totalMaxMarks, marksheetTemplateStructure.examStructure.term1.gradeMinMarks, marksheetTemplateStructure.examStructure.term1.gradeMaxMarks);
-              result.resultDetail.overallMarksAndGrades = overallMarksAndGrades;
-            }
-            return {
-              session: student.session,
-              adminId: result.adminId,
-              studentId: result.studentId,
-              resultId: result._id,
-              class: result.class,
-              stream: result.stream,
-              dob: student.dob,
-              marksheetTemplateStructure: marksheetTemplateStructure,
-              gradeMinMarks,
-              gradeMaxMarks,
-              resultDetail: result.resultDetail,
-              status: result.status || "",
-              name: student.name,
-              fatherName: student.fatherName,
-              motherName: student.motherName,
-              rollNumber: student.rollNumber,
-              admissionNo: student.admissionNo,
-              isDate: isDate,
-            };
-          });
-        };
-        let mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
-        this.mappedResults = mappedResults.sort((a: any, b: any) => a.name.localeCompare(b.name));
-        this.statusCode = 200;
+    };
+    this.examResultService.getAllStudentExamResultByClass(params).subscribe(
+      (res: any) => {
+        if (res) {
+          this.errorCheck = false;
+          this.examResultInfo = res.examResultInfo;
+          this.studentInfo = res.studentInfo;
+          let isDate = res.isDate;
+          let marksheetTemplateStructure = res.marksheetTemplateStructure;
+          const gradeMinMarks = marksheetTemplateStructure.examStructure.term1.gradeMinMarks.map(
+            (grade: any) => Object.values(grade)[0]
+          );
+          const gradeMaxMarks = marksheetTemplateStructure.examStructure.term1.gradeMaxMarks.map(
+            (grade: any) => Object.values(grade)[0]
+          );
+          const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
+            const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
+              acc[student._id] = student;
+              return acc;
+            }, {});
+            return examResults.map((result: any) => {
+              const student = studentInfoMap[result.studentId];
+              if (
+                marksheetTemplateStructure.templateName == 'T3' ||
+                marksheetTemplateStructure.templateName == 'T4' ||
+                marksheetTemplateStructure.templateName == 'T5' ||
+                marksheetTemplateStructure.templateName == 'T6'
+              ) {
+                let overallMarksAndGrades = this.calculateAverageMarksAndGrades(
+                  result.resultDetail.term1.marks,
+                  result.resultDetail.term2.marks,
+                  result.resultDetail.term1.totalMaxMarks,
+                  result.resultDetail.term1.totalMaxMarks,
+                  marksheetTemplateStructure.examStructure.term1.gradeMinMarks,
+                  marksheetTemplateStructure.examStructure.term1.gradeMaxMarks
+                );
+                result.resultDetail.overallMarksAndGrades = overallMarksAndGrades;
+              }
+              return {
+                session: student.session,
+                adminId: result.adminId,
+                studentId: result.studentId,
+                resultId: result._id,
+                class: result.class,
+                stream: result.stream,
+                dob: student.dob,
+                marksheetTemplateStructure: marksheetTemplateStructure,
+                gradeMinMarks,
+                gradeMaxMarks,
+                resultDetail: result.resultDetail,
+                status: result.status || '',
+                name: student.name,
+                fatherName: student.fatherName,
+                motherName: student.motherName,
+                rollNumber: student.rollNumber,
+                admissionNo: student.admissionNo,
+                isDate: isDate,
+              };
+            });
+          };
+          let mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
+          this.mappedResults = mappedResults.sort((a: any, b: any) => a.name.localeCompare(b.name));
+          this.statusCode = 200;
+        }
+      },
+      (err) => {
+        this.errorCheck = true;
+        this.statusCode = err.status;
       }
-    }, err => {
-      this.errorCheck = true;
-      this.statusCode = err.status;
-    })
+    );
     setTimeout(() => {
       this.loader = false;
     }, 1000);
   }
+
   private getGrade(averageMarks: any, gradeMinMarks: any, gradeMaxMarks: any) {
     const roundedMarks = Math.round(parseFloat(averageMarks));
     const grade = gradeMaxMarks.reduce((grade: string, gradeRange: any, i: number) => {
@@ -241,10 +270,17 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     }, '');
     return grade;
   }
-  private calculateAverageMarksAndGrades(term1: any[], term2: any[], term1TotalMaxMarks: number, term2TotalMaxMarks: number, gradeMinMarks: any[], gradeMaxMarks: any[]) {
+
+  private calculateAverageMarksAndGrades(
+    term1: any[],
+    term2: any[],
+    term1TotalMaxMarks: number,
+    term2TotalMaxMarks: number,
+    gradeMinMarks: any[],
+    gradeMaxMarks: any[]
+  ) {
     const subjects: { [key: string]: number[] } = {};
 
-    // Collect marks for all subjects from both terms in a single pass
     const allTerms = [...term1, ...term2];
     allTerms.forEach((mark: any) => {
       if (!subjects[mark.subject]) {
@@ -252,8 +288,8 @@ export class TeacherStudentMarksheetComponent implements OnInit {
       }
       subjects[mark.subject].push(mark.totalMarks);
     });
-    // Calculate average marks and grades for each subject
-    const averageGradesAndMarks = Object.keys(subjects).map(subject => {
+
+    const averageGradesAndMarks = Object.keys(subjects).map((subject) => {
       const totalMarks = subjects[subject].reduce((acc, val) => acc + val, 0);
       const averageMarks = totalMarks / subjects[subject].length;
       const grade = this.getGrade(averageMarks, gradeMinMarks, gradeMaxMarks);
@@ -265,7 +301,6 @@ export class TeacherStudentMarksheetComponent implements OnInit {
       };
     });
 
-    // Calculate total marks for each term
     const term1TotalMarks = term1.reduce((acc: number, mark: any) => acc + mark.totalMarks, 0);
     const term2TotalMarks = term2.reduce((acc: number, mark: any) => acc + mark.totalMarks, 0);
     const totalMarks = term1TotalMarks + term2TotalMarks;
@@ -273,15 +308,15 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     const averageTotalMaxMarks = (term1TotalMaxMarks + term2TotalMaxMarks) / 2;
     const averagePercentile = parseFloat(((averageTotalMarks / averageTotalMaxMarks) * 100).toFixed(2));
     const averagePercentileGrade = this.getGrade(averagePercentile, gradeMinMarks, gradeMaxMarks);
+
     return {
       averageGradesAndMarks,
       averageTotalMaxMarks,
-      averageTotalMarks: (averageTotalMarks).toFixed(2),
+      averageTotalMarks: averageTotalMarks.toFixed(2),
       averagePercentile,
       averagePercentileGrade
     };
   }
-
 
   printStudentData() {
     const printContent = this.getPrintOneMarksheetContent();
@@ -289,12 +324,10 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     this.closeModal();
   }
 
-
-
   private getPrintOneMarksheetContent(): string {
     let schoolName = this.schoolInfo.schoolName;
     let city = this.schoolInfo.city;
-    let schoolLogo = this.schoolInfo.schoolLogo; // Get the school logo URL
+    let schoolLogo = this.schoolInfo.schoolLogo;
 
     let printHtml = '<html>';
     printHtml += '<head>';
@@ -343,7 +376,7 @@ export class TeacherStudentMarksheetComponent implements OnInit {
     printHtml += ' top: 45%;';
     printHtml += ' left: 50%;';
     printHtml += ' transform: translate(-50%, -50%);';
-    printHtml += ' opacity: 0.06;';
+    printHtml += ' opacity: 0.1;'; // CHANGED FROM 0.06 TO 0.08
     printHtml += ' width: 40%;';
     printHtml += ' height: auto;';
     printHtml += ' max-width: 500px;';
@@ -393,19 +426,22 @@ export class TeacherStudentMarksheetComponent implements OnInit {
       cls: this.cls,
       adminId: this.adminId,
       stream: this.stream
-    }
-    this.examResultStructureService.getSingleClassResultStrucByStream(params).subscribe((res: any) => {
-      if (res) {
-        this.errorCheck = false;
-        this.templateStatusCode = 200;
-        this.marksheetTemplateStructureInfo = res;
-        this.examType = Object.keys(res.marksheetTemplateStructure.examStructure);
+    };
+    this.examResultStructureService.getSingleClassResultStrucByStream(params).subscribe(
+      (res: any) => {
+        if (res) {
+          this.errorCheck = false;
+          this.templateStatusCode = 200;
+          this.marksheetTemplateStructureInfo = res;
+          this.examType = Object.keys(res.marksheetTemplateStructure.examStructure);
+        }
+      },
+      (err) => {
+        this.errorCheck = true;
+        this.templateStatusCode = err.status;
+        this.falseAllValue();
       }
-    }, err => {
-      this.errorCheck = true;
-      this.templateStatusCode = err.status;
-      this.falseAllValue();
-    })
+    );
   }
 
   marksheetResultDelete(id: String) {
@@ -414,7 +450,6 @@ export class TeacherStudentMarksheetComponent implements OnInit {
         this.successDone(res);
         this.deleteById = '';
       }
-    })
+    });
   }
 }
-
