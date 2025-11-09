@@ -40,6 +40,10 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
   createdBy: String = '';
   adminId: string = '';
   teacherInfo: any;
+  
+  // Add submission state management property
+  isClick: boolean = false;
+  
   availableTemplates = [
     { name: 'T1', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573664/T1_bqzgw1.jpg' },
     { name: 'T2', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573792/T2_gqvlzs.jpg' },
@@ -50,6 +54,7 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     { name: 'T7', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573917/T7_bistg7.jpg' },
     { name: 'T8', url: 'https://res.cloudinary.com/dzzrracge/image/upload/v1733573944/T8_p1ukhf.jpg' }
   ];
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private el: ElementRef, private fb: FormBuilder, public activatedRoute: ActivatedRoute, private toastr: ToastrService, private adminAuthService: AdminAuthService, private teacherAuthService: TeacherAuthService, private teacherService: TeacherService, private classSubjectService: ClassSubjectService, private examResultStructureService: ExamResultStructureService) {
     this.examResultForm = this.fb.group({
       adminId: [''],
@@ -74,8 +79,11 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
       setTimeout(() => {
         this.loader = false;
       }, 1000);
+    } else {
+      this.loader = false;
     }
   }
+
   getTeacherById(teacherInfo: any) {
     let params = {
       adminId: teacherInfo.adminId,
@@ -85,9 +93,9 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
       if (res) {
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
-
     })
   }
+
   ngAfterViewInit() {
     this.initiateCarousel();
   }
@@ -117,10 +125,9 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
             },
           }
         });
-      }, 500); // Reduced timeout
+      }, 500);
     }
   }
-
 
   addExamResultModel(template: any, templateUrl: any) {
     this.showModal = true;
@@ -128,22 +135,34 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.examResultForm.get('templateName')?.setValue(template);
     this.examResultForm.get('templateUrl')?.setValue(templateUrl);
     this.selectedTemplate = template;
+    // Reset loading state
+    this.isClick = false;
+    this.errorCheck = false;
+    this.errorMsg = '';
   }
+
   openExamResultStructureModal(examResult: any) {
     this.examResultInfo = examResult;
   }
+
   deleteMarksheetTemplateModel(id: String) {
     this.showModal = true;
     this.deleteMode = true;
     this.deleteById = id;
+    // Reset loading state
+    this.isClick = false;
+    this.errorCheck = false;
+    this.errorMsg = '';
   }
 
   falseFormValue() {
     this.examResultForm.reset();
   }
+
   falseAllValue() {
     this.falseFormValue();
   }
+
   closeModal() {
     this.falseAllValue();
     this.showModal = false;
@@ -154,14 +173,20 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
     this.processedTheoryData = [];
     this.processedPracticalData = [];
     this.examResultForm.reset();
+    this.disabled = true;
+    // Reset loading state
+    this.isClick = false;
+    this.errorCheck = false;
   }
+
   successDone(msg: any) {
     this.closeModal();
     this.getSingleClassMarksheetTemplateByStream(this.cls);
     setTimeout(() => {
-      this.toastr.success('',msg);
+      this.toastr.success('', msg);
     }, 500)
   }
+
   getSingleClassMarksheetTemplateByStream(cls: any) {
     let params = {
       adminId: this.adminId,
@@ -175,43 +200,66 @@ export class TeacherStudentMarksheetStructureComponent implements OnInit {
       } else {
         this.marksheetTemplate = null;
         this.marksheetSelectMode = true;
-        this.initiateCarousel(); // Initialize carousel if no template is set
+        this.initiateCarousel();
       }
     }, err => {
       this.marksheetTemplate = null;
       this.marksheetSelectMode = true;
-      this.initiateCarousel(); // Initialize carousel on error as well
+      this.initiateCarousel();
     })
   }
+
   examResultAddUpdate() {
+    // Check if already submitting
+    if (this.isClick) {
+      return;
+    }
+
+    // Reset error state and set loading state
+    this.errorCheck = false;
+    this.errorMsg = '';
+    this.isClick = true;
     this.disabled = false;
+
     this.examResultForm.value.adminId = this.adminId;
     this.examResultForm.value.class = this.cls;
     this.examResultForm.value.stream = this.stream;
     this.examResultForm.value.createdBy = this.createdBy;
+
     this.examResultStructureService.addExamResultStructure(this.examResultForm.value).subscribe((res: any) => {
       if (res) {
+        this.isClick = false;
         this.successDone(res);
       }
     }, err => {
       this.errorCheck = true;
-      this.errorMsg = err.error;
+      this.errorMsg = err.error || 'An error occurred while setting marksheet template.';
+      this.isClick = false;
     })
   }
 
   marksheetTemplateDelete(id: String) {
+    // Check if already processing delete
+    if (this.isClick) {
+      return;
+    }
+
+    this.isClick = true;
+
     this.examResultStructureService.deleteResultStructure(id).subscribe((res: any) => {
       if (res) {
+        this.isClick = false;
         this.disabled = true;
         this.marksheetSelectMode = true;
-        this.marksheetTemplate = null; // Clear existing template
-        this.initiateCarousel(); // Re-initialize the template carousel
+        this.marksheetTemplate = null;
+        this.initiateCarousel();
         this.successDone(res);
         this.deleteById = '';
       }
+    }, (err) => {
+      this.errorCheck = true;
+      this.errorMsg = err.error || 'An error occurred while deleting marksheet template.';
+      this.isClick = false;
     })
   }
-
 }
-
-

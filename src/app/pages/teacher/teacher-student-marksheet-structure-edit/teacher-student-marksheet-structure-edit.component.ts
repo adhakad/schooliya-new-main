@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AdminAuthService } from 'src/app/services/auth/admin-auth.service';
-import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
 import { TeacherAuthService } from 'src/app/services/auth/teacher-auth.service';
+import { ExamResultStructureService } from 'src/app/services/exam-result-structure.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 
 @Component({
@@ -17,6 +16,7 @@ export class TeacherStudentMarksheetStructureEditComponent implements OnInit {
   successMsg: String = '';
   errorMsg: String = '';
   errorCheck: Boolean = false;
+  adminId: string = '';
   id: any;
   examStructure: any;
   subjects: any[] = [];
@@ -25,30 +25,31 @@ export class TeacherStudentMarksheetStructureEditComponent implements OnInit {
   marksTypes: string[] = [];
   marksTypeGroups: { [key: string]: string[] } = {};
   createdBy: String = '';
-  adminId: string = '';
   teacherInfo: any;
+
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private toastr: ToastrService,
-    private teacherAuthService: TeacherAuthService, private teacherService: TeacherService,
-    private adminAuthService: AdminAuthService,
+    private teacherAuthService: TeacherAuthService,
+    private teacherService: TeacherService,
     private examResultStructureService: ExamResultStructureService
-  ) {
+  ) { 
     this.subjectPermissionForm = this.fb.group({
       _id: [''],
       supplySubjectLimit: ['', Validators.required],
       createdBy: [''],
     });
-   }
+  }
 
   ngOnInit(): void {
-
     this.teacherInfo = this.teacherAuthService.getLoggedInTeacherInfo();
     this.adminId = this.teacherInfo?.adminId;
+    
     if (this.teacherInfo) {
-      this.getTeacherById(this.teacherInfo)
+      this.getTeacherById(this.teacherInfo);
     }
+    
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.getSingleMarksheetTemplateById();
   }
@@ -57,13 +58,12 @@ export class TeacherStudentMarksheetStructureEditComponent implements OnInit {
     let params = {
       adminId: teacherInfo.adminId,
       teacherUserId: teacherInfo.id,
-    }
+    };
     this.teacherService.getTeacherById(params).subscribe((res: any) => {
       if (res) {
         this.createdBy = `${res.name} (${res.teacherUserId})`;
       }
-
-    })
+    });
   }
 
   getKeys(obj: any): string[] {
@@ -180,14 +180,16 @@ export class TeacherStudentMarksheetStructureEditComponent implements OnInit {
   getMarksArray(term: string, marksType: string): FormArray {
     return this.subjectPermissionForm.get(`${term}.${marksType}`) as FormArray;
   }
+
   successDone(msg: any) {
     this.successMsg = '';
     this.marksTypeGroups = {};
     this.getSingleMarksheetTemplateById();
     setTimeout(() => {
-      this.toastr.success('',msg);
-    }, 500)
+      this.toastr.success('', msg);
+    }, 500);
   }
+
   subjectPermissionAdd() {
     if (this.subjectPermissionForm.valid) {
       this.subjectPermissionForm.value._id = this.id;
@@ -199,7 +201,7 @@ export class TeacherStudentMarksheetStructureEditComponent implements OnInit {
       }, err => {
         this.errorCheck = true;
         this.errorMsg = err.error;
-      })
+      });
     }
   }
 
@@ -214,7 +216,7 @@ export class TeacherStudentMarksheetStructureEditComponent implements OnInit {
           if (formGroupInsideFormArray instanceof FormGroup) {
             this.markFormGroupTouched(formGroupInsideFormArray);
           }
-        })
+        });
       }
     });
   }

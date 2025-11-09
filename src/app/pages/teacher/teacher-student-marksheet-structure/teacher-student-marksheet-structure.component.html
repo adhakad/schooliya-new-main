@@ -146,7 +146,11 @@
                                                 </div>
                                                 <div class="modal-footer" *ngIf="!deleteMode">
                                                     <button class="submit-button" mat-raised-button
-                                                        type="submit" [disabled]="disabled==false">Set</button>
+                                                        type="submit" [disabled]="!examResultForm.valid || isClick">
+                                                        <span *ngIf="isClick" class="submitting-content">
+                                                            <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                        </span>
+                                                        Set</button>
                                                 </div>
 
                                             </form>
@@ -168,7 +172,11 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button class="delete-button" mat-raised-button type="button"
-                                                    (click)="marksheetTemplateDelete(deleteById)">Ok</button>
+                                                    (click)="marksheetTemplateDelete(deleteById)" [disabled]="isClick">
+                                                    <span *ngIf="isClick" class="submitting-content">
+                                                        <mat-spinner diameter="20" class="button-loader"></mat-spinner>
+                                                    </span>
+                                                    Ok</button>
                                             </div>
                                         </div>
                                     </div>
