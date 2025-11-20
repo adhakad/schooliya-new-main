@@ -346,7 +346,7 @@
                             <div class="col-12 col-lg-6">
                               <mat-form-field appearance="outline">
                                 <mat-label>Fees Concession Amount (&#8377;)</mat-label>
-                                <input matInput type="number" formControlName="feesConcession" [readonly]="updateMode">
+                                <input matInput type="number" formControlName="feesConcession">
                                 <mat-error
                                   *ngIf="studentForm.get('feesConcession')?.hasError('required') && studentForm.get('feesConcession')?.touched">
                                   Fees discount amount is required

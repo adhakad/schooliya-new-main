@@ -669,11 +669,12 @@ const UpdateStudent = async (req, res) => {
         }
         return res.status(statusCode).json(message);
     };
+
     try {
         const id = req.params.id;
         let studentData = { ...req.body };
         let className = parseInt(req.body.class);
-        let { adminId, rollNumber, admissionNo } = studentData;
+        let { adminId, rollNumber, admissionNo, session, stream, feesConcession } = studentData;
 
         // Student exist check
         const singleStudent = await StudentModel.findById(id);
@@ -758,7 +759,122 @@ const UpdateStudent = async (req, res) => {
                 : DateTime.fromISO(studentData.doa).toFormat("dd/MM/yyyy");
         }
 
-        // Prepare update data first
+        // ============= FEES CONCESSION & SESSION UPDATE LOGIC =============
+        let shouldUpdateFees = false;
+        let feesUpdateData = {};
+
+        // Get student's fees collection record
+        const studentFeesRecord = await FeesCollectionModel.findOne({
+            studentId: id,
+            adminId: adminId
+        });
+
+        if (!studentFeesRecord) {
+            return handleError(404, "Student fees record not found!");
+        }
+
+        // Check if any fee payment has been made (excluding admission fees)
+        const hasPayments = studentFeesRecord.installment &&
+            studentFeesRecord.installment.length > 0;
+
+        // Check if session or feesConcession is being updated
+        const isSessionChanged = session && session !== singleStudent.session;
+        const isFeesConcessionChanged = feesConcession !== undefined &&
+            feesConcession !== null &&
+            parseFloat(feesConcession) !== parseFloat(singleStudent.feesConcession || 0);
+
+        // If either session or fees concession is being changed
+        if (isSessionChanged || isFeesConcessionChanged) {
+            // Check payment status
+            if (hasPayments) {
+                if (isSessionChanged) {
+                    return handleError(
+                        400,
+                        "Session cannot be updated after fees payments!"
+                    );
+                }
+
+                if (isFeesConcessionChanged) {
+                    return handleError(
+                        400,
+                        "Fees concession cannot be updated after fees payments!"
+                    );
+                }
+            }
+
+            // Determine target values
+            const normalizedStream = stream === "stream" ? "n/a" : (stream || singleStudent.stream);
+            const targetSession = session || singleStudent.session;
+
+            // Get fees structure for target session
+            const feesStructure = await FeesStructureModel.findOne({
+                adminId: adminId,
+                session: targetSession,
+                class: className,
+                stream: normalizedStream
+            });
+
+            if (!feesStructure) {
+                return handleError(404, `Fees structure not found for session ${targetSession}!`);
+            }
+
+            // Parse and validate feesConcession
+            const newFeesConcession = feesConcession !== undefined && feesConcession !== null
+                ? parseFloat(feesConcession)
+                : parseFloat(singleStudent.feesConcession || 0);
+
+            if (newFeesConcession < 0) {
+                return handleError(400, "Fees concession cannot be negative!");
+            }
+
+            if (newFeesConcession > feesStructure.totalFees) {
+                return handleError(400, `Fees concession (${newFeesConcession}) cannot be greater than total academic fees (${feesStructure.totalFees})!`);
+            }
+
+            // Calculate new fees based on new fees structure
+            let newTotalFees = feesStructure.totalFees - newFeesConcession;
+            let newDueFees = newTotalFees;
+            let newPaidFees = 0;
+            let newAdmissionFees = 0;
+            let newAdmissionFeesPayable = false;
+
+            // Handle admission fees if applicable
+            if (singleStudent.admissionType === 'new' && feesStructure.admissionFees > 0) {
+                newAdmissionFees = feesStructure.admissionFees;
+                newAdmissionFeesPayable = true;
+
+                // If admission fees were already paid, include them in calculations
+                if (studentFeesRecord.admissionFeesPayable && studentFeesRecord.paidFees > 0) {
+                    newTotalFees += newAdmissionFees;
+                    newPaidFees = newAdmissionFees;
+                    newDueFees = newTotalFees - newPaidFees;
+                }
+            }
+
+            // Prepare fees update data
+            feesUpdateData = {
+                feesConcession: newFeesConcession,
+                allFeesConcession: newFeesConcession,
+                totalFees: newTotalFees,
+                paidFees: newPaidFees,
+                dueFees: newDueFees,
+                AllTotalFees: newTotalFees,
+                AllPaidFees: newPaidFees,
+                AllDueFees: newDueFees,
+                admissionFees: newAdmissionFees,
+                admissionFeesPayable: newAdmissionFeesPayable
+            };
+
+            // If session is changed, update session fields
+            if (isSessionChanged) {
+                feesUpdateData.session = targetSession;
+                feesUpdateData.currentSession = targetSession;
+            }
+
+            shouldUpdateFees = true;
+        }
+
+        // Prepare student update data
         let updateData = { $set: studentData };
         let unsetData = {};
 
@@ -792,6 +908,19 @@ const UpdateStudent = async (req, res) => {
 
         if (!updatedStudent) {
             return handleError(400, "Student could not be updated. Please try again!");
+        }
+
+        // Update fees collection if needed
+        if (shouldUpdateFees) {
+            const updatedFees = await FeesCollectionModel.findOneAndUpdate(
+                { studentId: id, adminId: adminId },
+                { $set: feesUpdateData },
+                { new: true }
+            );
+
+            if (!updatedFees) {
+                return handleError(400, "Student updated but fees could not be updated. Please contact support!");
+            }
         }
 
         // Image upload only after successful update
