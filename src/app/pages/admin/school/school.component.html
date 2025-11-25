@@ -80,7 +80,11 @@
                         <p class="mb-0">{{schoolInfo?.schoolId}}</p>
                       </td>
                       <td>
-                        <img src="{{schoolInfo?.schoolLogo}}" alt="school logo" height="50" />
+                        <ng-container *ngIf="schoolInfo.schoolLogo"><img src="{{schoolInfo?.schoolLogo}}"
+                            alt="school logo" height="50" loading="lazy" /></ng-container>
+                        <ng-container *ngIf="!schoolInfo.schoolLogo"><img src="./assets/no-image.png"
+                            loading="lazy" /></ng-container>
+                      </td>
                       </td>
                       <td>
                         <p class="mb-0">{{schoolInfo?.schoolName | titlecase}}</p>

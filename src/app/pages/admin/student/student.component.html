@@ -172,8 +172,8 @@
                       </td>
                       <td>
                         <ng-container *ngIf="students.studentImage"><img src="{{students?.studentImage}}"
-                            alt="student image" /></ng-container>
-                        <ng-container *ngIf="!students.studentImage"><img src="" /></ng-container>
+                            alt="student image" loading="lazy"/></ng-container>
+                        <ng-container *ngIf="!students.studentImage"><img src="./assets/no-image.png" loading="lazy"/></ng-container>
                       </td>
                       <td>
                         <p class="mb-0">{{students.admissionNo}}</p>
