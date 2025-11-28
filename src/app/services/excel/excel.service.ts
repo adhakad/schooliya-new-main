@@ -49,10 +49,9 @@ export class ExcelService {
       },
     ];
 
-    let d = new Date();
-    let month = d.getMonth() + 1;
-    let date = d.getDate() + '-' + month + '-' + d.getFullYear();
-    // worksheet.addRow([]);
+    // let d = new Date();
+    // let month = d.getMonth() + 1;
+    // let date = d.getDate() + '-' + month + '-' + d.getFullYear();
     let headerRow = worksheet.addRow(header);
     headerRow.eachCell((cell, number) => {
       cell.fill = {
@@ -102,17 +101,17 @@ export class ExcelService {
       let index = i + 1;
       worksheet.getColumn(index).width = 25;
     }
-    worksheet.addRow([]);
-    let footerRow = worksheet.addRow([
-      `Students Record Generated from ${baseURL} at ${date}`,
-    ]);
-    footerRow.getCell(1).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'EBEBFF' },
-    };
-    footerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.mergeCells(`A${footerRow.number}:N${footerRow.number}`);
+    // worksheet.addRow([]);
+    // let footerRow = worksheet.addRow([
+    //   `Students Record Generated from ${baseURL} at ${date}`,
+    // ]);
+    // footerRow.getCell(1).fill = {
+    //   type: 'pattern',
+    //   pattern: 'solid',
+    //   fgColor: { argb: 'EBEBFF' },
+    // };
+    // footerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+    // worksheet.mergeCells(`A${footerRow.number}:N${footerRow.number}`);
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

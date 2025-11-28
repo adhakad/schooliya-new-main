@@ -663,26 +663,34 @@ export class StudentComponent implements OnInit {
     workbook.xlsx.load(arrayBuffer).then((workbook) => {
       const worksheet = workbook.getWorksheet(1);
       const data: any = [];
+      const rowNumbers: number[] = []; // Track actual Excel row numbers
+      
       worksheet!.eachRow({ includeEmpty: false }, (row: any, rowNumber) => {
         // Assuming the first row contains headers
         if (rowNumber === 1) {
           const headers = row.values.map(String);
           data.push(headers);
+          rowNumbers.push(rowNumber);
         } else {
           const rowData = row.values.map(String);
           data.push(rowData);
+          rowNumbers.push(rowNumber); // Store actual Excel row number
         }
       });
-      const lastIndex = data.length - 1;
+      
+      const lastIndex = data.length - 0;
       const indexesToDelete = [0, lastIndex];
       // IndexesToDelete ke hisab se elements ko delete karna
       indexesToDelete.sort((a, b) => b - a); // Sort indexesToDelete in descending order
       indexesToDelete.forEach((index) => {
         data.splice(index, 1);
+        rowNumbers.splice(index, 1); // Also delete from rowNumbers array
       });
+      
       const fields = data[0];
       // Data ke baki ke rows
       const dataRows = data.slice(1);
+      const dataRowNumbers = rowNumbers.slice(1); // Row numbers after header
 
       const formatDateValue = (value: any): string => {
         if (value instanceof Date && !isNaN(value.getTime())) {
@@ -716,8 +724,11 @@ export class StudentComponent implements OnInit {
         return value;
       };
 
-      const mappedData = dataRows.map((row: any) => {
+      const mappedData = dataRows.map((row: any, index: number) => {
         const obj: any = {};
+        
+        // Store actual Excel row number in the object
+        obj._excelRowNumber = dataRowNumbers[index];
 
         for (let i = 0; i < fields.length; i++) {
           const field = fields[i];
@@ -732,24 +743,32 @@ export class StudentComponent implements OnInit {
 
         return obj;
       });
+      
       function transformKeys(dataArray: any) {
         return dataArray.map((obj: any) => {
           const newObj: any = {};
           for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
-              const newKey = key.replace(/\s+/g, ''); // Remove spaces
-              newObj[newKey.charAt(0).toLowerCase() + newKey.slice(1)] = obj[key];
+              if (key === '_excelRowNumber') {
+                // Keep the Excel row number as-is
+                newObj[key] = obj[key];
+              } else {
+                const newKey = key.replace(/\s+/g, ''); // Remove spaces
+                newObj[newKey.charAt(0).toLowerCase() + newKey.slice(1)] = obj[key];
+              }
             }
           }
           return newObj;
         });
       }
+      
       // Transform the keys of the array
       const transformedDataArray = transformKeys(mappedData);
+      
       if (transformedDataArray.length > 200) {
         this.fileChoose = false;
         this.errorCheck = true;
-        this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 200';
+        this.errorMsg = 'File too large, Please make sure that file records to less then or equals to 200!';
       }
       if (transformedDataArray.length <= 200) {
         this.bulkStudentRecord = transformedDataArray;
@@ -759,39 +778,294 @@ export class StudentComponent implements OnInit {
       }
     }).catch(err => {
       this.errorCheck = true;
-      this.errorMsg = 'Error parsing Excel file. Please check the file format.';
+      this.errorMsg = 'Error parsing Excel file. Please check the file format!';
     });
   }
 
   addBulkStudentRecord() {
-    // Check if not currently importing and file is chosen
+    // 1. Initial Checks and State Reset
     if (this.isClick || !this.fileChoose) return;
 
     this.isClick = true;
     this.errorCheck = false;
     this.errorMsg = '';
 
-    let studentRecordData = {
+    // Valid sets for validation
+    const validGenders = new Set(['male', 'female', 'other']);
+    const validCategories = new Set(['general', 'obc', 'sc', 'st', 'ews', 'other']);
+
+    // Valid class values (case-insensitive)
+    const validClasses = new Set([
+      'nursery', 'lkg', 'ukg', 
+      '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
+    ]);
+
+    // Fields that must be Numbers (based on Mongoose model)
+    const numericFields = [
+      'admissionNo', 'rollNumber', 
+      'udiseNumber', 'aadharNumber', 'samagraId', 'bankAccountNo', 
+      'parentsContact', 'feesConcession'
+    ];
+
+    // Fields that must be Strings
+    const stringFields = [
+      'session', 'medium', 'name', 'admissionType', 'dob', 'doa',
+      'gender', 'category', 'religion', 'nationality', 'address',
+      'fatherName', 'fatherQualification', 'fatherOccupation',
+      'motherName', 'motherQualification', 'motherOccupation',
+      'familyAnnualIncome', 'bankIfscCode', 'lastSchool'
+    ];
+
+    // Required fields (matching backend and model)
+    const requiredFields = [
+      'medium', 'name', 'fatherName', 'motherName', 'fatherQualification',
+      'motherQualification', 'fatherOccupation', 'motherOccupation',
+      'familyAnnualIncome', 'rollNumber', 'admissionNo', 'feesConcession',
+      'admissionType', 'admissionClass', 'dob', 'doa', 'gender', 'category',
+      'religion', 'nationality', 'address'
+    ];
+
+    // Helper function for title case
+    const toTitleCase = (str: string): string => {
+      if (!str) return '';
+      return str.replace(/\w\S*/g, (txt) =>
+        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+      );
+    };
+
+    // Helper function to validate class value
+    const isValidClass = (classValue: any): boolean => {
+      if (!classValue) return false;
+      const normalized = String(classValue).toLowerCase().trim();
+      return validClasses.has(normalized);
+    };
+
+    // 2. Initial File Size Check (matching backend - max 200 records)
+    if (!this.bulkStudentRecord || this.bulkStudentRecord.length === 0) {
+      this.errorCheck = true;
+      this.errorMsg = 'No student records provided!';
+      this.isClick = false;
+      return;
+    }
+
+    if (this.bulkStudentRecord.length > 200) {
+      this.errorCheck = true;
+      this.errorMsg = 'File too large. Please make sure that file records are less than or equal to 200!';
+      this.isClick = false;
+      return;
+    }
+
+    // Sets to track uniqueness within the current batch
+    const batchAdmissionNos = new Set<number>();
+    const batchAadharNumbers = new Set<number>();
+    const batchSamagraIds = new Set<number>();
+    const batchRollNumbers = new Set<number>();
+
+    // 3. Data Validation Loop: Process and validate each student
+    try {
+      for (let i = 0; i < this.bulkStudentRecord.length; i++) {
+        const student = { ...this.bulkStudentRecord[i] }; // Shallow copy
+        
+        // Use actual Excel row number if available, otherwise fallback to sequential
+        const rowNumber = student._excelRowNumber || (i + 3);
+
+        // --- Field Presence Validation (Check Required Fields First) ---
+        const missingFields = requiredFields.filter(field => {
+          const value = student[field];
+          return value === null ||
+            value === undefined ||
+            (typeof value === 'string' && value.trim() === '');
+        });
+
+        if (missingFields.length > 0) {
+          const formattedMissingFields = missingFields.map(toTitleCase);
+          throw new Error(
+            `Row ${rowNumber} is missing required fields: ( ${formattedMissingFields.join(', ')} ). ` +
+            `Please fill in all mandatory fields before continuing!`
+          );
+        }
+
+        // --- Validate Admission Class (Special handling for class field) ---
+        if (!isValidClass(student.admissionClass)) {
+          throw new Error(
+            `Row ${rowNumber} has an invalid Admission Class value: "${student.admissionClass}". ` +
+            `Allowed values are: Nursery, LKG, UKG, or classes 1st to 12th!`
+          );
+        }
+
+        // --- Data Type Validation for Numeric Fields ---
+        for (const field of numericFields) {
+          const value = student[field];
+          
+          // Skip validation for optional fields if they're empty
+          if (!requiredFields.includes(field) && (value === null || value === undefined || value === '')) {
+            continue;
+          }
+
+          // For required numeric fields or non-empty optional fields, validate type
+          if (value !== null && value !== undefined && value !== '') {
+            const parsedValue = Number(value);
+            
+            if (isNaN(parsedValue)) {
+              throw new Error(
+                `Row ${rowNumber} has an invalid value for ${toTitleCase(field)}: "${value}". ` +
+                `It must be a valid number!`
+              );
+            }
+
+            // Update the value to parsed number
+            student[field] = parsedValue;
+          }
+        }
+
+        // --- Data Type Validation for String Fields ---
+        for (const field of stringFields) {
+          const value = student[field];
+          
+          // Skip validation for optional fields if they're empty
+          if (!requiredFields.includes(field) && (value === null || value === undefined || value === '')) {
+            continue;
+          }
+
+          // For required string fields or non-empty optional fields, validate type
+          if (value !== null && value !== undefined && value !== '') {
+            if (typeof value !== 'string' && typeof value !== 'number') {
+              throw new Error(
+                `Row ${rowNumber} has an invalid value for ${toTitleCase(field)}: "${value}". ` +
+                `It must be text!`
+              );
+            }
+          }
+        }
+
+        // --- Data Parsing and Normalization ---
+        const parsedAdmissionNo = student.admissionNo;
+        const parsedRollNumber = student.rollNumber;
+
+        // Normalize admission type
+        const normalizedAdmissionType = String(student.admissionType || '').toLowerCase().trim();
+
+        // Keep admissionClass and class as string (Nursery, LKG, UKG, 1-12)
+        const normalizedAdmissionClass = String(student.admissionClass).trim();
+        const normalizedClass = student.class ? String(student.class).trim() : null;
+
+        // --- Uniqueness Checks (Within Current Batch) ---
+        if (parsedAdmissionNo && batchAdmissionNos.has(parsedAdmissionNo)) {
+          throw new Error(
+            `Row ${rowNumber} has an Admission number (${parsedAdmissionNo}) that already exists. ` +
+            `Please fix it before continuing!`
+          );
+        }
+
+        if (parsedRollNumber && batchRollNumbers.has(parsedRollNumber)) {
+          throw new Error(
+            `Row ${rowNumber} has a Roll number (${parsedRollNumber}) that already exists in this class. ` +
+            `Please fix it before continuing!`
+          );
+        }
+
+        if (student.aadharNumber && batchAadharNumbers.has(student.aadharNumber)) {
+          throw new Error(
+            `Row ${rowNumber} has an Aadhar number (${student.aadharNumber}) that already exists. ` +
+            `Please fix it before continuing!`
+          );
+        }
+
+        if (student.samagraId && batchSamagraIds.has(student.samagraId)) {
+          throw new Error(
+            `Row ${rowNumber} has a Samagra ID (${student.samagraId}) that already exists. ` +
+            `Please fix it before continuing!`
+          );
+        }
+
+        // --- Data Content Validation ---
+        const normalizedGender = String(student.gender).toLowerCase().trim();
+        const normalizedCategory = String(student.category).toLowerCase().trim();
+
+        if (!validGenders.has(normalizedGender)) {
+          throw new Error(
+            `Row ${rowNumber} has invalid value for Gender: "${student.gender}". ` +
+            `Allowed values are: (Male, Female, Other)!`
+          );
+        }
+
+        if (!validCategories.has(normalizedCategory)) {
+          throw new Error(
+            `Row ${rowNumber} has invalid value for Category: "${student.category}". ` +
+            `Allowed values are: (General, OBC, SC, ST, EWS, Other)!`
+          );
+        }
+
+        // Validate feesConcession (already validated as number above)
+        const feesConcession = student.feesConcession;
+
+        if (feesConcession < 0) {
+          throw new Error(
+            `Row ${rowNumber} has a negative fee concession amount (${feesConcession}). ` +
+            `Please provide a non-negative value.`
+          );
+        }
+
+        // Note: Total fees validation should be done on backend as frontend may not have that data
+        // If you have totalFees available in frontend, uncomment below:
+        // if (feesConcession > this.totalFees) {
+        //     throw new Error(
+        //         `Row ${rowNumber} shows a fee concession amount (${feesConcession}) ` +
+        //         `greater than the total academic fee (${this.totalFees})!`
+        //     );
+        // }
+
+        // Add to batch sets to prevent duplicates within the current bulk upload
+        if (parsedAdmissionNo) batchAdmissionNos.add(parsedAdmissionNo);
+        if (student.aadharNumber) batchAadharNumbers.add(student.aadharNumber);
+        if (student.samagraId) batchSamagraIds.add(student.samagraId);
+        if (parsedRollNumber) batchRollNumbers.add(parsedRollNumber);
+
+        // Update the student record with normalized values
+        this.bulkStudentRecord[i].admissionNo = parsedAdmissionNo;
+        this.bulkStudentRecord[i].rollNumber = parsedRollNumber;
+        this.bulkStudentRecord[i].admissionClass = normalizedAdmissionClass;
+        if (normalizedClass) {
+          this.bulkStudentRecord[i].class = normalizedClass;
+        }
+        this.bulkStudentRecord[i].admissionType = normalizedAdmissionType;
+        this.bulkStudentRecord[i].gender = normalizedGender;
+        this.bulkStudentRecord[i].category = normalizedCategory;
+      }
+
+    } catch (validationError: any) {
+      // Handle validation errors
+      this.errorCheck = true;
+      this.errorMsg = validationError.message || 'Validation error occurred.';
+      this.isClick = false;
+      return;
+    }
+
+    // --- API Submission (Only executed if NO errors are found) ---
+    const studentRecordData = {
       bulkStudentRecord: this.bulkStudentRecord,
       session: this.selectedSession,
       class: this.className,
       stream: this.stream,
       adminId: this.adminId,
       createdBy: 'Admin',
-    }
+    };
 
-    if (studentRecordData) {
-      this.studentService.addBulkStudentRecord(studentRecordData).subscribe((res: any) => {
-        if (res) {
-          this.isClick = false;
-          this.successDone(res);
-        }
-      }, err => {
-        this.errorCheck = true;
-        this.errorMsg = err.error || 'An error occurred while importing bulk student records.';
+    this.studentService.addBulkStudentRecord(studentRecordData).subscribe(
+      (res: any) => {
+        // 4. Success Handling
         this.isClick = false;
-      })
-    }
+        this.successDone(res);
+      },
+      err => {
+        // 5. API Error Handling (Backend Error)
+        this.errorCheck = true;
+        this.errorMsg = err.error && (err.error.message || JSON.stringify(err.error))
+          ? (err.error.message || JSON.stringify(err.error))
+          : 'Import could not be completed due to a server error.';
+        this.isClick = false;
+      }
+    );
   }
 
   async exportToExcel() {
